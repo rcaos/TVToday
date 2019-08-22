@@ -1,0 +1,176 @@
+//
+//  TMDBClient.swift
+//  MyMovies
+//
+//  Created by Jeans on 8/20/19.
+//  Copyright © 2019 Jeans. All rights reserved.
+//
+
+import Foundation
+
+class TMDBClient{
+    
+    private static let apiKey = "06e1a8c1f39b7a033e2efb972625fee2"
+    
+    private enum EndPoints{
+        static let base = "https://api.themoviedb.org/3"
+        static let apiKeyParam = "?api_key=\(TMDBClient.apiKey)"
+        
+        case getPopularTVShows
+        case getAiringTodayShows
+        case getGenresTVShows
+        case getTVShowDetail(Int)
+        
+        var stringValue: String{
+            switch self {
+            case .getPopularTVShows:
+               return EndPoints.base + "/tv/popular" + EndPoints.apiKeyParam + "&language=en-US&page=1"
+                
+            case .getAiringTodayShows:
+               return EndPoints.base + "/tv/airing_today" + EndPoints.apiKeyParam + "&language=en-US&page=1"
+            
+            case .getGenresTVShows:
+                return EndPoints.base + "/genre/tv/list" + EndPoints.apiKeyParam + "&language=en-US"
+                
+            case .getTVShowDetail(let id) :
+                return EndPoints.base + "/tv/\(id)" + EndPoints.apiKeyParam + "&language=en-US"
+            }
+        }
+        
+        var url: URL{
+            return URL(string: stringValue)!
+        }
+    }
+    
+    class func getPopularShows(completion: @escaping ([TVShow]?, Error?) -> Void ){
+        let url = EndPoints.getPopularTVShows.url
+        
+        let task = URLSession.shared.dataTask(with: url, completionHandler: {
+            (data, response, error) in
+            
+            guard let data = data else{
+                completion(nil, error)
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse,
+                (200...299).contains(response.statusCode) else{
+                    completion(nil, error)
+                    return
+            }
+            
+            do{
+                let decoder = JSONDecoder()
+                let responseObject = try decoder.decode(TVShowResult.self, from: data)
+                completion( responseObject.results, nil )
+            }catch{
+                print("Error:[\(error)]")
+                debugPrint(error)
+                completion(nil, error)
+            }
+            
+        })
+        
+        task.resume()
+    }
+    
+    class func getAiringTodayShows(completion: @escaping ([TVShow]?, Error?) -> Void ){
+        let url = EndPoints.getAiringTodayShows.url
+        
+        let task = URLSession.shared.dataTask(with: url, completionHandler: {
+            (data, response, error) in
+            
+            //print("Data=[\(data)], \nResponse=[\(response)], Error=[\(error)]")
+            
+            guard let data = data else{
+                completion(nil, error)
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse,
+                (200...299).contains(response.statusCode) else{
+                    completion(nil, error)
+                    return
+            }
+            
+            do{
+                let decoder = JSONDecoder()
+                let responseObject = try decoder.decode(TVShowResult.self, from: data)
+                completion( responseObject.results, nil )
+            }catch{
+                print("Error Localize: [\(error.localizedDescription)]")
+                //print("Error:[\(error)]")
+                completion(nil, error)
+            }
+        })
+        
+        task.resume()
+    }
+    
+    class func getGenresTVShows(completion: @escaping ([Genre]?, Error?) -> Void ){
+        let url = EndPoints.getGenresTVShows.url
+        
+        let task = URLSession.shared.dataTask(with: url, completionHandler: {
+            (data, response, error) in
+            
+            //print("Data=[\(data)], \nResponse=[\(response)], Error=[\(error)]")
+            
+            guard let data = data else{
+                completion(nil, error)
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse,
+                (200...299).contains(response.statusCode) else{
+                    completion(nil, error)
+                    return
+            }
+            
+            do{
+                let decoder = JSONDecoder()
+                let responseObject = try decoder.decode( GenreTVShowListResult.self, from: data)
+                completion( responseObject.genres , nil )
+            }catch{
+                print("Error Localize: [\(error.localizedDescription)]")
+                print("Error:[\(error)]")
+                completion(nil, error)
+            }
+        })
+        
+        task.resume()
+    }
+    
+    class func getTVShowDetail(id: Int, completion: @escaping (TVShowDetail?, Error?) -> Void ){
+        let url = EndPoints.getTVShowDetail(id).url
+        print("URl=[\(url)]")
+        
+        let task = URLSession.shared.dataTask(with: url, completionHandler: {
+            (data, response, error) in
+            
+            //print("Data=[\(data)], \nResponse=[\(response)], Error=[\(error)]")
+            
+            guard let data = data else{
+                completion(nil, error)
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse,
+                (200...299).contains(response.statusCode) else{
+                    completion(nil, error)
+                    return
+            }
+            
+            do{
+                let decoder = JSONDecoder()
+                let responseObject = try decoder.decode( TVShowDetail.self, from: data)
+                completion( responseObject , nil )
+            }catch{
+                print("Error Localize: [\(error.localizedDescription)]")
+                print("Error:[\(error)]")
+                completion(nil, error)
+            }
+        })
+        
+        task.resume()
+    }
+}

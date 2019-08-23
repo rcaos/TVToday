@@ -12,10 +12,14 @@ class PopularShowsViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "Popular TV Shows"
         
         TMDBClient.getPopularShows(completion: handlePopularShows(shows:error:))
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     func handlePopularShows(shows: [TVShow]?, error: Error?){
@@ -28,6 +32,14 @@ class PopularShowsViewController: UITableViewController {
         }
     }
 
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowTVShowDetail"{
+            let indexPath =  sender as! IndexPath
+            
+            let controllerTo = segue.destination as! TVShowDetailViewController
+            controllerTo.tvShowGeneral  = Model.popularShows[indexPath.row]
+        }
+    }
 }
 
 extension PopularShowsViewController{
@@ -43,5 +55,11 @@ extension PopularShowsViewController{
         
         cell.tvShow = Model.popularShows[indexPath.row]
         return cell
+    }
+    
+    //MARK: - Delegate
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "ShowTVShowDetail", sender: indexPath)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }

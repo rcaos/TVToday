@@ -19,6 +19,7 @@ struct TVShow: Codable{
     var backDropPath: String!
     var overview: String!
     var originCountry: [String]!
+    var voteCount: Int!
     
     enum CodingKeys: String, CodingKey{
         case id
@@ -31,6 +32,6 @@ struct TVShow: Codable{
         case backDropPath = "backdrop_path"
         case overview
         case originCountry = "origin_country"
-        
+        case voteCount = "vote_count"
     }
 }

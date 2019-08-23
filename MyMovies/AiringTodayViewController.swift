@@ -17,12 +17,14 @@ class AiringTodayViewController: UIViewController{
         
         tableView.dataSource = self
         tableView.delegate = self
-        
-        navigationController?.navigationBar.prefersLargeTitles = true
-        
         navigationItem.title = "Airing Today"
 
         TMDBClient.getAiringTodayShows(completion: handleAiringTodayShows(shows:error:))
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     func handleAiringTodayShows(shows: [TVShow]?, error: Error?){
@@ -41,7 +43,7 @@ class AiringTodayViewController: UIViewController{
             let indexPath = sender as! IndexPath
             
             let controller = segue.destination as! TVShowDetailViewController
-            controller.idShow = Model.todayShows[indexPath.row].id
+            controller.tvShowGeneral = Model.todayShows[indexPath.row]
         }
     }
 }
@@ -64,6 +66,8 @@ extension AiringTodayViewController: UITableViewDataSource, UITableViewDelegate{
     //Mark: Delegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "ShowTVShowDetail", sender: indexPath)
+        //performSegue(withIdentifier: "temporalSegue", sender: indexPath)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
 }

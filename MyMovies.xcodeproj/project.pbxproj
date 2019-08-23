@@ -25,6 +25,7 @@
 		77F46342230CABAC008FB9D6 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F46341230CABAC008FB9D6 /* Model.swift */; };
 		77F46345230CB059008FB9D6 /* TVShowResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F46344230CB059008FB9D6 /* TVShowResult.swift */; };
 		77F46347230CB157008FB9D6 /* TMDBClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F46346230CB157008FB9D6 /* TMDBClient.swift */; };
+		77FE7C62230F4C8A00FE56CF /* TemporalDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FE7C61230F4C8A00FE56CF /* TemporalDetailController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		77F46341230CABAC008FB9D6 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		77F46344230CB059008FB9D6 /* TVShowResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowResult.swift; sourceTree = "<group>"; };
 		77F46346230CB157008FB9D6 /* TMDBClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBClient.swift; sourceTree = "<group>"; };
+		77FE7C61230F4C8A00FE56CF /* TemporalDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporalDetailController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +89,7 @@
 				7722CE59230D924C003DC4C5 /* SearchViewController.swift */,
 				7722CE5B230D92E3003DC4C5 /* SearchCell.swift */,
 				7722CE5F230DA1C3003DC4C5 /* TVShowDetailViewController.swift */,
+				77FE7C63230F4C9000FE56CF /* Temporal */,
 				77F4633E230CA86D008FB9D6 /* Model */,
 				77F46348230CB169008FB9D6 /* TMDB Client */,
 				77F46343230CAE11008FB9D6 /* Responses */,
@@ -125,6 +128,14 @@
 				77F46346230CB157008FB9D6 /* TMDBClient.swift */,
 			);
 			path = "TMDB Client";
+			sourceTree = "<group>";
+		};
+		77FE7C63230F4C9000FE56CF /* Temporal */ = {
+			isa = PBXGroup;
+			children = (
+				77FE7C61230F4C8A00FE56CF /* TemporalDetailController.swift */,
+			);
+			path = Temporal;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -213,6 +224,7 @@
 				7722CE52230D7DFA003DC4C5 /* PopularShowsViewController.swift in Sources */,
 				77F46340230CA953008FB9D6 /* PopularShowsCell.swift in Sources */,
 				7722CE58230D90AF003DC4C5 /* Genre.swift in Sources */,
+				77FE7C62230F4C8A00FE56CF /* TemporalDetailController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -37,7 +37,7 @@ class PopularShowsViewController: UITableViewController {
             let indexPath =  sender as! IndexPath
             
             let controllerTo = segue.destination as! TVShowDetailViewController
-            controllerTo.tvShowGeneral  = Model.popularShows[indexPath.row]
+            controllerTo.idShow = Model.popularShows[indexPath.row].id
         }
     }
 }

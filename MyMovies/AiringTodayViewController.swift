@@ -43,7 +43,7 @@ class AiringTodayViewController: UIViewController{
             let indexPath = sender as! IndexPath
             
             let controller = segue.destination as! TVShowDetailViewController
-            controller.tvShowGeneral = Model.todayShows[indexPath.row]
+            controller.idShow = Model.todayShows[indexPath.row].id
         }
     }
 }

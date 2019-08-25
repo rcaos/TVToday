@@ -10,7 +10,7 @@ import UIKit
 
 class TVShowDetailViewController: UITableViewController {
 
-    public var tvShowGeneral: TVShow!
+    public var idShow:Int!
     
     private var tvShow: TVShowDetail!
     
@@ -31,41 +31,24 @@ class TVShowDetailViewController: UITableViewController {
         
         navigationController?.navigationBar.prefersLargeTitles = false
 
-        if let idShow = tvShowGeneral.id{
-            updateLayoutGeneral()
+        if let idShow = idShow{
             TMDBClient.getTVShowDetail(id: idShow, completion: handleGetTVShowDetail(tvShow:error:))
-            downloadImages()
         }
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-//        print("Table View Size: \(tableView.frame.size)")
-//        print("Table View Parent: \(tableView.superview?.frame.size )")
-//
-//        print("Safe Area: \(view.safeAreaLayoutGuide.layoutFrame)")
-//        print("UIScreen Bounds:\(UIScreen.main.bounds)")
-    }
-    
-    
+  
     private func handleGetTVShowDetail(tvShow:TVShowDetail?, error: Error?){
         if let show = tvShow{
-            
             self.tvShow = show
             DispatchQueue.main.async {
                 self.updateLayout()
+                self.downloadImages()
             }
         }
     }
     
-    private func updateLayoutGeneral(){
-        nameLabel.text = tvShowGeneral.name
-        yearInitLabel.text = getYear(from: tvShowGeneral.firstAirDate)
-        overViewLabel.text = tvShowGeneral.overview
-        scoreLabel.text = "\(String(tvShowGeneral.voteAverage)) "
-        countVoteLabel.text = String(tvShowGeneral.voteCount)
-    }
-    
     private func updateLayout(){
+        nameLabel.text = tvShow.name
+        yearInitLabel.text = getYear(from: tvShow.firstAirDate)
         yearEndLabel.text = getYear(from: tvShow.lasttAirDate)
         if let runtime = tvShow.episodeRunTime.first{
             durationLabel.text = "\(String(runtime)) min"
@@ -74,6 +57,9 @@ class TVShowDetailViewController: UITableViewController {
         }
         genreLabel.text = tvShow.genreIds.first?.name
         numberOfEpisodes.text = String(tvShow.numbeOfEpisodes)
+        overViewLabel.text = tvShow.overview
+        scoreLabel.text = "\(String(tvShow.voteAverage)) "
+        countVoteLabel.text = String(tvShow.voteCount)
     }
     
     private func getYear(from dateString: String?) -> String{
@@ -94,7 +80,7 @@ class TVShowDetailViewController: UITableViewController {
     }
     
     private func downloadImages(){
-        if let backDropPath = tvShowGeneral.backDropPath{
+        if let backDropPath = tvShow.backDropPath{
             TMDBClient.getImage(size: .mediumBackDrop, path: backDropPath, completion: {
                 data, error in
                 if let data = data{
@@ -105,7 +91,7 @@ class TVShowDetailViewController: UITableViewController {
             })
         }
         
-        if let posterPath = tvShowGeneral.posterPath{
+        if let posterPath = tvShow.posterPath{
             TMDBClient.getImage(size: .mediumPoster, path: posterPath, completion: {
                 data, error in
                 if let data = data{

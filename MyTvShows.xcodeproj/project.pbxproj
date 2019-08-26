@@ -16,6 +16,7 @@
 		7722CE5E230D9A36003DC4C5 /* GenreTVShowListResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7722CE5D230D9A36003DC4C5 /* GenreTVShowListResult.swift */; };
 		7722CE60230DA1C3003DC4C5 /* TVShowDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7722CE5F230DA1C3003DC4C5 /* TVShowDetailViewController.swift */; };
 		77E26213230D7C490066B1CB /* AiringTodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E26212230D7C490066B1CB /* AiringTodayViewController.swift */; };
+		77E37AAA2314270700C692DA /* MovieDetail.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77E37AA92314270700C692DA /* MovieDetail.storyboard */; };
 		77F46327230C9F5A008FB9D6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F46326230C9F5A008FB9D6 /* AppDelegate.swift */; };
 		77F4632C230C9F5A008FB9D6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77F4632A230C9F5A008FB9D6 /* Main.storyboard */; };
 		77F4632E230C9F5C008FB9D6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 77F4632D230C9F5C008FB9D6 /* Assets.xcassets */; };
@@ -25,7 +26,6 @@
 		77F46342230CABAC008FB9D6 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F46341230CABAC008FB9D6 /* Model.swift */; };
 		77F46345230CB059008FB9D6 /* TVShowResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F46344230CB059008FB9D6 /* TVShowResult.swift */; };
 		77F46347230CB157008FB9D6 /* TMDBClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F46346230CB157008FB9D6 /* TMDBClient.swift */; };
-		77FE7C62230F4C8A00FE56CF /* TemporalDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FE7C61230F4C8A00FE56CF /* TemporalDetailController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,7 +38,8 @@
 		7722CE5D230D9A36003DC4C5 /* GenreTVShowListResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreTVShowListResult.swift; sourceTree = "<group>"; };
 		7722CE5F230DA1C3003DC4C5 /* TVShowDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowDetailViewController.swift; sourceTree = "<group>"; };
 		77E26212230D7C490066B1CB /* AiringTodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AiringTodayViewController.swift; sourceTree = "<group>"; };
-		77F46323230C9F5A008FB9D6 /* MyMovies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyMovies.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		77E37AA92314270700C692DA /* MovieDetail.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MovieDetail.storyboard; sourceTree = "<group>"; };
+		77F46323230C9F5A008FB9D6 /* MyTvShows.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyTvShows.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		77F46326230C9F5A008FB9D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		77F4632B230C9F5A008FB9D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		77F4632D230C9F5C008FB9D6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -49,7 +50,6 @@
 		77F46341230CABAC008FB9D6 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		77F46344230CB059008FB9D6 /* TVShowResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowResult.swift; sourceTree = "<group>"; };
 		77F46346230CB157008FB9D6 /* TMDBClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBClient.swift; sourceTree = "<group>"; };
-		77FE7C61230F4C8A00FE56CF /* TemporalDetailController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemporalDetailController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +63,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		77E37AA8231426F600C692DA /* StoryBoards */ = {
+			isa = PBXGroup;
+			children = (
+				77F4632A230C9F5A008FB9D6 /* Main.storyboard */,
+				77E37AA92314270700C692DA /* MovieDetail.storyboard */,
+			);
+			path = StoryBoards;
+			sourceTree = "<group>";
+		};
+		77E37AAB2314276300C692DA /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				77E37AAC2314276F00C692DA /* Movies */,
+			);
+			path = Scenes;
+			sourceTree = "<group>";
+		};
+		77E37AAC2314276F00C692DA /* Movies */ = {
+			isa = PBXGroup;
+			children = (
+				7722CE5F230DA1C3003DC4C5 /* TVShowDetailViewController.swift */,
+			);
+			path = Movies;
+			sourceTree = "<group>";
+		};
 		77F4631A230C9F5A008FB9D6 = {
 			isa = PBXGroup;
 			children = (
@@ -74,7 +99,7 @@
 		77F46324230C9F5A008FB9D6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				77F46323230C9F5A008FB9D6 /* MyMovies.app */,
+				77F46323230C9F5A008FB9D6 /* MyTvShows.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -88,12 +113,11 @@
 				77F4633F230CA953008FB9D6 /* PopularShowsCell.swift */,
 				7722CE59230D924C003DC4C5 /* SearchViewController.swift */,
 				7722CE5B230D92E3003DC4C5 /* SearchCell.swift */,
-				7722CE5F230DA1C3003DC4C5 /* TVShowDetailViewController.swift */,
-				77FE7C63230F4C9000FE56CF /* Temporal */,
+				77E37AAB2314276300C692DA /* Scenes */,
 				77F4633E230CA86D008FB9D6 /* Model */,
 				77F46348230CB169008FB9D6 /* TMDB Client */,
 				77F46343230CAE11008FB9D6 /* Responses */,
-				77F4632A230C9F5A008FB9D6 /* Main.storyboard */,
+				77E37AA8231426F600C692DA /* StoryBoards */,
 				77F4632D230C9F5C008FB9D6 /* Assets.xcassets */,
 				77F4632F230C9F5C008FB9D6 /* LaunchScreen.storyboard */,
 				77F46332230C9F5C008FB9D6 /* Info.plist */,
@@ -130,20 +154,12 @@
 			path = "TMDB Client";
 			sourceTree = "<group>";
 		};
-		77FE7C63230F4C9000FE56CF /* Temporal */ = {
-			isa = PBXGroup;
-			children = (
-				77FE7C61230F4C8A00FE56CF /* TemporalDetailController.swift */,
-			);
-			path = Temporal;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		77F46322230C9F5A008FB9D6 /* MyMovies */ = {
+		77F46322230C9F5A008FB9D6 /* MyTvShows */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 77F46335230C9F5C008FB9D6 /* Build configuration list for PBXNativeTarget "MyMovies" */;
+			buildConfigurationList = 77F46335230C9F5C008FB9D6 /* Build configuration list for PBXNativeTarget "MyTvShows" */;
 			buildPhases = (
 				77F4631F230C9F5A008FB9D6 /* Sources */,
 				77F46320230C9F5A008FB9D6 /* Frameworks */,
@@ -153,9 +169,9 @@
 			);
 			dependencies = (
 			);
-			name = MyMovies;
+			name = MyTvShows;
 			productName = MyMovies;
-			productReference = 77F46323230C9F5A008FB9D6 /* MyMovies.app */;
+			productReference = 77F46323230C9F5A008FB9D6 /* MyTvShows.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -173,7 +189,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 77F4631E230C9F5A008FB9D6 /* Build configuration list for PBXProject "MyMovies" */;
+			buildConfigurationList = 77F4631E230C9F5A008FB9D6 /* Build configuration list for PBXProject "MyTvShows" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -186,7 +202,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				77F46322230C9F5A008FB9D6 /* MyMovies */,
+				77F46322230C9F5A008FB9D6 /* MyTvShows */,
 			);
 		};
 /* End PBXProject section */
@@ -196,6 +212,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77E37AAA2314270700C692DA /* MovieDetail.storyboard in Resources */,
 				77F46331230C9F5C008FB9D6 /* LaunchScreen.storyboard in Resources */,
 				77F4632E230C9F5C008FB9D6 /* Assets.xcassets in Resources */,
 				77F4632C230C9F5A008FB9D6 /* Main.storyboard in Resources */,
@@ -224,7 +241,6 @@
 				7722CE52230D7DFA003DC4C5 /* PopularShowsViewController.swift in Sources */,
 				77F46340230CA953008FB9D6 /* PopularShowsCell.swift in Sources */,
 				7722CE58230D90AF003DC4C5 /* Genre.swift in Sources */,
-				77FE7C62230F4C8A00FE56CF /* TemporalDetailController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -405,7 +421,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		77F4631E230C9F5A008FB9D6 /* Build configuration list for PBXProject "MyMovies" */ = {
+		77F4631E230C9F5A008FB9D6 /* Build configuration list for PBXProject "MyTvShows" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				77F46333230C9F5C008FB9D6 /* Debug */,
@@ -414,7 +430,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		77F46335230C9F5C008FB9D6 /* Build configuration list for PBXNativeTarget "MyMovies" */ = {
+		77F46335230C9F5C008FB9D6 /* Build configuration list for PBXNativeTarget "MyTvShows" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				77F46336230C9F5C008FB9D6 /* Debug */,

@@ -16,7 +16,7 @@ struct TVShowDetail: Codable{
     var lasttAirDate: String!
     var episodeRunTime: [Int]!
     var genreIds: [Genre]!
-    var numbeOfEpisodes:Int!
+    var numberOfEpisodes:Int!
     
     var posterPath: String!
     var backDropPath: String!
@@ -32,7 +32,7 @@ struct TVShowDetail: Codable{
         case lasttAirDate = "last_air_date"
         case episodeRunTime = "episode_run_time"
         case genreIds = "genres"
-        case numbeOfEpisodes = "number_of_episodes"
+        case numberOfEpisodes = "number_of_episodes"
         
         case posterPath = "poster_path"
         case backDropPath = "backdrop_path"

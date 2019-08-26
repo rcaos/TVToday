@@ -36,6 +36,8 @@ class TMDBClient{
         
         case getImage(ImageSize, String)
         
+        case searchTVShow(String)
+        
         var stringValue: String{
             switch self {
             case .getPopularTVShows:
@@ -52,6 +54,9 @@ class TMDBClient{
                 
             case .getImage(let imageSize, let imagePath):
                 return EndPoints.baseImage + imageSize.rawValue + imagePath
+            
+            case .searchTVShow(let query):
+                return EndPoints.base + "/search/tv" + EndPoints.apiKeyParam + "&language=en-US&query=\( query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "" )&page=1"
             }
         }
         
@@ -98,8 +103,6 @@ class TMDBClient{
         let task = URLSession.shared.dataTask(with: url, completionHandler: {
             (data, response, error) in
             
-            //print("Data=[\(data)], \nResponse=[\(response)], Error=[\(error)]")
-            
             guard let data = data else{
                 completion(nil, error)
                 return
@@ -117,7 +120,6 @@ class TMDBClient{
                 completion( responseObject.results, nil )
             }catch{
                 print("Error Localize: [\(error.localizedDescription)]")
-                //print("Error:[\(error)]")
                 completion(nil, error)
             }
         })
@@ -130,8 +132,6 @@ class TMDBClient{
         
         let task = URLSession.shared.dataTask(with: url, completionHandler: {
             (data, response, error) in
-            
-            //print("Data=[\(data)], \nResponse=[\(response)], Error=[\(error)]")
             
             guard let data = data else{
                 completion(nil, error)
@@ -207,6 +207,37 @@ class TMDBClient{
             }
             
             completion( data , nil )
+        })
+        
+        task.resume()
+    }
+    
+    class func search(for show: String, completion: @escaping ([TVShow]?, Error?) -> Void ){
+        let url = EndPoints.searchTVShow(show).url
+        
+        let task = URLSession.shared.dataTask(with: url, completionHandler: {
+            (data, response, error) in
+            
+            guard let data = data else{
+                completion(nil, error)
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse,
+                (200...299).contains(response.statusCode) else{
+                    completion(nil, error)
+                    return
+            }
+            
+            do{
+                let decoder = JSONDecoder()
+                let responseObject = try decoder.decode( TVShowResult.self, from: data)
+                completion( responseObject.results , nil )
+            }catch{
+                print("Error Localize: [\(error.localizedDescription)]")
+                print("Error:[\(error)]")
+                completion(nil, error)
+            }
         })
         
         task.resume()

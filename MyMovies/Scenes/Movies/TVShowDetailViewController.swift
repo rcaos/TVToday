@@ -50,16 +50,19 @@ class TVShowDetailViewController: UITableViewController {
         nameLabel.text = tvShow.name
         yearInitLabel.text = getYear(from: tvShow.firstAirDate)
         yearEndLabel.text = getYear(from: tvShow.lasttAirDate)
+        
         if let runtime = tvShow.episodeRunTime.first{
             durationLabel.text = "\(String(runtime)) min"
         }else{
             durationLabel.text = "--"
         }
         genreLabel.text = tvShow.genreIds.first?.name
-        numberOfEpisodes.text = String(tvShow.numbeOfEpisodes)
+       
+        numberOfEpisodes.text = (tvShow.numberOfEpisodes != nil) ? String(tvShow.numberOfEpisodes!) : ""
+        
         overViewLabel.text = tvShow.overview
-        scoreLabel.text = "\(String(tvShow.voteAverage)) "
-        countVoteLabel.text = String(tvShow.voteCount)
+        scoreLabel.text = (tvShow.voteAverage != nil) ? String(tvShow.voteAverage) : ""
+        countVoteLabel.text = (tvShow.voteCount != nil) ? String(tvShow.voteCount) : ""
     }
     
     private func getYear(from dateString: String?) -> String{

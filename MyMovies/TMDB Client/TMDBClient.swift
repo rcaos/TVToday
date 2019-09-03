@@ -38,6 +38,8 @@ class TMDBClient{
         
         case searchTVShow(String)
         
+        case listTVShowsBy(Int)
+        
         var stringValue: String{
             switch self {
             case .getPopularTVShows:
@@ -57,6 +59,9 @@ class TMDBClient{
             
             case .searchTVShow(let query):
                 return EndPoints.base + "/search/tv" + EndPoints.apiKeyParam + "&language=en-US&query=\( query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "" )&page=1"
+           
+            case .listTVShowsBy(let genre):
+                return EndPoints.base + "/discover/tv" + EndPoints.apiKeyParam + "&language=en-US&sort_by=popularity.desc&page=1&timezone=America%2FNew_York&with_genres=\(String(genre))&include_null_first_air_dates=false"
             }
         }
         
@@ -214,6 +219,37 @@ class TMDBClient{
     
     class func search(for show: String, completion: @escaping ([TVShow]?, Error?) -> Void ){
         let url = EndPoints.searchTVShow(show).url
+        
+        let task = URLSession.shared.dataTask(with: url, completionHandler: {
+            (data, response, error) in
+            
+            guard let data = data else{
+                completion(nil, error)
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse,
+                (200...299).contains(response.statusCode) else{
+                    completion(nil, error)
+                    return
+            }
+            
+            do{
+                let decoder = JSONDecoder()
+                let responseObject = try decoder.decode( TVShowResult.self, from: data)
+                completion( responseObject.results , nil )
+            }catch{
+                print("Error Localize: [\(error.localizedDescription)]")
+                print("Error:[\(error)]")
+                completion(nil, error)
+            }
+        })
+        
+        task.resume()
+    }
+    
+    class func listTVShows(by genre: Int, completion: @escaping ([TVShow]?, Error?) -> Void ){
+        let url = EndPoints.listTVShowsBy(genre).url
         
         let task = URLSession.shared.dataTask(with: url, completionHandler: {
             (data, response, error) in

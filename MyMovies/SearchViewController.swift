@@ -18,6 +18,8 @@ class SearchViewController: UIViewController{
         super.viewDidLoad()
         
         tableView.dataSource = self
+        tableView.delegate = self
+        
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationItem.title = "Search TV Shows"
 
@@ -82,6 +84,10 @@ class SearchViewController: UIViewController{
         if segue.identifier == "ShowTVShowDetail"{
             guard let toController = segue.destination as? TVShowDetailViewController else { return }
             toController.idShow = sender as? Int
+            
+        }else if segue.identifier == "showTvShowListSegue"{
+            guard let toController = segue.destination as? TVShowListViewController else { return }
+            toController.idGenre = sender as? Int
         }
     }
 }
@@ -117,6 +123,17 @@ extension SearchViewController: UITableViewDataSource{
         
         cell.genre = Model.genresShows[indexPath.row]
         return cell
+    }
+}
+
+//MARK: - UITableViewDelegate
+extension SearchViewController: UITableViewDelegate{
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let genre = Model.genresShows[indexPath.row]
+        if let id = genre.id{
+            performSegue(withIdentifier: "showTvShowListSegue", sender: id)
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
     }
 }
 

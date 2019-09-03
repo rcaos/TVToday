@@ -66,7 +66,6 @@ extension AiringTodayViewController: UITableViewDataSource, UITableViewDelegate{
     //Mark: Delegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "ShowTVShowDetail", sender: indexPath)
-        //performSegue(withIdentifier: "temporalSegue", sender: indexPath)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     

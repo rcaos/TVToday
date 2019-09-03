@@ -71,10 +71,10 @@
         <!--TVShowDetailViewController-->
         <scene sceneID="qDG-jR-xlK">
             <objects>
-                <viewControllerPlaceholder storyboardName="MovieDetail" referencedIdentifier="TVShowDetailViewController" id="wUJ-be-Uhy" sceneMemberID="viewController"/>
+                <viewControllerPlaceholder storyboardName="TVShowDetail" referencedIdentifier="TVShowDetailViewController" id="wUJ-be-Uhy" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4TJ-or-gwt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2943" y="-78"/>
+            <point key="canvasLocation" x="2930" y="-37"/>
         </scene>
         <!--Popular-->
         <scene sceneID="BPh-WT-bNA">
@@ -252,11 +252,20 @@
                     <connections>
                         <outlet property="tableView" destination="vr5-wd-zC4" id="Ni3-jc-1xe"/>
                         <segue destination="wUJ-be-Uhy" kind="show" identifier="ShowTVShowDetail" id="Cak-t9-GqP"/>
+                        <segue destination="m4s-OV-wAg" kind="show" identifier="showTvShowListSegue" id="Sev-iN-2XR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dnq-NN-9dn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2029" y="1253"/>
+        </scene>
+        <!--TVShowList-->
+        <scene sceneID="qqC-Fn-LCE">
+            <objects>
+                <viewControllerPlaceholder storyboardName="TVShowList" id="m4s-OV-wAg" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Q6B-Tv-MlM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2788" y="1252"/>
         </scene>
         <!--Results Search View Controller-->
         <scene sceneID="UMq-GJ-bQi">
@@ -312,7 +321,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gkm-KH-TvD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2849" y="1728"/>
+            <point key="canvasLocation" x="2815" y="1857"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Rtj-C5-85A">

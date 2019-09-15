@@ -17,15 +17,22 @@ class SearchViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.dataSource = self
-        tableView.delegate = self
-        
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationItem.title = "Search TV Shows"
 
         TMDBClient.getGenresTVShows(completion: handleSearchGenre(genres:error:))
         
+        setupTable()
         setupSearchBar()
+    }
+    
+    //MARK: - SetupTable
+    func setupTable(){
+        tableView.dataSource = self
+        tableView.delegate = self
+        
+        let nibName = UINib(nibName: "GenreViewCell", bundle: nil)
+        tableView.register(nibName, forCellReuseIdentifier: "GenreViewCell")
     }
     
     //MARK: - Setup UI
@@ -119,8 +126,7 @@ extension SearchViewController: UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "SearchCell", for: indexPath) as! SearchCell
-        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "GenreViewCell", for: indexPath) as! GenreViewCell
         cell.genre = Model.genresShows[indexPath.row]
         return cell
     }

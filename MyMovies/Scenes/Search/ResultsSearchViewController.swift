@@ -24,11 +24,18 @@ class ResultsSearchViewController: UIViewController {
     
     var delegate:ResultsSearchViewControllerDelegate!
     
+    //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupTable()
+    }
+    
+    func setupTable(){
         tableView.dataSource = self
         tableView.delegate = self
+        
+        let nibName = UINib(nibName: "TVShowViewCell", bundle: nil)
+        tableView.register(nibName, forCellReuseIdentifier: "TVShowViewCell")
     }
 }
 
@@ -40,9 +47,8 @@ extension ResultsSearchViewController: UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellListResult", for: indexPath)
-        cell.textLabel?.text = tvShowsResults[indexPath.row].name
-        cell.detailTextLabel?.text = String(tvShowsResults[indexPath.row].voteAverage)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
+        cell.show = tvShowsResults[indexPath.row]
         return cell
     }
 }

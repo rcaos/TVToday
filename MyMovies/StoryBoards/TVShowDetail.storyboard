@@ -42,7 +42,7 @@
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="VeH-jy-ieC">
                                                             <rect key="frame" x="0.0" y="243" width="375" height="36"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Breaking Bad" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tNe-vN-cJp">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="TV Show Name" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tNe-vN-cJp">
                                                                     <rect key="frame" x="16" y="0.0" width="359" height="36"/>
                                                                     <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>

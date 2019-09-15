@@ -15,16 +15,22 @@ class AiringTodayViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.dataSource = self
-        tableView.delegate = self
         navigationItem.title = "Airing Today"
-
+        setupTable()
         TMDBClient.getAiringTodayShows(completion: handleAiringTodayShows(shows:error:))
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
+    func setupTable(){
+        tableView.dataSource = self
+        tableView.delegate = self
+        
+        let nibName = UINib(nibName: "TVShowViewCell", bundle: nil)
+        tableView.register(nibName, forCellReuseIdentifier: "TVShowViewCell")
     }
     
     func handleAiringTodayShows(shows: [TVShow]?, error: Error?){
@@ -57,8 +63,7 @@ extension AiringTodayViewController: UITableViewDataSource, UITableViewDelegate{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "AiringTodayCell", for: indexPath) as! AiringTodayCell
-        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
         cell.show = Model.todayShows[indexPath.row]
         return cell
     }

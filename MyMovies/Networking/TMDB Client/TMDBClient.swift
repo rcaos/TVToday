@@ -151,7 +151,7 @@ class TMDBClient{
             
             do{
                 let decoder = JSONDecoder()
-                let responseObject = try decoder.decode( GenreTVShowListResult.self, from: data)
+                let responseObject = try decoder.decode( GenreListResult.self, from: data)
                 completion( responseObject.genres , nil )
             }catch{
                 print("Error Localize: [\(error.localizedDescription)]")
@@ -163,7 +163,7 @@ class TMDBClient{
         task.resume()
     }
     
-    class func getTVShowDetail(id: Int, completion: @escaping (TVShowDetail?, Error?) -> Void ){
+    class func getTVShowDetail(id: Int, completion: @escaping (TVShowDetailResult?, Error?) -> Void ){
         let url = EndPoints.getTVShowDetail(id).url
         
         let task = URLSession.shared.dataTask(with: url, completionHandler: {
@@ -182,7 +182,7 @@ class TMDBClient{
             
             do{
                 let decoder = JSONDecoder()
-                let responseObject = try decoder.decode( TVShowDetail.self, from: data)
+                let responseObject = try decoder.decode( TVShowDetailResult.self, from: data)
                 completion( responseObject , nil )
             }catch{
                 print("Error Localize: [\(error.localizedDescription)]")

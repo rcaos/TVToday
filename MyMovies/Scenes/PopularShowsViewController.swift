@@ -14,12 +14,18 @@ class PopularShowsViewController: UITableViewController {
         super.viewDidLoad()
         navigationItem.title = "Popular TV Shows"
         
+        setupTable()
         TMDBClient.getPopularShows(completion: handlePopularShows(shows:error:))
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
+    func setupTable(){
+        let nibName = UINib(nibName: "TVShowViewCell", bundle: nil)
+        tableView.register(nibName, forCellReuseIdentifier: "TVShowViewCell")
     }
     
     func handlePopularShows(shows: [TVShow]?, error: Error?){
@@ -51,9 +57,8 @@ extension PopularShowsViewController{
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "AiringCell", for: indexPath) as! PopularShowsCell
-        
-        cell.tvShow = Model.popularShows[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
+        cell.show = Model.popularShows[indexPath.row]
         return cell
     }
     

@@ -18,12 +18,18 @@ class TVShowListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.dataSource = self
-        tableView.delegate = self
-        
+        setupTable()
         if let genre = idGenre{
             TMDBClient.listTVShows(by: genre, completion: handleShowsResult(shows:error:))
         }
+    }
+    
+    func setupTable(){
+        tableView.dataSource = self
+        tableView.delegate = self
+        
+        let nibName = UINib(nibName: "TVShowViewCell", bundle: nil)
+        tableView.register(nibName, forCellReuseIdentifier: "TVShowViewCell")
     }
     
     func handleShowsResult( shows: [TVShow]?, error: Error?){
@@ -52,15 +58,9 @@ extension TVShowListViewController: UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellTVShow", for: indexPath)
-        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
         guard let _ = tvShows else { return UITableViewCell() }
-        
-        let show = tvShows[indexPath.row]
-        
-        cell.textLabel?.text = show.name
-        cell.detailTextLabel?.text = (show.voteAverage != nil) ? String(show.voteAverage!) : ""
-        
+        cell.show = tvShows[indexPath.row]
         return cell
     }
 }

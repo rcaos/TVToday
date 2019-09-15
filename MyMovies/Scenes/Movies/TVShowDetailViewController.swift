@@ -12,7 +12,7 @@ class TVShowDetailViewController: UITableViewController {
 
     public var idShow:Int!
     
-    private var tvShow: TVShowDetail!
+    private var tvShow: TVShowDetailResult!
     
     @IBOutlet weak private var backDropImage: UIImageView!
     @IBOutlet weak private var nameLabel: UILabel!
@@ -36,7 +36,7 @@ class TVShowDetailViewController: UITableViewController {
         }
     }
   
-    private func handleGetTVShowDetail(tvShow:TVShowDetail?, error: Error?){
+    private func handleGetTVShowDetail(tvShow:TVShowDetailResult?, error: Error?){
         if let show = tvShow{
             self.tvShow = show
             DispatchQueue.main.async {
@@ -109,8 +109,24 @@ class TVShowDetailViewController: UITableViewController {
 
 extension TVShowDetailViewController{
     
+    override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+        if indexPath.row == 1{
+            return true
+        }
+        return false
+    }
+    
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        return nil
+        if indexPath.row == 1{
+            print("Only Episode Guide Selected: [\(indexPath.row)]")
+            return indexPath
+        }else{
+            return nil
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {

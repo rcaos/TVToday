@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct TVShowDetail: Codable{
+struct TVShowDetailResult: Codable{
     
     var id: Int!
     var name: String!

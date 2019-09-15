@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Popular Shows View Controller-->
+        <scene sceneID="K1a-bz-hOD">
+            <objects>
+                <tableViewController id="08J-lJ-oGe" customClass="PopularShowsViewController" customModule="MyTvShows" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Zkm-z9-YTt">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <connections>
+                            <outlet property="dataSource" destination="08J-lJ-oGe" id="MVf-Cp-dtG"/>
+                            <outlet property="delegate" destination="08J-lJ-oGe" id="PMd-pS-mAy"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="3AF-DG-39u"/>
+                    <connections>
+                        <segue destination="JmK-k0-LMx" kind="show" identifier="ShowTVShowDetail" id="AuO-Pg-xfz"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="L5m-QY-1bY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1846" y="448"/>
+        </scene>
+        <!--TVShowDetailViewController-->
+        <scene sceneID="sDm-Lx-Fxj">
+            <objects>
+                <viewControllerPlaceholder storyboardName="TVShowDetail" referencedIdentifier="TVShowDetailViewController" id="JmK-k0-LMx" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xLt-sL-JF2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2583" y="448"/>
+        </scene>
+        <!--Popular-->
+        <scene sceneID="D0g-sU-pou">
+            <objects>
+                <navigationController storyboardIdentifier="PopularShowsViewController" automaticallyAdjustsScrollViewInsets="NO" id="UEP-Jt-z4H" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Popular" image="popular" id="bpC-fv-UlV"/>
+                    <toolbarItems/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="nBh-rP-Ka9">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="08J-lJ-oGe" kind="relationship" relationship="rootViewController" id="vs6-RV-Yqe"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zXh-Yc-W7b" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1087" y="449"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="popular" width="22" height="22"/>
+    </resources>
+</document>

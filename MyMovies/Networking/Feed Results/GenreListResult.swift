@@ -8,6 +8,6 @@
 
 import Foundation
 
-struct GenreTVShowListResult: Codable{
+struct GenreListResult: Codable{
     var genres:[Genre]!
 }

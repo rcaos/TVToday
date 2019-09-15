@@ -48,7 +48,7 @@ extension ResultsSearchViewController: UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
-        cell.show = tvShowsResults[indexPath.row]
+        //cell.show = tvShowsResults[indexPath.row]
         return cell
     }
 }

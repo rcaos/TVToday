@@ -60,7 +60,7 @@ extension TVShowListViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
         guard let _ = tvShows else { return UITableViewCell() }
-        cell.show = tvShows[indexPath.row]
+        //cell.show = tvShows[indexPath.row]
         return cell
     }
 }

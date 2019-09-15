@@ -13,7 +13,7 @@ class TVShowViewCell: UITableViewCell {
     @IBOutlet weak private var nameLabel: UILabel!
     @IBOutlet weak private var averageLabel: UILabel!
 
-    var show:TVShow?{
+    var viewModel:TVShowCellViewModel?{
         didSet{
             setupUI()
         }
@@ -25,14 +25,10 @@ class TVShowViewCell: UITableViewCell {
     }
     
     func setupUI(){
-        guard let show = show else {
-            return
-        }
+        guard let viewModel = viewModel else { return }
         
-        nameLabel.text = show.name
-        if let average = show.voteAverage{
-            averageLabel.text = String(average)
-        }
+        nameLabel.text = viewModel.name
+        averageLabel.text = viewModel.average
     }
     
 }

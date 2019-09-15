@@ -10,7 +10,6 @@ import Foundation
 
 class Model{
     static var popularShows = [TVShow]()
-    static var todayShows = [TVShow]()
     
     static var genresShows = [Genre]()
 }

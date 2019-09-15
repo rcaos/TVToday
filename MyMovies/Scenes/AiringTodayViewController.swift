@@ -12,12 +12,14 @@ class AiringTodayViewController: UIViewController{
     
     @IBOutlet var tableView: UITableView!
     
+    lazy private var viewModel:AiringTodayViewModel = AiringTodayViewModel()
+    
+    //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.title = "Airing Today"
-        setupTable()
-        TMDBClient.getAiringTodayShows(completion: handleAiringTodayShows(shows:error:))
+        setupUI()
+        setupViewModel()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -25,6 +27,13 @@ class AiringTodayViewController: UIViewController{
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
+    //MARK: - SetupView
+    func setupUI(){
+        navigationItem.title = "Airing Today"
+        setupTable()
+    }
+    
+    //MARK: - SetupTable
     func setupTable(){
         tableView.dataSource = self
         tableView.delegate = self
@@ -33,45 +42,44 @@ class AiringTodayViewController: UIViewController{
         tableView.register(nibName, forCellReuseIdentifier: "TVShowViewCell")
     }
     
-    func handleAiringTodayShows(shows: [TVShow]?, error: Error?){
-        if let shows = shows{
-            Model.todayShows = shows
-            
+    //MARK: - SetupUI
+    func setupViewModel(){
+        
+        //Binding
+        viewModel.reloadTable = {[weak self] () in
             DispatchQueue.main.async {
-                self.tableView.reloadData()
+                self?.tableView.reloadData()
             }
         }
+        viewModel.getShows()
     }
     
+    //MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowTVShowDetail"{
-            
             let indexPath = sender as! IndexPath
             
             let controller = segue.destination as! TVShowDetailViewController
-            controller.idShow = Model.todayShows[indexPath.row].id
+            controller.idShow = viewModel.getShowID(at: indexPath)
         }
     }
 }
 
+//MARK: - DataSource, Delegate
 extension AiringTodayViewController: UITableViewDataSource, UITableViewDelegate{
     
-    //MARK: DataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Model.todayShows.count
+        return viewModel.numberOfCells
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
-        cell.show = Model.todayShows[indexPath.row]
+        cell.viewModel = viewModel.getCellViewModel(at: indexPath)
         return cell
     }
     
-    //Mark: Delegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "ShowTVShowDetail", sender: indexPath)
         tableView.deselectRow(at: indexPath, animated: true)
     }
-    
 }

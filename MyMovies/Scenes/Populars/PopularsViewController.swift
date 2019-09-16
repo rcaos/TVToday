@@ -8,14 +8,15 @@
 
 import UIKit
 
-class PopularShowsViewController: UITableViewController {
+class PopularsViewController: UITableViewController {
 
+    var viewModel = PopularViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Popular TV Shows"
         
-        setupTable()
-        TMDBClient.getPopularShows(completion: handlePopularShows(shows:error:))
+        setupUI()
+        setupViewModel()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -23,42 +24,58 @@ class PopularShowsViewController: UITableViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
+    //MARK: - SetupView
+    func setupUI(){
+        navigationItem.title = "Popular TV Shows"
+        setupTable()
+    }
+    
+    //MARK: - SetupTable
     func setupTable(){
+        tableView.dataSource = self
+        tableView.delegate = self
+        
         let nibName = UINib(nibName: "TVShowViewCell", bundle: nil)
         tableView.register(nibName, forCellReuseIdentifier: "TVShowViewCell")
     }
     
-    func handlePopularShows(shows: [TVShow]?, error: Error?){
-        if let shows = shows{
-            Model.popularShows = shows
-            
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
+    //MARK: - SetupUI
+    func setupViewModel(){
+        
+        //Binding
+        viewModel.reloadData.bindAndFire({[unowned self] isReload in
+            if isReload{
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                    print("Se actualizó Data en PopularShowsVC..")
+                }
             }
-        }
+        })
+        viewModel.getShows()
     }
-
+    
+    //MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowTVShowDetail"{
             let indexPath =  sender as! IndexPath
             
             let controllerTo = segue.destination as! TVShowDetailViewController
-            controllerTo.idShow = Model.popularShows[indexPath.row].id
+            controllerTo.idShow = viewModel.shows[indexPath.row].id
         }
     }
 }
 
-extension PopularShowsViewController{
+extension PopularsViewController{
     
     // MARK: - Table view data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Model.popularShows.count
+        return viewModel.shows.count
     }
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
-        //cell.show = Model.popularShows[indexPath.row]
+        cell.viewModel = viewModel.showCells[indexPath.row]
         return cell
     }
     

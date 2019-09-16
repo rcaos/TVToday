@@ -15,19 +15,15 @@ protocol ResultsSearchViewControllerDelegate: class{
 class ResultsSearchViewController: UIViewController {
 
     @IBOutlet var tableView: UITableView!
-    
-    var tvShowsResults:[TVShow]!{
-        didSet{
-            tableView.reloadData()
-        }
-    }
-    
+    var viewModel = ResultsSearchViewModel()
     var delegate:ResultsSearchViewControllerDelegate!
     
     //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupTable()
+        setupViewModel()
     }
     
     func setupTable(){
@@ -37,18 +33,31 @@ class ResultsSearchViewController: UIViewController {
         let nibName = UINib(nibName: "TVShowViewCell", bundle: nil)
         tableView.register(nibName, forCellReuseIdentifier: "TVShowViewCell")
     }
+    
+    //MARK: - SetupViewModel
+    func setupViewModel(){
+        
+        //Binding
+        viewModel.reloadData.bindAndFire({[unowned self] isReload in
+            if isReload{
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                    print("Se actualizó Results ViewController..")
+                }
+            }
+        })
+    }
 }
 
 //MARK: - UITableViewDataSource
 extension ResultsSearchViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let tvShowsResults = tvShowsResults else{ return 0}
-        return tvShowsResults.count
+        return viewModel.shows.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
-        //cell.show = tvShowsResults[indexPath.row]
+        cell.viewModel = viewModel.showCells[indexPath.row]
         return cell
     }
 }
@@ -56,7 +65,7 @@ extension ResultsSearchViewController: UITableViewDataSource{
 //MARK: - UITableViewDelegate
 extension ResultsSearchViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedShow = tvShowsResults[indexPath.row]
+        let selectedShow = viewModel.shows[indexPath.row]
         delegate?.resultsSearchViewController(self, didSelectedMovie: selectedShow.id)
         
         tableView.deselectRow(at: indexPath, animated: true)

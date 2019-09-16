@@ -11,19 +11,22 @@ import UIKit
 class SearchViewController: UIViewController{
     
     @IBOutlet var tableView: UITableView!
-    
     var searchController:UISearchController!
+    var viewModel = SearchViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupUI()
+    }
+    
+    //MARK: - SetupView
+    func setupUI(){
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationItem.title = "Search TV Shows"
-
-        TMDBClient.getGenresTVShows(completion: handleSearchGenre(genres:error:))
         
         setupTable()
         setupSearchBar()
+        setupViewModel()
     }
     
     //MARK: - SetupTable
@@ -35,7 +38,7 @@ class SearchViewController: UIViewController{
         tableView.register(nibName, forCellReuseIdentifier: "GenreViewCell")
     }
     
-    //MARK: - Setup UI
+    //MARK: - SetupSearchBar
     func setupSearchBar(){
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let toController = storyboard.instantiateViewController(withIdentifier: "searchResults")
@@ -59,34 +62,33 @@ class SearchViewController: UIViewController{
         definesPresentationContext = true
     }
     
-    //MARK: - Networking
-    func handleSearchGenre(genres: [Genre]?, error: Error?){
-        if let genres = genres{
-            Model.genresShows = genres
-            
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
+    //MARK: - SetupViewModel
+    func setupViewModel(){
+        
+        //Binding
+        viewModel.reloadData.bindAndFire({[unowned self] isReload in
+            if isReload{
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                    print("Se actualizó Data en Genres..")
+                }
             }
-        }
-    }
-    
-    func handleSearchShow(shows: [TVShow]?, error: Error?){
-        if let shows = shows{
-            guard let controller = searchController.searchResultsController as? ResultsSearchViewController else { return }
-            
-            DispatchQueue.main.async {
-                controller.tvShowsResults = shows
-            }
-        }
+        })
+        
+        viewModel.getGenres()
     }
     
     func clearResults(){
         guard let controller = searchController.searchResultsController as? ResultsSearchViewController else { return }
-        if let _ = controller.tvShowsResults{
-            controller.tvShowsResults.removeAll()
-        }
+        controller.viewModel.clearShows()
     }
     
+    func search(for query: String){
+        guard let controller = searchController.searchResultsController as? ResultsSearchViewController else { return }
+        controller.viewModel.searchShows(for: query)
+    }
+    
+    //MARK: - Nagivation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowTVShowDetail"{
             guard let toController = segue.destination as? TVShowDetailViewController else { return }
@@ -110,7 +112,7 @@ extension SearchViewController: UISearchResultsUpdating{
 extension SearchViewController: UISearchBarDelegate{
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let query = searchBar.text {
-            TMDBClient.search(for: query, completion: handleSearchShow(shows:error:) )
+            search(for: query)
         }
     }
     
@@ -122,12 +124,12 @@ extension SearchViewController: UISearchBarDelegate{
 //MARK: - UITableViewDataSource
 extension SearchViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Model.genresShows.count
+        return viewModel.genres.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "GenreViewCell", for: indexPath) as! GenreViewCell
-        cell.genre = Model.genresShows[indexPath.row]
+        cell.genre = viewModel.genres[indexPath.row]
         return cell
     }
 }
@@ -135,7 +137,7 @@ extension SearchViewController: UITableViewDataSource{
 //MARK: - UITableViewDelegate
 extension SearchViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let genre = Model.genresShows[indexPath.row]
+        let genre = viewModel.genres[indexPath.row]
         if let id = genre.id{
             performSegue(withIdentifier: "showTvShowListSegue", sender: id)
             tableView.deselectRow(at: indexPath, animated: true)

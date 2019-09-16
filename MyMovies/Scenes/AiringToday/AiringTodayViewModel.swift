@@ -8,22 +8,17 @@
 
 import Foundation
 
-final class AiringTodayViewModel{
+final class AiringTodayViewModel: ShowsViewModel{
     
-    private var tvShows:[TVShow]
-    private var showCells:[TVShowCellViewModel]
-    
-    //MARK: - Bindings
-    var reloadTable: (()->())?
-    
-    var numberOfCells: Int{
-        return tvShows.count
-    }
+    var shows:[TVShow]
+    var showCells:[TVShowCellViewModel]
+    var reloadData:Bindable<Bool>
     
     //MARK: - Initializers
     init() {
-        tvShows = []
+        shows = []
         showCells = []
+        self.reloadData = Bindable(false)
     }
     
     //MARK: - Fetch Shows
@@ -35,27 +30,17 @@ final class AiringTodayViewModel{
         })
     }
     
-    //MARK: - Get Cell Model
-    func getCellViewModel(at indexPath: IndexPath) -> TVShowCellViewModel{
-        return showCells[indexPath.row]
-    }
-    
-    //MARK: - Get Show Id
-    func getShowID(at indexPath: IndexPath) -> Int{
-        return tvShows[indexPath.row].id
-    }
-    
     //MARK: - Private
     private func processFetched(for shows: [TVShow]){
         print("Se recibieron : [\(shows.count) shows]. Actualizar TableView")
-        self.tvShows.append(contentsOf: shows)
+        self.shows.append(contentsOf: shows)
         
         for show in shows{
             let modelforCell = TVShowCellViewModel(show: show)
             self.showCells.append(modelforCell)
         }
         print("Ahora existen: [\(showCells.count) Models]")
-        self.reloadTable?()
+        self.reloadData.value = true
     }
 
 }

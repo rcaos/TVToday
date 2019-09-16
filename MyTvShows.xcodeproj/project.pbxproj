@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		770B5C35230E06B2002019E6 /* TVShowDetailResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770B5C34230E06B2002019E6 /* TVShowDetailResult.swift */; };
+		77193F35232FD927007FA822 /* Bindable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77193F34232FD927007FA822 /* Bindable.swift */; };
+		77193F37232FE0CB007FA822 /* ShowsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77193F36232FE0CB007FA822 /* ShowsViewModel.swift */; };
 		7722CE52230D7DFA003DC4C5 /* PopularShowsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7722CE51230D7DFA003DC4C5 /* PopularShowsViewController.swift */; };
 		7722CE58230D90AF003DC4C5 /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7722CE57230D90AF003DC4C5 /* Genre.swift */; };
 		7722CE5A230D924C003DC4C5 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7722CE59230D924C003DC4C5 /* SearchViewController.swift */; };
@@ -40,6 +42,8 @@
 
 /* Begin PBXFileReference section */
 		770B5C34230E06B2002019E6 /* TVShowDetailResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowDetailResult.swift; sourceTree = "<group>"; };
+		77193F34232FD927007FA822 /* Bindable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bindable.swift; sourceTree = "<group>"; };
+		77193F36232FE0CB007FA822 /* ShowsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowsViewModel.swift; sourceTree = "<group>"; };
 		7722CE51230D7DFA003DC4C5 /* PopularShowsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularShowsViewController.swift; sourceTree = "<group>"; };
 		7722CE57230D90AF003DC4C5 /* Genre.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
 		7722CE59230D924C003DC4C5 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
@@ -83,6 +87,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		77193F33232FD912007FA822 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				77193F34232FD927007FA822 /* Bindable.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		77193F38232FE162007FA822 /* AiringToday */ = {
+			isa = PBXGroup;
+			children = (
+				77E26212230D7C490066B1CB /* AiringTodayViewController.swift */,
+				77E119E1232DE39900A01ACF /* AiringTodayViewModel.swift */,
+			);
+			path = AiringToday;
+			sourceTree = "<group>";
+		};
 		7736A089231FF43100566F0B /* TabBar */ = {
 			isa = PBXGroup;
 			children = (
@@ -170,8 +191,8 @@
 		77E37AAB2314276300C692DA /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
-				77E26212230D7C490066B1CB /* AiringTodayViewController.swift */,
-				77E119E1232DE39900A01ACF /* AiringTodayViewModel.swift */,
+				77193F36232FE0CB007FA822 /* ShowsViewModel.swift */,
+				77193F38232FE162007FA822 /* AiringToday */,
 				7722CE51230D7DFA003DC4C5 /* PopularShowsViewController.swift */,
 				77E119DE232DDAA300A01ACF /* Search */,
 				7736A089231FF43100566F0B /* TabBar */,
@@ -213,6 +234,7 @@
 				77B3CCCE232D7C2400921D23 /* ViewComponents */,
 				77E37AAB2314276300C692DA /* Scenes */,
 				77E37AA8231426F600C692DA /* StoryBoards */,
+				77193F33232FD912007FA822 /* Helpers */,
 				77F4632D230C9F5C008FB9D6 /* Assets.xcassets */,
 				77F46332230C9F5C008FB9D6 /* Info.plist */,
 				77F46326230C9F5A008FB9D6 /* AppDelegate.swift */,
@@ -328,6 +350,7 @@
 			files = (
 				77F46342230CABAC008FB9D6 /* Model.swift in Sources */,
 				7722CE5A230D924C003DC4C5 /* SearchViewController.swift in Sources */,
+				77193F37232FE0CB007FA822 /* ShowsViewModel.swift in Sources */,
 				7736A088231FF25500566F0B /* MainTabBarController.swift in Sources */,
 				77F46347230CB157008FB9D6 /* TMDBClient.swift in Sources */,
 				77F46327230C9F5A008FB9D6 /* AppDelegate.swift in Sources */,
@@ -336,6 +359,7 @@
 				7722CE5E230D9A36003DC4C5 /* GenreListResult.swift in Sources */,
 				770B5C35230E06B2002019E6 /* TVShowDetailResult.swift in Sources */,
 				77E119E2232DE39900A01ACF /* AiringTodayViewModel.swift in Sources */,
+				77193F35232FD927007FA822 /* Bindable.swift in Sources */,
 				77E119DA232DD3C200A01ACF /* GenreViewCell.swift in Sources */,
 				77E37AAE23142CAC00C692DA /* ResultsSearchViewController.swift in Sources */,
 				7722CE60230DA1C3003DC4C5 /* TVShowDetailViewController.swift in Sources */,

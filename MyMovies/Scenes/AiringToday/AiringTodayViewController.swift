@@ -46,11 +46,14 @@ class AiringTodayViewController: UIViewController{
     func setupViewModel(){
         
         //Binding
-        viewModel.reloadTable = {[weak self] () in
-            DispatchQueue.main.async {
-                self?.tableView.reloadData()
+        viewModel.reloadData.bindAndFire({[unowned self] isReload in
+            if isReload{
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                    print("Se actualizó Data en AiringTodayVC..")
+                }
             }
-        }
+        })
         viewModel.getShows()
     }
     
@@ -60,7 +63,7 @@ class AiringTodayViewController: UIViewController{
             let indexPath = sender as! IndexPath
             
             let controller = segue.destination as! TVShowDetailViewController
-            controller.idShow = viewModel.getShowID(at: indexPath)
+            controller.idShow = viewModel.shows[indexPath.row].id
         }
     }
 }
@@ -69,12 +72,12 @@ class AiringTodayViewController: UIViewController{
 extension AiringTodayViewController: UITableViewDataSource, UITableViewDelegate{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.numberOfCells
+        return viewModel.shows.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
-        cell.viewModel = viewModel.getCellViewModel(at: indexPath)
+        cell.viewModel = viewModel.showCells[indexPath.row]
         return cell
     }
     

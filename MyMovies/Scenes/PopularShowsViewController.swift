@@ -58,7 +58,7 @@ extension PopularShowsViewController{
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
-        cell.show = Model.popularShows[indexPath.row]
+        //cell.show = Model.popularShows[indexPath.row]
         return cell
     }
     

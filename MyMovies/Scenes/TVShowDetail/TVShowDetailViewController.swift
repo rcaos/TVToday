@@ -10,14 +10,21 @@ import UIKit
 
 class TVShowDetailViewController: UITableViewController {
 
-    public var idShow:Int!
+    var viewModel: TVShowDetailViewModel?{
+        didSet{
+            setupViewModel()
+        }
+    }
     
-    private var tvShow: TVShowDetailResult!
+    var idShow:Int!{
+        didSet{
+            self.viewModel = TVShowDetailViewModel(idShow)
+        }
+    }
     
     @IBOutlet weak private var backDropImage: UIImageView!
     @IBOutlet weak private var nameLabel: UILabel!
-    @IBOutlet weak private var yearInitLabel: UILabel!
-    @IBOutlet weak private var yearEndLabel: UILabel!
+    @IBOutlet weak private var yearsRelease: UILabel!
     @IBOutlet weak private var durationLabel: UILabel!
     @IBOutlet weak private var genreLabel: UILabel!
     @IBOutlet weak private var numberOfEpisodes: UILabel!
@@ -28,83 +35,54 @@ class TVShowDetailViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         navigationController?.navigationBar.prefersLargeTitles = false
-
-        if let idShow = idShow{
-            TMDBClient.getTVShowDetail(id: idShow, completion: handleGetTVShowDetail(tvShow:error:))
-        }
     }
-  
-    private func handleGetTVShowDetail(tvShow:TVShowDetailResult?, error: Error?){
-        if let show = tvShow{
-            self.tvShow = show
+    
+    //MARK: - SetupViewModel
+    private func setupViewModel(){
+        setupBindables()
+        viewModel?.getShowDetails(id: idShow)
+    }
+    
+    private func setupBindables(){
+        viewModel?.updateShowDetail = { [weak self] in
             DispatchQueue.main.async {
-                self.updateLayout()
-                self.downloadImages()
+                self?.setupUI()
             }
         }
-    }
-    
-    private func updateLayout(){
-        nameLabel.text = tvShow.name
-        yearInitLabel.text = getYear(from: tvShow.firstAirDate)
-        yearEndLabel.text = getYear(from: tvShow.lasttAirDate)
         
-        if let runtime = tvShow.episodeRunTime.first{
-            durationLabel.text = "\(String(runtime)) min"
-        }else{
-            durationLabel.text = "--"
-        }
-        genreLabel.text = tvShow.genreIds.first?.name
-       
-        numberOfEpisodes.text = (tvShow.numberOfEpisodes != nil) ? String(tvShow.numberOfEpisodes!) : ""
-        
-        overViewLabel.text = tvShow.overview
-        scoreLabel.text = (tvShow.voteAverage != nil) ? String(tvShow.voteAverage) : ""
-        countVoteLabel.text = (tvShow.voteCount != nil) ? String(tvShow.voteCount) : ""
-    }
-    
-    private func getYear(from dateString: String?) -> String{
-        guard let dateString = dateString else{
-            return "-"
-        }
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        
-        if let date = formatter.date(from: dateString){
-            formatter.dateFormat = "yyyy"
-            let yearString = formatter.string(from: date)
-            return yearString
-        }else{
-            return "-"
-        }
-    }
-    
-    private func downloadImages(){
-        if let backDropPath = tvShow.backDropPath{
-            TMDBClient.getImage(size: .mediumBackDrop, path: backDropPath, completion: {
-                data, error in
+        viewModel?.dropData.bind({ [weak self] data in
+            DispatchQueue.main.async {
                 if let data = data{
-                    DispatchQueue.main.async {
-                        self.backDropImage.image = UIImage(data: data)
-                    }
+                    self?.backDropImage.image = UIImage(data: data)
                 }
-            })
-        }
+            }
+        })
         
-        if let posterPath = tvShow.posterPath{
-            TMDBClient.getImage(size: .mediumPoster, path: posterPath, completion: {
-                data, error in
+        viewModel?.posterData.bind({ [weak self] data in
+            DispatchQueue.main.async {
                 if let data = data{
-                    DispatchQueue.main.async {
-                        self.posterImage.image = UIImage(data: data)
-                    }
+                    self?.posterImage.image = UIImage(data: data)
                 }
-            })
-        }
+            }
+        })
     }
+    
+    private func setupUI(){
+        guard let viewModel = viewModel else { return }
+        
+        nameLabel.text = viewModel.nameShow
+        yearsRelease.text = viewModel.yearsRelease
+        
+        durationLabel.text = viewModel.duration
+        genreLabel.text = viewModel.genre
+        
+        numberOfEpisodes.text = viewModel.numberOfEpisodes
+        overViewLabel.text = viewModel.overView
+        scoreLabel.text = viewModel.score
+        countVoteLabel.text = viewModel.countVote
+    }
+    
 }
 
 extension TVShowDetailViewController{

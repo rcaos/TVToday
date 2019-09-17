@@ -14,6 +14,8 @@ class SearchViewController: UIViewController{
     var searchController:UISearchController!
     var viewModel = SearchViewModel()
     
+    var lastSearch = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -112,11 +114,17 @@ extension SearchViewController: UISearchResultsUpdating{
 extension SearchViewController: UISearchBarDelegate{
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let query = searchBar.text {
-            search(for: query)
+            
+            if query.lowercased() != lastSearch.lowercased(){
+                clearResults()
+                lastSearch = query
+                search(for: query)
+            }
         }
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        lastSearch = ""
         clearResults()
     }
 }

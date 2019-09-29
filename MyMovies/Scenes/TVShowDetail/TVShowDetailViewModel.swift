@@ -24,17 +24,14 @@ final class TVShowDetailViewModel{
     
     var dropData:Bindable<Data?> = Bindable(nil)
     var posterData:Bindable<Data?> = Bindable(nil)
-    
-    var updateShowDetail: (()-> Void)?
+    var updateUI: (()-> Void)?
+    var isLoading:Bindable<Bool>?
     
     var showDetail: TVShowDetailResult?
     
-//    init(_ show: TVShowDetailResult) {
-//        self.setupTVShow(show)
-//    }
-    
     init(_ idShow: Int){
         id = idShow
+        isLoading = Bindable(false)
     }
     
     private func setupTVShow(_ show: TVShowDetailResult){
@@ -55,10 +52,14 @@ final class TVShowDetailViewModel{
     //MARK: - Networking
     
     func getShowDetails(id show: Int){
+        self.isLoading?.value = true
+        
         TMDBClient.getTVShowDetail(id: show, completion: { result, error in
             if let showDetail = result{
+                self.isLoading?.value = false
+                
                 self.setupTVShow(showDetail)
-                self.updateShowDetail?()
+                self.updateUI?()
                 self.downloadImages(for: showDetail)
                 
                 self.showDetail = showDetail

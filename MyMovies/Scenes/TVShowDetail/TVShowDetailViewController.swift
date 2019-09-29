@@ -33,9 +33,20 @@ class TVShowDetailViewController: UITableViewController {
     @IBOutlet weak private var scoreLabel: UILabel!
     @IBOutlet weak private var countVoteLabel: UILabel!
     
+    private var activityIndicator: UIActivityIndicatorView!
+    
+    //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.prefersLargeTitles = false
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
+    deinit {
+        print("deinit TVShowDetailViewController")
     }
     
     //MARK: - SetupViewModel
@@ -45,7 +56,14 @@ class TVShowDetailViewController: UITableViewController {
     }
     
     private func setupBindables(){
-        viewModel?.updateShowDetail = { [weak self] in
+        
+        viewModel?.isLoading?.bind({[weak self] isLoading in
+            DispatchQueue.main.async {
+                isLoading ? self?.showLoader() : self?.hideLoader()
+            }
+        })
+        
+        viewModel?.updateUI = { [weak self] in
             DispatchQueue.main.async {
                 self?.setupUI()
             }
@@ -65,6 +83,36 @@ class TVShowDetailViewController: UITableViewController {
                     self?.posterImage.image = UIImage(data: data)
                 }
             }
+        })
+    }
+    
+    func showLoader(){
+        DispatchQueue.main.async {
+            let containerView = UIView(frame: self.view.frame)
+            containerView.backgroundColor = .white
+            
+            self.activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
+            self.activityIndicator.color = .darkGray
+            self.activityIndicator.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
+            self.activityIndicator.center = containerView.center
+            
+            containerView.addSubview(self.activityIndicator)
+            self.view.addSubview(containerView)
+            
+            self.activityIndicator.startAnimating()
+        }
+    }
+    
+    func hideLoader(){
+        guard let activityIndicator = self.activityIndicator,
+            let containerView = activityIndicator.superview else { return }
+        
+        activityIndicator.stopAnimating()
+        
+        UIView.animate(withDuration: 0.5, animations: {
+            containerView.alpha = 0
+        }, completion: { _ in
+            containerView.removeFromSuperview()
         })
     }
     
@@ -105,7 +153,6 @@ extension TVShowDetailViewController{
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if indexPath.row == 1{
-            print("Only Episode Guide Selected: [\(indexPath.row)]")
             performSegue(withIdentifier: "SeasonsListSegue", sender: nil)
             return indexPath
         }else{

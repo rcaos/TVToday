@@ -60,9 +60,9 @@ enum ColorsForCell{
     var rawValue:UIColor{
         switch self {
         case .selected:
-            return UIColor.yellow
+            return UIColor(red: 255.0/255.0, green: 202.0/255.0, blue: 40.0/255.0, alpha: 0.8)
         case .normal:
-            return UIColor.lightGray
+            return UIColor.clear
         }
     }
 }

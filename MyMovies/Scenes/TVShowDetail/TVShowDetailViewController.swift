@@ -83,6 +83,15 @@ class TVShowDetailViewController: UITableViewController {
         countVoteLabel.text = viewModel.countVote
     }
     
+    //MARK: - Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "SeasonsListSegue"{
+            if let vc = segue.destination as? SeasonsListViewController{
+             vc.showDetail = viewModel?.showDetail
+            }
+        }
+    }
+    
 }
 
 extension TVShowDetailViewController{
@@ -97,6 +106,7 @@ extension TVShowDetailViewController{
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if indexPath.row == 1{
             print("Only Episode Guide Selected: [\(indexPath.row)]")
+            performSegue(withIdentifier: "SeasonsListSegue", sender: nil)
             return indexPath
         }else{
             return nil

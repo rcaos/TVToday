@@ -17,6 +17,7 @@ struct TVShowDetailResult: Codable{
     var episodeRunTime: [Int]!
     var genreIds: [Genre]!
     var numberOfEpisodes:Int!
+    var numberOfSeasons:Int!
     
     var posterPath: String!
     var backDropPath: String!
@@ -35,6 +36,7 @@ struct TVShowDetailResult: Codable{
         case episodeRunTime = "episode_run_time"
         case genreIds = "genres"
         case numberOfEpisodes = "number_of_episodes"
+        case numberOfSeasons = "number_of_seasons"
         
         case posterPath = "poster_path"
         case backDropPath = "backdrop_path"

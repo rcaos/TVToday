@@ -27,6 +27,8 @@ final class TVShowDetailViewModel{
     
     var updateShowDetail: (()-> Void)?
     
+    var showDetail: TVShowDetailResult?
+    
 //    init(_ show: TVShowDetailResult) {
 //        self.setupTVShow(show)
 //    }
@@ -46,6 +48,8 @@ final class TVShowDetailViewModel{
         overView = show.overview
         score = (show.voteAverage != nil) ? String(show.voteAverage) : ""
         countVote = (show.voteCount != nil) ? String(show.voteCount) : ""
+        
+        showDetail = show
     }
     
     //MARK: - Networking
@@ -56,6 +60,8 @@ final class TVShowDetailViewModel{
                 self.setupTVShow(showDetail)
                 self.updateShowDetail?()
                 self.downloadImages(for: showDetail)
+                
+                self.showDetail = showDetail
             }
         })
     }

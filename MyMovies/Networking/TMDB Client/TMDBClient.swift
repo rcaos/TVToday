@@ -34,6 +34,8 @@ class TMDBClient{
         case getGenresTVShows
         case getTVShowDetail(Int)
         
+        case getEpisodesFor(Int,Int)
+        
         case getImage(ImageSize, String)
         
         case searchTVShow(String)
@@ -53,6 +55,9 @@ class TMDBClient{
                 
             case .getTVShowDetail(let id) :
                 return EndPoints.base + "/tv/\(id)" + EndPoints.apiKeyParam + "&language=en-US"
+        
+            case .getEpisodesFor(let show, let season) :
+                return EndPoints.base + "/tv/\(show)/season/\(season)" + EndPoints.apiKeyParam + "&language=en-US"
                 
             case .getImage(let imageSize, let imagePath):
                 return EndPoints.baseImage + imageSize.rawValue + imagePath
@@ -183,6 +188,37 @@ class TMDBClient{
             do{
                 let decoder = JSONDecoder()
                 let responseObject = try decoder.decode( TVShowDetailResult.self, from: data)
+                completion( responseObject , nil )
+            }catch{
+                print("Error Localize: [\(error.localizedDescription)]")
+                print("Error:[\(error)]")
+                completion(nil, error)
+            }
+        })
+        
+        task.resume()
+    }
+    
+    class func getEpisodesFor(show: Int, season:Int, completion: @escaping (SeasonResult?, Error?) -> Void ){
+        let url = EndPoints.getEpisodesFor(show, season).url
+        print("consultando: [\(url)]")
+        let task = URLSession.shared.dataTask(with: url, completionHandler: {
+            (data, response, error) in
+            
+            guard let data = data else{
+                completion(nil, error)
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse,
+                (200...299).contains(response.statusCode) else{
+                    completion(nil, error)
+                    return
+            }
+            
+            do{
+                let decoder = JSONDecoder()
+                let responseObject = try decoder.decode( SeasonResult.self, from: data)
                 completion( responseObject , nil )
             }catch{
                 print("Error Localize: [\(error.localizedDescription)]")

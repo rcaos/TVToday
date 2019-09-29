@@ -13,10 +13,8 @@ final class SeasonListTableViewModel {
     var episodeNumber: String?
     var episodeName: String?
     var releaseDate: String?
-    var duration: String?
     var average: String?
-    
-    var data: Data?
+    var data: Bindable<Data?>?
     
     var episode: Episode!
     
@@ -33,5 +31,6 @@ final class SeasonListTableViewModel {
         episodeName = episode.name
         releaseDate = episode.airDate
         average = episode.average
+        data = Bindable(nil)
     }
 }

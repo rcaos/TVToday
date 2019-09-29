@@ -35,8 +35,6 @@ final class DefaultSeasonTableViewModel {
     
     var reloadSection: ((Int) -> Void)?
     
-    var reloadCell: ((Int) -> Void )?
-    
     //MARK: - Life cycle
     init(show: Int) {
         self.idShow = show
@@ -202,11 +200,7 @@ final class DefaultSeasonTableViewModel {
         TMDBClient.getImage(size: .mediumPoster, path: path, completion: { data, error in
             if let data = data {
                 //print("Se descargo imagen a las: [\( Date() )], index: [\(index)]")
-                model.data = data
-                
-                if let reloadCell = self.reloadCell{
-                    reloadCell(index)
-                }
+                model.data?.value = data
             }
         })
     }

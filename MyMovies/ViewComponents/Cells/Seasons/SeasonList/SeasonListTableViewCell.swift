@@ -34,20 +34,23 @@ class SeasonListTableViewCell: UITableViewCell {
         episodeNumberLabel.text = viewModel?.episodeNumber
         episodeNameLabel.text = viewModel?.episodeName
         releaseLabel.text = viewModel?.releaseDate
-        //durationLabel.text = viewModel?.duration
         averageLabel.text = viewModel?.average
-        
-        //if viewModel?.imageData?.value == nil{
-            //print("Here nil data")
         episodeImage.image = UIImage(named: "placeholder2")
-        //}
     }
     
     func setupBindables(){
         guard let viewModel = viewModel else { return }
-        
-        if let data = viewModel.data{
-            episodeImage.image = UIImage(data: data)
-        }
+
+        viewModel.data?.bindAndFire({[weak self] data in
+            if let data = data{
+                DispatchQueue.main.async {
+                    self?.episodeImage.image = UIImage(data: data)
+                }
+            }
+        })
+    }
+    
+    override func prepareForReuse() {
+        viewModel?.data?.listener = nil
     }
 }

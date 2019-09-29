@@ -85,27 +85,6 @@ class DefaultSeasonTableViewController: UITableViewController {
             }
         }
         
-        viewModel?.reloadCell = { [weak self] index in
-            DispatchQueue.main.async {
-                self?.reloadCells(at: index)
-            }
-        }
-    }
-    
-    //FIXME: - Reload Image Cells -
-    //Heap corruption detected
-    //Guard value 22
-    //First select season 1
-    //Luego select season 9
-    func reloadCells(at indexPath: Int){
-        let index = IndexPath(row: indexPath, section: 1)
-
-        if let indexs =  tableView.indexPathsForVisibleRows,
-            indexs.contains(index){
-
-            print("\nSe actualizará solo la celda...\(index)")
-            tableView.reloadRows(at: [index], with: .none)
-        }
     }
     
     func reloadCollection(){
@@ -182,7 +161,7 @@ extension DefaultSeasonTableViewController{
         var msg = ""
         if let model = viewModel?.getModel(for: indexPath.row){
             cell.viewModel = model
-            msg = "\(model.data?.isEmpty)"
+            msg = "\(model.data?.value?.isEmpty)"
         }
         print("Se pide Model para Episode : \(indexPath), \(msg)")
         return cell

@@ -49,19 +49,6 @@ class SeasonEpisodeTableViewCell: UITableViewCell {
                 self.selectedSeason(at: index)
             }
         }
-        
-        
-        
-        print("1.: Está Seleccionada: \(viewModel?.seasonSelected)")
-        if let season = viewModel?.seasonSelected{
-            if collectionView.indexPathsForVisibleItems.count > 0{
-                print("Seleccionar season: \(season)\n")
-                selectedSeason(at: season)
-            }
-        }
-        
-        //collectionView.reloadData()
-        //printCells()
     }
     
     func selectedSeason(at index: Int){

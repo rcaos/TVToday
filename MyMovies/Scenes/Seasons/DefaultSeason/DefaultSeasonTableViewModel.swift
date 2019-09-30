@@ -135,7 +135,7 @@ final class DefaultSeasonTableViewModel {
             }
         }
         
-        self.viewSeasonModel = SeasonEpisodeTableViewModel(seasons: seasons, season: seasonSelected)
+        self.viewSeasonModel = SeasonEpisodeTableViewModel(seasons: seasons)
         return viewSeasonModel!
     }
     

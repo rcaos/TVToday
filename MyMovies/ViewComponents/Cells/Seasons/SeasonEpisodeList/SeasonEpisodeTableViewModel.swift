@@ -18,15 +18,12 @@ final class SeasonEpisodeTableViewModel{
         } )
     }
     
-    var seasonSelected:Int?
-    
     //Reactive
     var selectedCell: ( (Int) -> Void)?
     
     //MARK: Life Cycle
-    init( seasons: [Int] , season : Int? = nil) {
+    init( seasons: [Int] ){
         self.seasons = seasons
-        self.seasonSelected = season
     }
     
     func getSeasonNumber(for index: Int) -> Int?{
@@ -38,16 +35,6 @@ final class SeasonEpisodeTableViewModel{
     }
     
     func getModelFor(_ indexPath: Int) -> SeasonEpisodeCollectionViewModel {
-        
-        var model = cellModels[indexPath]
-        
-//        if let season = seasonSelected{
-//            if model.season == season{
-//                model.isSelected = true
-//            }
-//        }
-        
-        return model
-        //return cellModels[indexPath]
+        return cellModels[indexPath]
     }
 }

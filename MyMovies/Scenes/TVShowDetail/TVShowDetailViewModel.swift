@@ -31,7 +31,7 @@ final class TVShowDetailViewModel{
     
     init(_ idShow: Int){
         id = idShow
-        isLoading = Bindable(false)
+        isLoading = Bindable(true)
     }
     
     private func setupTVShow(_ show: TVShowDetailResult){

@@ -104,16 +104,18 @@ class TVShowDetailViewController: UITableViewController {
     }
     
     func hideLoader(){
-        guard let activityIndicator = self.activityIndicator,
-            let containerView = activityIndicator.superview else { return }
-        
-        activityIndicator.stopAnimating()
-        
-        UIView.animate(withDuration: 0.5, animations: {
-            containerView.alpha = 0
-        }, completion: { _ in
-            containerView.removeFromSuperview()
-        })
+        DispatchQueue.main.async {
+            guard let activityIndicator = self.activityIndicator,
+                let containerView = activityIndicator.superview else { return }
+            
+            activityIndicator.stopAnimating()
+            
+            UIView.animate(withDuration: 0.5, animations: {
+                containerView.alpha = 0
+            }, completion: { _ in
+                containerView.removeFromSuperview()
+            })
+        }
     }
     
     private func setupUI(){

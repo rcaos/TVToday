@@ -142,7 +142,12 @@ final class DefaultSeasonTableViewModel {
         self.seasonSelected = season
         self.createModels(for: season, ordered)
         
-        self.viewState.value = .populated(ordered)
+        if ordered.count == 0{
+            self.viewState.value = .empty
+        }else{
+            self.viewState.value = .populated(ordered)
+        }
+        
         
         self.downloadImages(for: season)
     }

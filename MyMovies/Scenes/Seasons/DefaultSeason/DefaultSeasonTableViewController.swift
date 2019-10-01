@@ -80,6 +80,17 @@ class DefaultSeasonTableViewController: UITableViewController {
         return containerView
     }
     
+    func buildEmptyView() -> UIView{
+        
+        let frame = CGRect(x: 0, y: 0, width: tableView.frame.height, height: 200)
+        let nib = UINib(nibName: "EmptyView", bundle: nil)
+        
+        let emptyView = nib.instantiate(withOwner: nil, options: nil).first as! EmptyView
+        emptyView.frame = frame
+        
+        return emptyView
+    }
+    
     private func setupViewModel(){
         setupBindables()
         viewModel?.getFirstSeason()
@@ -97,12 +108,14 @@ class DefaultSeasonTableViewController: UITableViewController {
     private func configureView(with state: DefaultSeasonTableViewModel.ViewState) {
         
         switch state {
-//        case .empty:
-//            tableView.tableFooterView = CustomFooterView(message: Constants.emptyResultsTitle)
         case .populated:
             tableView.tableFooterView = UIView()
             tableView.separatorStyle = .singleLine
+        case .empty:
+            tableView.tableFooterView = buildEmptyView()
+            tableView.separatorStyle = .none
         default:
+            //Loading
             tableView.tableFooterView = buildActivityIndicator()
             tableView.separatorStyle = .none
 //        case .searching:

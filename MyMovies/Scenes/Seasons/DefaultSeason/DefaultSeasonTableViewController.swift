@@ -37,10 +37,6 @@ class DefaultSeasonTableViewController: UITableViewController {
         print("viewDidLoad DefaultSeasonTableViewController")
     }
     
-//    override func loadView() {
-//        tableView.backgroundView = activityIndicator
-//    }
-    
     deinit {
         print("deinit child DefaultSeasonTableViewController")
     }
@@ -66,55 +62,64 @@ class DefaultSeasonTableViewController: UITableViewController {
         tableView.tableHeaderView = headerView
     }
     
+    func buildActivityIndicator() -> UIView{
+        let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
+        activityIndicator.color = .darkGray
+        activityIndicator.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
+        
+        let containerView = UIView(frame: self.view.frame)
+        containerView.backgroundColor = .white
+        
+        activityIndicator.center = containerView.center
+        containerView.addSubview(activityIndicator)
+        
+        self.view.addSubview(containerView)
+        
+        activityIndicator.startAnimating()
+        
+        return containerView
+    }
+    
     private func setupViewModel(){
         setupBindables()
         viewModel?.getFirstSeason()
     }
     
     private func setupBindables(){
-        
-        viewModel?.reloadCollection = {[weak self] in
+        viewModel?.viewState.bindAndFire({[weak self] state in
             DispatchQueue.main.async {
-                self?.reloadCollection()
+                self?.configureView(with: state)
+                self?.reloadSection(at: 1)
             }
-        }
-        
-        viewModel?.reloadSection = {[weak self] section in
-            DispatchQueue.main.async {
-                self?.reloadSection(at: section)
-            }
-        }
-        
+        })
     }
     
-    func reloadCollection(){
-//        print("\nSe actualizará Section para CollectionView")
-//        let index = IndexSet(integer: 0)
-//        tableView.reloadSections(index, with: .none)
+    private func configureView(with state: DefaultSeasonTableViewModel.ViewState) {
+        
+        switch state {
+//        case .empty:
+//            tableView.tableFooterView = CustomFooterView(message: Constants.emptyResultsTitle)
+        case .populated:
+            tableView.tableFooterView = UIView()
+            tableView.separatorStyle = .singleLine
+        default:
+            tableView.tableFooterView = buildActivityIndicator()
+            tableView.separatorStyle = .none
+//        case .searching:
+//            tableView.tableFooterView = searchMoviesResultView.loadingFooterView
+//        case .error(let error):
+//            tableView.tableFooterView = CustomFooterView(message: error.description)
+        }
     }
+    
     
     func reloadSection(at section: Int){
         print("\nSe actualizará Section para: \(section)")
         let index = IndexSet(integer: section)
-
-        print("Existen celdas?: \(tableView.numberOfRows(inSection: section))")
-        print("Cells for model?: \(viewModel?.numberOfEpisodes)")
-
-        if let visible = viewModel?.numberOfEpisodes{
-            if visible == tableView.numberOfRows(inSection: section){
-
-                let index = IndexSet(integer: section)
-                tableView.reloadSections(index, with: .none)
-                return
-            }
-        }
-
+//        print("Existen celdas?: \(tableView.numberOfRows(inSection: section))")
+//        print("Cells for model?: \(viewModel?.viewState.value.currentEpisodes.count)")
         tableView.beginUpdates()
-        tableView.deleteSections(index, with: .none)
-        tableView.insertSections(index, with: .none)
-
-        //Jajaj tiene que ser el mismo # de elementos
-        //tableView.reloadSections(index, with: .automatic)
+        tableView.reloadSections(index, with: .automatic)
         tableView.endUpdates()
     }
 
@@ -133,7 +138,7 @@ extension DefaultSeasonTableViewController{
         if section == 0 {
             return 1
         }else{
-            return viewModel.numberOfEpisodes
+            return viewModel.viewState.value.currentEpisodes.count
         }
     }
     

@@ -11,36 +11,22 @@ import Foundation
 final class DefaultSeasonTableViewModel {
     
     private var idShow: Int!
-    private var seasonSelected: Int?
-    private var episodes: [Int:[Episode]]
-    private var cellModels: [Int:[SeasonListTableViewModel]]
-    
     private var showDetailResult: TVShowDetailResult?
     
+    private var seasonSelected: Int?
+    
+    private var episodes: [Int:[Episode]]
+    private var cellModels: [Int:[SeasonListTableViewModel]]
     private var viewSeasonModel:SeasonEpisodeTableViewModel?
     
-    var numberOfEpisodes:Int{
-        if let selected = seasonSelected,
-            let episodes = episodes[selected]{
-            //print("\n Me pide numero de episodios: Season: \(selected):\(episodes.count)\n")
-            return episodes.count
-        }
-        return 0
-    }
-    
     //Bindables
-    //var reloadTable:Bindable<Bool>
-    
-    var reloadCollection: (() -> Void)?
-    
-    var reloadSection: ((Int) -> Void)?
+    var viewState:Bindable<ViewState> = Bindable(.loading)
     
     //MARK: - Life cycle
     init(show: Int) {
         self.idShow = show
         episodes = [:]
         cellModels = [:]
-        //reloadTable = Bindable(false)
     }
     
     convenience init(showDetailResult: TVShowDetailResult) {
@@ -53,7 +39,6 @@ final class DefaultSeasonTableViewModel {
     }
     
     func getSeason(at index: Int){
-        //print("\(seasonSelected) seleccionada?")
         let numberOfSeason = index + 1
         
         if isSeasonSelected(for: numberOfSeason) {
@@ -62,8 +47,7 @@ final class DefaultSeasonTableViewModel {
         
         if isFetchedBefore(for: numberOfSeason){
             self.seasonSelected = numberOfSeason
-            self.reloadSection?(1)
-            //self.reloadCollection?()
+            self.viewState.value = .populated( episodes[numberOfSeason]!  )
             return
         }
         
@@ -93,20 +77,12 @@ final class DefaultSeasonTableViewModel {
     func selectFirstSeason(){
         let firstSeason = 1
         self.seasonSelected = firstSeason
-        
+
         if let model = viewSeasonModel,
             let selectedFunction = model.selectedCell{
             print("\nSeleccionaré season desde Model: \(firstSeason)")
             selectedFunction(firstSeason)
         }
-
-        
-//        if let seasonSelected = self.seasonSelected ,
-//            let model = viewSeasonModel ,
-//            let selectedFunction = model.selectedCell{
-//            print("\nSeleccionaré season desde Model: \(seasonSelected)")
-//            selectedFunction(seasonSelected)
-//        }
     }
     
     func getEpisode(for indexPath: Int) -> Episode?{
@@ -147,6 +123,7 @@ final class DefaultSeasonTableViewModel {
     //MARK: - Helper
     private func getEpisodesFor(season seasonNumber: Int){
         print("Se consulta Episodes para Season: \(seasonNumber)")
+        self.viewState.value = .loading
         TMDBClient.getEpisodesFor(show: idShow , season: seasonNumber, completion: { result, error in
             if let season = result, let episodes = season.episodes{
                 self.processFetched(for: seasonNumber, episodes)
@@ -165,8 +142,7 @@ final class DefaultSeasonTableViewModel {
         self.seasonSelected = season
         self.createModels(for: season, ordered)
         
-        self.reloadSection?(1)
-        //self.reloadCollection?()
+        self.viewState.value = .populated(ordered)
         
         self.downloadImages(for: season)
     }
@@ -203,5 +179,25 @@ final class DefaultSeasonTableViewModel {
                 model.data?.value = data
             }
         })
+    }
+}
+
+extension DefaultSeasonTableViewModel{
+    
+    enum ViewState {
+        
+        case loading
+        case populated([Episode])
+        case empty
+        case error(Error)
+        
+        var currentEpisodes : [Episode] {
+            switch self{
+            case .populated(let episodes):
+                return episodes
+            default:
+                return []
+            }
+        }
     }
 }

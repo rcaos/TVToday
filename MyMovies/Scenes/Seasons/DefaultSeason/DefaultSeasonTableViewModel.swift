@@ -127,6 +127,10 @@ final class DefaultSeasonTableViewModel {
         TMDBClient.getEpisodesFor(show: idShow , season: seasonNumber, completion: { result, error in
             if let season = result, let episodes = season.episodes{
                 self.processFetched(for: seasonNumber, episodes)
+            }else{
+                if let error = error{
+                    self.viewState.value = .error(error)
+                }
             }
         })
     }

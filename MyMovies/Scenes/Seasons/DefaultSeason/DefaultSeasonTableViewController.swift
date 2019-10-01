@@ -91,6 +91,17 @@ class DefaultSeasonTableViewController: UITableViewController {
         return emptyView
     }
     
+    func buildErrorView() -> UIView{
+        
+        let frame = CGRect(x: 0, y: 0, width: tableView.frame.height, height: 200)
+        let nib = UINib(nibName: "ErrorView", bundle: nil)
+        
+        let emptyView = nib.instantiate(withOwner: nil, options: nil).first as! ErrorView
+        emptyView.frame = frame
+        
+        return emptyView
+    }
+    
     private func setupViewModel(){
         setupBindables()
         viewModel?.getFirstSeason()
@@ -114,14 +125,14 @@ class DefaultSeasonTableViewController: UITableViewController {
         case .empty:
             tableView.tableFooterView = buildEmptyView()
             tableView.separatorStyle = .none
+        case .error(_):
+            tableView.tableFooterView = buildErrorView()
+            //tableView.tableFooterView = CustomFooterView(message: error.description)
+            tableView.separatorStyle = .none
         default:
             //Loading
             tableView.tableFooterView = buildActivityIndicator()
             tableView.separatorStyle = .none
-//        case .searching:
-//            tableView.tableFooterView = searchMoviesResultView.loadingFooterView
-//        case .error(let error):
-//            tableView.tableFooterView = CustomFooterView(message: error.description)
         }
     }
     

@@ -12,6 +12,6 @@ protocol ShowsViewModel{
     
     //var movieClient: --For Networking
     var shows:[TVShow] { get }
-    var showCells:[TVShowCellViewModel] { get }
+    //var showCells:[TVShowCellViewModel] { get }
     
 }

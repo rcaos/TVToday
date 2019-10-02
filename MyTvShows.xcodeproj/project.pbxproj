@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		770373872345134100775698 /* AiringTodayCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770373852345134100775698 /* AiringTodayCollectionViewCell.swift */; };
+		770373882345134100775698 /* AiringTodayCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 770373862345134100775698 /* AiringTodayCollectionViewCell.xib */; };
+		7703738B234517B000775698 /* AiringTodayCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7703738A234517B000775698 /* AiringTodayCollectionViewModel.swift */; };
 		77054AAA233999440026B868 /* SeasonListTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77054AA9233999430026B868 /* SeasonListTableViewModel.swift */; };
 		770B5C35230E06B2002019E6 /* TVShowDetailResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770B5C34230E06B2002019E6 /* TVShowDetailResult.swift */; };
 		770D102F2339408A00CD84B2 /* SeasonsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770D102E2339408A00CD84B2 /* SeasonsListViewController.swift */; };
@@ -67,6 +70,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		770373852345134100775698 /* AiringTodayCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AiringTodayCollectionViewCell.swift; sourceTree = "<group>"; };
+		770373862345134100775698 /* AiringTodayCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AiringTodayCollectionViewCell.xib; sourceTree = "<group>"; };
+		7703738A234517B000775698 /* AiringTodayCollectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AiringTodayCollectionViewModel.swift; sourceTree = "<group>"; };
 		77054AA9233999430026B868 /* SeasonListTableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonListTableViewModel.swift; sourceTree = "<group>"; };
 		770B5C34230E06B2002019E6 /* TVShowDetailResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowDetailResult.swift; sourceTree = "<group>"; };
 		770D102E2339408A00CD84B2 /* SeasonsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonsListViewController.swift; sourceTree = "<group>"; };
@@ -139,6 +145,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		770373892345134700775698 /* Airing Today */ = {
+			isa = PBXGroup;
+			children = (
+				770373852345134100775698 /* AiringTodayCollectionViewCell.swift */,
+				7703738A234517B000775698 /* AiringTodayCollectionViewModel.swift */,
+				770373862345134100775698 /* AiringTodayCollectionViewCell.xib */,
+			);
+			path = "Airing Today";
+			sourceTree = "<group>";
+		};
 		770D102D2339406500CD84B2 /* Seasons */ = {
 			isa = PBXGroup;
 			children = (
@@ -279,6 +295,7 @@
 				77B3CCD2232D7CC100921D23 /* TVShowViewCell.swift */,
 				77B3CCD3232D7CC100921D23 /* TVShowViewCell.xib */,
 				77E119DF232DE02A00A01ACF /* TVShowCellViewModel.swift */,
+				770373892345134700775698 /* Airing Today */,
 			);
 			path = ShowList;
 			sourceTree = "<group>";
@@ -500,6 +517,7 @@
 				7736A08D231FF8BF00566F0B /* PopularShows.storyboard in Resources */,
 				77DB76EA231487BE00A1DE77 /* TVShowList.storyboard in Resources */,
 				77F4632E230C9F5C008FB9D6 /* Assets.xcassets in Resources */,
+				770373882345134100775698 /* AiringTodayCollectionViewCell.xib in Resources */,
 				77EEF800233AA6C40054A499 /* SeasonEpisodeCollectionViewCell.xib in Resources */,
 				77F4632C230C9F5A008FB9D6 /* Main.storyboard in Resources */,
 				7736A091231FFFD300566F0B /* SearchShows.storyboard in Resources */,
@@ -533,6 +551,7 @@
 				77193F42232FF168007FA822 /* ResultsSearchViewModel.swift in Sources */,
 				77E119E2232DE39900A01ACF /* AiringTodayViewModel.swift in Sources */,
 				77193F35232FD927007FA822 /* Bindable.swift in Sources */,
+				7703738B234517B000775698 /* AiringTodayCollectionViewModel.swift in Sources */,
 				77E119DA232DD3C200A01ACF /* GenreViewCell.swift in Sources */,
 				77193F3F232FEB4A007FA822 /* SearchViewModel.swift in Sources */,
 				77EEF7FF233AA6C40054A499 /* SeasonEpisodeCollectionViewCell.swift in Sources */,
@@ -547,6 +566,7 @@
 				77B3CCD4232D7CC100921D23 /* TVShowViewCell.swift in Sources */,
 				77193F44232FF8F5007FA822 /* TVShowDetailViewModel.swift in Sources */,
 				7722CE52230D7DFA003DC4C5 /* PopularsViewController.swift in Sources */,
+				770373872345134100775698 /* AiringTodayCollectionViewCell.swift in Sources */,
 				7722CE58230D90AF003DC4C5 /* Genre.swift in Sources */,
 				77EEF809233AA8330054A499 /* SeasonEpisodeCollectionViewModel.swift in Sources */,
 				770D5B2E233584F000438937 /* SeasonResult.swift in Sources */,

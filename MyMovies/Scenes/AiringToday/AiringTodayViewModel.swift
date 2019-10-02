@@ -11,9 +11,9 @@ import Foundation
 final class AiringTodayViewModel: ShowsViewModel{
     
     var shows:[TVShow]
-    var showCells:[TVShowCellViewModel] {
+    var showCells:[AiringTodayCollectionViewModel] {
         return shows.map({
-            return TVShowCellViewModel(show: $0)
+            return AiringTodayCollectionViewModel(show: $0)
         })
     }
     
@@ -36,13 +36,13 @@ final class AiringTodayViewModel: ShowsViewModel{
         })
     }
     
-    func getModelFor(_ index:Int) -> TVShowCellViewModel{
+    func getModelFor(_ index:Int) -> AiringTodayCollectionViewModel{
         return showCells[index]
     }
     
     //MARK: - Private
     private func processFetched(for shows: [TVShow]){
-        //print("Se recibieron : [\(shows.count) shows]. Actualizar TableView")
+        print("Se recibieron : [\(shows.count) shows]. Actualizar TableView")
         self.shows.append(contentsOf: shows)
         self.viewState.value = .populated(shows)
     }

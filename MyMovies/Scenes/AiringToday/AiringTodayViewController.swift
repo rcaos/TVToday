@@ -10,9 +10,11 @@ import UIKit
 
 class AiringTodayViewController: UIViewController{
     
-    @IBOutlet var tableView: UITableView!
+    @IBOutlet weak var collectionView: UICollectionView!
     
     lazy private var viewModel:AiringTodayViewModel = AiringTodayViewModel()
+    
+    var loadingView: UIView!
     
     //MARK: - Life Cycle
     override func viewDidLoad() {
@@ -30,16 +32,16 @@ class AiringTodayViewController: UIViewController{
     //MARK: - SetupView
     func setupUI(){
         navigationItem.title = "Airing Today"
-        setupTable()
+        setupCollection()
     }
     
     //MARK: - SetupTable
-    func setupTable(){
-        tableView.dataSource = self
-        tableView.delegate = self
+    func setupCollection(){
+        collectionView.dataSource = self
+        collectionView.delegate = self
         
-        let nibName = UINib(nibName: "TVShowViewCell", bundle: nil)
-        tableView.register(nibName, forCellReuseIdentifier: "TVShowViewCell")
+        let nibName = UINib(nibName: "AiringTodayCollectionViewCell", bundle: nil)
+        collectionView.register(nibName, forCellWithReuseIdentifier: "AiringTodayCollectionViewCell")
     }
     
     //MARK: - SetupViewModel
@@ -47,41 +49,45 @@ class AiringTodayViewController: UIViewController{
         //Binding
         viewModel.viewState.bindAndFire({ state in
             DispatchQueue.main.async {
-                self.configTable(with: state)
-                self.tableView.reloadData()
+                self.configView(with: state)
+                //self.collectionView.reloadData()
             }
         })
         
         viewModel.getShows()
     }
     
-    func configTable(with state: AiringTodayViewModel.ViewState){
+    func configView(with state: AiringTodayViewModel.ViewState){
+        
+        if let customView = loadingView{
+            customView.removeFromSuperview()
+        }
+        
         switch state {
         case .populated(_):
-            self.tableView.tableFooterView = UIView()
-            self.tableView.separatorStyle = .singleLine
+            self.collectionView.reloadData()
         default:
-            self.tableView.tableFooterView = buildLoadingView()
-            self.tableView.separatorStyle = .none
+            buildLoadingView()
+            self.view.addSubview( loadingView )
         }
     }
     
-    func buildLoadingView() -> UIView{
+    func buildLoadingView(){
         let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
         activityIndicator.color = .darkGray
-        activityIndicator.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
+        activityIndicator.frame = CGRect(x: 0, y: 0, width: collectionView.frame.width, height: 100)
         
-        let containerView = UIView(frame: self.view.frame)
-        containerView.backgroundColor = .white
+        loadingView = UIView(frame: self.view.frame)
+        loadingView.backgroundColor = .white
         
-        activityIndicator.center = containerView.center
-        containerView.addSubview(activityIndicator)
+        activityIndicator.center = loadingView.center
+        loadingView.addSubview(activityIndicator)
         
-        self.view.addSubview(containerView)
+        //self.view.addSubview(containerView)
         
         activityIndicator.startAnimating()
         
-        return containerView
+        //return containerView
     }
     
     //MARK: - Navigation
@@ -95,22 +101,31 @@ class AiringTodayViewController: UIViewController{
 }
 
 //MARK: - DataSource, Delegate
-extension AiringTodayViewController: UITableViewDataSource, UITableViewDelegate{
+extension AiringTodayViewController: UICollectionViewDataSource{
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModel.viewState.value.currentEpisodes.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
-        cell.viewModel = viewModel.getModelFor(indexPath.row)
-        return cell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let item = collectionView.dequeueReusableCell(withReuseIdentifier: "AiringTodayCollectionViewCell", for: indexPath) as! AiringTodayCollectionViewCell
+        item.viewModel = viewModel.getModelFor(indexPath.row)
+        return item
     }
+}
+
+extension AiringTodayViewController: UICollectionViewDelegateFlowLayout{
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let idSelected = viewModel.viewState.value.currentEpisodes[indexPath.row].id
         performSegue(withIdentifier: "ShowTVShowDetail", sender: idSelected)
         
-        tableView.deselectRow(at: indexPath, animated: true)
+        collectionView.deselectItem(at: indexPath, animated: true)
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = collectionView.frame.width
+        return CGSize(width: width, height: width)
+    }
+    
 }

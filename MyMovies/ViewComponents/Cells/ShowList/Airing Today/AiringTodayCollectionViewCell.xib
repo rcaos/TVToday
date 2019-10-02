@@ -89,6 +89,7 @@
             <connections>
                 <outlet property="averageLabel" destination="zXp-Yr-6gJ" id="x9X-ye-cod"/>
                 <outlet property="backImageView" destination="Feu-UB-Gxh" id="ozX-ge-yXX"/>
+                <outlet property="containerView" destination="b8p-21-odD" id="pvG-fd-fz0"/>
                 <outlet property="showNameLabel" destination="v0x-PM-che" id="3kY-O0-maL"/>
             </connections>
             <point key="canvasLocation" x="277.536231884058" y="202.23214285714286"/>

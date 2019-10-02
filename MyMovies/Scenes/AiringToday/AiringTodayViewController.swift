@@ -31,7 +31,7 @@ class AiringTodayViewController: UIViewController{
     
     //MARK: - SetupView
     func setupUI(){
-        navigationItem.title = "Airing Today"
+        navigationItem.title = "Today on TV"
         setupCollection()
     }
     
@@ -42,6 +42,8 @@ class AiringTodayViewController: UIViewController{
         
         let nibName = UINib(nibName: "AiringTodayCollectionViewCell", bundle: nil)
         collectionView.register(nibName, forCellWithReuseIdentifier: "AiringTodayCollectionViewCell")
+        
+        collectionView.backgroundColor = UIColor.groupTableViewBackground
     }
     
     //MARK: - SetupViewModel
@@ -50,7 +52,6 @@ class AiringTodayViewController: UIViewController{
         viewModel.viewState.bindAndFire({ state in
             DispatchQueue.main.async {
                 self.configView(with: state)
-                //self.collectionView.reloadData()
             }
         })
         
@@ -82,12 +83,7 @@ class AiringTodayViewController: UIViewController{
         
         activityIndicator.center = loadingView.center
         loadingView.addSubview(activityIndicator)
-        
-        //self.view.addSubview(containerView)
-        
         activityIndicator.startAnimating()
-        
-        //return containerView
     }
     
     //MARK: - Navigation
@@ -125,7 +121,7 @@ extension AiringTodayViewController: UICollectionViewDelegateFlowLayout{
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = collectionView.frame.width
-        return CGSize(width: width, height: width)
+        return CGSize(width: width, height: 275)
     }
     
 }

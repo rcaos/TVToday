@@ -11,11 +11,7 @@ import Foundation
 final class AiringTodayViewModel: ShowsViewModel{
     
     var shows:[TVShow]
-    var showCells:[AiringTodayCollectionViewModel] {
-        return shows.map({
-            return AiringTodayCollectionViewModel(show: $0)
-        })
-    }
+    var models:[AiringTodayCollectionViewModel]
     
     //Bindables
     var viewState:Bindable<ViewState> = Bindable(.loading)
@@ -23,6 +19,7 @@ final class AiringTodayViewModel: ShowsViewModel{
     //MARK: - Initializers
     init() {
         shows = []
+        models = []
     }
     
     //MARK: - Fetch Shows
@@ -37,16 +34,37 @@ final class AiringTodayViewModel: ShowsViewModel{
     }
     
     func getModelFor(_ index:Int) -> AiringTodayCollectionViewModel{
-        return showCells[index]
+        return models[index]
     }
     
     //MARK: - Private
     private func processFetched(for shows: [TVShow]){
         print("Se recibieron : [\(shows.count) shows]. Actualizar TableView")
         self.shows.append(contentsOf: shows)
+        self.buildModels()
+        
         self.viewState.value = .populated(shows)
+        self.downloadImages()
     }
-
+    
+    private func buildModels(){
+        for show in shows{
+            models.append( AiringTodayCollectionViewModel(show: show) )
+        }
+    }
+    
+    private func downloadImages(){
+        
+        for model in models{
+            if let pathImage = model.show.backDropPath{
+                TMDBClient.getImage(size: .mediumBackDrop , path: pathImage, completion: { data, error in
+                    if let data = data{
+                        model.imageData.value = data
+                    }
+                })
+            }
+        }
+    }
 }
 
 extension AiringTodayViewModel{

@@ -10,6 +10,8 @@ import UIKit
 
 class AiringTodayCollectionViewCell: UICollectionViewCell {
 
+    @IBOutlet weak var containerView: UIView!
+    
     @IBOutlet weak var backImageView: UIImageView!
     @IBOutlet weak var showNameLabel: UILabel!
     @IBOutlet weak var averageLabel: UILabel!
@@ -25,18 +27,31 @@ class AiringTodayCollectionViewCell: UICollectionViewCell {
     }
     
     func setupUI(){
-        showNameLabel.text = viewModel?.showName
-        averageLabel.text = viewModel?.average
+        guard let viewModel = viewModel else { return }
         
-        viewModel?.imageData.bindAndFire({ data in
+        showNameLabel.text = viewModel.showName
+        averageLabel.text = viewModel.average
+        
+        if let data = viewModel.imageData.value{
+            backImageView.image = UIImage(data: data)
+        }
+        
+        viewModel.imageData.bindAndFire({ [weak self] data in
             if let data = data{
-                self.backImageView.image = UIImage(data: data)
+                DispatchQueue.main.async {
+                    self?.backImageView.image = UIImage(data: data)
+                }
             }
         })
+        
+        containerView.layer.cornerRadius = 14
+        containerView.clipsToBounds = true
+        
+        backImageView.contentMode = .scaleToFill
     }
     
     override func prepareForReuse() {
-        backImageView.image = nil
+        viewModel?.imageData.listener = nil
     }
 
 }

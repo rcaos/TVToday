@@ -118,7 +118,7 @@
 		77EEF803233AA70A0054A499 /* SeasonEpisodeTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SeasonEpisodeTableViewCell.xib; sourceTree = "<group>"; };
 		77EEF806233AA73A0054A499 /* SeasonEpisodeTableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonEpisodeTableViewModel.swift; sourceTree = "<group>"; };
 		77EEF808233AA8330054A499 /* SeasonEpisodeCollectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonEpisodeCollectionViewModel.swift; sourceTree = "<group>"; };
-		77F46323230C9F5A008FB9D6 /* MyTvShows.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyTvShows.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		77F46323230C9F5A008FB9D6 /* TVToday.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TVToday.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		77F46326230C9F5A008FB9D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		77F4632B230C9F5A008FB9D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		77F4632D230C9F5C008FB9D6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -373,7 +373,7 @@
 		77F46324230C9F5A008FB9D6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				77F46323230C9F5A008FB9D6 /* MyTvShows.app */,
+				77F46323230C9F5A008FB9D6 /* TVToday.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -448,9 +448,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		77F46322230C9F5A008FB9D6 /* MyTvShows */ = {
+		77F46322230C9F5A008FB9D6 /* TVToday */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 77F46335230C9F5C008FB9D6 /* Build configuration list for PBXNativeTarget "MyTvShows" */;
+			buildConfigurationList = 77F46335230C9F5C008FB9D6 /* Build configuration list for PBXNativeTarget "TVToday" */;
 			buildPhases = (
 				77F4631F230C9F5A008FB9D6 /* Sources */,
 				77F46320230C9F5A008FB9D6 /* Frameworks */,
@@ -460,9 +460,9 @@
 			);
 			dependencies = (
 			);
-			name = MyTvShows;
+			name = TVToday;
 			productName = MyMovies;
-			productReference = 77F46323230C9F5A008FB9D6 /* MyTvShows.app */;
+			productReference = 77F46323230C9F5A008FB9D6 /* TVToday.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -480,7 +480,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 77F4631E230C9F5A008FB9D6 /* Build configuration list for PBXProject "MyTvShows" */;
+			buildConfigurationList = 77F4631E230C9F5A008FB9D6 /* Build configuration list for PBXProject "TVToday" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -493,7 +493,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				77F46322230C9F5A008FB9D6 /* MyTvShows */,
+				77F46322230C9F5A008FB9D6 /* TVToday */,
 			);
 		};
 /* End PBXProject section */
@@ -725,7 +725,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = home.rcaos.MyMovies;
+				PRODUCT_BUNDLE_IDENTIFIER = home.rcaos.tvtoday;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -743,7 +743,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = home.rcaos.MyMovies;
+				PRODUCT_BUNDLE_IDENTIFIER = home.rcaos.tvtoday;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -753,7 +753,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		77F4631E230C9F5A008FB9D6 /* Build configuration list for PBXProject "MyTvShows" */ = {
+		77F4631E230C9F5A008FB9D6 /* Build configuration list for PBXProject "TVToday" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				77F46333230C9F5C008FB9D6 /* Debug */,
@@ -762,7 +762,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		77F46335230C9F5C008FB9D6 /* Build configuration list for PBXNativeTarget "MyTvShows" */ = {
+		77F46335230C9F5C008FB9D6 /* Build configuration list for PBXNativeTarget "TVToday" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				77F46336230C9F5C008FB9D6 /* Debug */,

@@ -13,7 +13,7 @@
         <!--Airing Today View Controller-->
         <scene sceneID="a7q-NV-0M5">
             <objects>
-                <viewController id="FFk-sQ-QRf" customClass="AiringTodayViewController" customModule="MyTvShows" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="FFk-sQ-QRf" customClass="AiringTodayViewController" customModule="TVToday" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hwT-E5-Mx7">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

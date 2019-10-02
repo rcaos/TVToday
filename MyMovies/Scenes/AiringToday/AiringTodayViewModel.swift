@@ -11,18 +11,24 @@ import Foundation
 final class AiringTodayViewModel: ShowsViewModel{
     
     var shows:[TVShow]
-    var showCells:[TVShowCellViewModel]
-    var reloadData:Bindable<Bool>
+    var showCells:[TVShowCellViewModel] {
+        return shows.map({
+            return TVShowCellViewModel(show: $0)
+        })
+    }
+    
+    //Bindables
+    var viewState:Bindable<ViewState> = Bindable(.loading)
     
     //MARK: - Initializers
     init() {
         shows = []
-        showCells = []
-        self.reloadData = Bindable(false)
     }
     
     //MARK: - Fetch Shows
     func getShows(){
+        self.viewState.value =  .loading
+        
         TMDBClient.getAiringTodayShows(completion: { result, error in
             if let shows = result{
                 self.processFetched(for: shows)
@@ -30,17 +36,35 @@ final class AiringTodayViewModel: ShowsViewModel{
         })
     }
     
+    func getModelFor(_ index:Int) -> TVShowCellViewModel{
+        return showCells[index]
+    }
+    
     //MARK: - Private
     private func processFetched(for shows: [TVShow]){
-        print("Se recibieron : [\(shows.count) shows]. Actualizar TableView")
+        //print("Se recibieron : [\(shows.count) shows]. Actualizar TableView")
         self.shows.append(contentsOf: shows)
-        
-        for show in shows{
-            let modelforCell = TVShowCellViewModel(show: show)
-            self.showCells.append(modelforCell)
-        }
-        print("Ahora existen: [\(showCells.count) Models]")
-        self.reloadData.value = true
+        self.viewState.value = .populated(shows)
     }
 
+}
+
+extension AiringTodayViewModel{
+    
+    enum ViewState {
+        
+        case loading
+        case populated([TVShow])
+        case empty
+        case error(Error)
+        
+        var currentEpisodes : [TVShow] {
+            switch self{
+            case .populated(let episodes):
+                return episodes
+            default:
+                return []
+            }
+        }
+    }
 }

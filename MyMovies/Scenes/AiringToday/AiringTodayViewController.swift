@@ -42,28 +42,54 @@ class AiringTodayViewController: UIViewController{
         tableView.register(nibName, forCellReuseIdentifier: "TVShowViewCell")
     }
     
-    //MARK: - SetupUI
+    //MARK: - SetupViewModel
     func setupViewModel(){
-        
         //Binding
-        viewModel.reloadData.bindAndFire({[unowned self] isReload in
-            if isReload{
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                    print("Se actualizó Data en AiringTodayVC..")
-                }
+        viewModel.viewState.bindAndFire({ state in
+            DispatchQueue.main.async {
+                self.configTable(with: state)
+                self.tableView.reloadData()
             }
         })
+        
         viewModel.getShows()
+    }
+    
+    func configTable(with state: AiringTodayViewModel.ViewState){
+        switch state {
+        case .populated(_):
+            self.tableView.tableFooterView = UIView()
+            self.tableView.separatorStyle = .singleLine
+        default:
+            self.tableView.tableFooterView = buildLoadingView()
+            self.tableView.separatorStyle = .none
+        }
+    }
+    
+    func buildLoadingView() -> UIView{
+        let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
+        activityIndicator.color = .darkGray
+        activityIndicator.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
+        
+        let containerView = UIView(frame: self.view.frame)
+        containerView.backgroundColor = .white
+        
+        activityIndicator.center = containerView.center
+        containerView.addSubview(activityIndicator)
+        
+        self.view.addSubview(containerView)
+        
+        activityIndicator.startAnimating()
+        
+        return containerView
     }
     
     //MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowTVShowDetail"{
-            let indexPath = sender as! IndexPath
-            
+            let showID = sender as! Int
             let controller = segue.destination as! TVShowDetailViewController
-            controller.idShow = viewModel.shows[indexPath.row].id
+            controller.idShow = showID
         }
     }
 }
@@ -72,17 +98,19 @@ class AiringTodayViewController: UIViewController{
 extension AiringTodayViewController: UITableViewDataSource, UITableViewDelegate{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.shows.count
+        return viewModel.viewState.value.currentEpisodes.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
-        cell.viewModel = viewModel.showCells[indexPath.row]
+        cell.viewModel = viewModel.getModelFor(indexPath.row)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "ShowTVShowDetail", sender: indexPath)
+        let idSelected = viewModel.viewState.value.currentEpisodes[indexPath.row].id
+        performSegue(withIdentifier: "ShowTVShowDetail", sender: idSelected)
+        
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }

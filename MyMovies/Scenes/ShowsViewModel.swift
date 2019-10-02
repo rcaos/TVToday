@@ -14,5 +14,4 @@ protocol ShowsViewModel{
     var shows:[TVShow] { get }
     var showCells:[TVShowCellViewModel] { get }
     
-    var reloadData:Bindable<Bool> { get set }
 }

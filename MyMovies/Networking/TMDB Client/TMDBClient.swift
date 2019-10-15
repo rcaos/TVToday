@@ -46,7 +46,7 @@ class TMDBClient{
             switch self {
             case .getPopularTVShows:
                return EndPoints.base + "/tv/popular" + EndPoints.apiKeyParam + "&language=en-US&page=1"
-                
+
             case .getAiringTodayShows:
                return EndPoints.base + "/tv/airing_today" + EndPoints.apiKeyParam + "&language=en-US&page=1"
             

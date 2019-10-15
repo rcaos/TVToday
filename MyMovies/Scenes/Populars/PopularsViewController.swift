@@ -12,6 +12,9 @@ class PopularsViewController: UITableViewController {
 
     var viewModel = PopularViewModel()
     
+    var loadingView: UIView!
+    
+    //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -43,15 +46,41 @@ class PopularsViewController: UITableViewController {
     func setupViewModel(){
         
         //Binding
-        viewModel.reloadData.bindAndFire({[unowned self] isReload in
-            if isReload{
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                    print("Se actualizó Data en PopularShowsVC..")
-                }
+        viewModel.viewState.bindAndFire({ [unowned self] state in
+            DispatchQueue.main.async {
+                self.configView(with: state)
             }
         })
+        
         viewModel.getShows()
+    }
+    
+    func configView(with state: PopularViewModel.ViewState){
+        
+        if let customView = loadingView{
+            customView.removeFromSuperview()
+        }
+        
+        switch state {
+        case .populated(_):
+            self.tableView.reloadData()
+        default:
+            self.buildLoadingView()
+            self.view.addSubview( loadingView )
+        }
+    }
+    
+    func buildLoadingView(){
+        let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
+        activityIndicator.color = .darkGray
+        activityIndicator.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
+        
+        loadingView = UIView(frame: self.view.frame)
+        loadingView.backgroundColor = .white
+        
+        activityIndicator.center = loadingView.center
+        loadingView.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
     }
     
     //MARK: - Navigation

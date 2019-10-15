@@ -10,6 +10,9 @@ import Foundation
 
 final class TVShowDetailViewModel{
     
+    private let showsService = ApiClient<TVShowsProvider>()
+    private let imagesService = ApiClient<ImagesProvider>()
+    
     var id: Int!
     var backDropPath:String?
     var nameShow: String?
@@ -22,16 +25,15 @@ final class TVShowDetailViewModel{
     var score: String?
     var countVote: String?
     
+    var showDetail: TVShowDetailResult?
+    
+    //Bindables
+    var viewState:Bindable<ViewState> = Bindable(.loading)
     var dropData:Bindable<Data?> = Bindable(nil)
     var posterData:Bindable<Data?> = Bindable(nil)
-    var updateUI: (()-> Void)?
-    var isLoading:Bindable<Bool>?
-    
-    var showDetail: TVShowDetailResult?
     
     init(_ idShow: Int){
         id = idShow
-        isLoading = Bindable(true)
     }
     
     private func setupTVShow(_ show: TVShowDetailResult){
@@ -52,40 +54,57 @@ final class TVShowDetailViewModel{
     //MARK: - Networking
     
     func getShowDetails(id show: Int){
-        self.isLoading?.value = true
+        self.viewState.value = .loading
         
-        TMDBClient.getTVShowDetail(id: show, completion: { result, error in
-            if let showDetail = result{
-                self.isLoading?.value = false
-                
+        showsService.load(service: .getTVShowDetail(show), decodeType: TVShowDetailResult.self, completion: { result in
+            switch result{
+            case .success(let showDetail):
                 self.setupTVShow(showDetail)
-                self.updateUI?()
+                self.viewState.value = .populated
                 self.downloadImages(for: showDetail)
-                
-                self.showDetail = showDetail
+            case .failure(let error):
+                print("Error: [\(error)]")
             }
         })
     }
     
     //MARK: - Download Images
     private func downloadImages(for show: TVShowDetailResult){
+        
         if let backDropPath = show.backDropPath{
-            TMDBClient.getImage(size: .mediumBackDrop, path: backDropPath, completion: {
-                data, error in
-                if let data = data{
+            imagesService.load(service: .getBackDrop(.mediumBackDrop, backDropPath), completion: { result in
+                switch result{
+                case .success(let data):
                     self.dropData.value = data
+                case .failure(let error):
+                    print("error to download Image: [\(error)]")
                 }
+                
             })
         }
         
         if let posterPath = show.posterPath{
-            TMDBClient.getImage(size: .mediumPoster, path: posterPath, completion: {
-                data, error in
-                if let data = data{
+            imagesService.load(service: .getPoster( .mediumPoster, posterPath), completion: { result in
+                switch result{
+                case .success(let data):
                     self.posterData.value = data
+                case .failure(let error):
+                    print("error to download Image: [\(error)]")
                 }
+                
             })
         }
     }
     
+}
+
+extension TVShowDetailViewModel{
+    
+    enum ViewState {
+        
+        case loading
+        case populated
+        case empty
+        case error(Error)
+    }
 }

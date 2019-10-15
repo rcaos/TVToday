@@ -9,7 +9,7 @@
 import UIKit
 
 class TVShowDetailViewController: UITableViewController {
-
+    
     var viewModel: TVShowDetailViewModel?{
         didSet{
             setupViewModel()
@@ -33,7 +33,7 @@ class TVShowDetailViewController: UITableViewController {
     @IBOutlet weak private var scoreLabel: UILabel!
     @IBOutlet weak private var countVoteLabel: UILabel!
     
-    private var activityIndicator: UIActivityIndicatorView!
+    private var loadingView: UIView!
     
     //MARK: - Life Cycle
     override func viewDidLoad() {
@@ -57,18 +57,13 @@ class TVShowDetailViewController: UITableViewController {
     
     private func setupBindables(){
         
-        viewModel?.isLoading?.bind({[weak self] isLoading in
+        viewModel?.viewState.bindAndFire({[weak self] state in
             DispatchQueue.main.async {
-                isLoading ? self?.showLoader() : self?.hideLoader()
+                self?.configView(with: state)
             }
         })
         
-        viewModel?.updateUI = { [weak self] in
-            DispatchQueue.main.async {
-                self?.setupUI()
-            }
-        }
-        
+        //Poster and BackDrop
         viewModel?.dropData.bind({ [weak self] data in
             DispatchQueue.main.async {
                 if let data = data{
@@ -86,36 +81,33 @@ class TVShowDetailViewController: UITableViewController {
         })
     }
     
-    func showLoader(){
-        DispatchQueue.main.async {
-            let containerView = UIView(frame: self.view.frame)
-            containerView.backgroundColor = .white
-            
-            self.activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
-            self.activityIndicator.color = .darkGray
-            self.activityIndicator.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
-            self.activityIndicator.center = containerView.center
-            
-            containerView.addSubview(self.activityIndicator)
-            self.view.addSubview(containerView)
-            
-            self.activityIndicator.startAnimating()
+    //TODO: - handle other states -
+    func configView(with state: TVShowDetailViewModel.ViewState){
+        
+        if let customView = loadingView{
+            customView.removeFromSuperview()
+        }
+        
+        switch state {
+        case .populated:
+            self.setupUI()
+        default:
+            self.buildLoadingView()
+            self.view.addSubview( loadingView )
         }
     }
     
-    func hideLoader(){
-        DispatchQueue.main.async {
-            guard let activityIndicator = self.activityIndicator,
-                let containerView = activityIndicator.superview else { return }
-            
-            activityIndicator.stopAnimating()
-            
-            UIView.animate(withDuration: 0.5, animations: {
-                containerView.alpha = 0
-            }, completion: { _ in
-                containerView.removeFromSuperview()
-            })
-        }
+    func buildLoadingView(){
+        let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
+        activityIndicator.color = .darkGray
+        activityIndicator.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
+        
+        loadingView = UIView(frame: self.view.frame)
+        loadingView.backgroundColor = .white
+        
+        activityIndicator.center = loadingView.center
+        loadingView.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
     }
     
     private func setupUI(){
@@ -137,7 +129,7 @@ class TVShowDetailViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "SeasonsListSegue"{
             if let vc = segue.destination as? SeasonsListViewController{
-             vc.showDetail = viewModel?.showDetail
+                vc.showDetail = viewModel?.showDetail
             }
         }
     }

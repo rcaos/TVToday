@@ -16,6 +16,8 @@ class SearchViewController: UIViewController{
     
     var lastSearch = ""
     
+    var loadingView: UIView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -66,18 +68,43 @@ class SearchViewController: UIViewController{
     
     //MARK: - SetupViewModel
     func setupViewModel(){
-        
         //Binding
-        viewModel.reloadData.bindAndFire({[unowned self] isReload in
-            if isReload{
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                    print("Se actualizó Data en Genres..")
-                }
+        viewModel.viewState.bindAndFire({[unowned self] state in
+            DispatchQueue.main.async {
+                self.configView(with: state)
             }
         })
         
         viewModel.getGenres()
+    }
+    
+    //TODO: -handle other states-
+    func configView(with state: SearchViewModel.ViewState){
+        
+        if let customView = loadingView{
+            customView.removeFromSuperview()
+        }
+        
+        switch state {
+        case .populated(_):
+            self.tableView.reloadData()
+        default:
+            self.buildLoadingView()
+            self.view.addSubview( loadingView )
+        }
+    }
+    
+    func buildLoadingView(){
+        let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
+        activityIndicator.color = .darkGray
+        activityIndicator.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
+        
+        loadingView = UIView(frame: self.view.frame)
+        loadingView.backgroundColor = .white
+        
+        activityIndicator.center = loadingView.center
+        loadingView.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
     }
     
     func clearResults(){
@@ -132,7 +159,7 @@ extension SearchViewController: UISearchBarDelegate{
 //MARK: - UITableViewDataSource
 extension SearchViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.genres.count
+        return viewModel.viewState.value.currentEpisodes.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

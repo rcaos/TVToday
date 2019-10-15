@@ -27,11 +27,11 @@ class ApiClient<T: EndPoint> {
                     completion(.success(resp))
                 }
                 catch {
-                    print("error here?")
+                    print("error to Decode: [\(error)]")
                     completion(.failure( .requestFailed ))
                 }
             case .failure(let error):
-                print("error here? 2")
+                print("error server: [\(error)]")
                 completion(.failure(error))
             }
         }

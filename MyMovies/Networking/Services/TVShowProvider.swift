@@ -35,7 +35,7 @@ extension TVShowsProvider: EndPoint {
 //        case .searchTVShow(let _)
 //            return "/3/search/tv"
         case .listTVShowsBy(_):
-            return "/discover/tv"
+            return "/3/discover/tv"
         }
     }
     

@@ -10,28 +10,52 @@ import Foundation
 
 final class SearchViewModel{
     
+    private let genreService = ApiClient<GenreProvider>()
+    
     var genres:[Genre]
-    var reloadData:Bindable<Bool>
+    
+    //Bindables
+    var viewState:Bindable<ViewState> = Bindable(.loading)
     
     init() {
         genres = []
-        reloadData = Bindable(false)
     }
     
     func getGenres(){
         
-        TMDBClient.getGenresTVShows(completion: { result, error in
-            if let shows = result{
-                self.processFetched(for: shows)
+        genreService.load(service: .getAll, decodeType: GenreListResult.self, completion: { result in
+            switch result{
+            case .success(let response):
+                self.processFetched(for: response.genres)
+            case .failure(let error):
+                print("error: [\(error)]")
             }
         })
     }
     
     //MARK: - Private
-    private func processFetched(for shows: [Genre]){
-        print("\nSe recibieron : [\(shows.count) Genres]. Actualizar TableView")
-        self.genres.append(contentsOf: shows)
-        self.reloadData.value = true
+    private func processFetched(for genres: [Genre]){
+        self.genres.append(contentsOf: genres)
+        self.viewState.value = .populated(genres)
     }
     
+}
+
+extension SearchViewModel{
+    
+    enum ViewState {
+        case loading
+        case populated([Genre])
+        case empty
+        case error(Error)
+        
+        var currentEpisodes : [Genre] {
+            switch self{
+            case .populated(let genres):
+                return genres
+            default:
+                return []
+            }
+        }
+    }
 }

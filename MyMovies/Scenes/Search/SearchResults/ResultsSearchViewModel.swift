@@ -9,29 +9,37 @@
 import Foundation
 
 final class ResultsSearchViewModel: ShowsViewModel{
+    private let showsService = ApiClient<TVShowsProvider>()
+    
     var shows: [TVShow]
-    var showCells: [TVShowCellViewModel]
-    var reloadData: Bindable<Bool>
+    var models: [TVShowCellViewModel]
+    
+    //Bindable
+    var viewState:Bindable<ViewState> = Bindable(.loading)
     
     init() {
         shows = []
-        showCells = []
-        reloadData = Bindable(false)
+        models = []
     }
     
     //MARK: - Fetch Shows
     func searchShows(for name: String){
-        TMDBClient.search(for: name, completion: { result, error in
-            if let shows = result{
-                self.processFetched(for: shows)
+        self.viewState.value = .loading
+        
+        showsService.load(service: .searchTVShow(name) , decodeType: TVShowResult.self, completion: { result in
+            switch result{
+            case .success(let response):
+                self.processFetched(for: response.results )
+            case .failure(let error):
+                print("error: [\(error)")
             }
         })
     }
     
     func clearShows(){
         shows.removeAll()
-        showCells.removeAll()
-        reloadData.value = true
+        models.removeAll()
+        viewState.value = .populated(shows)
     }
     
     //MARK: - Private
@@ -39,11 +47,30 @@ final class ResultsSearchViewModel: ShowsViewModel{
         print("\nSe recibieron : [\(shows.count) resultados]")
         self.shows.append(contentsOf: shows)
         
-        for show in shows{
-            let modelforCell = TVShowCellViewModel(show: show)
-            self.showCells.append(modelforCell)
+        self.models = shows.map({
+            return TVShowCellViewModel(show: $0)
+        })
+        
+        self.viewState.value = .populated( shows )
+    }
+}
+
+extension ResultsSearchViewModel{
+    
+    enum ViewState {
+        
+        case loading
+        case populated([TVShow])
+        case empty
+        case error(Error)
+        
+        var currentEpisodes : [TVShow] {
+            switch self{
+            case .populated(let episodes):
+                return episodes
+            default:
+                return []
+            }
         }
-        print("Ahora existen: [\(showCells.count) Models]\n")
-        self.reloadData.value = true
     }
 }

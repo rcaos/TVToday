@@ -18,6 +18,8 @@ class ResultsSearchViewController: UIViewController {
     var viewModel = ResultsSearchViewModel()
     var delegate:ResultsSearchViewControllerDelegate!
     
+    var loadingView: UIView!
+    
     //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,26 +40,51 @@ class ResultsSearchViewController: UIViewController {
     func setupViewModel(){
         
         //Binding
-        viewModel.reloadData.bindAndFire({[unowned self] isReload in
-            if isReload{
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                    print("Se actualizó Results ViewController..")
-                }
+        viewModel.viewState.bind({[unowned self] state in
+            DispatchQueue.main.async {
+                self.configView(with: state)
             }
         })
+    }
+    
+    func configView(with state: ResultsSearchViewModel.ViewState){
+        
+        if let customView = loadingView{
+            customView.removeFromSuperview()
+        }
+        
+        switch state {
+        case .populated(_):
+            self.tableView.reloadData()
+        default:
+            self.buildLoadingView()
+            self.view.addSubview( loadingView )
+        }
+    }
+    
+    func buildLoadingView(){
+        let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
+        activityIndicator.color = .darkGray
+        activityIndicator.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
+        
+        loadingView = UIView(frame: self.view.frame)
+        loadingView.backgroundColor = .white
+        
+        activityIndicator.center = loadingView.center
+        loadingView.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
     }
 }
 
 //MARK: - UITableViewDataSource
 extension ResultsSearchViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.shows.count
+        return viewModel.viewState.value.currentEpisodes.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
-        cell.viewModel = viewModel.showCells[indexPath.row]
+        cell.viewModel = viewModel.models[indexPath.row]
         return cell
     }
 }

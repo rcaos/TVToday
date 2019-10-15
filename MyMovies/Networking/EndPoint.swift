@@ -6,6 +6,9 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
+//TODO: - implement "ParameterEncoding" -
+//FIXME: - implement POST http method
+
 import Foundation
 
 protocol EndPoint {
@@ -28,15 +31,17 @@ extension EndPoint {
     
     private var url: URL? {
         var urlComponents = URLComponents(string: baseURL)
-        urlComponents?.path += path
+        urlComponents?.path = path
         
-        if method == .get {
-            // add query items to url
-            guard let parameters = parameters as? [String: String] else {
-                fatalError("parameters for GET http method must conform to [String: String]")
-            }
-            urlComponents?.queryItems = parameters.map { URLQueryItem(name: $0.key, value: $0.value) }
+        var queryItems:[URLQueryItem] = []
+        
+        if let params = parameters, method == .get {
+            queryItems.append(contentsOf: params.map({
+                return URLQueryItem(name: "\($0)", value: "\($1)")
+            }))
         }
+        
+        urlComponents?.queryItems = queryItems
         return urlComponents?.url
     }
 }

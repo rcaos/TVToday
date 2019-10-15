@@ -28,8 +28,6 @@ extension ImagesProvider: EndPoint {
     }
     
     var parameters: [String: Any]? {
-        //var params: [String: Any] = [:]
-        //return params
         return [:]
     }
     

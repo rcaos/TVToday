@@ -40,7 +40,7 @@ class ApiClient<T: EndPoint> {
 
 extension ApiClient {
     private func call(_ request: URLRequest, deliverQueue: DispatchQueue = DispatchQueue.main, completion: @escaping (Result<Data, APIError>) -> Void) {
-        print( "url request: [\(request)]\n" )
+        print( "url request: [\(request)]" )
         let task = urlSession.dataTask(with: request) { (data, response, _) in
             
             guard let httpResponse = response as? HTTPURLResponse else {

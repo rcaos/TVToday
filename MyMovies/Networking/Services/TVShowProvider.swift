@@ -13,7 +13,7 @@ enum TVShowsProvider {
     case getAiringTodayShows
     case getTVShowDetail(Int)
     case getEpisodesFor(Int,Int)
-    //case searchTVShow(String)
+    case searchTVShow(String)
     case listTVShowsBy(Int)
 }
 
@@ -32,8 +32,8 @@ extension TVShowsProvider: EndPoint {
             return "/3/tv/\(identifier)"
         case .getEpisodesFor(let show, let season):
             return "/3/tv/\(show)/season/\(season)"
-//        case .searchTVShow(let _)
-//            return "/3/search/tv"
+        case .searchTVShow(_):
+            return "/3/search/tv"
         case .listTVShowsBy(_):
             return "/3/discover/tv"
         }
@@ -53,9 +53,10 @@ extension TVShowsProvider: EndPoint {
             params["language"] = "en-US"
         case .getEpisodesFor(_, _):
             params["language"] = "en-US"
-//        case .searchTVShow(let query):
-//            params["language"] = "en-US"
-//            params["query"] = "en-US"
+        case .searchTVShow(let query):
+            params["language"] = "en-US"
+            params["query"] = query
+            params["page"] = "1"
         case .listTVShowsBy(let genre):
             params["language"] = "en-US"
             params["with_genre"] = "\(String(genre))"

@@ -67,7 +67,6 @@
 		77F46331230C9F5C008FB9D6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77F4632F230C9F5C008FB9D6 /* LaunchScreen.storyboard */; };
 		77F4633D230CA864008FB9D6 /* TVShow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F4633C230CA864008FB9D6 /* TVShow.swift */; };
 		77F46345230CB059008FB9D6 /* TVShowResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F46344230CB059008FB9D6 /* TVShowResult.swift */; };
-		77F46347230CB157008FB9D6 /* TMDBClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F46346230CB157008FB9D6 /* TMDBClient.swift */; };
 		77FFB0912339544D00D17CF0 /* DefaultSeasonTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FFB0902339544D00D17CF0 /* DefaultSeasonTableViewController.swift */; };
 		77FFB0932339556B00D17CF0 /* DefaultSeasonTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FFB0922339556B00D17CF0 /* DefaultSeasonTableViewModel.swift */; };
 		77FFDE2D233BA54600C4096F /* SeasonHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77FFDE2C233BA54600C4096F /* SeasonHeaderView.xib */; };
@@ -138,7 +137,6 @@
 		77F46332230C9F5C008FB9D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		77F4633C230CA864008FB9D6 /* TVShow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShow.swift; sourceTree = "<group>"; };
 		77F46344230CB059008FB9D6 /* TVShowResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowResult.swift; sourceTree = "<group>"; };
-		77F46346230CB157008FB9D6 /* TMDBClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TMDBClient.swift; sourceTree = "<group>"; };
 		77FFB0902339544D00D17CF0 /* DefaultSeasonTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultSeasonTableViewController.swift; sourceTree = "<group>"; };
 		77FFB0922339556B00D17CF0 /* DefaultSeasonTableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultSeasonTableViewModel.swift; sourceTree = "<group>"; };
 		77FFDE2C233BA54600C4096F /* SeasonHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SeasonHeaderView.xib; sourceTree = "<group>"; };
@@ -270,7 +268,6 @@
 			isa = PBXGroup;
 			children = (
 				77F46343230CAE11008FB9D6 /* Feed Results */,
-				77F46348230CB169008FB9D6 /* TMDB Client */,
 				7787CFCE23553E79007DA54E /* ApiClient.swift */,
 				7787CFD023553EC1007DA54E /* EndPoint.swift */,
 				7787CFD223553ED0007DA54E /* ApiError.swift */,
@@ -441,14 +438,6 @@
 			path = "Feed Results";
 			sourceTree = "<group>";
 		};
-		77F46348230CB169008FB9D6 /* TMDB Client */ = {
-			isa = PBXGroup;
-			children = (
-				77F46346230CB157008FB9D6 /* TMDBClient.swift */,
-			);
-			path = "TMDB Client";
-			sourceTree = "<group>";
-		};
 		77FFB0942339557200D17CF0 /* DefaultSeason */ = {
 			isa = PBXGroup;
 			children = (
@@ -565,7 +554,6 @@
 				77193F3B232FE2D9007FA822 /* PopularsViewModel.swift in Sources */,
 				77FFDE30233BA6C500C4096F /* SeasonHeaderView.swift in Sources */,
 				77EEF807233AA73A0054A499 /* SeasonEpisodeTableViewModel.swift in Sources */,
-				77F46347230CB157008FB9D6 /* TMDBClient.swift in Sources */,
 				77F46327230C9F5A008FB9D6 /* AppDelegate.swift in Sources */,
 				77E26213230D7C490066B1CB /* AiringTodayViewController.swift in Sources */,
 				77F46345230CB059008FB9D6 /* TVShowResult.swift in Sources */,

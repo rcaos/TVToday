@@ -10,6 +10,8 @@ import Foundation
 
 final class AiringTodayCollectionViewModel{
     
+    private let showsService = ApiClient<ImagesProvider>()
+    
     var show: TVShow
     var showName: String!
     var average: String!
@@ -35,5 +37,18 @@ final class AiringTodayCollectionViewModel{
         }else{
             average = "0.0"
         }
+    }
+    
+    func downloadImage(){
+        guard let backDropPath = show.backDropPath else { return }
+        
+        showsService.load(service: .getBackDrop(.mediumBackDrop, backDropPath) , completion: { result in
+            switch result{
+            case .success(let response):
+                self.imageData.value = response
+            case .failure(let error):
+                print("error: [\(error)]")
+            }
+        })
     }
 }

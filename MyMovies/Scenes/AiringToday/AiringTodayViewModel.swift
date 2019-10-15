@@ -9,6 +9,7 @@
 import Foundation
 
 final class AiringTodayViewModel: ShowsViewModel{
+    private let showsService = ApiClient<TVShowsProvider>()
     
     var shows:[TVShow]
     var models:[AiringTodayCollectionViewModel]
@@ -26,9 +27,12 @@ final class AiringTodayViewModel: ShowsViewModel{
     func getShows(){
         self.viewState.value =  .loading
         
-        TMDBClient.getAiringTodayShows(completion: { result, error in
-            if let shows = result{
-                self.processFetched(for: shows)
+        showsService.load(service: .getAiringTodayShows, decodeType: TVShowResult.self, completion: { result in
+            switch result{
+            case .success(let response):
+               self.processFetched(for: response.results)
+            case .failure(let error):
+                print(error)
             }
         })
     }
@@ -39,30 +43,16 @@ final class AiringTodayViewModel: ShowsViewModel{
     
     //MARK: - Private
     private func processFetched(for shows: [TVShow]){
-        print("Se recibieron : [\(shows.count) shows]. Actualizar TableView")
+        //print("Se recibieron : [\(shows.count) shows]. Actualizar TableView")
         self.shows.append(contentsOf: shows)
         self.buildModels()
         
         self.viewState.value = .populated(shows)
-        self.downloadImages()
     }
     
     private func buildModels(){
         for show in shows{
             models.append( AiringTodayCollectionViewModel(show: show) )
-        }
-    }
-    
-    private func downloadImages(){
-        
-        for model in models{
-            if let pathImage = model.show.backDropPath{
-                TMDBClient.getImage(size: .mediumBackDrop , path: pathImage, completion: { data, error in
-                    if let data = data{
-                        model.imageData.value = data
-                    }
-                })
-            }
         }
     }
 }

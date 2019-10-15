@@ -34,7 +34,6 @@ class DefaultSeasonTableViewController: UITableViewController {
         super.viewDidLoad()
         setupTable()
         setupTableHeaderView()
-        print("viewDidLoad DefaultSeasonTableViewController")
     }
     
     deinit {
@@ -138,10 +137,8 @@ class DefaultSeasonTableViewController: UITableViewController {
     
     
     func reloadSection(at section: Int){
-        print("\nSe actualizará Section para: \(section)")
+        //print("Se actualizará Section para: \(section)")
         let index = IndexSet(integer: section)
-//        print("Existen celdas?: \(tableView.numberOfRows(inSection: section))")
-//        print("Cells for model?: \(viewModel?.viewState.value.currentEpisodes.count)")
         tableView.beginUpdates()
         tableView.reloadSections(index, with: .automatic)
         tableView.endUpdates()
@@ -175,7 +172,6 @@ extension DefaultSeasonTableViewController{
     }
     
     private func makeCellForSeasonNumber(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell{
-        //print("Se pide Model para Season Number : \(indexPath)")
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifierForSeasons, for: indexPath) as! SeasonEpisodeTableViewCell
         cell.viewModel = viewModel?.buildModelForSeasons()
         cell.delegate = self
@@ -190,9 +186,8 @@ extension DefaultSeasonTableViewController{
         var msg = ""
         if let model = viewModel?.getModel(for: indexPath.row){
             cell.viewModel = model
-            msg = "\(model.data?.value?.isEmpty)"
         }
-        print("Se pide Model para Episode : \(indexPath), \(msg)")
+        //print("Se pide Model para Episode : \(indexPath), \(msg)")
         return cell
     }
     

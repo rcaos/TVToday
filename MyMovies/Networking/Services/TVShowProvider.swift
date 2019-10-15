@@ -31,7 +31,7 @@ extension TVShowsProvider: EndPoint {
         case .getTVShowDetail(let identifier):
             return "/3/tv/\(identifier)"
         case .getEpisodesFor(let show, let season):
-            return "/3/\(show)/season/\(season)"
+            return "/3/tv/\(show)/season/\(season)"
 //        case .searchTVShow(let _)
 //            return "/3/search/tv"
         case .listTVShowsBy(_):

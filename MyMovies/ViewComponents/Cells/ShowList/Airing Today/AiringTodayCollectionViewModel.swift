@@ -10,7 +10,7 @@ import Foundation
 
 final class AiringTodayCollectionViewModel{
     
-    private let showsService = ApiClient<ImagesProvider>()
+    private let imageService = ApiClient<ImagesProvider>()
     
     var show: TVShow
     var showName: String!
@@ -42,7 +42,7 @@ final class AiringTodayCollectionViewModel{
     func downloadImage(){
         guard let backDropPath = show.backDropPath else { return }
         
-        showsService.load(service: .getBackDrop(.mediumBackDrop, backDropPath) , completion: { result in
+        imageService.load(service: .getBackDrop(.mediumBackDrop, backDropPath) , completion: { result in
             switch result{
             case .success(let response):
                 self.imageData.value = response

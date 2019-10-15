@@ -9,6 +9,7 @@
 import Foundation
 
 final class DefaultSeasonTableViewModel {
+    private let showsService = ApiClient<TVShowsProvider>()
     
     private var idShow: Int!
     private var showDetailResult: TVShowDetailResult?
@@ -80,7 +81,7 @@ final class DefaultSeasonTableViewModel {
 
         if let model = viewSeasonModel,
             let selectedFunction = model.selectedCell{
-            print("\nSeleccionaré season desde Model: \(firstSeason)")
+            //print("\nSeleccionaré season desde Model: \(firstSeason)")
             selectedFunction(firstSeason)
         }
     }
@@ -124,19 +125,23 @@ final class DefaultSeasonTableViewModel {
     private func getEpisodesFor(season seasonNumber: Int){
         print("Se consulta Episodes para Season: \(seasonNumber)")
         self.viewState.value = .loading
-        TMDBClient.getEpisodesFor(show: idShow , season: seasonNumber, completion: { result, error in
-            if let season = result, let episodes = season.episodes{
-                self.processFetched(for: seasonNumber, episodes)
-            }else{
-                if let error = error{
-                    self.viewState.value = .error(error)
-                }
+        
+        showsService.load(service: .getEpisodesFor(idShow, seasonNumber) , decodeType: SeasonResult.self, completion: { result in
+            switch result{
+            case .success(let response):
+                self.processFetched(for: seasonNumber, response.episodes)
+            case .failure(let error):
+                print("error: [\(error)]")
+                self.viewState.value = .error(error)
             }
         })
     }
     
     private func processFetched(for season: Int, _ fetchedEpisodes: [Episode]){
         print("Se recibieron: \(fetchedEpisodes.count) episodios para Season: \(season)")
+        if fetchedEpisodes.isEmpty{
+            self.viewState.value = .empty
+        }
         
         let ordered = fetchedEpisodes.sorted(by: {
             $0.episodeNumber < $1.episodeNumber
@@ -145,49 +150,17 @@ final class DefaultSeasonTableViewModel {
         self.episodes[season] = ordered
         self.seasonSelected = season
         self.createModels(for: season, ordered)
-        
-        if ordered.count == 0{
-            self.viewState.value = .empty
-        }else{
-            self.viewState.value = .populated(ordered)
-        }
-        
-        
-        self.downloadImages(for: season)
+        self.viewState.value = .populated(ordered)
     }
     
     private func createModels(for season: Int, _ episodes: [Episode]){
-        var models:[SeasonListTableViewModel] = []
-        
-        for episode in episodes{
-            models.append( SeasonListTableViewModel(episode: episode) )
-        }
+        let models = episodes.map({
+            return SeasonListTableViewModel(episode: $0)
+        })
         
         if models.count > 0{
             self.cellModels[season] = models
         }
-    }
-    
-    //MARK: - Download Images
-    private func downloadImages(for season: Int){
-        
-        if let seasonModel = cellModels[season] {
-            for (index, model) in seasonModel.enumerated(){
-                if let pathImage = model.episode.episodePath{
-                    downloadImage(for: index, path: pathImage, model )
-                }
-            }
-        }
-    }
-    
-    private func downloadImage(for index: Int, path: String, _ model:  SeasonListTableViewModel){
-        //print("Se decargará imagen a las :\(Date()), [\(path)], index: [\(index)]")
-        TMDBClient.getImage(size: .mediumPoster, path: path, completion: { data, error in
-            if let data = data {
-                //print("Se descargo imagen a las: [\( Date() )], index: [\(index)]")
-                model.data?.value = data
-            }
-        })
     }
 }
 

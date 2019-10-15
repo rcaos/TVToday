@@ -37,13 +37,9 @@ class SeasonEpisodeTableViewCell: UITableViewCell {
         
         let nibName = UINib(nibName: "SeasonEpisodeCollectionViewCell", bundle: nil)
         collectionView.register(nibName, forCellWithReuseIdentifier: "SeasonEpisodeCollectionViewCell")
-        
-        print("\n1.: awakeFromNib() Cell: Config collectionView")
     }
     
     func setupBindables(){
-        print("1.: Se configuran Bindables")
-        
         viewModel?.selectedCell = { index in
             DispatchQueue.main.async {
                 self.selectedSeason(at: index)
@@ -52,18 +48,8 @@ class SeasonEpisodeTableViewCell: UITableViewCell {
     }
     
     func selectedSeason(at index: Int){
-        print("1.: Se seleccionará Season en CollectionView: ... \(index)")
-        //print( collectionView.indexPathsForVisibleItems )
         let indexPath = IndexPath(row: index - 1, section: 0)
         collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .top)
-        
-        printCells()
-    }
-    
-    private func printCells(){
-        collectionView.indexPathsForVisibleItems.sorted().map({
-            print("\($0), \(collectionView.cellForItem(at: $0)?.isSelected)")
-        })
     }
 }
 
@@ -71,7 +57,6 @@ extension SeasonEpisodeTableViewCell: UICollectionViewDataSource{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let viewModel = viewModel else { return 0 }
-        print("1.: Numero de Seasons: \(viewModel.getNumberOfSeasons())")
         return viewModel.getNumberOfSeasons()
     }
     
@@ -85,8 +70,6 @@ extension SeasonEpisodeTableViewCell: UICollectionViewDataSource{
 extension SeasonEpisodeTableViewCell: UICollectionViewDelegate{
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("Se selecciono la cell: \(indexPath)")
-        self.printCells()
         delegate?.didSelectedSeason(at: indexPath.row)
     }
 }

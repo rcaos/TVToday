@@ -9,17 +9,22 @@
 import Foundation
 
 final class SeasonListTableViewModel {
+    private let imageService = ApiClient<ImagesProvider>()
     
     var episodeNumber: String?
     var episodeName: String?
     var releaseDate: String?
     var average: String?
-    var data: Bindable<Data?>?
     
     var episode: Episode!
     
+    //Bindables
+    var imageData: Bindable<Data?>
+    
+    
     init(episode: Episode) {
         self.episode = episode
+        self.imageData = Bindable(nil)
         setupData()
     }
     
@@ -31,6 +36,20 @@ final class SeasonListTableViewModel {
         episodeName = episode.name
         releaseDate = episode.airDate
         average = episode.average
-        data = Bindable(nil)
+    }
+    
+    func downloadImage(){
+        guard let episodePath = episode.episodePath else { return }
+        
+        imageService.load(service: .getPoster(.mediumPoster , episodePath) , completion: { result in
+            switch result{
+            case .success(let data):
+                self.imageData.value = data
+            case .failure(let error):
+                print("error to Download Image: [\(error)]")
+            }
+        })
     }
 }
+
+

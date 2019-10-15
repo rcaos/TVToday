@@ -44,10 +44,6 @@ class SeasonEpisodeCollectionViewCell: UICollectionViewCell {
     
     func setupUI(){
         seasonNumber.text = viewModel?.seasonNumber
-        
-//        if let model = viewModel{
-//            isSelected = model.isSelected
-//        }
     }
 
 }

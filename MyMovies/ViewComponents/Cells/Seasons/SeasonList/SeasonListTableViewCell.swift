@@ -40,8 +40,17 @@ class SeasonListTableViewCell: UITableViewCell {
     
     func setupBindables(){
         guard let viewModel = viewModel else { return }
-
-        viewModel.data?.bindAndFire({[weak self] data in
+        
+        if viewModel.imageData.value == nil{
+            print("Se descargará imagen solo para Episode : \(viewModel.episodeNumber)")
+            viewModel.downloadImage()
+        }
+        
+        if let data = viewModel.imageData.value{
+            episodeImage.image = UIImage(data: data)
+        }
+        
+        viewModel.imageData.bind({[weak self] data in
             if let data = data{
                 DispatchQueue.main.async {
                     self?.episodeImage.image = UIImage(data: data)
@@ -51,6 +60,6 @@ class SeasonListTableViewCell: UITableViewCell {
     }
     
     override func prepareForReuse() {
-        viewModel?.data?.listener = nil
+        viewModel?.imageData.listener = nil
     }
 }

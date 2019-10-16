@@ -55,11 +55,28 @@ class ResultsSearchViewController: UIViewController {
         
         switch state {
         case .populated(_):
+            self.tableView.tableHeaderView = UIView()
+            self.tableView.separatorStyle = .singleLine
             self.tableView.reloadData()
+        case .empty:
+            self.tableView.tableHeaderView = buildEmptyView()
+            self.tableView.separatorStyle = .none
         default:
             self.buildLoadingView()
             self.view.addSubview( loadingView )
         }
+    }
+    
+    func buildEmptyView() -> UIView{
+        let frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
+        let nib = UINib(nibName: "CustomFooterView", bundle: nil)
+        
+        let emptyView = nib.instantiate(withOwner: nil, options: nil).first as! CustomFooterView
+        emptyView.frame = frame
+        
+        emptyView.messageLabel.text = "No results to show"
+        
+        return emptyView
     }
     
     func buildLoadingView(){

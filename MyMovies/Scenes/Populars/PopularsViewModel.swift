@@ -49,6 +49,10 @@ final class PopularViewModel: ShowsViewModel{
         self.viewState.value = .populated( shows )
     }
     
+    //MARK: - Build Models
+    func buildShowDetailViewModel(for showId: Int) -> TVShowDetailViewModel {
+        return TVShowDetailViewModel(showId)
+    }
 }
 
 extension PopularViewModel{

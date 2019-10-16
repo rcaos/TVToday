@@ -39,6 +39,15 @@ final class SearchViewModel{
         self.viewState.value = .populated(genres)
     }
     
+    //MARK: - Build Model
+    
+    func buildShowDetailViewModel(for showId: Int) -> TVShowDetailViewModel {
+        return TVShowDetailViewModel(showId)
+    }
+    
+    func buildMovieListViewModel(for genreId: Int) -> TVShowListViewModel {
+        return TVShowListViewModel(genreId: genreId)
+    }
 }
 
 extension SearchViewModel{

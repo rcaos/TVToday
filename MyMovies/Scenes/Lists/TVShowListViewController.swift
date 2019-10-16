@@ -12,8 +12,11 @@ class TVShowListViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     
-    var viewModel = TVShowListViewModel()
-    var idGenre: Int!
+    var viewModel: TVShowListViewModel? {
+        didSet {
+            setupViewModel()
+        }
+    }
     
     var loadingView: UIView!
     
@@ -21,7 +24,11 @@ class TVShowListViewController: UIViewController {
         super.viewDidLoad()
         
         setupUI()
-        setupViewModel()
+        //setupViewModel()
+    }
+    
+    deinit {
+        print("deinit TVShowListViewController")
     }
     
     //MARK: - SetupView
@@ -40,6 +47,7 @@ class TVShowListViewController: UIViewController {
     
     //MARK: - SetupViewModel
     func setupViewModel(){
+        guard let viewModel = viewModel else { return }
         
         //Binding
         viewModel.viewState.bindAndFire({[unowned self] state in
@@ -48,9 +56,7 @@ class TVShowListViewController: UIViewController {
             }
         })
         
-        if let genre = idGenre{
-            viewModel.getGenres(by: genre)
-        }
+        viewModel.getMoviesForGenre()
     }
     
     func configView(with state: TVShowListViewModel.ViewState){
@@ -84,7 +90,8 @@ class TVShowListViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "tvShowDetailSegue"{
             if let toController = segue.destination as? TVShowDetailViewController{
-                toController.idShow = sender as? Int
+                let idShow = sender as! Int
+                toController.viewModel = viewModel?.buildShowDetailViewModel(for: idShow)
             }
         }
     }
@@ -93,12 +100,13 @@ class TVShowListViewController: UIViewController {
 //MARK: - UITableViewDataSource
 extension TVShowListViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard let viewModel = viewModel else { return 0}
         return viewModel.viewState.value.currentEpisodes.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
-        cell.viewModel = viewModel.models[indexPath.row]
+        cell.viewModel = viewModel?.models[indexPath.row]
         return cell
     }
 }
@@ -107,7 +115,7 @@ extension TVShowListViewController: UITableViewDataSource{
 extension TVShowListViewController: UITableViewDelegate{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let idToSend = viewModel.shows[indexPath.row].id
+        let idToSend = viewModel?.shows[indexPath.row].id
         
         performSegue(withIdentifier: "tvShowDetailSegue", sender: idToSend)
         tableView.deselectRow(at: indexPath, animated: true)

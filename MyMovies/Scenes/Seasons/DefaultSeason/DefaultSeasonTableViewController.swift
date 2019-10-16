@@ -18,17 +18,7 @@ class DefaultSeasonTableViewController: UITableViewController {
             setupViewModel()
         }
     }
-    
-    var showDetail: TVShowDetailResult?{
-        didSet{
-            if let showDetail = showDetail,
-                let idShow = showDetail.id{
-                //viewModel = DefaultSeasonTableViewModel(show: idShow)
-                viewModel = DefaultSeasonTableViewModel(showDetailResult: showDetail)
-            }
-        }
-    }
-    
+        
     //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()

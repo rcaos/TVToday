@@ -14,16 +14,19 @@ final class TVShowListViewModel: ShowsViewModel{
     var shows: [TVShow]
     var models: [TVShowCellViewModel]
     
+    var genreId: Int!
+    
     //Bindable
     var viewState:Bindable<ViewState> = Bindable(.loading)
     
-    init() {
+    init(genreId: Int) {
+        self.genreId = genreId
         shows = []
         models = []
     }
     
-    func getGenres(by id:  Int){
-        showsService.load(service: .listTVShowsBy(id) , decodeType: TVShowResult.self, completion: { result in
+    func getMoviesForGenre(){
+        showsService.load(service: .listTVShowsBy(genreId) , decodeType: TVShowResult.self, completion: { result in
             switch result{
             case .success(let response):
                 self.processFetched(for: response.results)
@@ -42,6 +45,11 @@ final class TVShowListViewModel: ShowsViewModel{
             return TVShowCellViewModel(show: $0)
         })
         self.viewState.value = .populated(shows)
+    }
+    
+    //MARK: - Build Models
+    func buildShowDetailViewModel(for showId: Int) -> TVShowDetailViewModel {
+        return TVShowDetailViewModel(showId)
     }
 }
 

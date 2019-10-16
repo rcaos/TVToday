@@ -87,9 +87,11 @@ class PopularsViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowTVShowDetail"{
             let indexPath =  sender as! IndexPath
+            let idShow = viewModel.shows[indexPath.row].id!
             
             let controllerTo = segue.destination as! TVShowDetailViewController
-            controllerTo.idShow = viewModel.shows[indexPath.row].id
+            controllerTo.viewModel = viewModel.buildShowDetailViewModel(for: idShow)
+            
         }
     }
 }

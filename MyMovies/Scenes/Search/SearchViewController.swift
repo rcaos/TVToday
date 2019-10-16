@@ -121,11 +121,13 @@ class SearchViewController: UIViewController{
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowTVShowDetail"{
             guard let toController = segue.destination as? TVShowDetailViewController else { return }
-            toController.idShow = sender as? Int
+            let idShow = sender as! Int
+            toController.viewModel = viewModel.buildShowDetailViewModel(for: idShow)
             
         }else if segue.identifier == "showTvShowListSegue"{
             guard let toController = segue.destination as? TVShowListViewController else { return }
-            toController.idGenre = sender as? Int
+            let genre = sender as! Int
+            toController.viewModel = viewModel.buildMovieListViewModel(for: genre)
         }
     }
 }

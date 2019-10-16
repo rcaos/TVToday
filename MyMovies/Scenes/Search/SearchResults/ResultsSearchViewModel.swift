@@ -45,6 +45,12 @@ final class ResultsSearchViewModel: ShowsViewModel{
     //MARK: - Private
     private func processFetched(for shows: [TVShow]){
         print("\nSe recibieron : [\(shows.count) resultados]")
+        
+        if shows.isEmpty {
+            self.viewState.value = .empty
+            return
+        }
+        
         self.shows.append(contentsOf: shows)
         
         self.models = shows.map({

@@ -53,10 +53,10 @@ final class TVShowDetailViewModel{
     
     //MARK: - Networking
     
-    func getShowDetails(id show: Int){
+    func getShowDetails(){
         self.viewState.value = .loading
         
-        showsService.load(service: .getTVShowDetail(show), decodeType: TVShowDetailResult.self, completion: { result in
+        showsService.load(service: .getTVShowDetail(id), decodeType: TVShowDetailResult.self, completion: { result in
             switch result{
             case .success(let showDetail):
                 self.setupTVShow(showDetail)
@@ -94,6 +94,11 @@ final class TVShowDetailViewModel{
                 
             })
         }
+    }
+    
+    //MARK: View Model Building
+    func buildSeasonViewModel() -> DefaultSeasonTableViewModel {
+        return DefaultSeasonTableViewModel(showDetailResult: showDetail!)
     }
     
 }

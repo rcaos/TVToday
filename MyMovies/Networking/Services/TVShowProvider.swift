@@ -59,7 +59,7 @@ extension TVShowsProvider: EndPoint {
             params["page"] = "1"
         case .listTVShowsBy(let genre):
             params["language"] = "en-US"
-            params["with_genre"] = "\(String(genre))"
+            params["with_genres"] = "\(String(genre))"
             params["sort_by"] = "popularity.desc"
             params["page"] = "1"
             params["timezone"] = "America%2FNew_York"

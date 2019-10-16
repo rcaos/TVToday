@@ -16,11 +16,11 @@ class TVShowDetailViewController: UITableViewController {
         }
     }
     
-    var idShow:Int!{
-        didSet{
-            self.viewModel = TVShowDetailViewModel(idShow)
-        }
-    }
+//    var idShow:Int!{
+//        didSet{
+//            self.viewModel = TVShowDetailViewModel(idShow)
+//        }
+//    }
     
     @IBOutlet weak private var backDropImage: UIImageView!
     @IBOutlet weak private var nameLabel: UILabel!
@@ -52,7 +52,7 @@ class TVShowDetailViewController: UITableViewController {
     //MARK: - SetupViewModel
     private func setupViewModel(){
         setupBindables()
-        viewModel?.getShowDetails(id: idShow)
+        viewModel?.getShowDetails()
     }
     
     private func setupBindables(){
@@ -129,7 +129,7 @@ class TVShowDetailViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "SeasonsListSegue"{
             if let vc = segue.destination as? SeasonsListViewController{
-                vc.showDetail = viewModel?.showDetail
+                vc.seasonModel = viewModel?.buildSeasonViewModel()
             }
         }
     }

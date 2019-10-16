@@ -89,9 +89,9 @@ class AiringTodayViewController: UIViewController{
     //MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowTVShowDetail"{
-            let showID = sender as! Int
+            let showId = sender as! Int
             let controller = segue.destination as! TVShowDetailViewController
-            controller.idShow = showID
+            controller.viewModel = viewModel.buildShowDetailViewModel(for: showId)
         }
     }
 }

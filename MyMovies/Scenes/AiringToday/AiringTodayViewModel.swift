@@ -55,6 +55,11 @@ final class AiringTodayViewModel: ShowsViewModel{
             models.append( AiringTodayCollectionViewModel(show: show) )
         }
     }
+    
+    //MARK: - Build Models
+    func buildShowDetailViewModel(for showId: Int) -> TVShowDetailViewModel {
+        return TVShowDetailViewModel(showId)
+    }
 }
 
 extension AiringTodayViewModel{

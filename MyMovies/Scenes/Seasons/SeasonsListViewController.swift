@@ -10,8 +10,7 @@ import UIKit
 
 class SeasonsListViewController: UIViewController {
 
-    //var idShow: Int?
-    var showDetail: TVShowDetailResult?
+    var seasonModel: DefaultSeasonTableViewModel?
     
     //MARK: - Life Cycle
     override func viewDidLoad() {
@@ -26,11 +25,11 @@ class SeasonsListViewController: UIViewController {
     
     //MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let showDetail = self.showDetail else { return }
+        guard let seasonModel = self.seasonModel else { return }
         
         if segue.identifier == "SeasonListsSegue"{
             guard let vc = segue.destination as? DefaultSeasonTableViewController else { return }
-            vc.showDetail = showDetail
+            vc.viewModel = seasonModel
         }
     }
     

@@ -24,13 +24,14 @@ final class AiringTodayViewModel: ShowsViewModel{
     }
     
     //MARK: - Fetch Shows
-    func getShows(){
+    func getShows(for page: Int){
         self.viewState.value =  .loading
         
-        showsService.load(service: .getAiringTodayShows, decodeType: TVShowResult.self, completion: { result in
+        showsService.load(service: .getAiringTodayShows(page), decodeType: TVShowResult.self, completion: { result in
             switch result{
             case .success(let response):
-               self.processFetched(for: response.results)
+                print("Page: \(response.page), Total Pages: \(response.totalPages), Has More Pages: \(response.hasMorePages), Next Page: \(response.nextPage)\n")
+               self.processFetched(for: response)
             case .failure(let error):
                 print(error)
             }
@@ -42,17 +43,22 @@ final class AiringTodayViewModel: ShowsViewModel{
     }
     
     //MARK: - Private
-    private func processFetched(for shows: [TVShow]){
-        //print("Se recibieron : [\(shows.count) shows]. Actualizar TableView")
-        self.shows.append(contentsOf: shows)
-        self.buildModels()
+    private func processFetched(for response: TVShowResult){
+        var fetchedShows : [TVShow] = []
+        if let shows = response.results {
+            fetchedShows = shows
+        }
         
-        self.viewState.value = .populated(shows)
-    }
-    
-    private func buildModels(){
-        for show in shows{
-            models.append( AiringTodayCollectionViewModel(show: show) )
+        //TODO: - Empty View -
+        
+        self.shows.append(contentsOf: fetchedShows)
+        self.models.append(contentsOf:
+            fetchedShows.map({ return AiringTodayCollectionViewModel(show: $0) }) )
+        
+        if response.hasMorePages {
+            self.viewState.value = .paging( self.shows , response.nextPage)
+        } else {
+            self.viewState.value = .populated( self.shows )
         }
     }
     
@@ -68,12 +74,15 @@ extension AiringTodayViewModel{
         
         case loading
         case populated([TVShow])
+        case paging([TVShow], Int)
         case empty
         case error(Error)
         
         var currentEpisodes : [TVShow] {
             switch self{
             case .populated(let episodes):
+                return episodes
+            case .paging(let episodes, _):
                 return episodes
             default:
                 return []

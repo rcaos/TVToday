@@ -10,7 +10,7 @@ import Foundation
 
 enum TVShowsProvider {
     case getPopularTVShows
-    case getAiringTodayShows
+    case getAiringTodayShows(Int)
     case getTVShowDetail(Int)
     case getEpisodesFor(Int,Int)
     case searchTVShow(String)
@@ -32,9 +32,9 @@ extension TVShowsProvider: EndPoint {
             return "/3/tv/\(identifier)"
         case .getEpisodesFor(let show, let season):
             return "/3/tv/\(show)/season/\(season)"
-        case .searchTVShow(_):
+        case .searchTVShow:
             return "/3/search/tv"
-        case .listTVShowsBy(_):
+        case .listTVShowsBy:
             return "/3/discover/tv"
         }
     }
@@ -46,9 +46,9 @@ extension TVShowsProvider: EndPoint {
         case .getPopularTVShows:
             params["language"] = "en-US"
             params["page"] = "1"
-        case .getAiringTodayShows:
+        case .getAiringTodayShows(let page):
             params["language"] = "en-US"
-            params["page"] = "1"
+            params["page"] = page
         case .getTVShowDetail(_):
             params["language"] = "en-US"
         case .getEpisodesFor(_, _):

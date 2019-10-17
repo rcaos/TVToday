@@ -14,8 +14,6 @@ class AiringTodayViewController: UIViewController{
     
     lazy private var viewModel:AiringTodayViewModel = AiringTodayViewModel()
     
-    var loadingView: UIView!
-    
     //MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,6 +41,8 @@ class AiringTodayViewController: UIViewController{
         let nibName = UINib(nibName: "AiringTodayCollectionViewCell", bundle: nil)
         collectionView.register(nibName, forCellWithReuseIdentifier: "AiringTodayCollectionViewCell")
         
+        collectionView.register(FooterReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter , withReuseIdentifier: "FooterReusableView")
+        
         collectionView.backgroundColor = UIColor.groupTableViewBackground
     }
     
@@ -55,35 +55,19 @@ class AiringTodayViewController: UIViewController{
             }
         })
         
-        viewModel.getShows()
+        viewModel.getShows(for: 1)
     }
     
     func configView(with state: AiringTodayViewModel.ViewState){
         
-        if let customView = loadingView{
-            customView.removeFromSuperview()
-        }
-        
         switch state {
         case .populated(_):
             self.collectionView.reloadData()
+        case .paging(_, _):
+            self.collectionView.reloadData()
         default:
-            buildLoadingView()
-            self.view.addSubview( loadingView )
+            print("Default state.")
         }
-    }
-    
-    func buildLoadingView(){
-        let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
-        activityIndicator.color = .darkGray
-        activityIndicator.frame = CGRect(x: 0, y: 0, width: collectionView.frame.width, height: 100)
-        
-        loadingView = UIView(frame: self.view.frame)
-        loadingView.backgroundColor = .white
-        
-        activityIndicator.center = loadingView.center
-        loadingView.addSubview(activityIndicator)
-        activityIndicator.startAnimating()
     }
     
     //MARK: - Navigation
@@ -106,7 +90,18 @@ extension AiringTodayViewController: UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let item = collectionView.dequeueReusableCell(withReuseIdentifier: "AiringTodayCollectionViewCell", for: indexPath) as! AiringTodayCollectionViewCell
         item.viewModel = viewModel.getModelFor(indexPath.row)
+        
+        if case .paging(_, let nextPage) = viewModel.viewState.value,
+            indexPath.row == viewModel.viewState.value.currentEpisodes.count - 1 {
+            viewModel.getShows(for: nextPage)
+        }
+        
         return item
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "FooterReusableView", for: indexPath) as! FooterReusableView
+        return footer
     }
 }
 
@@ -122,6 +117,16 @@ extension AiringTodayViewController: UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = collectionView.frame.width
         return CGSize(width: width, height: 275)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        let state = viewModel.viewState.value
+        switch state {
+        case .loading, .paging(_, _):
+            return CGSize(width: collectionView.frame.width, height: 100)
+        default:
+            return CGSize(width: 0, height: 0)
+        }
     }
     
 }

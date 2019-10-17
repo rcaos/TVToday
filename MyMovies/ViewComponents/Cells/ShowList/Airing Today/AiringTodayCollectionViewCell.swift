@@ -32,13 +32,11 @@ class AiringTodayCollectionViewCell: UICollectionViewCell {
         showNameLabel.text = viewModel.showName
         averageLabel.text = viewModel.average
         
-        if viewModel.imageData.value == nil{
+        if let data = viewModel.imageData.value {
+            backImageView.image = UIImage(data: data)
+        } else {
             print("Se descargará imagen solo para : \(showNameLabel.text)")
             viewModel.downloadImage()
-        }
-        
-        if let data = viewModel.imageData.value{
-            backImageView.image = UIImage(data: data)
         }
         
         viewModel.imageData.bindAndFire({ [weak self] data in
@@ -57,6 +55,7 @@ class AiringTodayCollectionViewCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         viewModel?.imageData.listener = nil
+        backImageView.image = nil
     }
 
 }

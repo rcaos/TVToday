@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct TVShowResult: Codable{
+struct TVShowResult: Codable {
     let page: Int!
     let results: [TVShow]!
     let totalResults: Int!
@@ -19,5 +19,15 @@ struct TVShowResult: Codable{
         case results
         case totalResults = "total_results"
         case totalPages = "total_pages"
+    }
+}
+
+extension TVShowResult {
+    var hasMorePages: Bool {
+        return totalPages > page
+    }
+    
+    var nextPage: Int {
+        return page + 1
     }
 }

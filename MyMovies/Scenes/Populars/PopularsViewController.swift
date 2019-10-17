@@ -40,6 +40,8 @@ class PopularsViewController: UITableViewController {
         
         let nibName = UINib(nibName: "TVShowViewCell", bundle: nil)
         tableView.register(nibName, forCellReuseIdentifier: "TVShowViewCell")
+        
+        buildLoadingView()
     }
     
     //MARK: - SetupUI
@@ -52,30 +54,33 @@ class PopularsViewController: UITableViewController {
             }
         })
         
-        viewModel.getShows()
+        viewModel.getShows(for: 1)
     }
     
     func configView(with state: PopularViewModel.ViewState){
         
-        if let customView = loadingView{
-            customView.removeFromSuperview()
-        }
-        
         switch state {
-        case .populated(_):
+        case .populated(_) :
             self.tableView.reloadData()
+            self.tableView.tableFooterView = UIView()
+        case .paging(_, _) :
+            self.tableView.reloadData()
+            self.tableView.tableFooterView = loadingView
+        case .loading :
+            self.tableView.tableFooterView = loadingView
         default:
-            self.buildLoadingView()
-            self.view.addSubview( loadingView )
+            print("Default State")
         }
     }
     
     func buildLoadingView(){
+        let defaultFrame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
+        
         let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
         activityIndicator.color = .darkGray
-        activityIndicator.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
+        activityIndicator.frame = defaultFrame
         
-        loadingView = UIView(frame: self.view.frame)
+        loadingView = UIView(frame: defaultFrame)
         loadingView.backgroundColor = .white
         
         activityIndicator.center = loadingView.center
@@ -91,7 +96,6 @@ class PopularsViewController: UITableViewController {
             
             let controllerTo = segue.destination as! TVShowDetailViewController
             controllerTo.viewModel = viewModel.buildShowDetailViewModel(for: idShow)
-            
         }
     }
 }
@@ -100,13 +104,18 @@ extension PopularsViewController{
     
     // MARK: - Table view data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.shows.count
+        return viewModel.viewState.value.currentEpisodes.count
     }
-    
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
-        cell.viewModel = viewModel.showCells[indexPath.row]
+        cell.viewModel = viewModel.models[indexPath.row]
+        
+        if case .paging(_, let nextPage) = viewModel.viewState.value ,
+            indexPath.row == viewModel.viewState.value.currentEpisodes.count - 1  {
+            viewModel.getShows(for: nextPage)
+        }
+        
         return cell
     }
     

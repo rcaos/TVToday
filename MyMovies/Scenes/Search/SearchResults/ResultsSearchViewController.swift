@@ -34,6 +34,8 @@ class ResultsSearchViewController: UIViewController {
         
         let nibName = UINib(nibName: "TVShowViewCell", bundle: nil)
         tableView.register(nibName, forCellReuseIdentifier: "TVShowViewCell")
+        
+        buildLoadingView()
     }
     
     //MARK: - SetupViewModel
@@ -49,21 +51,21 @@ class ResultsSearchViewController: UIViewController {
     
     func configView(with state: ResultsSearchViewModel.ViewState){
         
-        if let customView = loadingView{
-            customView.removeFromSuperview()
-        }
-        
         switch state {
         case .populated(_):
-            self.tableView.tableHeaderView = UIView()
+            self.tableView.tableFooterView = UIView()
             self.tableView.separatorStyle = .singleLine
             self.tableView.reloadData()
         case .empty:
-            self.tableView.tableHeaderView = buildEmptyView()
+            self.tableView.tableFooterView = buildEmptyView()
             self.tableView.separatorStyle = .none
+        case .paging(_, _):
+            self.tableView.tableFooterView = loadingView
+            self.tableView.separatorStyle = .singleLine
+            self.tableView.reloadData()
         default:
-            self.buildLoadingView()
-            self.view.addSubview( loadingView )
+            print("default state")
+            self.tableView.tableFooterView = loadingView
         }
     }
     
@@ -80,11 +82,13 @@ class ResultsSearchViewController: UIViewController {
     }
     
     func buildLoadingView(){
+        let defaultFrame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
+        
         let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
         activityIndicator.color = .darkGray
-        activityIndicator.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
+        activityIndicator.frame = defaultFrame
         
-        loadingView = UIView(frame: self.view.frame)
+        loadingView = UIView(frame: defaultFrame)
         loadingView.backgroundColor = .white
         
         activityIndicator.center = loadingView.center
@@ -102,6 +106,13 @@ extension ResultsSearchViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
         cell.viewModel = viewModel.models[indexPath.row]
+        
+        if case .paging(_, let nextPage) = viewModel.viewState.value,
+            indexPath.row == viewModel.viewState.value.currentEpisodes.count - 1 {
+            print("Necesito otra page: \(nextPage)")
+            viewModel.searchShow(for: nextPage)
+        }
+        
         return cell
     }
 }

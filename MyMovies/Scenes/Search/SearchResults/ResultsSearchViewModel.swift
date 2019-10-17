@@ -14,6 +14,8 @@ final class ResultsSearchViewModel: ShowsViewModel{
     var shows: [TVShow]
     var models: [TVShowCellViewModel]
     
+    var currentSearch = ""
+    
     //Bindable
     var viewState:Bindable<ViewState> = Bindable(.loading)
     
@@ -23,13 +25,20 @@ final class ResultsSearchViewModel: ShowsViewModel{
     }
     
     //MARK: - Fetch Shows
-    func searchShows(for name: String){
-        self.viewState.value = .loading
+    func searchShow(for page: Int) {
+        guard !currentSearch.isEmpty else { return }
         
-        showsService.load(service: .searchTVShow(name) , decodeType: TVShowResult.self, completion: { result in
+        searchShows(for: currentSearch, page: page)
+    }
+    
+    func searchShows(for name: String, page: Int) {
+        self.viewState.value = .loading
+        currentSearch = name
+        
+        showsService.load(service: .searchTVShow(name, page) , decodeType: TVShowResult.self, completion: { result in
             switch result{
             case .success(let response):
-                self.processFetched(for: response.results )
+                self.processFetched(for: response)
             case .failure(let error):
                 print("error: [\(error)")
             }
@@ -43,21 +52,27 @@ final class ResultsSearchViewModel: ShowsViewModel{
     }
     
     //MARK: - Private
-    private func processFetched(for shows: [TVShow]){
-        print("\nSe recibieron : [\(shows.count) resultados]")
+    private func processFetched(for response: TVShowResult){
+        print("Page: \(response.page), Total Pages: \(response.totalPages), Has More Pages: \(response.hasMorePages), Next Page: \(response.nextPage)\n")
         
-        if shows.isEmpty {
+        var fetchedShows:[TVShow] = []
+        if let shows = response.results {
+            fetchedShows = shows
+        }
+        
+        if fetchedShows.isEmpty {
             self.viewState.value = .empty
             return
         }
         
-        self.shows.append(contentsOf: shows)
+        self.shows.append(contentsOf: fetchedShows)
+        self.models.append(contentsOf: fetchedShows.map({ return TVShowCellViewModel(show: $0) }) )
         
-        self.models = shows.map({
-            return TVShowCellViewModel(show: $0)
-        })
-        
-        self.viewState.value = .populated( shows )
+        if response.hasMorePages {
+            self.viewState.value = .paging(shows, response.nextPage)
+        } else {
+            self.viewState.value = .populated(shows)
+        }
     }
 }
 
@@ -67,12 +82,15 @@ extension ResultsSearchViewModel{
         
         case loading
         case populated([TVShow])
+        case paging([TVShow], Int)
         case empty
         case error(Error)
         
         var currentEpisodes : [TVShow] {
             switch self{
             case .populated(let episodes):
+                return episodes
+            case .paging(let episodes, _):
                 return episodes
             default:
                 return []

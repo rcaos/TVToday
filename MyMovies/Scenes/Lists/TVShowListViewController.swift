@@ -24,7 +24,6 @@ class TVShowListViewController: UIViewController {
         super.viewDidLoad()
         
         setupUI()
-        //setupViewModel()
     }
     
     deinit {
@@ -43,6 +42,8 @@ class TVShowListViewController: UIViewController {
         
         let nibName = UINib(nibName: "TVShowViewCell", bundle: nil)
         tableView.register(nibName, forCellReuseIdentifier: "TVShowViewCell")
+        
+        buildLoadingView()
     }
     
     //MARK: - SetupViewModel
@@ -56,29 +57,29 @@ class TVShowListViewController: UIViewController {
             }
         })
         
-        viewModel.getMoviesForGenre()
+        viewModel.getMoviesForGenre(from: 1)
     }
     
     func configView(with state: TVShowListViewModel.ViewState){
-        if let customView = loadingView{
-            customView.removeFromSuperview()
-        }
-        
         switch state {
         case .populated(_):
             self.tableView.reloadData()
+        case .paging(_, _):
+            self.tableView.reloadData()
+            self.tableView.tableFooterView = loadingView
         default:
-            self.buildLoadingView()
-            self.view.addSubview( loadingView )
+            self.tableView.tableFooterView = loadingView
         }
     }
     
     func buildLoadingView(){
+        let defaultFrame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
+        
         let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
         activityIndicator.color = .darkGray
-        activityIndicator.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
+        activityIndicator.frame = defaultFrame
         
-        loadingView = UIView(frame: self.view.frame)
+        loadingView = UIView(frame: defaultFrame)
         loadingView.backgroundColor = .white
         
         activityIndicator.center = loadingView.center
@@ -100,13 +101,21 @@ class TVShowListViewController: UIViewController {
 //MARK: - UITableViewDataSource
 extension TVShowListViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let viewModel = viewModel else { return 0}
+        guard let viewModel = viewModel else { return 0 }
         return viewModel.viewState.value.currentEpisodes.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let viewModel = viewModel else { fatalError() }
+
         let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
-        cell.viewModel = viewModel?.models[indexPath.row]
+        cell.viewModel = viewModel.models[indexPath.row]
+        
+        if case .paging(_, let nextPage) = viewModel.viewState.value,
+            indexPath.row == viewModel.viewState.value.currentEpisodes.count - 1 {
+            viewModel.getMoviesForGenre(from: nextPage)
+        }
+        
         return cell
     }
 }

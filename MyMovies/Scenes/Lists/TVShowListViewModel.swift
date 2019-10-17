@@ -25,11 +25,11 @@ final class TVShowListViewModel: ShowsViewModel{
         models = []
     }
     
-    func getMoviesForGenre(){
-        showsService.load(service: .listTVShowsBy(genreId) , decodeType: TVShowResult.self, completion: { result in
+    func getMoviesForGenre(from page: Int){
+        showsService.load(service: .listTVShowsBy(genreId, page) , decodeType: TVShowResult.self, completion: { result in
             switch result{
             case .success(let response):
-                self.processFetched(for: response.results)
+                self.processFetched(for: response)
             case .failure(let error):
                 print(error)
             }
@@ -37,14 +37,23 @@ final class TVShowListViewModel: ShowsViewModel{
     }
     
     //MARK: - Private
-    private func processFetched(for shows: [TVShow]){
-        print("\nSe recibieron : [\(shows.count) Shows]. Actualizar TableView")
-        self.shows.append(contentsOf: shows)
+    private func processFetched(for response: TVShowResult ){
+        //print("\nSe recibieron : [\(shows.count) Shows]. Actualizar TableView")
+        print("Page: \(response.page), Total Pages: \(response.totalPages), Has More Pages: \(response.hasMorePages), Next Page: \(response.nextPage)\n")
         
-        self.models = shows.map({
-            return TVShowCellViewModel(show: $0)
-        })
-        self.viewState.value = .populated(shows)
+        var fetchedShows:[TVShow] = []
+        if let shows = response.results {
+            fetchedShows = shows
+        }
+        
+        self.shows.append(contentsOf: fetchedShows)
+        self.models.append(contentsOf: fetchedShows.map({ return TVShowCellViewModel(show: $0) }) )
+        
+        if response.hasMorePages {
+            self.viewState.value = .paging(shows, response.nextPage)
+        } else{
+            self.viewState.value = .populated(shows)
+        }
     }
     
     //MARK: - Build Models
@@ -59,12 +68,15 @@ extension TVShowListViewModel{
         
         case loading
         case populated([TVShow])
+        case paging([TVShow], Int)
         case empty
         case error(Error)
         
         var currentEpisodes : [TVShow] {
             switch self{
             case .populated(let episodes):
+                return episodes
+            case .paging(let episodes, _):
                 return episodes
             default:
                 return []

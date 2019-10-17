@@ -114,7 +114,7 @@ class SearchViewController: UIViewController{
     
     func search(for query: String){
         guard let controller = searchController.searchResultsController as? ResultsSearchViewController else { return }
-        controller.viewModel.searchShows(for: query)
+        controller.viewModel.searchShows(for: query, page: 1)
     }
     
     //MARK: - Nagivation

@@ -9,12 +9,12 @@
 import Foundation
 
 enum TVShowsProvider {
-    case getPopularTVShows
     case getAiringTodayShows(Int)
+    case getPopularTVShows(Int)
     case getTVShowDetail(Int)
     case getEpisodesFor(Int,Int)
-    case searchTVShow(String)
-    case listTVShowsBy(Int)
+    case searchTVShow(String, Int)
+    case listTVShowsBy(Int,Int)
 }
 
 extension TVShowsProvider: EndPoint {
@@ -43,25 +43,25 @@ extension TVShowsProvider: EndPoint {
         var params: [String: Any] = ["api_key": "06e1a8c1f39b7a033e2efb972625fee2"]
         
         switch self {
-        case .getPopularTVShows:
-            params["language"] = "en-US"
-            params["page"] = "1"
         case .getAiringTodayShows(let page):
+            params["language"] = "en-US"
+            params["page"] = page
+        case .getPopularTVShows(let page):
             params["language"] = "en-US"
             params["page"] = page
         case .getTVShowDetail(_):
             params["language"] = "en-US"
         case .getEpisodesFor(_, _):
             params["language"] = "en-US"
-        case .searchTVShow(let query):
+        case .searchTVShow(let query, let page):
             params["language"] = "en-US"
             params["query"] = query
-            params["page"] = "1"
-        case .listTVShowsBy(let genre):
+            params["page"] = page
+        case .listTVShowsBy(let genre, let page):
             params["language"] = "en-US"
-            params["with_genres"] = "\(String(genre))"
+            params["with_genres"] = genre
             params["sort_by"] = "popularity.desc"
-            params["page"] = "1"
+            params["page"] = page
             params["timezone"] = "America%2FNew_York"
             params["include_null_first_air_dates"] = "false"
         }

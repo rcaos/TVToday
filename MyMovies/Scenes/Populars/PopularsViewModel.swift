@@ -13,24 +13,24 @@ final class PopularViewModel: ShowsViewModel{
     private let showsService = ApiClient<TVShowsProvider>()
     
     var shows: [TVShow]
-    var showCells: [TVShowCellViewModel]
+    var models: [TVShowCellViewModel]
     
     //Bindables
     var viewState:Bindable<ViewState> = Bindable(.loading)
     
     init() {
         shows = []
-        showCells = []
+        models = []
     }
     
     //MARK: - Fetch Shows
-    func getShows(){
+    func getShows(for page: Int){
         self.viewState.value = .loading
         
-        showsService.load(service: .getPopularTVShows , decodeType: TVShowResult.self, completion: { result in
+        showsService.load(service: .getPopularTVShows(page) , decodeType: TVShowResult.self, completion: { result in
             switch result{
             case .success(let response):
-                self.processFetched(for: response.results)
+                self.processFetched(for: response)
             case .failure(let error):
                 print(error)
             }
@@ -38,15 +38,22 @@ final class PopularViewModel: ShowsViewModel{
     }
     
     //MARK: - Private
-    private func processFetched(for shows: [TVShow]){
-        //print("Se recibieron : [\(shows.count) Popular shows]. Actualizar TableView")
-        self.shows.append(contentsOf: shows)
+    private func processFetched(for response: TVShowResult){
+        print("Page: \(response.page), Total Pages: \(response.totalPages), Has More Pages: \(response.hasMorePages), Next Page: \(response.nextPage)\n")
         
-        //Build Models
-        self.showCells = self.shows.map({
-            return TVShowCellViewModel(show: $0)
-        })
-        self.viewState.value = .populated( shows )
+        var fetchedShows:[TVShow] = []
+        if let shows = response.results {
+            fetchedShows.append(contentsOf: shows)
+        }
+        
+        self.shows.append(contentsOf: fetchedShows)
+        self.models.append(contentsOf: fetchedShows.map({ return TVShowCellViewModel(show: $0) }) )
+        
+        if response.hasMorePages {
+            self.viewState.value = .paging( shows, response.nextPage)
+        } else {
+            self.viewState.value = .populated( shows )
+        }
     }
     
     //MARK: - Build Models
@@ -60,12 +67,15 @@ extension PopularViewModel{
         
         case loading
         case populated([TVShow])
+        case paging([TVShow], Int)
         case empty
         case error(Error)
         
         var currentEpisodes : [TVShow] {
             switch self{
             case .populated(let episodes):
+                return episodes
+            case .paging(let episodes, _):
                 return episodes
             default:
                 return []

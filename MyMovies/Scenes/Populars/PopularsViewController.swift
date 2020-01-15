@@ -8,14 +8,26 @@
 
 import UIKit
 
-class PopularsViewController: UITableViewController {
+class PopularsViewController: UITableViewController, StoryboardInstantiable {
 
-    var viewModel = PopularViewModel()
+    //var viewModel = PopularViewModel()
+    var viewModel:PopularViewModel! {
+        didSet {
+            print("Me asignaron un valor Populars")
+        }
+    }
     
     var loadingView: UIView!
     
+    static func create(with viewModel: PopularViewModel) -> PopularsViewController {
+        let controller = PopularsViewController.instantiateViewController()
+        controller.viewModel = viewModel
+        return controller
+    }
+    
     //MARK: - Life Cycle
     override func viewDidLoad() {
+        print("viewDidLoad Populars")
         super.viewDidLoad()
         
         setupUI()
@@ -30,6 +42,7 @@ class PopularsViewController: UITableViewController {
     //MARK: - SetupView
     func setupUI(){
         navigationItem.title = "Popular TV Shows"
+        //navigationController?.navigationBar.prefersLargeTitles = true
         setupTable()
     }
     

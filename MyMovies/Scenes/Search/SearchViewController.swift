@@ -8,17 +8,28 @@
 
 import UIKit
 
-class SearchViewController: UIViewController{
+class SearchViewController: UIViewController, StoryboardInstantiable {
     
     @IBOutlet var tableView: UITableView!
     var searchController:UISearchController!
-    var viewModel = SearchViewModel()
-    
+    //var viewModel = SearchViewModel()
+    var viewModel:SearchViewModel! {
+        didSet {
+            print("Me asignaron un valor ViewModel Search")
+        }
+    }
     var lastSearch = ""
     
     var loadingView: UIView!
     
+    static func create(with viewModel: SearchViewModel) -> SearchViewController {
+        let controller = SearchViewController.instantiateViewController()
+        controller.viewModel = viewModel
+        return controller
+    }
+    
     override func viewDidLoad() {
+        print("viewDidLoad Search")
         super.viewDidLoad()
         setupUI()
     }
@@ -44,7 +55,8 @@ class SearchViewController: UIViewController{
     
     //MARK: - SetupSearchBar
     func setupSearchBar(){
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        //let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let storyboard = UIStoryboard(name: "SearchViewController", bundle: nil)
         let toController = storyboard.instantiateViewController(withIdentifier: "searchResults")
         
         guard let resultsController = toController as? ResultsSearchViewController else{ return }

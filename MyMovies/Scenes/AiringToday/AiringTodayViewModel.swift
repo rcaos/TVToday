@@ -8,85 +8,89 @@
 
 import Foundation
 
-final class AiringTodayViewModel: ShowsViewModel{
+final class AiringTodayViewModel {
     private let showsService = ApiClient<TVShowsProvider>()
     
-    var shows:[TVShow]
-    var models:[AiringTodayCollectionViewModel]
+    private let fetchTodayShowsUseCase: FetchTodayShowsUseCase
+    //var posterImageRepository: String
     
-    //Bindables
-    var viewState:Bindable<ViewState> = Bindable(.loading)
+    var tvShowsCells: [AiringTodayCollectionViewModel] = []
     
-    //MARK: - Initializers
-    init() {
-        shows = []
-        models = []
+    var viewState:Bindable<SimpleViewState<TVShow>> = Bindable(.loading)
+    
+    var tvShows: [TVShow] {
+        return viewState.value.currentEntities
     }
     
-    //MARK: - Fetch Shows
+    private var showsLoadTask: Cancellable? {
+        willSet {
+            showsLoadTask?.cancel()
+        }
+    }
+    
+    // MARK: - Initializers
+    
+    init(fetchTodayShowsUseCase: FetchTodayShowsUseCase) {
+        self.fetchTodayShowsUseCase = fetchTodayShowsUseCase
+    }
+    
+    // MARK: - Fetch Shows
+    
     func getShows(for page: Int){
-        self.viewState.value =  .loading
+        if viewState.value.isInitialPage {
+            viewState.value =  .loading
+        }
         
-        showsService.load(service: .getAiringTodayShows(page), decodeType: TVShowResult.self, completion: { result in
-            switch result{
-            case .success(let response):
-                print("Page: \(response.page), Total Pages: \(response.totalPages), Has More Pages: \(response.hasMorePages), Next Page: \(response.nextPage)\n")
-               self.processFetched(for: response)
+//        showsService.load(service: .getAiringTodayShows(page), decodeType: TVShowResult.self, completion: { result in
+//            switch result{
+//            case .success(let response):
+//               self.processFetched(for: response)
+//            case .failure(let error):
+//                print(error)
+//            }
+//        })
+        
+        let request = FetchTodayUseCaseRequestValue(page: page)
+        
+        showsLoadTask = fetchTodayShowsUseCase.execute(requestValue: request) { [weak self] result in
+            guard let strongSelf = self else { return }
+            switch result {
+            case .success(let results):
+                strongSelf.processFetched(for: results)
             case .failure(let error):
-                print(error)
+                print("Error to fetch Case use \(error)")
             }
-        })
+        }
     }
     
     func getModelFor(_ index:Int) -> AiringTodayCollectionViewModel{
-        return models[index]
+        return tvShowsCells[index]
     }
     
-    //MARK: - Private
-    private func processFetched(for response: TVShowResult){
-        var fetchedShows : [TVShow] = []
-        if let shows = response.results {
-            fetchedShows = shows
+    // MARK: - Private
+    
+    private func processFetched(for response: TVShowResult) {
+        let fetchedShows = response.results ?? []
+        
+        tvShowsCells.append(contentsOf: fetchedShows.map({ AiringTodayCollectionViewModel(show: $0) }))
+        
+        let allShows = viewState.value.currentEntities + fetchedShows
+        
+        if allShows.isEmpty {
+            viewState.value = .empty
+            return
         }
-        
-        //TODO: - Empty View -
-        
-        self.shows.append(contentsOf: fetchedShows)
-        self.models.append(contentsOf:
-            fetchedShows.map({ return AiringTodayCollectionViewModel(show: $0) }) )
-        
+
         if response.hasMorePages {
-            self.viewState.value = .paging( self.shows , response.nextPage)
+            self.viewState.value = .paging(allShows, next: response.nextPage)
         } else {
-            self.viewState.value = .populated( self.shows )
+            self.viewState.value = .populated(allShows)
         }
     }
     
-    //MARK: - Build Models
+    // MARK: - Build Models
+    
     func buildShowDetailViewModel(for showId: Int) -> TVShowDetailViewModel {
         return TVShowDetailViewModel(showId)
-    }
-}
-
-extension AiringTodayViewModel{
-    
-    enum ViewState {
-        
-        case loading
-        case populated([TVShow])
-        case paging([TVShow], Int)
-        case empty
-        case error(Error)
-        
-        var currentEpisodes : [TVShow] {
-            switch self{
-            case .populated(let episodes):
-                return episodes
-            case .paging(let episodes, _):
-                return episodes
-            default:
-                return []
-            }
-        }
     }
 }

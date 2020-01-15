@@ -8,13 +8,25 @@
 
 import UIKit
 
-class AiringTodayViewController: UIViewController{
+class AiringTodayViewController: UIViewController, StoryboardInstantiable {
     
     @IBOutlet weak var collectionView: UICollectionView!
     
-    lazy private var viewModel:AiringTodayViewModel = AiringTodayViewModel()
+    private var viewModel: AiringTodayViewModel!
+    private var airingTodayViewControllersFactory: AiringTodayViewControllersFactory!
+    
+    // MARK: - TODO, cambiar por protocol del ViewModel
+    
+    static func create(with viewModel: AiringTodayViewModel,
+                       airingTodayViewControllersFactory: AiringTodayViewControllersFactory) -> AiringTodayViewController {
+        let controller = AiringTodayViewController.instantiateViewController()
+        controller.viewModel = viewModel
+        controller.airingTodayViewControllersFactory = airingTodayViewControllersFactory
+        return controller
+    }
     
     //MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -28,13 +40,13 @@ class AiringTodayViewController: UIViewController{
     }
     
     //MARK: - SetupView
-    func setupUI(){
+    func setupUI() {
         navigationItem.title = "Today on TV"
         setupCollection()
     }
     
     //MARK: - SetupTable
-    func setupCollection(){
+    func setupCollection() {
         collectionView.dataSource = self
         collectionView.delegate = self
         
@@ -47,7 +59,7 @@ class AiringTodayViewController: UIViewController{
     }
     
     //MARK: - SetupViewModel
-    func setupViewModel(){
+    func setupViewModel() {
         //Binding
         viewModel.viewState.bindAndFire({ state in
             DispatchQueue.main.async {
@@ -58,7 +70,7 @@ class AiringTodayViewController: UIViewController{
         viewModel.getShows(for: 1)
     }
     
-    func configView(with state: AiringTodayViewModel.ViewState){
+    func configView(with state: SimpleViewState<TVShow>) {
         
         switch state {
         case .populated(_):
@@ -81,10 +93,10 @@ class AiringTodayViewController: UIViewController{
 }
 
 //MARK: - DataSource, Delegate
-extension AiringTodayViewController: UICollectionViewDataSource{
+extension AiringTodayViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.viewState.value.currentEpisodes.count
+        return viewModel.viewState.value.currentEntities.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -92,7 +104,8 @@ extension AiringTodayViewController: UICollectionViewDataSource{
         item.viewModel = viewModel.getModelFor(indexPath.row)
         
         if case .paging(_, let nextPage) = viewModel.viewState.value,
-            indexPath.row == viewModel.viewState.value.currentEpisodes.count - 1 {
+            indexPath.row == viewModel.viewState.value.currentEntities.count - 1 {
+            print("get next Page: \(nextPage)")
             viewModel.getShows(for: nextPage)
         }
         
@@ -105,10 +118,10 @@ extension AiringTodayViewController: UICollectionViewDataSource{
     }
 }
 
-extension AiringTodayViewController: UICollectionViewDelegateFlowLayout{
+extension AiringTodayViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let idSelected = viewModel.viewState.value.currentEpisodes[indexPath.row].id
+        let idSelected = viewModel.viewState.value.currentEntities[indexPath.row].id
         performSegue(withIdentifier: "ShowTVShowDetail", sender: idSelected)
         
         collectionView.deselectItem(at: indexPath, animated: true)
@@ -128,5 +141,10 @@ extension AiringTodayViewController: UICollectionViewDelegateFlowLayout{
             return CGSize(width: 0, height: 0)
         }
     }
+    
+}
+
+// MARK: - AiringTodayViewControllersFactory
+protocol AiringTodayViewControllersFactory {
     
 }

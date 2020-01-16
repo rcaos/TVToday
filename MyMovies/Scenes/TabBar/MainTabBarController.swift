@@ -38,7 +38,7 @@ class MainTabBarController: UITabBarController {
         popularVC.tabBarItem = UITabBarItem(title: "Popular", image: UIImage(named: "popular"), tag: 1)
         let popularNavigation = UINavigationController(rootViewController: popularVC)
         
-        let searchVC = SearchViewController.create(with: SearchViewModel())
+        let searchVC = appDIContainer.makeSearchSceneDIContainer().makeSearchViewController()
         searchVC.tabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 2)
         let searchNavigation = UINavigationController(rootViewController: searchVC)
         

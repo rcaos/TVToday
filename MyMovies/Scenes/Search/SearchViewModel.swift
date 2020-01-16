@@ -10,32 +10,49 @@ import Foundation
 
 final class SearchViewModel{
     
-    private let genreService = ApiClient<GenreProvider>()
+    private let fetchGenresUseCase: FetchGenresUseCase
     
     var genres:[Genre]
     
     //Bindables
     var viewState:Bindable<ViewState> = Bindable(.loading)
     
-    init() {
+    private var showsLoadTask: Cancellable? {
+        willSet {
+            showsLoadTask?.cancel()
+        }
+    }
+    
+    init(fetchGenresUseCase: FetchGenresUseCase) {
+        self.fetchGenresUseCase = fetchGenresUseCase
         genres = []
     }
     
-    func getGenres(){
+    func getGenres() {
         
-        genreService.load(service: .getAll, decodeType: GenreListResult.self, completion: { result in
-            switch result{
+        showsLoadTask =  fetchGenresUseCase.execute(requestValue: FetchGenresUseCaseRequestValue()) { [weak self] result in
+            guard let strongSelf = self else { return }
+            switch result {
             case .success(let response):
-                self.processFetched(for: response.genres)
+                strongSelf.processFetched(for: response)
             case .failure(let error):
-                print("error: [\(error)]")
+                // MARK: - TODO // Handle error at View
+                print("Error to fetch Case use \(error)")
             }
-        })
+        }
     }
     
     //MARK: - Private
-    private func processFetched(for genres: [Genre]){
-        self.genres.append(contentsOf: genres)
+    
+    private func processFetched(for response: GenreListResult) {
+        let fetchedGenres = response.genres ?? []
+        
+        if fetchedGenres.isEmpty {
+            viewState.value = .empty
+            return
+        }
+        
+        self.genres.append(contentsOf: fetchedGenres)
         self.viewState.value = .populated(genres)
     }
     

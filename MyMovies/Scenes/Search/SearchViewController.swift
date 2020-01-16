@@ -12,30 +12,32 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
     
     @IBOutlet var tableView: UITableView!
     var searchController:UISearchController!
-    //var viewModel = SearchViewModel()
-    var viewModel:SearchViewModel! {
-        didSet {
-            print("Me asignaron un valor ViewModel Search")
-        }
-    }
+    
+    private var viewModel:SearchViewModel!
+    private var searchViewControllersFactory: SearchViewControllersFactory!
+    
     var lastSearch = ""
     
     var loadingView: UIView!
     
-    static func create(with viewModel: SearchViewModel) -> SearchViewController {
+    static func create(with viewModel: SearchViewModel,
+                       searchViewControllersFactory: SearchViewControllersFactory) -> SearchViewController {
         let controller = SearchViewController.instantiateViewController()
         controller.viewModel = viewModel
+        controller.searchViewControllersFactory = searchViewControllersFactory
         return controller
     }
     
+    //MARK: - Life Cycle
+    
     override func viewDidLoad() {
-        print("viewDidLoad Search")
         super.viewDidLoad()
         setupUI()
     }
     
     //MARK: - SetupView
-    func setupUI(){
+    
+    func setupUI() {
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationItem.title = "Search TV Shows"
         
@@ -45,7 +47,8 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
     }
     
     //MARK: - SetupTable
-    func setupTable(){
+    
+    func setupTable() {
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -54,8 +57,8 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
     }
     
     //MARK: - SetupSearchBar
-    func setupSearchBar(){
-        //let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    
+    func setupSearchBar() {
         let storyboard = UIStoryboard(name: "SearchViewController", bundle: nil)
         let toController = storyboard.instantiateViewController(withIdentifier: "searchResults")
         
@@ -79,7 +82,8 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
     }
     
     //MARK: - SetupViewModel
-    func setupViewModel(){
+    
+    func setupViewModel() {
         //Binding
         viewModel.viewState.bindAndFire({[unowned self] state in
             DispatchQueue.main.async {
@@ -90,7 +94,8 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
         viewModel.getGenres()
     }
     
-    //TODO: -handle other states-
+    // MARK: - TODO: -handle other states-
+    
     func configView(with state: SearchViewModel.ViewState){
         
         if let customView = loadingView{
@@ -106,7 +111,7 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
         }
     }
     
-    func buildLoadingView(){
+    func buildLoadingView() {
         let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
         activityIndicator.color = .darkGray
         activityIndicator.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
@@ -119,17 +124,18 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
         activityIndicator.startAnimating()
     }
     
-    func clearResults(){
+    func clearResults() {
         guard let controller = searchController.searchResultsController as? ResultsSearchViewController else { return }
         controller.viewModel.clearShows()
     }
     
-    func search(for query: String){
+    func search(for query: String) {
         guard let controller = searchController.searchResultsController as? ResultsSearchViewController else { return }
         controller.viewModel.searchShows(for: query, page: 1)
     }
     
     //MARK: - Nagivation
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowTVShowDetail"{
             guard let toController = segue.destination as? TVShowDetailViewController else { return }
@@ -145,14 +151,18 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
 }
 
 //MARK: - UISearchResultsUpdating
-extension SearchViewController: UISearchResultsUpdating{
+
+extension SearchViewController: UISearchResultsUpdating {
+    
     func updateSearchResults(for searchController: UISearchController) {
         searchController.searchResultsController?.view.isHidden = false
     }
 }
 
 //MARK: - UISearchBarDelegate
-extension SearchViewController: UISearchBarDelegate{
+
+extension SearchViewController: UISearchBarDelegate {
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let query = searchBar.text {
             
@@ -171,7 +181,9 @@ extension SearchViewController: UISearchBarDelegate{
 }
 
 //MARK: - UITableViewDataSource
-extension SearchViewController: UITableViewDataSource{
+
+extension SearchViewController: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.viewState.value.currentEpisodes.count
     }
@@ -184,7 +196,9 @@ extension SearchViewController: UITableViewDataSource{
 }
 
 //MARK: - UITableViewDelegate
-extension SearchViewController: UITableViewDelegate{
+
+extension SearchViewController: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let genre = viewModel.genres[indexPath.row]
         if let id = genre.id{
@@ -195,8 +209,16 @@ extension SearchViewController: UITableViewDelegate{
 }
 
 //MARK: - ResultsSearchViewControllerDelegate
-extension SearchViewController: ResultsSearchViewControllerDelegate{
+
+extension SearchViewController: ResultsSearchViewControllerDelegate {
+    
     func resultsSearchViewController(_ resultsSearchViewController: ResultsSearchViewController, didSelectedMovie movie: Int) {
         performSegue(withIdentifier: "ShowTVShowDetail", sender: movie)
     }
+}
+
+// MARK: - SearchViewControllersFactory
+
+protocol SearchViewControllersFactory {
+    
 }

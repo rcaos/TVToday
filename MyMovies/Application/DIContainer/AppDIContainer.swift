@@ -53,4 +53,11 @@ extension AppDIContainer {
     
     
     // MARK : - DIContainers Search
+    
+    func makeSearchSceneDIContainer() -> SearchSceneDIContainer {
+        let dependencies = SearchSceneDIContainer.Dependencies(
+            apiDataTransferService: apiDataTransferService,
+            imageDataTransferService: imageTransferService)
+        return SearchSceneDIContainer(dependencies: dependencies)
+    }
 }

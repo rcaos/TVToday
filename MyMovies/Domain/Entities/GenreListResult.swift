@@ -9,11 +9,7 @@
 import Foundation
 
 struct GenreListResult {
+    
     var genres:[Genre]!
-}
-
-// MARK: - TODO Mover a Data Layer
-
-extension GenreListResult: Codable {
     
 }

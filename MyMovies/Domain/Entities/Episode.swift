@@ -17,19 +17,6 @@ struct Episode {
     var episodePath: String!
 }
 
-// MARK: - TODO Mover a Data layer
-
-extension Episode: Codable {
-    
-    enum CodingKeys: String, CodingKey {
-        case episodeNumber = "episode_number"
-        case name
-        case airDate = "air_date"
-        case voteAverage =  "vote_average"
-        case episodePath = "still_path"
-    }
-}
-
 extension Episode {
     
     var average: String {

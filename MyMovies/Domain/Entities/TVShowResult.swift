@@ -16,18 +16,6 @@ struct TVShowResult {
     let totalPages: Int!
 }
 
-// MARK: - TODO Mover a Data Layer
-
-extension TVShowResult: Codable {
-    
-    enum CodingKeys: String, CodingKey{
-        case page
-        case results
-        case totalResults = "total_results"
-        case totalPages = "total_pages"
-    }
-}
-
 extension TVShowResult {
     
     var hasMorePages: Bool {

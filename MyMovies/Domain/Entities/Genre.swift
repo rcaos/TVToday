@@ -11,11 +11,6 @@ import Foundation
 struct Genre {
     
     var id: Int!
-    var name: String!
-}
-
-// MARK: - TODO Mover a Data Layer
-
-extension Genre: Codable {
     
+    var name: String!
 }

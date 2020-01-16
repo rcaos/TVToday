@@ -29,36 +29,11 @@ struct TVShowDetailResult {
     var status: String!
 }
 
-// MARK: - TODO Mover a Data Layer
-
-extension TVShowDetailResult: Codable {
-    
-    enum CodingKeys: String, CodingKey {
-        case id
-        case name
-        case firstAirDate = "first_air_date"
-        case lasttAirDate = "last_air_date"
-        case episodeRunTime = "episode_run_time"
-        case genreIds = "genres"
-        case numberOfEpisodes = "number_of_episodes"
-        case numberOfSeasons = "number_of_seasons"
-        
-        case posterPath = "poster_path"
-        case backDropPath = "backdrop_path"
-        case overview
-        
-        case voteAverage = "vote_average"
-        case voteCount = "vote_count"
-        
-        case status
-    }
-}
-
 extension TVShowDetailResult {
     
     //MARK: - Computed
     
-    var releaseYears:String? {
+    var releaseYears: String? {
         let yearIni = getYear(from: firstAirDate)
         
         var yearEnd = ""
@@ -71,7 +46,7 @@ extension TVShowDetailResult {
         return yearIni + " - " + yearEnd
     }
     
-    var episodeDuration:String? {
+    var episodeDuration: String? {
         var duration = ""
         if let runTime = episodeRunTime?.first {
             duration = "\(String(runTime))"

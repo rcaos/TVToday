@@ -10,6 +10,18 @@ import Foundation
 
 protocol TVShowsRepository {
     
-    func tvShowsList(page: Int,
+    func tvShowsList(with filter: TVShowsListFilter,
+                     page: Int,
                      completion: @escaping(Result<TVShowResult,Error>) -> Void) -> Cancellable?
+}
+
+// MARK: - TVShowsListFilter
+
+enum TVShowsListFilter {
+
+    case today, popular
+    
+    case byGenre(genreId: Int)
+    
+    case search(query: String)
 }

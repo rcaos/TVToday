@@ -21,14 +21,28 @@ final class DefaultTVShowsRepository {
 
 extension DefaultTVShowsRepository: TVShowsRepository {
     
-    func tvShowsList(page: Int,
+    func tvShowsList(with filter: TVShowsListFilter,
+                     page: Int,
                      completion: @escaping (Result<TVShowResult, Error>) -> Void) -> Cancellable? {
         
-        let endPoint: TVShowsProvider = .getAiringTodayShows(page)
+        let endPoint = getProvider(with: filter, page: page)
         
         let networkTask = dataTransferService.request(service: endPoint,
                          decodeType: TVShowResult.self,
                          completion: completion)
         return RepositoryTask(networkTask: networkTask)
+    }
+    
+    private func getProvider(with filter: TVShowsListFilter, page: Int) -> TVShowsProvider {
+        switch filter {
+        case .today:
+            return TVShowsProvider.getAiringTodayShows(page)
+        case .popular:
+            return TVShowsProvider.getPopularTVShows(page)
+        case .byGenre(let genreId):
+            return TVShowsProvider.listTVShowsBy(genreId, page)
+        case .search(let query):
+            return TVShowsProvider.searchTVShow(query, page)
+        }
     }
 }

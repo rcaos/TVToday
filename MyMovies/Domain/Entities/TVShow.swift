@@ -15,9 +15,9 @@ struct TVShow {
     var voteAverage: Double!
     var firstAirDate: String!
     
-    var posterPath: String!
+    var posterPath: String?
     var genreIds: [Int]!
-    var backDropPath: String!
+    var backDropPath: String?
     var overview: String!
     var originCountry: [String]!
     var voteCount: Int!

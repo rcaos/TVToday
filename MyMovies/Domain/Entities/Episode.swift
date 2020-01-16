@@ -14,7 +14,7 @@ struct Episode {
     var name: String!
     var airDate: String!
     var voteAverage: Double!
-    var episodePath: String!
+    var episodePath: String?
 }
 
 extension Episode {

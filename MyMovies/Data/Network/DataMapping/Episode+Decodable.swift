@@ -25,6 +25,6 @@ extension Episode: Decodable {
         self.name = try container.decode(String.self, forKey: .name)
         self.airDate = try container.decode(String.self, forKey: .airDate)
         self.voteAverage = try container.decode(Double.self, forKey: .voteAverage)
-        self.episodePath = try container.decode(String.self, forKey: .episodePath)
+        self.episodePath = try container.decodeIfPresent(String.self, forKey: .episodePath)
     }
 }

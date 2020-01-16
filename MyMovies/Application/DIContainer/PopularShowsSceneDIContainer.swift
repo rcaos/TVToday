@@ -1,14 +1,15 @@
 //
-//  TVShowsSceneDIContainer.swift
+//  PopularShowsSceneDIContainer.swift
 //  TVToday
 //
-//  Created by Jeans Ruiz on 1/14/20.
+//  Created by Jeans Ruiz on 1/16/20.
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
+import Foundation
 import UIKit
 
-final class TodayShowsSceneDIContainer {
+final class PopularShowsSceneDIContainer {
     
     struct Dependencies {
         let apiDataTransferService: DataTransferService
@@ -23,25 +24,25 @@ final class TodayShowsSceneDIContainer {
         self.dependencies = dependencies
     }
     
-    func makeAiringTodayViewController() -> UIViewController {
-        return AiringTodayViewController.create( with: makeAiringTodayViewModel(),
-                                                 airingTodayViewControllersFactory: self)
+    func makePopularsViewController() -> UIViewController {
+        return PopularsViewController.create( with: makePopularsViewModel(),
+                                              popularsViewControllersFactory: self)
     }
 }
 
 // MARK: - Private
 
-extension TodayShowsSceneDIContainer {
+extension PopularShowsSceneDIContainer {
     
     // MARK: - TODO cambiar ViewModel por protocolm, Agregar repository de Imágenes
     
-    private func makeAiringTodayViewModel() -> AiringTodayViewModel {
-        return AiringTodayViewModel(fetchTodayShowsUseCase: makeFetchTodayShowsUseCase())
+    private func makePopularsViewModel() -> PopularViewModel {
+        return PopularViewModel(fetchPopularsShowsUseCase: makeFetchPopularsShowsUseCase())
     }
     
     // MARK: - Use Cases
     
-    private func makeFetchTodayShowsUseCase() -> FetchTVShowsUseCase {
+    private func makeFetchPopularsShowsUseCase() -> FetchTVShowsUseCase {
         return DefaultFetchTVShowsUseCase(tvShowsRepository: makeTVShowsRepository())
     }
     
@@ -52,8 +53,8 @@ extension TodayShowsSceneDIContainer {
     }
 }
 
-// MARK: - AiringTodayViewControllersFactory
+// MARK: - PopularsViewControllersFactory
 
-extension TodayShowsSceneDIContainer: AiringTodayViewControllersFactory {
+extension PopularShowsSceneDIContainer: PopularsViewControllersFactory {
     
 }

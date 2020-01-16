@@ -8,9 +8,9 @@
 
 import Foundation
 
-final class PopularViewModel: ShowsViewModel{
+final class PopularViewModel {
     
-    private let showsService = ApiClient<TVShowsProvider>()
+    private let fetchPopularsShowsUseCase: FetchTVShowsUseCase
     
     var shows: [TVShow]
     var models: [TVShowCellViewModel]
@@ -18,29 +18,42 @@ final class PopularViewModel: ShowsViewModel{
     //Bindables
     var viewState:Bindable<ViewState> = Bindable(.loading)
     
-    init() {
+    private var showsLoadTask: Cancellable? {
+        willSet {
+            showsLoadTask?.cancel()
+        }
+    }
+    
+    // MARK: - Initializers
+    
+    init(fetchPopularsShowsUseCase: FetchTVShowsUseCase) {
+        self.fetchPopularsShowsUseCase = fetchPopularsShowsUseCase
         shows = []
         models = []
     }
     
     //MARK: - Fetch Shows
-    func getShows(for page: Int){
+    
+    func getShows(for page: Int) {
         self.viewState.value = .loading
         
-        showsService.load(service: .getPopularTVShows(page) , decodeType: TVShowResult.self, completion: { result in
-            switch result{
-            case .success(let response):
-                self.processFetched(for: response)
+        let request = FetchTVShowsUseCaseRequestValue(filter: .popular, page: page)
+        
+        showsLoadTask = fetchPopularsShowsUseCase.execute(requestValue: request) { [weak self] result in
+            guard let strongSelf = self else { return }
+            switch result {
+            case .success(let results):
+                strongSelf.processFetched(for: results)
             case .failure(let error):
-                print(error)
+                // MARK: - TODO , handle error at View
+                print("Error to fetch Case use \(error)")
             }
-        })
+        }
     }
     
     //MARK: - Private
-    private func processFetched(for response: TVShowResult){
-        print("Page: \(response.page), Total Pages: \(response.totalPages), Has More Pages: \(response.hasMorePages), Next Page: \(response.nextPage)\n")
-        
+    
+    private func processFetched(for response: TVShowResult) {
         var fetchedShows:[TVShow] = []
         if let shows = response.results {
             fetchedShows.append(contentsOf: shows)
@@ -57,12 +70,14 @@ final class PopularViewModel: ShowsViewModel{
     }
     
     //MARK: - Build Models
+    
     func buildShowDetailViewModel(for showId: Int) -> TVShowDetailViewModel {
         return TVShowDetailViewModel(showId)
     }
 }
 
-extension PopularViewModel{
+extension PopularViewModel {
+    
     enum ViewState {
         
         case loading

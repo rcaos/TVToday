@@ -13,6 +13,7 @@
 		7701B33A23D0C3E3003DA227 /* Episode+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7701B33923D0C3E3003DA227 /* Episode+Decodable.swift */; };
 		7701B33C23D0C44D003DA227 /* GenreListResult+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7701B33B23D0C44D003DA227 /* GenreListResult+Decodable.swift */; };
 		7701B33E23D0C49D003DA227 /* SeasonResult+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7701B33D23D0C49D003DA227 /* SeasonResult+Decodable.swift */; };
+		7701B34323D0D30C003DA227 /* PopularShowsSceneDIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7701B34223D0D30C003DA227 /* PopularShowsSceneDIContainer.swift */; };
 		770373872345134100775698 /* AiringTodayCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770373852345134100775698 /* AiringTodayCollectionViewCell.swift */; };
 		770373882345134100775698 /* AiringTodayCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 770373862345134100775698 /* AiringTodayCollectionViewCell.xib */; };
 		7703738B234517B000775698 /* AiringTodayCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7703738A234517B000775698 /* AiringTodayCollectionViewModel.swift */; };
@@ -56,7 +57,6 @@
 		7787CFDA23554290007DA54E /* GenreProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7787CFD923554290007DA54E /* GenreProvider.swift */; };
 		7787CFDC23554609007DA54E /* ImagesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7787CFDB23554609007DA54E /* ImagesProvider.swift */; };
 		778B47E823CE0BE1009AE084 /* FetchTodayShowsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778B47E723CE0BE1009AE084 /* FetchTodayShowsUseCase.swift */; };
-		778B47EA23CE0BF9009AE084 /* FetchPopularShowsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778B47E923CE0BF9009AE084 /* FetchPopularShowsUseCase.swift */; };
 		778B47EC23CE0C0C009AE084 /* SearchShowsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778B47EB23CE0C0C009AE084 /* SearchShowsUseCase.swift */; };
 		778B47EF23CE0C65009AE084 /* TVShowsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778B47EE23CE0C65009AE084 /* TVShowsRepository.swift */; };
 		778B47F323CE1778009AE084 /* DefaultTVShowsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778B47F223CE1778009AE084 /* DefaultTVShowsRepository.swift */; };
@@ -105,6 +105,7 @@
 		7701B33923D0C3E3003DA227 /* Episode+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Episode+Decodable.swift"; sourceTree = "<group>"; };
 		7701B33B23D0C44D003DA227 /* GenreListResult+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GenreListResult+Decodable.swift"; sourceTree = "<group>"; };
 		7701B33D23D0C49D003DA227 /* SeasonResult+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SeasonResult+Decodable.swift"; sourceTree = "<group>"; };
+		7701B34223D0D30C003DA227 /* PopularShowsSceneDIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularShowsSceneDIContainer.swift; sourceTree = "<group>"; };
 		770373852345134100775698 /* AiringTodayCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AiringTodayCollectionViewCell.swift; sourceTree = "<group>"; };
 		770373862345134100775698 /* AiringTodayCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AiringTodayCollectionViewCell.xib; sourceTree = "<group>"; };
 		7703738A234517B000775698 /* AiringTodayCollectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AiringTodayCollectionViewModel.swift; sourceTree = "<group>"; };
@@ -148,7 +149,6 @@
 		7787CFD923554290007DA54E /* GenreProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreProvider.swift; sourceTree = "<group>"; };
 		7787CFDB23554609007DA54E /* ImagesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesProvider.swift; sourceTree = "<group>"; };
 		778B47E723CE0BE1009AE084 /* FetchTodayShowsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchTodayShowsUseCase.swift; sourceTree = "<group>"; };
-		778B47E923CE0BF9009AE084 /* FetchPopularShowsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchPopularShowsUseCase.swift; sourceTree = "<group>"; };
 		778B47EB23CE0C0C009AE084 /* SearchShowsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchShowsUseCase.swift; sourceTree = "<group>"; };
 		778B47EE23CE0C65009AE084 /* TVShowsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowsRepository.swift; sourceTree = "<group>"; };
 		778B47F223CE1778009AE084 /* DefaultTVShowsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTVShowsRepository.swift; sourceTree = "<group>"; };
@@ -272,6 +272,7 @@
 			children = (
 				770860F523CE6F5300625183 /* AppDIContainer.swift */,
 				770860F823CE6F6C00625183 /* TodayShowsSceneDIContainer.swift */,
+				7701B34223D0D30C003DA227 /* PopularShowsSceneDIContainer.swift */,
 			);
 			path = DIContainer;
 			sourceTree = "<group>";
@@ -398,7 +399,6 @@
 			isa = PBXGroup;
 			children = (
 				778B47E723CE0BE1009AE084 /* FetchTodayShowsUseCase.swift */,
-				778B47E923CE0BF9009AE084 /* FetchPopularShowsUseCase.swift */,
 				778B47EB23CE0C0C009AE084 /* SearchShowsUseCase.swift */,
 			);
 			path = UseCases;
@@ -747,6 +747,7 @@
 				7736A088231FF25500566F0B /* MainTabBarController.swift in Sources */,
 				77193F3B232FE2D9007FA822 /* PopularsViewModel.swift in Sources */,
 				77F49CAA2357864200AF12F8 /* CustomFooterView.swift in Sources */,
+				7701B34323D0D30C003DA227 /* PopularShowsSceneDIContainer.swift in Sources */,
 				7701B33823D0C0C5003DA227 /* TVShowDetailResult+Decodable.swift in Sources */,
 				77FFDE30233BA6C500C4096F /* SeasonHeaderView.swift in Sources */,
 				77EEF807233AA73A0054A499 /* SeasonEpisodeTableViewModel.swift in Sources */,
@@ -770,7 +771,6 @@
 				77193F3F232FEB4A007FA822 /* SearchViewModel.swift in Sources */,
 				7787CFDA23554290007DA54E /* GenreProvider.swift in Sources */,
 				7787CFD323553ED0007DA54E /* ApiError.swift in Sources */,
-				778B47EA23CE0BF9009AE084 /* FetchPopularShowsUseCase.swift in Sources */,
 				770860EE23CE6C4900625183 /* TVShowResult+Decodable.swift in Sources */,
 				77E00DBC23CFB70A00B62B15 /* NetworkConfigurable.swift in Sources */,
 				77EEF7FF233AA6C40054A499 /* SeasonEpisodeCollectionViewCell.swift in Sources */,

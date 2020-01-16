@@ -42,8 +42,8 @@ extension TVShowDetailResult: Decodable {
         self.numberOfEpisodes = try container.decode(Int.self, forKey: .numberOfEpisodes)
         self.numberOfSeasons = try container.decode(Int.self, forKey: .numberOfSeasons)
         
-        self.posterPath = try container.decode(String.self, forKey: .posterPath)
-        self.backDropPath = try container.decode(String.self, forKey: .backDropPath)
+        self.posterPath = try container.decodeIfPresent(String.self, forKey: .posterPath)
+        self.backDropPath = try container.decodeIfPresent(String.self, forKey: .backDropPath)
         self.overview = try container.decode(String.self, forKey: .overview)
         
         self.voteAverage = try container.decode(Double.self, forKey: .voteAverage)

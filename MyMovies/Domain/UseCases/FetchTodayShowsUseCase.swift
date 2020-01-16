@@ -8,21 +8,19 @@
 
 import Foundation
 
-// MARK: - TODO, tendría que tener una abstraccion para
-//  Today, Popular, lo que cambia es la URL,
-
-protocol FetchTodayShowsUseCase {
-    func execute(requestValue: FetchTodayUseCaseRequestValue,
+protocol FetchTVShowsUseCase {
+    func execute(requestValue: FetchTVShowsUseCaseRequestValue,
                  completion: @escaping(Result<TVShowResult, Error>) -> Void) -> Cancellable?
 }
 
-struct FetchTodayUseCaseRequestValue {
+struct FetchTVShowsUseCaseRequestValue {
+    let filter: TVShowsListFilter
     let page: Int
 }
 
 // MARK: - DefaultFetchTodayShowsUseCase
 
-final class DefaultFetchTodayShowsUseCase: FetchTodayShowsUseCase {
+final class DefaultFetchTVShowsUseCase: FetchTVShowsUseCase {
     
     private let tvShowsRepository: TVShowsRepository
     
@@ -30,10 +28,11 @@ final class DefaultFetchTodayShowsUseCase: FetchTodayShowsUseCase {
         self.tvShowsRepository = tvShowsRepository
     }
     
-    func execute(requestValue: FetchTodayUseCaseRequestValue,
+    func execute(requestValue: FetchTVShowsUseCaseRequestValue,
                  completion: @escaping (Result<TVShowResult, Error>) -> Void) -> Cancellable? {
         
-        return tvShowsRepository.tvShowsList(page: requestValue.page) { result in
+        return tvShowsRepository.tvShowsList(with: requestValue.filter,
+                                             page: requestValue.page) { result in
             switch result {
             case .success:
                 completion(result)

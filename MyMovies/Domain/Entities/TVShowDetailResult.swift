@@ -19,8 +19,8 @@ struct TVShowDetailResult {
     var numberOfEpisodes:Int!
     var numberOfSeasons:Int!
     
-    var posterPath: String!
-    var backDropPath: String!
+    var posterPath: String?
+    var backDropPath: String?
     var overview: String!
     
     var voteAverage: Double!

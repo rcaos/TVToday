@@ -10,7 +10,7 @@ import Foundation
 
 final class AiringTodayViewModel {
     
-    private let fetchTodayShowsUseCase: FetchTodayShowsUseCase
+    private let fetchTodayShowsUseCase: FetchTVShowsUseCase
     
     var tvShowsCells: [AiringTodayCollectionViewModel] = []
     
@@ -28,18 +28,18 @@ final class AiringTodayViewModel {
     
     // MARK: - Initializers
     
-    init(fetchTodayShowsUseCase: FetchTodayShowsUseCase) {
+    init(fetchTodayShowsUseCase: FetchTVShowsUseCase) {
         self.fetchTodayShowsUseCase = fetchTodayShowsUseCase
     }
     
     // MARK: - Fetch Shows
     
-    func getShows(for page: Int){
+    func getShows(for page: Int) {
         if viewState.value.isInitialPage {
             viewState.value =  .loading
         }
         
-        let request = FetchTodayUseCaseRequestValue(page: page)
+        let request = FetchTVShowsUseCaseRequestValue(filter: .today, page: page)
         
         showsLoadTask = fetchTodayShowsUseCase.execute(requestValue: request) { [weak self] result in
             guard let strongSelf = self else { return }
@@ -47,12 +47,13 @@ final class AiringTodayViewModel {
             case .success(let results):
                 strongSelf.processFetched(for: results)
             case .failure(let error):
+                // MARK: - TODO // Handle error at View
                 print("Error to fetch Case use \(error)")
             }
         }
     }
     
-    func getModelFor(_ index:Int) -> AiringTodayCollectionViewModel{
+    func getModelFor(_ index:Int) -> AiringTodayCollectionViewModel {
         return tvShowsCells[index]
     }
     

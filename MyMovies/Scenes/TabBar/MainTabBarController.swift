@@ -34,7 +34,7 @@ class MainTabBarController: UITabBarController {
         airingTodayVC.tabBarItem = UITabBarItem(title: "Today", image: UIImage(named: "calendar"), tag: 0)
         let todayNavigation = UINavigationController(rootViewController: airingTodayVC)
         
-        let popularVC = PopularsViewController.create(with: PopularViewModel())
+        let popularVC = appDIContainer.makePopularsSceneDIContainer().makePopularsViewController()
         popularVC.tabBarItem = UITabBarItem(title: "Popular", image: UIImage(named: "popular"), tag: 1)
         let popularNavigation = UINavigationController(rootViewController: popularVC)
         

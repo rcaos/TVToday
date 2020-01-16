@@ -32,9 +32,9 @@ extension TVShow: Decodable {
         self.voteAverage = try container.decode(Double.self, forKey: .voteAverage)
         self.firstAirDate = try container.decode(String.self, forKey: .firstAirDate)
         
-        self.posterPath = try container.decode(String.self, forKey: .posterPath)
+        self.posterPath = try container.decodeIfPresent(String.self, forKey: .posterPath)
         self.genreIds = try container.decode([Int].self, forKey: .genreIds)
-        self.backDropPath = try container.decode(String.self, forKey: .backDropPath)
+        self.backDropPath = try container.decodeIfPresent(String.self, forKey: .backDropPath)
         self.overview = try container.decode(String.self, forKey: .overview)
         self.originCountry = try container.decode([String].self, forKey: .originCountry)
         self.voteCount = try container.decode(Int.self, forKey: .voteCount)

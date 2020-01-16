@@ -8,23 +8,6 @@
 
 import Foundation
 
-enum ShowsListFilter {
-    
-    case today, popular
-    case byGenre(genreId: Int)
-    
-    var title: String {
-        switch self {
-        case .today:
-            return "Today on TV"
-        case .popular:
-            return "Popular TV Shows"
-        case .byGenre(_):
-            return ""
-        }
-    }
-}
-
 protocol ShowsViewModel{
     
 //    associatedtype TVShowCellViewModel

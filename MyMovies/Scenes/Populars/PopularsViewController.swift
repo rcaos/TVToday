@@ -10,22 +10,21 @@ import UIKit
 
 class PopularsViewController: UITableViewController, StoryboardInstantiable {
 
-    //var viewModel = PopularViewModel()
-    var viewModel:PopularViewModel! {
-        didSet {
-            print("Me asignaron un valor Populars")
-        }
-    }
+    var viewModel:PopularViewModel!
+    private var popularsViewControllersFactory: PopularsViewControllersFactory!
     
     var loadingView: UIView!
     
-    static func create(with viewModel: PopularViewModel) -> PopularsViewController {
+    static func create(with viewModel: PopularViewModel,
+                       popularsViewControllersFactory: PopularsViewControllersFactory) -> PopularsViewController {
         let controller = PopularsViewController.instantiateViewController()
         controller.viewModel = viewModel
+        controller.popularsViewControllersFactory = popularsViewControllersFactory
         return controller
     }
     
     //MARK: - Life Cycle
+    
     override func viewDidLoad() {
         print("viewDidLoad Populars")
         super.viewDidLoad()
@@ -40,14 +39,15 @@ class PopularsViewController: UITableViewController, StoryboardInstantiable {
     }
     
     //MARK: - SetupView
-    func setupUI(){
+    
+    func setupUI() {
         navigationItem.title = "Popular TV Shows"
-        //navigationController?.navigationBar.prefersLargeTitles = true
         setupTable()
     }
     
     //MARK: - SetupTable
-    func setupTable(){
+    
+    func setupTable() {
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -58,7 +58,8 @@ class PopularsViewController: UITableViewController, StoryboardInstantiable {
     }
     
     //MARK: - SetupUI
-    func setupViewModel(){
+    
+    func setupViewModel() {
         
         //Binding
         viewModel.viewState.bindAndFire({ [unowned self] state in
@@ -70,7 +71,7 @@ class PopularsViewController: UITableViewController, StoryboardInstantiable {
         viewModel.getShows(for: 1)
     }
     
-    func configView(with state: PopularViewModel.ViewState){
+    func configView(with state: PopularViewModel.ViewState) {
         
         switch state {
         case .populated(_) :
@@ -86,7 +87,7 @@ class PopularsViewController: UITableViewController, StoryboardInstantiable {
         }
     }
     
-    func buildLoadingView(){
+    func buildLoadingView() {
         let defaultFrame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
         
         let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
@@ -102,6 +103,7 @@ class PopularsViewController: UITableViewController, StoryboardInstantiable {
     }
     
     //MARK: - Navigation
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowTVShowDetail"{
             let indexPath =  sender as! IndexPath
@@ -116,6 +118,7 @@ class PopularsViewController: UITableViewController, StoryboardInstantiable {
 extension PopularsViewController{
     
     // MARK: - Table view data source
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.viewState.value.currentEpisodes.count
     }
@@ -132,9 +135,17 @@ extension PopularsViewController{
         return cell
     }
     
-    //MARK: - Delegate
+    //MARK: - TableView Delegate
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "ShowTVShowDetail", sender: indexPath)
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }
+
+// MARK: - PopularsViewControllersFactory
+
+protocol PopularsViewControllersFactory {
+    
+}
+

@@ -44,6 +44,13 @@ extension AppDIContainer {
     
     // MARK : - DIContainers Popular
     
+    func makePopularsSceneDIContainer() -> PopularShowsSceneDIContainer {
+        let dependencies = PopularShowsSceneDIContainer.Dependencies(
+            apiDataTransferService: apiDataTransferService,
+            imageDataTransferService: imageTransferService)
+        return PopularShowsSceneDIContainer(dependencies: dependencies)
+    }
+    
     
     // MARK : - DIContainers Search
 }

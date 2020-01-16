@@ -9,10 +9,8 @@
 import Foundation
 
 final class AiringTodayViewModel {
-    private let showsService = ApiClient<TVShowsProvider>()
     
     private let fetchTodayShowsUseCase: FetchTodayShowsUseCase
-    //var posterImageRepository: String
     
     var tvShowsCells: [AiringTodayCollectionViewModel] = []
     
@@ -40,15 +38,6 @@ final class AiringTodayViewModel {
         if viewState.value.isInitialPage {
             viewState.value =  .loading
         }
-        
-//        showsService.load(service: .getAiringTodayShows(page), decodeType: TVShowResult.self, completion: { result in
-//            switch result{
-//            case .success(let response):
-//               self.processFetched(for: response)
-//            case .failure(let error):
-//                print(error)
-//            }
-//        })
         
         let request = FetchTodayUseCaseRequestValue(page: page)
         

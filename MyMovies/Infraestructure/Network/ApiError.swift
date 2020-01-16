@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum APIError: Error{
+enum APIError: Error {
     
     case requestFailed
     case invalidData
@@ -19,7 +19,7 @@ enum APIError: Error{
     
     case unknown(HTTPURLResponse?)
     
-    init(response: URLResponse?){
+    init(response: URLResponse?) {
         guard let response = response as? HTTPURLResponse else {
             self = .unknown(nil)
             return

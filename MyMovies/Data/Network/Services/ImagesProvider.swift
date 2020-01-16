@@ -13,7 +13,8 @@ enum ImagesProvider {
     case getBackDrop(BackDropSize, String)
 }
 
-extension ImagesProvider: EndPointOld {
+extension ImagesProvider: EndPoint {
+    
     var baseURL: String {
         return "https://image.tmdb.org"
     }
@@ -25,6 +26,10 @@ extension ImagesProvider: EndPointOld {
         case .getBackDrop(let size, let path):
             return "/t/p/\(size.rawValue)/\(path)"
         }
+    }
+    
+    func getParameters(with config: NetworkConfigurable) -> [String: Any] {
+        return [:]
     }
     
     var parameters: [String: Any]? {

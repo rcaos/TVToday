@@ -9,6 +9,7 @@
 import Foundation
 
 enum TVShowsProvider {
+    
     case getAiringTodayShows(Int)
     case getPopularTVShows(Int)
     case getTVShowDetail(Int)
@@ -17,7 +18,8 @@ enum TVShowsProvider {
     case listTVShowsBy(Int,Int)
 }
 
-extension TVShowsProvider: EndPointOld {
+extension TVShowsProvider: EndPoint {
+    
     var baseURL: String {
         return "https://api.themoviedb.org"
     }
@@ -37,6 +39,42 @@ extension TVShowsProvider: EndPointOld {
         case .listTVShowsBy:
             return "/3/discover/tv"
         }
+    }
+    
+    func getParameters(with config: NetworkConfigurable) -> [String: Any] {
+        var params: [String: Any] = [:]
+        
+        switch self {
+        case .getAiringTodayShows(let page):
+            params["api_key"] = config.queryParameters["api_key"]
+            params["language"] = config.queryParameters["language"]
+            params["page"] = page
+        case .getPopularTVShows(let page):
+            params["api_key"] = config.queryParameters["api_key"]
+            params["language"] = config.queryParameters["language"]
+            params["page"] = page
+        case .getTVShowDetail(_):
+            params["api_key"] = config.queryParameters["api_key"]
+            params["language"] = config.queryParameters["language"]
+        case .getEpisodesFor(_, _):
+            params["api_key"] = config.queryParameters["api_key"]
+            params["language"] = config.queryParameters["language"]
+        case .searchTVShow(let query, let page):
+            params["api_key"] = config.queryParameters["api_key"]
+            params["language"] = config.queryParameters["language"]
+            params["query"] = query
+            params["page"] = page
+        case .listTVShowsBy(let genre, let page):
+            params["api_key"] = config.queryParameters["api_key"]
+            params["language"] = config.queryParameters["language"]
+            params["with_genres"] = genre
+            params["page"] = page
+            params["sort_by"] = "popularity.desc"
+            params["timezone"] = "America%2FNew_York"
+            params["include_null_first_air_dates"] = "false"
+        }
+        
+        return params
     }
     
     var parameters: [String: Any]? {

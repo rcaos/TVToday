@@ -2,7 +2,7 @@
 //  NetworkConfigurable.swift
 //  TVToday
 //
-//  Created by Jeans Ruiz on 1/14/20.
+//  Created by Jeans Ruiz on 1/15/20.
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
@@ -10,24 +10,22 @@ import Foundation
 
 public protocol NetworkConfigurable {
     
-    var baseURL: URL { get }
+    var baseURL: String { get }
     
     var headers: [String: String] { get }
     
     var queryParameters: [String: String] { get }
 }
 
-// MARK: - NetworkConfigurable
-
 public struct ApiDataNetworkConfig: NetworkConfigurable {
     
-    public let baseURL: URL
+    public let baseURL: String
     
     public let headers: [String: String]
     
     public let queryParameters: [String: String]
     
-    public init(baseURL: URL,
+    public init(baseURL: String,
                 headers: [String: String] = [:],
                 queryParameters: [String: String] = [:]) {
         self.baseURL = baseURL

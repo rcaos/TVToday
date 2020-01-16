@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ApiClient<T: EndPointOld> {
+class ApiClient<T: EndPoint> {
     var urlSession = URLSession.shared
     
     init() { }

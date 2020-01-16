@@ -24,10 +24,11 @@ extension DefaultTVShowsRepository: TVShowsRepository {
     func tvShowsList(page: Int,
                      completion: @escaping (Result<TVShowResult, Error>) -> Void) -> Cancellable? {
         
-        let endPoint = APIEndpoints.todayTVShows(page: page)
-        print("endPoint: [\(endPoint)]")
-        let networkTask = self.dataTransferService.request(with: endPoint,
-                                                           completion: completion)
+        let endPoint: TVShowsProvider = .getAiringTodayShows(page)
+        
+        let networkTask = dataTransferService.request(service: endPoint,
+                         decodeType: TVShowResult.self,
+                         completion: completion)
         return RepositoryTask(networkTask: networkTask)
     }
 }

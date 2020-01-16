@@ -13,26 +13,21 @@ final class AppDIContainer {
     lazy var appConfigurations = AppConfigurations()
     
     lazy var apiDataTransferService: DataTransferService = {
-        let baseURL = URL(string: appConfigurations.apiBaseURL)!
-        let queryParameters =
-            ["api_key": appConfigurations.apiKey,
-             "language": NSLocale.preferredLanguages.first ?? "en"]
+        let queryParameters = [
+            "api_key": appConfigurations.apiKey,
+            "language": NSLocale.preferredLanguages.first ?? "en"]
         
-        let config = ApiDataNetworkConfig(baseURL: baseURL, queryParameters: queryParameters)
+        let configuration = ApiDataNetworkConfig(
+            baseURL: appConfigurations.apiBaseURL,
+            queryParameters: queryParameters)
         
-        let apiDataNetwork = DefaultNetworkService(config: config)
-        
-        return DefaultDataTransferService(with: apiDataNetwork)
+        return ApiClientNew<TVShowsProvider>(with: configuration)
     }()
     
     lazy var imageTransferService: DataTransferService = {
-        let baseURL = URL(string: appConfigurations.apiBaseURL)!
-        
-        let config = ApiDataNetworkConfig(baseURL: baseURL)
-        
-        let apiDataNetwork = DefaultNetworkService(config: config)
-        
-        return DefaultDataTransferService(with: apiDataNetwork)
+        let configuration = ApiDataNetworkConfig(
+            baseURL: appConfigurations.imagesBaseURL)
+        return ApiClientNew<ImagesProvider>(with: configuration)
     }()
 }
 

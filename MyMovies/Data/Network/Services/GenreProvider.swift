@@ -12,7 +12,8 @@ enum GenreProvider {
     case getAll
 }
 
-extension GenreProvider: EndPointOld {
+extension GenreProvider: EndPoint {
+    
     var baseURL: String {
         return "https://api.themoviedb.org"
     }
@@ -22,6 +23,17 @@ extension GenreProvider: EndPointOld {
         case .getAll:
             return "/3/genre/tv/list"
         }
+    }
+    
+    func getParameters(with config: NetworkConfigurable) -> [String: Any] {
+        var params: [String: Any] = [:]
+        
+        switch self {
+        case .getAll:
+            params["api_key"] = config.queryParameters["api_key"]
+            params["language"] = config.queryParameters["language"]
+        }
+        return params
     }
     
     var parameters: [String: Any]? {

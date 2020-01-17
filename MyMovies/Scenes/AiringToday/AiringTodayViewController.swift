@@ -81,18 +81,10 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable {
             print("Default state.")
         }
     }
-    
-    //MARK: - Navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "ShowTVShowDetail"{
-            let showId = sender as! Int
-            let controller = segue.destination as! TVShowDetailViewController
-            controller.viewModel = viewModel.buildShowDetailViewModel(for: showId)
-        }
-    }
 }
 
 //MARK: - DataSource, Delegate
+
 extension AiringTodayViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -122,7 +114,7 @@ extension AiringTodayViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let idSelected = viewModel.viewState.value.currentEntities[indexPath.row].id
-        performSegue(withIdentifier: "ShowTVShowDetail", sender: idSelected)
+        handle( idSelected )
         
         collectionView.deselectItem(at: indexPath, animated: true)
     }
@@ -144,8 +136,21 @@ extension AiringTodayViewController: UICollectionViewDelegateFlowLayout {
     
 }
 
+extension AiringTodayViewController {
+    
+    //MARK: - Navigation
+    
+    //MARK: - TODO AiringTodayViewModelRoute
+    func handle(_ route: Int?) {
+        guard let identifier = route else { return }
+        let detailController = airingTodayViewControllersFactory.makeTVShowDetailsViewController(with: identifier)
+        navigationController?.pushViewController(detailController, animated: true)
+    }
+}
+
 // MARK: - AiringTodayViewControllersFactory
 
 protocol AiringTodayViewControllersFactory {
     
+    func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController
 }

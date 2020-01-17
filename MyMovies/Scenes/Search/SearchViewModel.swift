@@ -56,10 +56,10 @@ final class SearchViewModel{
         self.viewState.value = .populated(genres)
     }
     
-    //MARK: - Build Model
+    //MARK: - Build Model - BORRAR
     
     func buildShowDetailViewModel(for showId: Int) -> TVShowDetailViewModel {
-        return TVShowDetailViewModel(showId)
+        return TVShowDetailViewModel(showId, fetchDetailShowUseCase: nil)
     }
     
     func buildMovieListViewModel(for genreId: Int) -> TVShowListViewModel {

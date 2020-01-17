@@ -78,9 +78,9 @@ final class AiringTodayViewModel {
         }
     }
     
-    // MARK: - Build Models
+    // MARK: - Build Models - BORRAR
     
     func buildShowDetailViewModel(for showId: Int) -> TVShowDetailViewModel {
-        return TVShowDetailViewModel(showId)
+        return TVShowDetailViewModel(showId, fetchDetailShowUseCase: nil)
     }
 }

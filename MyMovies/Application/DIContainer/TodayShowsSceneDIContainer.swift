@@ -23,7 +23,7 @@ final class TodayShowsSceneDIContainer {
         self.dependencies = dependencies
     }
     
-    func makeAiringTodayViewController() -> UIViewController {
+    public func makeAiringTodayViewController() -> UIViewController {
         return AiringTodayViewController.create( with: makeAiringTodayViewModel(),
                                                  airingTodayViewControllersFactory: self)
     }
@@ -55,5 +55,14 @@ extension TodayShowsSceneDIContainer {
 // MARK: - AiringTodayViewControllersFactory
 
 extension TodayShowsSceneDIContainer: AiringTodayViewControllersFactory {
-    
+     
+    public func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController {
+        let showDetailsDependencies = TVShowDetailsSceneDIContainer.Dependencies(
+                apiDataTransferService: dependencies.apiDataTransferService,
+                imageDataTransferService: dependencies.imageDataTransferService)
+            
+        let container =  TVShowDetailsSceneDIContainer(dependencies: showDetailsDependencies)
+        
+        return container.makeTVShowDetailsViewController(with: identifier)
+    }
 }

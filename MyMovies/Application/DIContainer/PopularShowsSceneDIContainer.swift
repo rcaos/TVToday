@@ -6,7 +6,6 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 final class PopularShowsSceneDIContainer {
@@ -26,7 +25,7 @@ final class PopularShowsSceneDIContainer {
     
     func makePopularsViewController() -> UIViewController {
         return PopularsViewController.create( with: makePopularsViewModel(),
-                                              popularsViewControllersFactory: self)
+                                              popularViewControllersFactory: self)
     }
 }
 
@@ -55,6 +54,15 @@ extension PopularShowsSceneDIContainer {
 
 // MARK: - PopularsViewControllersFactory
 
-extension PopularShowsSceneDIContainer: PopularsViewControllersFactory {
-    
+extension PopularShowsSceneDIContainer: PopularViewControllersFactory {
+     
+    public func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController {
+        let showDetailsDependencies = TVShowDetailsSceneDIContainer.Dependencies(
+                apiDataTransferService: dependencies.apiDataTransferService,
+                imageDataTransferService: dependencies.imageDataTransferService)
+            
+        let container =  TVShowDetailsSceneDIContainer(dependencies: showDetailsDependencies)
+        
+        return container.makeTVShowDetailsViewController(with: identifier)
+    }
 }

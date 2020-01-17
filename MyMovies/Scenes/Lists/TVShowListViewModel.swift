@@ -38,9 +38,6 @@ final class TVShowListViewModel: ShowsViewModel{
     
     //MARK: - Private
     private func processFetched(for response: TVShowResult ){
-        //print("\nSe recibieron : [\(shows.count) Shows]. Actualizar TableView")
-        print("Page: \(response.page), Total Pages: \(response.totalPages), Has More Pages: \(response.hasMorePages), Next Page: \(response.nextPage)\n")
-        
         var fetchedShows:[TVShow] = []
         if let shows = response.results {
             fetchedShows = shows
@@ -56,9 +53,9 @@ final class TVShowListViewModel: ShowsViewModel{
         }
     }
     
-    //MARK: - Build Models
+    //MARK: - Build Models - BORRAR
     func buildShowDetailViewModel(for showId: Int) -> TVShowDetailViewModel {
-        return TVShowDetailViewModel(showId)
+        return TVShowDetailViewModel(showId, fetchDetailShowUseCase: nil)
     }
 }
 

@@ -8,19 +8,11 @@
 
 import UIKit
 
-class TVShowDetailViewController: UITableViewController {
+class TVShowDetailViewController: UITableViewController, StoryboardInstantiable {
     
-    var viewModel: TVShowDetailViewModel?{
-        didSet{
-            setupViewModel()
-        }
-    }
+    var viewModel: TVShowDetailViewModel?
     
-//    var idShow:Int!{
-//        didSet{
-//            self.viewModel = TVShowDetailViewModel(idShow)
-//        }
-//    }
+    private var showDetailsViewControllersFactory: TVShowDetailViewControllersFactory!
     
     @IBOutlet weak private var backDropImage: UIImageView!
     @IBOutlet weak private var nameLabel: UILabel!
@@ -35,10 +27,23 @@ class TVShowDetailViewController: UITableViewController {
     
     private var loadingView: UIView!
     
+    // MARK: - TODO, cambiar por protocol del ViewModel
+    
+    static func create(with viewModel: TVShowDetailViewModel,
+                       showDetailsViewControllersFactory: TVShowDetailViewControllersFactory) -> TVShowDetailViewController {
+        let controller = TVShowDetailViewController.instantiateViewController()
+        controller.viewModel = viewModel
+        controller.showDetailsViewControllersFactory = showDetailsViewControllersFactory
+        return controller
+    }
+    
     //MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.prefersLargeTitles = false
+        
+        setupViewModel()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -50,12 +55,13 @@ class TVShowDetailViewController: UITableViewController {
     }
     
     //MARK: - SetupViewModel
-    private func setupViewModel(){
+    
+    private func setupViewModel() {
         setupBindables()
         viewModel?.getShowDetails()
     }
     
-    private func setupBindables(){
+    private func setupBindables() {
         
         viewModel?.viewState.bindAndFire({[weak self] state in
             DispatchQueue.main.async {
@@ -82,7 +88,7 @@ class TVShowDetailViewController: UITableViewController {
     }
     
     //TODO: - handle other states -
-    func configView(with state: TVShowDetailViewModel.ViewState){
+    func configView(with state: TVShowDetailViewModel.ViewState) {
         
         if let customView = loadingView{
             customView.removeFromSuperview()
@@ -97,7 +103,7 @@ class TVShowDetailViewController: UITableViewController {
         }
     }
     
-    func buildLoadingView(){
+    func buildLoadingView() {
         let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
         activityIndicator.color = .darkGray
         activityIndicator.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
@@ -110,7 +116,7 @@ class TVShowDetailViewController: UITableViewController {
         activityIndicator.startAnimating()
     }
     
-    private func setupUI(){
+    private func setupUI() {
         guard let viewModel = viewModel else { return }
         
         nameLabel.text = viewModel.nameShow
@@ -126,6 +132,7 @@ class TVShowDetailViewController: UITableViewController {
     }
     
     //MARK: - Navigation
+    // MARK: - TODO
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "SeasonsListSegue"{
             if let vc = segue.destination as? SeasonsListViewController{
@@ -133,10 +140,9 @@ class TVShowDetailViewController: UITableViewController {
             }
         }
     }
-    
 }
 
-extension TVShowDetailViewController{
+extension TVShowDetailViewController {
     
     override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         if indexPath.row == 1{
@@ -185,4 +191,10 @@ extension TVShowDetailViewController{
         }
         return CGFloat(heightrow)
     }
+}
+
+// MARK: - TVShowDetailViewControllersFactory
+
+protocol TVShowDetailViewControllersFactory {
+    
 }

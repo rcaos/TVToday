@@ -11,7 +11,7 @@
         <!--TVShowDetailViewController-->
         <scene sceneID="qDG-jR-xlK">
             <objects>
-                <viewControllerPlaceholder storyboardName="TVShowDetail" referencedIdentifier="TVShowDetailViewController" id="wUJ-be-Uhy" sceneMemberID="viewController"/>
+                <viewControllerPlaceholder storyboardName="TVShowDetailViewController" referencedIdentifier="TVShowDetailViewController" id="wUJ-be-Uhy" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4TJ-or-gwt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2500" y="1323"/>

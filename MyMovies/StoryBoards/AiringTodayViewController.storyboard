@@ -40,20 +40,11 @@
                     <navigationItem key="navigationItem" id="FXi-U0-TrZ"/>
                     <connections>
                         <outlet property="collectionView" destination="Yg4-JR-uz6" id="Qhm-ax-mt4"/>
-                        <segue destination="9ac-0x-UvG" kind="show" identifier="ShowTVShowDetail" id="klC-16-TPR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="If1-Gr-kUp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1846" y="-251"/>
-        </scene>
-        <!--TVShowDetailViewController-->
-        <scene sceneID="VyS-ZK-1hV">
-            <objects>
-                <viewControllerPlaceholder storyboardName="TVShowDetail" referencedIdentifier="TVShowDetailViewController" id="9ac-0x-UvG" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="4aW-K6-i4C" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2663" y="-252"/>
         </scene>
     </scenes>
 </document>

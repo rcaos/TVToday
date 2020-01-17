@@ -21,21 +21,10 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="3AF-DG-39u"/>
-                    <connections>
-                        <segue destination="JmK-k0-LMx" kind="show" identifier="ShowTVShowDetail" id="AuO-Pg-xfz"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="L5m-QY-1bY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1846" y="448"/>
-        </scene>
-        <!--TVShowDetailViewController-->
-        <scene sceneID="sDm-Lx-Fxj">
-            <objects>
-                <viewControllerPlaceholder storyboardName="TVShowDetail" referencedIdentifier="TVShowDetailViewController" id="JmK-k0-LMx" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="xLt-sL-JF2" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2583" y="448"/>
         </scene>
     </scenes>
 </document>

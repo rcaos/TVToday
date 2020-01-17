@@ -8,9 +8,10 @@
 
 import Foundation
 
-final class TVShowDetailViewModel{
+final class TVShowDetailViewModel {
     
-    private let showsService = ApiClient<TVShowsProvider>()
+    private let fetchDetailShowUseCase: FetchTVShowDetailsUseCase?
+    
     private let imagesService = ApiClient<ImagesProvider>()
     
     var id: Int!
@@ -32,11 +33,12 @@ final class TVShowDetailViewModel{
     var dropData:Bindable<Data?> = Bindable(nil)
     var posterData:Bindable<Data?> = Bindable(nil)
     
-    init(_ idShow: Int){
+    init(_ idShow: Int, fetchDetailShowUseCase: FetchTVShowDetailsUseCase?) {
+        self.fetchDetailShowUseCase = fetchDetailShowUseCase
         id = idShow
     }
     
-    private func setupTVShow(_ show: TVShowDetailResult){
+    private func setupTVShow(_ show: TVShowDetailResult) {
         id = show.id
         backDropPath = show.backDropPath
         nameShow = show.name
@@ -53,25 +55,34 @@ final class TVShowDetailViewModel{
     
     //MARK: - Networking
     
-    func getShowDetails(){
+    func getShowDetails() {
         self.viewState.value = .loading
         
-        showsService.load(service: .getTVShowDetail(id), decodeType: TVShowDetailResult.self, completion: { result in
-            switch result{
-            case .success(let showDetail):
-                self.setupTVShow(showDetail)
-                self.viewState.value = .populated
-                self.downloadImages(for: showDetail)
+        let request = FetchTVShowDetailsUseCaseRequestValue(identifier: id)
+        
+        fetchDetailShowUseCase?.execute(requestValue: request) { [weak self] result in
+            guard let strongSelf = self else { return }
+            switch result {
+            case .success(let response):
+                strongSelf.processFetched(for: response)
             case .failure(let error):
-                print("Error: [\(error)]")
+                // MARK: - TODO // Handle error at View
+                print("Error to fetch Case use \(error)")
             }
-        })
+        }
+    }
+    
+    private func processFetched(for response: TVShowDetailResult) {
+        self.setupTVShow(response)
+        self.viewState.value = .populated
+        self.downloadImages(for: response)
     }
     
     //MARK: - Download Images
-    private func downloadImages(for show: TVShowDetailResult){
+    
+    private func downloadImages(for show: TVShowDetailResult) {
         
-        if let backDropPath = show.backDropPath{
+        if let backDropPath = show.backDropPath {
             imagesService.load(service: .getBackDrop(.mediumBackDrop, backDropPath), completion: { result in
                 switch result{
                 case .success(let data):
@@ -83,7 +94,7 @@ final class TVShowDetailViewModel{
             })
         }
         
-        if let posterPath = show.posterPath{
+        if let posterPath = show.posterPath {
             imagesService.load(service: .getPoster( .mediumPoster, posterPath), completion: { result in
                 switch result{
                 case .success(let data):
@@ -103,7 +114,7 @@ final class TVShowDetailViewModel{
     
 }
 
-extension TVShowDetailViewModel{
+extension TVShowDetailViewModel {
     
     enum ViewState {
         

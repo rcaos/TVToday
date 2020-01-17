@@ -11,22 +11,21 @@ import UIKit
 class PopularsViewController: UITableViewController, StoryboardInstantiable {
 
     var viewModel:PopularViewModel!
-    private var popularsViewControllersFactory: PopularsViewControllersFactory!
+    private var popularViewControllersFactory: PopularViewControllersFactory!
     
     var loadingView: UIView!
     
     static func create(with viewModel: PopularViewModel,
-                       popularsViewControllersFactory: PopularsViewControllersFactory) -> PopularsViewController {
+                       popularViewControllersFactory: PopularViewControllersFactory) -> PopularsViewController {
         let controller = PopularsViewController.instantiateViewController()
         controller.viewModel = viewModel
-        controller.popularsViewControllersFactory = popularsViewControllersFactory
+        controller.popularViewControllersFactory = popularViewControllersFactory
         return controller
     }
     
     //MARK: - Life Cycle
     
     override func viewDidLoad() {
-        print("viewDidLoad Populars")
         super.viewDidLoad()
         
         setupUI()
@@ -101,18 +100,6 @@ class PopularsViewController: UITableViewController, StoryboardInstantiable {
         loadingView.addSubview(activityIndicator)
         activityIndicator.startAnimating()
     }
-    
-    //MARK: - Navigation
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "ShowTVShowDetail"{
-            let indexPath =  sender as! IndexPath
-            let idShow = viewModel.shows[indexPath.row].id!
-            
-            let controllerTo = segue.destination as! TVShowDetailViewController
-            controllerTo.viewModel = viewModel.buildShowDetailViewModel(for: idShow)
-        }
-    }
 }
 
 extension PopularsViewController{
@@ -138,14 +125,28 @@ extension PopularsViewController{
     //MARK: - TableView Delegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "ShowTVShowDetail", sender: indexPath)
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        let idShow = viewModel.shows[indexPath.row].id!
+        handle(idShow)
     }
 }
 
-// MARK: - PopularsViewControllersFactory
-
-protocol PopularsViewControllersFactory {
+extension PopularsViewController {
     
+    //PopularViewModelRoute
+    // MARK: - TODO
+    func handle(_ route: Int?) {
+        guard let identifier = route else { return }
+        let detailController = popularViewControllersFactory.makeTVShowDetailsViewController(with: identifier)
+        navigationController?.pushViewController(detailController, animated: true)
+    }
+}
+
+// MARK: - PopularViewControllersFactory
+
+protocol PopularViewControllersFactory {
+    
+    func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController
 }
 

@@ -6,7 +6,6 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 final class SearchSceneDIContainer {

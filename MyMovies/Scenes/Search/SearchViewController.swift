@@ -59,14 +59,10 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
     //MARK: - SetupSearchBar
     
     func setupSearchBar() {
-        let storyboard = UIStoryboard(name: "SearchViewController", bundle: nil)
-        let toController = storyboard.instantiateViewController(withIdentifier: "searchResults")
+        let resultViewModel = searchViewControllersFactory.makeSearchResultsViewModel()
+        let resultsController = ResultsSearchViewController(viewModel: resultViewModel)
         
-        guard let resultsController = toController as? ResultsSearchViewController else{ return }
         resultsController.delegate = self
-        
-        //Así se cae @@
-        //let resultsController = ResultsSearchViewController()
         
         searchController = UISearchController(searchResultsController: resultsController)
         searchController.searchResultsUpdater = self
@@ -137,12 +133,8 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
     //MARK: - Nagivation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "ShowTVShowDetail"{
-            guard let toController = segue.destination as? TVShowDetailViewController else { return }
-            let idShow = sender as! Int
-            toController.viewModel = viewModel.buildShowDetailViewModel(for: idShow)
-            
-        }else if segue.identifier == "showTvShowListSegue"{
+        
+        if segue.identifier == "showTvShowListSegue" {
             guard let toController = segue.destination as? TVShowListViewController else { return }
             let genre = sender as! Int
             toController.viewModel = viewModel.buildMovieListViewModel(for: genre)
@@ -213,7 +205,20 @@ extension SearchViewController: UITableViewDelegate {
 extension SearchViewController: ResultsSearchViewControllerDelegate {
     
     func resultsSearchViewController(_ resultsSearchViewController: ResultsSearchViewController, didSelectedMovie movie: Int) {
-        performSegue(withIdentifier: "ShowTVShowDetail", sender: movie)
+        handle(movie)
+    }
+}
+
+//MARK: - Navigation
+
+extension SearchViewController {
+    
+    // MARK: - TODO Handle Route
+    
+    func handle(_ route: Int?) {
+        guard let identifier = route else { return }
+        let detailController = searchViewControllersFactory.makeTVShowDetailsViewController(with: identifier)
+        navigationController?.pushViewController(detailController, animated: true)
     }
 }
 
@@ -221,4 +226,7 @@ extension SearchViewController: ResultsSearchViewControllerDelegate {
 
 protocol SearchViewControllersFactory {
     
+    func makeSearchResultsViewModel() -> ResultsSearchViewModel
+    
+    func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController
 }

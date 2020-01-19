@@ -8,17 +8,33 @@
 
 import UIKit
 
-protocol ResultsSearchViewControllerDelegate: class{
+protocol ResultsSearchViewControllerDelegate: class {
     func resultsSearchViewController(_ resultsSearchViewController: ResultsSearchViewController, didSelectedMovie movie: Int )
 }
 
 class ResultsSearchViewController: UIViewController {
-
-    @IBOutlet var tableView: UITableView!
-    var viewModel = ResultsSearchViewModel()
-    var delegate:ResultsSearchViewControllerDelegate!
+    
+    var resultView: ResultListView = ResultListView()
+    
+    var delegate:ResultsSearchViewControllerDelegate?
     
     var loadingView: UIView!
+    
+    var viewModel: ResultsSearchViewModel
+    
+    init(viewModel: ResultsSearchViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
+    
+    override func loadView() {
+        super.loadView()
+        view = resultView
+    }
     
     //MARK: - Life Cycle
     override func viewDidLoad() {
@@ -28,49 +44,51 @@ class ResultsSearchViewController: UIViewController {
         setupViewModel()
     }
     
-    func setupTable(){
-        tableView.dataSource = self
-        tableView.delegate = self
+    func setupTable() {
+        resultView.tableView.dataSource = self
+        resultView.tableView.delegate = self
         
         let nibName = UINib(nibName: "TVShowViewCell", bundle: nil)
-        tableView.register(nibName, forCellReuseIdentifier: "TVShowViewCell")
+        resultView.tableView.register(nibName, forCellReuseIdentifier: "TVShowViewCell")
         
         buildLoadingView()
     }
     
     //MARK: - SetupViewModel
-    func setupViewModel(){
+    func setupViewModel() {
         
         //Binding
-        viewModel.viewState.bind({[unowned self] state in
+        viewModel.viewState.bind({[weak self] state in
             DispatchQueue.main.async {
-                self.configView(with: state)
+                self?.configView(with: state)
             }
         })
     }
     
-    func configView(with state: ResultsSearchViewModel.ViewState){
+    func configView(with state: ResultsSearchViewModel.ViewState) {
+        
+        let tableView = resultView.tableView
         
         switch state {
         case .populated(_):
-            self.tableView.tableFooterView = UIView()
-            self.tableView.separatorStyle = .singleLine
-            self.tableView.reloadData()
+            tableView.tableFooterView = UIView()
+            tableView.separatorStyle = .singleLine
+            tableView.reloadData()
         case .empty:
-            self.tableView.tableFooterView = buildEmptyView()
-            self.tableView.separatorStyle = .none
+            tableView.tableFooterView = buildEmptyView()
+            tableView.separatorStyle = .none
         case .paging(_, _):
-            self.tableView.tableFooterView = loadingView
-            self.tableView.separatorStyle = .singleLine
-            self.tableView.reloadData()
+            tableView.tableFooterView = loadingView
+            tableView.separatorStyle = .singleLine
+            tableView.reloadData()
         default:
             print("default state")
-            self.tableView.tableFooterView = loadingView
+            tableView.tableFooterView = loadingView
         }
     }
     
-    func buildEmptyView() -> UIView{
-        let frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
+    func buildEmptyView() -> UIView {
+        let frame = CGRect(x: 0, y: 0, width: resultView.tableView.frame.width, height: 100)
         let nib = UINib(nibName: "CustomFooterView", bundle: nil)
         
         let emptyView = nib.instantiate(withOwner: nil, options: nil).first as! CustomFooterView
@@ -81,8 +99,8 @@ class ResultsSearchViewController: UIViewController {
         return emptyView
     }
     
-    func buildLoadingView(){
-        let defaultFrame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
+    func buildLoadingView() {
+        let defaultFrame = CGRect(x: 0, y: 0, width: resultView.tableView.frame.width, height: 100)
         
         let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
         activityIndicator.color = .darkGray
@@ -98,7 +116,9 @@ class ResultsSearchViewController: UIViewController {
 }
 
 //MARK: - UITableViewDataSource
-extension ResultsSearchViewController: UITableViewDataSource{
+
+extension ResultsSearchViewController: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.viewState.value.currentEpisodes.count
     }
@@ -118,7 +138,9 @@ extension ResultsSearchViewController: UITableViewDataSource{
 }
 
 //MARK: - UITableViewDelegate
-extension ResultsSearchViewController: UITableViewDelegate{
+
+extension ResultsSearchViewController: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedShow = viewModel.shows[indexPath.row]
         delegate?.resultsSearchViewController(self, didSelectedMovie: selectedShow.id)

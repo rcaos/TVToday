@@ -33,6 +33,12 @@ final class TVShowDetailViewModel {
     var dropData:Bindable<Data?> = Bindable(nil)
     var posterData:Bindable<Data?> = Bindable(nil)
     
+    private var showsLoadTask: Cancellable? {
+        willSet {
+            showsLoadTask?.cancel()
+        }
+    }
+    
     init(_ idShow: Int, fetchDetailShowUseCase: FetchTVShowDetailsUseCase?) {
         self.fetchDetailShowUseCase = fetchDetailShowUseCase
         id = idShow
@@ -44,11 +50,11 @@ final class TVShowDetailViewModel {
         nameShow = show.name
         yearsRelease = show.releaseYears
         duration = show.episodeDuration
-        genre = show.genreIds.first?.name
+        genre = show.genreIds?.first?.name
         numberOfEpisodes = (show.numberOfEpisodes != nil) ? String(show.numberOfEpisodes!) : ""
         overView = show.overview
-        score = (show.voteAverage != nil) ? String(show.voteAverage) : ""
-        countVote = (show.voteCount != nil) ? String(show.voteCount) : ""
+        score = (show.voteAverage != nil) ? String(show.voteAverage!) : ""
+        countVote = (show.voteCount != nil) ? String(show.voteCount!) : ""
         
         showDetail = show
     }
@@ -60,7 +66,7 @@ final class TVShowDetailViewModel {
         
         let request = FetchTVShowDetailsUseCaseRequestValue(identifier: id)
         
-        fetchDetailShowUseCase?.execute(requestValue: request) { [weak self] result in
+        showsLoadTask = fetchDetailShowUseCase?.execute(requestValue: request) { [weak self] result in
             guard let strongSelf = self else { return }
             switch result {
             case .success(let response):

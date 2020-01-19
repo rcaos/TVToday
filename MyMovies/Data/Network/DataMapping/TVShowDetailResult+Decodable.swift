@@ -35,20 +35,20 @@ extension TVShowDetailResult: Decodable {
 
         self.id = try container.decode(Int.self, forKey: .id)
         self.name = try container.decode(String.self, forKey: .name)
-        self.firstAirDate = try container.decode(String.self, forKey: .firstAirDate)
-        self.lasttAirDate = try container.decode(String.self, forKey: .lasttAirDate)
-        self.episodeRunTime = try container.decode([Int].self, forKey: .episodeRunTime)
-        self.genreIds = try container.decode([Genre].self, forKey: .genreIds)
-        self.numberOfEpisodes = try container.decode(Int.self, forKey: .numberOfEpisodes)
-        self.numberOfSeasons = try container.decode(Int.self, forKey: .numberOfSeasons)
+        self.firstAirDate = try container.decodeIfPresent(String.self, forKey: .firstAirDate)
+        self.lasttAirDate = try container.decodeIfPresent(String.self, forKey: .lasttAirDate)
+        self.episodeRunTime = try container.decodeIfPresent([Int].self, forKey: .episodeRunTime)
+        self.genreIds = try container.decodeIfPresent([Genre].self, forKey: .genreIds)
+        self.numberOfEpisodes = try container.decodeIfPresent(Int.self, forKey: .numberOfEpisodes)
+        self.numberOfSeasons = try container.decodeIfPresent(Int.self, forKey: .numberOfSeasons)
         
         self.posterPath = try container.decodeIfPresent(String.self, forKey: .posterPath)
         self.backDropPath = try container.decodeIfPresent(String.self, forKey: .backDropPath)
         self.overview = try container.decode(String.self, forKey: .overview)
         
-        self.voteAverage = try container.decode(Double.self, forKey: .voteAverage)
-        self.voteCount = try container.decode(Int.self, forKey: .voteCount)
+        self.voteAverage = try container.decodeIfPresent(Double.self, forKey: .voteAverage)
+        self.voteCount = try container.decodeIfPresent(Int.self, forKey: .voteCount)
         
-        self.status = try container.decode(String.self, forKey: .status)
+        self.status = try container.decodeIfPresent(String.self, forKey: .status)
     }
 }

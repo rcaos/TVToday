@@ -23,6 +23,7 @@
 		770860F623CE6F5300625183 /* AppDIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770860F523CE6F5300625183 /* AppDIContainer.swift */; };
 		770860F923CE6F6C00625183 /* TodayShowsSceneDIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770860F823CE6F6C00625183 /* TodayShowsSceneDIContainer.swift */; };
 		770860FB23CE753200625183 /* StoryboardInstantiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770860FA23CE753200625183 /* StoryboardInstantiable.swift */; };
+		770A117D23D2250D00B57A6F /* ResultListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770A117C23D2250D00B57A6F /* ResultListView.swift */; };
 		770B5C35230E06B2002019E6 /* TVShowDetailResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770B5C34230E06B2002019E6 /* TVShowDetailResult.swift */; };
 		770D102F2339408A00CD84B2 /* SeasonsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770D102E2339408A00CD84B2 /* SeasonsListViewController.swift */; };
 		770D1036233941BF00CD84B2 /* SeasonListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770D1034233941BF00CD84B2 /* SeasonListTableViewCell.swift */; };
@@ -122,6 +123,7 @@
 		770860F523CE6F5300625183 /* AppDIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDIContainer.swift; sourceTree = "<group>"; };
 		770860F823CE6F6C00625183 /* TodayShowsSceneDIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayShowsSceneDIContainer.swift; sourceTree = "<group>"; };
 		770860FA23CE753200625183 /* StoryboardInstantiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardInstantiable.swift; sourceTree = "<group>"; };
+		770A117C23D2250D00B57A6F /* ResultListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultListView.swift; sourceTree = "<group>"; };
 		770B5C34230E06B2002019E6 /* TVShowDetailResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowDetailResult.swift; sourceTree = "<group>"; };
 		770D102E2339408A00CD84B2 /* SeasonsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonsListViewController.swift; sourceTree = "<group>"; };
 		770D1034233941BF00CD84B2 /* SeasonListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonListTableViewCell.swift; sourceTree = "<group>"; };
@@ -379,6 +381,7 @@
 			children = (
 				77E37AAD23142CAC00C692DA /* ResultsSearchViewController.swift */,
 				77193F41232FF168007FA822 /* ResultsSearchViewModel.swift */,
+				770A117C23D2250D00B57A6F /* ResultListView.swift */,
 			);
 			path = SearchResults;
 			sourceTree = "<group>";
@@ -811,6 +814,7 @@
 				7722CE60230DA1C3003DC4C5 /* TVShowDetailViewController.swift in Sources */,
 				77FFDE32233BB5FE00C4096F /* SeasonHeaderViewModel.swift in Sources */,
 				77F4633D230CA864008FB9D6 /* TVShow.swift in Sources */,
+				770A117D23D2250D00B57A6F /* ResultListView.swift in Sources */,
 				77FFB0932339556B00D17CF0 /* DefaultSeasonTableViewModel.swift in Sources */,
 				778B480F23CE2F90009AE084 /* RepositoryTask.swift in Sources */,
 				77B3CCD4232D7CC100921D23 /* TVShowViewCell.swift in Sources */,

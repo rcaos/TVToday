@@ -27,6 +27,22 @@ final class SearchSceneDIContainer {
         return SearchViewController.create( with: makeSearchViewModel(),
                                               searchViewControllersFactory: self)
     }
+    
+    // MARK: - TODO thats correct?
+    
+    func makeSearchResultsViewModel() -> ResultsSearchViewModel {
+        return ResultsSearchViewModel(fetchSearchShowsUseCase: makeFetchSearchResultsShowsUseCase())
+    }
+    
+    public func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController {
+        let showDetailsDependencies = TVShowDetailsSceneDIContainer.Dependencies(
+                apiDataTransferService: dependencies.apiDataTransferService,
+                imageDataTransferService: dependencies.imageDataTransferService)
+            
+        let container =  TVShowDetailsSceneDIContainer(dependencies: showDetailsDependencies)
+        
+        return container.makeTVShowDetailsViewController(with: identifier)
+    }
 }
 
 // MARK: - Private
@@ -51,6 +67,21 @@ extension SearchSceneDIContainer {
     private func makeGenresRepository() -> GenresRepository {
         return DefaultGenreRepository(dataTransferService:
             dependencies.apiDataTransferService)
+    }
+}
+
+extension SearchSceneDIContainer {
+    
+//    private func makeSearchResultsViewModel() -> ResultsSearchViewModel {
+//        return ResultsSearchViewModel(fetchSearchShowsUseCase: makeFetchSearchResultsShowsUseCase())
+//    }
+    
+    private func makeFetchSearchResultsShowsUseCase() -> FetchTVShowsUseCase {
+        return DefaultFetchTVShowsUseCase(tvShowsRepository: makeTVShowsRespository())
+    }
+    
+    private func makeTVShowsRespository() -> TVShowsRepository {
+        return DefaultTVShowsRepository(dataTransferService: dependencies.apiDataTransferService)
     }
 }
 

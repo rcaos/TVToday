@@ -13,10 +13,10 @@ struct TVShow {
     var id: Int!
     var name: String!
     var voteAverage: Double!
-    var firstAirDate: String!
+    var firstAirDate: String?
     
     var posterPath: String?
-    var genreIds: [Int]!
+    var genreIds: [Int]?
     var backDropPath: String?
     var overview: String!
     var originCountry: [String]!

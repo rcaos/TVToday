@@ -132,6 +132,8 @@ extension PopularsViewController{
     }
 }
 
+//MARK: - Navigation
+
 extension PopularsViewController {
     
     //PopularViewModelRoute

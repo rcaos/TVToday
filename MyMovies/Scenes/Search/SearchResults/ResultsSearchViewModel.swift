@@ -8,8 +8,11 @@
 
 import Foundation
 
-final class ResultsSearchViewModel: ShowsViewModel{
-    private let showsService = ApiClient<TVShowsProvider>()
+final class ResultsSearchViewModel: ShowsViewModel {
+    
+    private let fetchSearchShowsUseCase: FetchTVShowsUseCase?
+    
+//    private let showsService = ApiClient<TVShowsProvider>()
     
     var shows: [TVShow]
     var models: [TVShowCellViewModel]
@@ -19,7 +22,14 @@ final class ResultsSearchViewModel: ShowsViewModel{
     //Bindable
     var viewState:Bindable<ViewState> = Bindable(.loading)
     
-    init() {
+    private var showsLoadTask: Cancellable? {
+        willSet {
+            showsLoadTask?.cancel()
+        }
+    }
+    
+    init(fetchSearchShowsUseCase: FetchTVShowsUseCase?) {
+        self.fetchSearchShowsUseCase = fetchSearchShowsUseCase
         shows = []
         models = []
     }
@@ -35,24 +45,38 @@ final class ResultsSearchViewModel: ShowsViewModel{
         self.viewState.value = .loading
         currentSearch = name
         
-        showsService.load(service: .searchTVShow(name, page) , decodeType: TVShowResult.self, completion: { result in
-            switch result{
+        let request = FetchTVShowsUseCaseRequestValue(filter: .search(query: name), page: page)
+        
+        showsLoadTask = fetchSearchShowsUseCase?.execute(requestValue: request) {
+            [weak self] result in
+            guard let strongSelf = self else { return }
+            switch result {
             case .success(let response):
-                self.processFetched(for: response)
+                strongSelf.processFetched(for: response)
             case .failure(let error):
-                print("error: [\(error)")
+                // MARK: - TODO // Handle error at View
+                print("Error to fetch Case use \(error)")
             }
-        })
+        }
+        
+//        showsService.load(service: .searchTVShow(name, page) , decodeType: TVShowResult.self, completion: { result in
+//            switch result{
+//            case .success(let response):
+//                self.processFetched(for: response)
+//            case .failure(let error):
+//                print("error: [\(error)")
+//            }
+//        })
     }
     
-    func clearShows(){
+    func clearShows() {
         shows.removeAll()
         models.removeAll()
         viewState.value = .populated(shows)
     }
     
     //MARK: - Private
-    private func processFetched(for response: TVShowResult){
+    private func processFetched(for response: TVShowResult) {
         print("Page: \(response.page), Total Pages: \(response.totalPages), Has More Pages: \(response.hasMorePages), Next Page: \(response.nextPage)\n")
         
         var fetchedShows:[TVShow] = []
@@ -76,7 +100,7 @@ final class ResultsSearchViewModel: ShowsViewModel{
     }
 }
 
-extension ResultsSearchViewModel{
+extension ResultsSearchViewModel {
     
     enum ViewState {
         

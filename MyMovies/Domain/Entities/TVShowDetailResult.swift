@@ -12,21 +12,21 @@ struct TVShowDetailResult {
     
     var id: Int!
     var name: String!
-    var firstAirDate: String!
-    var lasttAirDate: String!
-    var episodeRunTime: [Int]!
-    var genreIds: [Genre]!
-    var numberOfEpisodes:Int!
-    var numberOfSeasons:Int!
+    var firstAirDate: String?
+    var lasttAirDate: String?
+    var episodeRunTime: [Int]?
+    var genreIds: [Genre]?
+    var numberOfEpisodes:Int?
+    var numberOfSeasons:Int?
     
     var posterPath: String?
     var backDropPath: String?
     var overview: String!
     
-    var voteAverage: Double!
-    var voteCount: Int!
+    var voteAverage: Double?
+    var voteCount: Int?
     
-    var status: String!
+    var status: String?
 }
 
 extension TVShowDetailResult {

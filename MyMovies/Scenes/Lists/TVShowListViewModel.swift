@@ -8,40 +8,55 @@
 
 import Foundation
 
-final class TVShowListViewModel: ShowsViewModel{
-    private let showsService = ApiClient<TVShowsProvider>()
+final class TVShowListViewModel: ShowsViewModel {
+    
+    private let fetchShowListUseCase: FetchTVShowsUseCase
     
     var shows: [TVShow]
     var models: [TVShowCellViewModel]
     
     var genreId: Int!
     
-    //Bindable
     var viewState:Bindable<ViewState> = Bindable(.loading)
     
-    init(genreId: Int) {
+    private var showsLoadTask: Cancellable? {
+        willSet {
+            showsLoadTask?.cancel()
+        }
+    }
+    
+    // MARK: - Initializers
+    
+    init(genreId: Int, fetchShowListUseCase: FetchTVShowsUseCase) {
+        self.fetchShowListUseCase = fetchShowListUseCase
         self.genreId = genreId
         shows = []
         models = []
     }
     
-    func getMoviesForGenre(from page: Int){
-        showsService.load(service: .listTVShowsBy(genreId, page) , decodeType: TVShowResult.self, completion: { result in
+    func getMoviesForGenre(from page: Int) {
+        
+        viewState.value = .loading
+        
+        let request = FetchTVShowsUseCaseRequestValue(filter: .byGenre(genreId: genreId), page: page)
+        
+        showsLoadTask = fetchShowListUseCase.execute(requestValue: request) { [weak self ] result in
+            guard let strongSelf = self else { return }
             switch result{
             case .success(let response):
-                self.processFetched(for: response)
+                strongSelf.processFetched(for: response)
             case .failure(let error):
+                // MARK: - TODO // handle errror view
                 print(error)
+                strongSelf.viewState.value = .error(error)
             }
-        })
+        }
     }
     
     //MARK: - Private
-    private func processFetched(for response: TVShowResult ){
-        var fetchedShows:[TVShow] = []
-        if let shows = response.results {
-            fetchedShows = shows
-        }
+    
+    private func processFetched(for response: TVShowResult ) {
+        let fetchedShows = response.results ?? []
         
         self.shows.append(contentsOf: fetchedShows)
         self.models.append(contentsOf: fetchedShows.map({ return TVShowCellViewModel(show: $0) }) )
@@ -52,14 +67,9 @@ final class TVShowListViewModel: ShowsViewModel{
             self.viewState.value = .populated(shows)
         }
     }
-    
-    //MARK: - Build Models - BORRAR
-    func buildShowDetailViewModel(for showId: Int) -> TVShowDetailViewModel {
-        return TVShowDetailViewModel(showId, fetchDetailShowUseCase: nil)
-    }
 }
 
-extension TVShowListViewModel{
+extension TVShowListViewModel {
     
     enum ViewState {
         

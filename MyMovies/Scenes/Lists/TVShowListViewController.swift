@@ -8,22 +8,33 @@
 
 import UIKit
 
-class TVShowListViewController: UIViewController {
-
+class TVShowListViewController: UIViewController, StoryboardInstantiable {
+    
     @IBOutlet weak var tableView: UITableView!
     
-    var viewModel: TVShowListViewModel? {
-        didSet {
-            setupViewModel()
-        }
-    }
+    private var viewModel: TVShowListViewModel!
+    
+    private var showsListViewControllersFactory: TVShowListViewControllersFactory!
     
     var loadingView: UIView!
+    
+    // MARK: - TODO, cambiar por protocol del ViewModel
+    
+    static func create(with viewModel: TVShowListViewModel,
+                       showsListViewControllersFactory: TVShowListViewControllersFactory) -> TVShowListViewController {
+        let controller = TVShowListViewController.instantiateViewController()
+        controller.viewModel = viewModel
+        controller.showsListViewControllersFactory = showsListViewControllersFactory
+        return controller
+    }
+    
+    // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupUI()
+        setupViewModel()
     }
     
     deinit {
@@ -31,12 +42,14 @@ class TVShowListViewController: UIViewController {
     }
     
     //MARK: - SetupView
-    func setupUI(){
+    
+    func setupUI() {
         setupTable()
     }
     
-    //MARK: - SetupTable
-    func setupTable(){
+    // MARK: - SetupTable
+    
+    func setupTable() {
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -46,21 +59,23 @@ class TVShowListViewController: UIViewController {
         buildLoadingView()
     }
     
-    //MARK: - SetupViewModel
-    func setupViewModel(){
+    // MARK: - SetupViewModel
+    
+    func setupViewModel() {
         guard let viewModel = viewModel else { return }
         
         //Binding
-        viewModel.viewState.bindAndFire({[unowned self] state in
+        viewModel.viewState.bindAndFire({[weak self] state in
+            guard let strongSelf = self else { return }
             DispatchQueue.main.async {
-                self.configView(with: state)
+                strongSelf.configView(with: state)
             }
         })
         
         viewModel.getMoviesForGenre(from: 1)
     }
     
-    func configView(with state: TVShowListViewModel.ViewState){
+    func configView(with state: TVShowListViewModel.ViewState) {
         switch state {
         case .populated(_):
             self.tableView.reloadData()
@@ -72,7 +87,7 @@ class TVShowListViewController: UIViewController {
         }
     }
     
-    func buildLoadingView(){
+    func buildLoadingView() {
         let defaultFrame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
         
         let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
@@ -87,19 +102,11 @@ class TVShowListViewController: UIViewController {
         activityIndicator.startAnimating()
     }
     
-    //MARK: - Navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "tvShowDetailSegue"{
-            if let toController = segue.destination as? TVShowDetailViewController{
-                let idShow = sender as! Int
-                toController.viewModel = viewModel?.buildShowDetailViewModel(for: idShow)
-            }
-        }
-    }
 }
 
-//MARK: - UITableViewDataSource
-extension TVShowListViewController: UITableViewDataSource{
+// MARK: - UITableViewDataSource
+
+extension TVShowListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let viewModel = viewModel else { return 0 }
         return viewModel.viewState.value.currentEpisodes.count
@@ -107,7 +114,7 @@ extension TVShowListViewController: UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let viewModel = viewModel else { fatalError() }
-
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
         cell.viewModel = viewModel.models[indexPath.row]
         
@@ -120,13 +127,32 @@ extension TVShowListViewController: UITableViewDataSource{
     }
 }
 
-//MARK: - UITableViewDelegate
-extension TVShowListViewController: UITableViewDelegate{
+// MARK: - UITableViewDelegate
+
+extension TVShowListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let idToSend = viewModel?.shows[indexPath.row].id
-        
-        performSegue(withIdentifier: "tvShowDetailSegue", sender: idToSend)
         tableView.deselectRow(at: indexPath, animated: true)
+        let idToSend = viewModel?.shows[indexPath.row].id
+        handle(idToSend)
     }
+}
+
+// MARK: - Navigation
+
+extension TVShowListViewController {
+    
+    // MARK: - TODO AiringTodayViewModelRoute
+    func handle(_ route: Int?) {
+        guard let identifier = route else { return }
+        let detailController =  showsListViewControllersFactory.makeTVShowDetailsViewController(with: identifier)
+        navigationController?.pushViewController(detailController, animated: true)
+    }
+}
+
+// MARK: - TVShowListViewControllersFactory
+
+protocol TVShowListViewControllersFactory {
+    
+    func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController
 }

@@ -8,7 +8,13 @@
 
 import Foundation
 
-final class SearchViewModel{
+enum SearchViewModelRoute {
+    case initial
+    case showMovieDetail(identifier: Int)
+    case showShowList(genreId: Int)
+}
+
+final class SearchViewModel {
     
     private let fetchGenresUseCase: FetchGenresUseCase
     
@@ -16,6 +22,9 @@ final class SearchViewModel{
     
     //Bindables
     var viewState:Bindable<ViewState> = Bindable(.loading)
+    
+    // Routing
+    var route: Bindable<SearchViewModelRoute> = Bindable(.initial)
     
     private var showsLoadTask: Cancellable? {
         willSet {
@@ -56,18 +65,17 @@ final class SearchViewModel{
         self.viewState.value = .populated(genres)
     }
     
-    //MARK: - Build Model - BORRAR
-    
-    func buildShowDetailViewModel(for showId: Int) -> TVShowDetailViewModel {
-        return TVShowDetailViewModel(showId, fetchDetailShowUseCase: nil)
+    func showTVShowDetails(with identifier: Int) {
+        route.value = .showMovieDetail(identifier: identifier)
     }
     
-    func buildMovieListViewModel(for genreId: Int) -> TVShowListViewModel {
-        return TVShowListViewModel(genreId: genreId)
+    func showShowsList(indexPath: Int) {
+        guard let genreId = genres[indexPath].id else { return }
+        route.value = .showShowList(genreId: genreId)
     }
 }
 
-extension SearchViewModel{
+extension SearchViewModel {
     
     enum ViewState {
         case loading

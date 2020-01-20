@@ -33,20 +33,11 @@
                     <navigationItem key="navigationItem" id="c7e-po-gtA"/>
                     <connections>
                         <outlet property="tableView" destination="vr5-wd-zC4" id="Ni3-jc-1xe"/>
-                        <segue destination="m4s-OV-wAg" kind="show" identifier="showTvShowListSegue" id="Sev-iN-2XR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dnq-NN-9dn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1846" y="1173"/>
-        </scene>
-        <!--TVShowList-->
-        <scene sceneID="qqC-Fn-LCE">
-            <objects>
-                <viewControllerPlaceholder storyboardName="TVShowList" id="m4s-OV-wAg" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Q6B-Tv-MlM" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2586" y="1172"/>
         </scene>
     </scenes>
 </document>

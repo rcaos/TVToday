@@ -80,12 +80,17 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
     //MARK: - SetupViewModel
     
     func setupViewModel() {
-        //Binding
-        viewModel.viewState.bindAndFire({[unowned self] state in
+        viewModel.viewState.bindAndFire({[weak self] state in
             DispatchQueue.main.async {
-                self.configView(with: state)
+                self?.configView(with: state)
             }
         })
+        
+        viewModel.route.bind { [weak self] routing in
+            DispatchQueue.main.async {
+                self?.handle(routing)
+            }
+        }
         
         viewModel.getGenres()
     }
@@ -130,16 +135,6 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
         controller.viewModel.searchShows(for: query, page: 1)
     }
     
-    //MARK: - Nagivation
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        if segue.identifier == "showTvShowListSegue" {
-            guard let toController = segue.destination as? TVShowListViewController else { return }
-            let genre = sender as! Int
-            toController.viewModel = viewModel.buildMovieListViewModel(for: genre)
-        }
-    }
 }
 
 //MARK: - UISearchResultsUpdating
@@ -192,11 +187,8 @@ extension SearchViewController: UITableViewDataSource {
 extension SearchViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let genre = viewModel.genres[indexPath.row]
-        if let id = genre.id{
-            performSegue(withIdentifier: "showTvShowListSegue", sender: id)
-            tableView.deselectRow(at: indexPath, animated: true)
-        }
+        tableView.deselectRow(at: indexPath, animated: true)
+        viewModel.showShowsList(indexPath: indexPath.row)
     }
 }
 
@@ -205,7 +197,7 @@ extension SearchViewController: UITableViewDelegate {
 extension SearchViewController: ResultsSearchViewControllerDelegate {
     
     func resultsSearchViewController(_ resultsSearchViewController: ResultsSearchViewController, didSelectedMovie movie: Int) {
-        handle(movie)
+        viewModel.showTVShowDetails(with: movie)
     }
 }
 
@@ -213,12 +205,19 @@ extension SearchViewController: ResultsSearchViewControllerDelegate {
 
 extension SearchViewController {
     
-    // MARK: - TODO Handle Route
-    
-    func handle(_ route: Int?) {
-        guard let identifier = route else { return }
-        let detailController = searchViewControllersFactory.makeTVShowDetailsViewController(with: identifier)
-        navigationController?.pushViewController(detailController, animated: true)
+    func handle(_ route: SearchViewModelRoute) {
+        switch route {
+            
+        case .initial: break
+            
+        case .showMovieDetail(let identifier):
+            let detailController = searchViewControllersFactory.makeTVShowDetailsViewController(with: identifier)
+            navigationController?.pushViewController(detailController, animated: true)
+            
+        case .showShowList(let genreId):
+            let listController = searchViewControllersFactory.makeShowListViewControll(with: genreId)
+            navigationController?.pushViewController(listController, animated: true)
+        }
     }
 }
 
@@ -229,4 +228,6 @@ protocol SearchViewControllersFactory {
     func makeSearchResultsViewModel() -> ResultsSearchViewModel
     
     func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController
+    
+    func makeShowListViewControll(with genre: Int) -> UIViewController
 }

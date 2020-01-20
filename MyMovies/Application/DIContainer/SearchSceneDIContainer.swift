@@ -30,7 +30,7 @@ final class SearchSceneDIContainer {
     
     // MARK: - TODO thats correct?
     
-    func makeSearchResultsViewModel() -> ResultsSearchViewModel {
+    public func makeSearchResultsViewModel() -> ResultsSearchViewModel {
         return ResultsSearchViewModel(fetchSearchShowsUseCase: makeFetchSearchResultsShowsUseCase())
     }
     
@@ -43,6 +43,18 @@ final class SearchSceneDIContainer {
         
         return container.makeTVShowDetailsViewController(with: identifier)
     }
+    
+    public func makeShowListViewControll(with genre: Int) -> UIViewController {
+        
+        let showDetailsDependencies = TVShowListSceneDIContainer.Dependencies(
+                apiDataTransferService: dependencies.apiDataTransferService,
+                imageDataTransferService: dependencies.imageDataTransferService)
+            
+        let container = TVShowListSceneDIContainer(dependencies: showDetailsDependencies)
+        
+        return container.makeShowListViewController(with: genre)
+    }
+    
 }
 
 // MARK: - Private
@@ -71,11 +83,7 @@ extension SearchSceneDIContainer {
 }
 
 extension SearchSceneDIContainer {
-    
-//    private func makeSearchResultsViewModel() -> ResultsSearchViewModel {
-//        return ResultsSearchViewModel(fetchSearchShowsUseCase: makeFetchSearchResultsShowsUseCase())
-//    }
-    
+        
     private func makeFetchSearchResultsShowsUseCase() -> FetchTVShowsUseCase {
         return DefaultFetchTVShowsUseCase(tvShowsRepository: makeTVShowsRespository())
     }

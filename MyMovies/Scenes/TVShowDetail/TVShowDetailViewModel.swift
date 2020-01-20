@@ -8,6 +8,11 @@
 
 import Foundation
 
+enum TVShowDetailViewModelRoute {
+    case initial
+    case showSeasonsList(tvShowResult: TVShowDetailResult)
+}
+
 final class TVShowDetailViewModel {
     
     private let fetchDetailShowUseCase: FetchTVShowDetailsUseCase?
@@ -32,6 +37,9 @@ final class TVShowDetailViewModel {
     var viewState:Bindable<ViewState> = Bindable(.loading)
     var dropData:Bindable<Data?> = Bindable(nil)
     var posterData:Bindable<Data?> = Bindable(nil)
+    
+    // Routing
+    var route: Bindable<TVShowDetailViewModelRoute> = Bindable(.initial)
     
     private var showsLoadTask: Cancellable? {
         willSet {
@@ -112,12 +120,11 @@ final class TVShowDetailViewModel {
             })
         }
     }
-    
-    //MARK: View Model Building
-    func buildSeasonViewModel() -> DefaultSeasonTableViewModel {
-        return DefaultSeasonTableViewModel(showDetailResult: showDetail!)
+        
+    func showSeasonList() {
+        guard let showDetail = showDetail else { return }
+        route.value = .showSeasonsList(tvShowResult: showDetail)
     }
-    
 }
 
 extension TVShowDetailViewModel {

@@ -19,7 +19,7 @@ final class SeasonHeaderViewModel{
         setupUI()
     }
     
-    func setupUI(){
+    func setupUI() {
         if let name = showDetail.name{
             showName = name
         }
@@ -28,5 +28,4 @@ final class SeasonHeaderViewModel{
             showName += " (" + years + ")"
         }
     }
-    
 }

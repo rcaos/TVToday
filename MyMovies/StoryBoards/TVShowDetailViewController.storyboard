@@ -259,20 +259,11 @@
                         <outlet property="posterImage" destination="zAw-vx-YNK" id="BHC-NL-PrG"/>
                         <outlet property="scoreLabel" destination="H8e-Ze-8eF" id="gaP-VN-Ngj"/>
                         <outlet property="yearsRelease" destination="mpO-ud-9OW" id="jHG-8q-O8b"/>
-                        <segue destination="Hxp-b1-68v" kind="show" identifier="SeasonsListSegue" id="KbY-jg-POD"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aWq-H5-tbd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3268" y="-158"/>
-        </scene>
-        <!--SeasonsListViewController-->
-        <scene sceneID="eth-Ro-aZg">
-            <objects>
-                <viewControllerPlaceholder storyboardName="SeasonsList" referencedIdentifier="SeasonsListViewController" id="Hxp-b1-68v" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="6hY-VY-w9n" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3925" y="-281"/>
         </scene>
     </scenes>
     <resources>

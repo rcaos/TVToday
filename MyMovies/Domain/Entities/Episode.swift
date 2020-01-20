@@ -10,10 +10,10 @@ import Foundation
 
 struct Episode {
     
-    var episodeNumber: Int!
-    var name: String!
-    var airDate: String!
-    var voteAverage: Double!
+    var episodeNumber: Int
+    var name: String?
+    var airDate: String?
+    var voteAverage: Double?
     var episodePath: String?
 }
 

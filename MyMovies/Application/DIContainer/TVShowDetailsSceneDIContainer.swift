@@ -30,6 +30,17 @@ final class TVShowDetailsSceneDIContainer {
             with: makeTVShowDetailsViewModel(with: identifier),
             showDetailsViewControllersFactory: self)
     }
+    
+    public func makeSeasonsListViewController(with result: TVShowDetailResult) -> UIViewController {
+        
+        let dependenciesForSeasons = SeasonsListViewControllerDIContainer.Dependencies(
+                apiDataTransferService: dependencies.apiDataTransferService,
+                imageDataTransferService: dependencies.imageDataTransferService)
+            
+        let container = SeasonsListViewControllerDIContainer(dependencies: dependenciesForSeasons)
+        
+        return container.makeSeasonsListViewController(with: result)
+    }
 }
 
 // MARK: - Private

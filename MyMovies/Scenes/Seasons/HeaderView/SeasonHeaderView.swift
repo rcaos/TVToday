@@ -12,7 +12,7 @@ class SeasonHeaderView: UIView {
 
     @IBOutlet weak var showNameLabel: UILabel!
     
-    var viewModel:SeasonHeaderViewModel?{
+    var viewModel:SeasonHeaderViewModel? {
         didSet{
             setupUI()
         }
@@ -24,7 +24,7 @@ class SeasonHeaderView: UIView {
         super.awakeFromNib()
     }
     
-    func setupUI(){
+    func setupUI() {
         //print("Se Setean las variables...")
         showNameLabel.text = viewModel?.showName
     }

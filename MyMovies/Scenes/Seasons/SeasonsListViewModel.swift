@@ -1,5 +1,5 @@
 //
-//  DefaultSeasonTableViewModel.swift
+//  SeasonsListViewModel.swift
 //  MyTvShows
 //
 //  Created by Jeans on 9/23/19.
@@ -8,8 +8,9 @@
 
 import Foundation
 
-final class DefaultSeasonTableViewModel {
-    private let showsService = ApiClient<TVShowsProvider>()
+final class SeasonsListViewModel {
+    
+    private let fetchEpisodesUseCase: FetchEpisodesUseCase
     
     private var idShow: Int!
     private var showDetailResult: TVShowDetailResult?
@@ -23,23 +24,35 @@ final class DefaultSeasonTableViewModel {
     //Bindables
     var viewState:Bindable<ViewState> = Bindable(.loading)
     
+    private var showsLoadTask: Cancellable? {
+        willSet {
+            showsLoadTask?.cancel()
+        }
+    }
+    
     //MARK: - Life cycle
-    init(show: Int) {
-        self.idShow = show
+    
+//    init(show: Int)
+//        MARK: - TODO , este constructor requiere 2 querys.
+//        self.idShow = show
+//        episodes = [:]
+//        cellModels = [:]
+//    }
+    
+    init(showDetailResult: TVShowDetailResult, fetchEpisodesUseCase: FetchEpisodesUseCase) {
+        self.idShow = showDetailResult.id
+        self.showDetailResult = showDetailResult
         episodes = [:]
         cellModels = [:]
+            
+        self.fetchEpisodesUseCase = fetchEpisodesUseCase
     }
     
-    convenience init(showDetailResult: TVShowDetailResult) {
-        self.init(show: showDetailResult.id!)
-        self.showDetailResult = showDetailResult
-    }
-    
-    func getFirstSeason(){
+    func getFirstSeason() {
         getEpisodesFor(season: 1)
     }
     
-    func getSeason(at index: Int){
+    func getSeason(at index: Int) {
         let numberOfSeason = index + 1
         
         if isSeasonSelected(for: numberOfSeason) {
@@ -55,7 +68,7 @@ final class DefaultSeasonTableViewModel {
         getEpisodesFor(season: numberOfSeason)
     }
     
-    private func isSeasonSelected(for index: Int) -> Bool{
+    private func isSeasonSelected(for index: Int) -> Bool {
         if let season = self.seasonSelected,
             season == index{
             print("Season ya está seleccionada: \(index)")
@@ -64,7 +77,7 @@ final class DefaultSeasonTableViewModel {
         return false
     }
     
-    private func isFetchedBefore(for season: Int) -> Bool{
+    private func isFetchedBefore(for season: Int) -> Bool {
         
         if let episodes = episodes[season] ,
             episodes.count > 1{
@@ -75,18 +88,17 @@ final class DefaultSeasonTableViewModel {
         return false
     }
     
-    func selectFirstSeason(){
+    func selectFirstSeason() {
         let firstSeason = 1
         self.seasonSelected = firstSeason
 
         if let model = viewSeasonModel,
-            let selectedFunction = model.selectedCell{
-            //print("\nSeleccionaré season desde Model: \(firstSeason)")
+            let selectedFunction = model.selectedCell {
             selectedFunction(firstSeason)
         }
     }
     
-    func getEpisode(for indexPath: Int) -> Episode?{
+    func getEpisode(for indexPath: Int) -> Episode? {
         if let selected = seasonSelected,
             let episodes = episodes[selected]{
             return episodes[indexPath]
@@ -94,7 +106,7 @@ final class DefaultSeasonTableViewModel {
         return nil
     }
     
-    func getModel(for indexPath: Int) -> SeasonListTableViewModel?{
+    func getModel(for indexPath: Int) -> SeasonListTableViewModel? {
         if let selected = seasonSelected,
             let models = cellModels[selected]{
             return models[indexPath]
@@ -102,7 +114,7 @@ final class DefaultSeasonTableViewModel {
         return nil
     }
     
-    func buildModelForSeasons() -> SeasonEpisodeTableViewModel{
+    func buildModelForSeasons() -> SeasonEpisodeTableViewModel {
         print("Me pide el Model para el Collection View.. \(seasonSelected)")
         var seasons:[Int] = []
         
@@ -116,28 +128,36 @@ final class DefaultSeasonTableViewModel {
         return viewSeasonModel!
     }
     
-    func buildHeaderViewModel() -> SeasonHeaderViewModel?{
+    func buildHeaderViewModel() -> SeasonHeaderViewModel? {
         guard let show = showDetailResult else { return nil }
         return SeasonHeaderViewModel(showDetail: show)
     }
     
     //MARK: - Helper
-    private func getEpisodesFor(season seasonNumber: Int){
+    
+    private func getEpisodesFor(season seasonNumber: Int) {
         print("Se consulta Episodes para Season: \(seasonNumber)")
         self.viewState.value = .loading
         
-        showsService.load(service: .getEpisodesFor(idShow, seasonNumber) , decodeType: SeasonResult.self, completion: { result in
-            switch result{
+        let request = FetchEpisodesUseCaseRequestValue(showIdentifier: idShow, seasonNumber: seasonNumber)
+        
+        showsLoadTask = fetchEpisodesUseCase.execute(requestValue: request) { [weak self] result in
+            guard let strongSelf = self else { return }
+            
+            switch result {
             case .success(let response):
-                self.processFetched(for: seasonNumber, response.episodes)
+                strongSelf.processFetched(with: response)
             case .failure(let error):
                 print("error: [\(error)]")
-                self.viewState.value = .error(error)
+                strongSelf.viewState.value = .error(error)
             }
-        })
+        }
     }
     
-    private func processFetched(for season: Int, _ fetchedEpisodes: [Episode]){
+    private func processFetched(with response: SeasonResult) {
+        let fetchedEpisodes = response.episodes ?? []
+        let season = response.seasonNumber
+        
         print("Se recibieron: \(fetchedEpisodes.count) episodios para Season: \(season)")
         if fetchedEpisodes.isEmpty{
             self.viewState.value = .empty
@@ -153,7 +173,7 @@ final class DefaultSeasonTableViewModel {
         self.viewState.value = .populated(ordered)
     }
     
-    private func createModels(for season: Int, _ episodes: [Episode]){
+    private func createModels(for season: Int, _ episodes: [Episode]) {
         let models = episodes.map({
             return SeasonListTableViewModel(episode: $0)
         })
@@ -164,7 +184,7 @@ final class DefaultSeasonTableViewModel {
     }
 }
 
-extension DefaultSeasonTableViewModel{
+extension SeasonsListViewModel {
     
     enum ViewState {
         

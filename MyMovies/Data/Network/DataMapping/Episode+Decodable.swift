@@ -22,9 +22,9 @@ extension Episode: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         self.episodeNumber = try container.decode(Int.self, forKey: .episodeNumber)
-        self.name = try container.decode(String.self, forKey: .name)
-        self.airDate = try container.decode(String.self, forKey: .airDate)
-        self.voteAverage = try container.decode(Double.self, forKey: .voteAverage)
+        self.name = try container.decodeIfPresent(String.self, forKey: .name)
+        self.airDate = try container.decodeIfPresent(String.self, forKey: .airDate)
+        self.voteAverage = try container.decodeIfPresent(Double.self, forKey: .voteAverage)
         self.episodePath = try container.decodeIfPresent(String.self, forKey: .episodePath)
     }
 }

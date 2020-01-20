@@ -69,6 +69,12 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
             }
         })
         
+        viewModel?.route.bind({ [weak self] route in
+            DispatchQueue.main.async {
+                self?.handle(route)
+            }
+        })
+        
         //Poster and BackDrop
         viewModel?.dropData.bind({ [weak self] data in
             DispatchQueue.main.async {
@@ -130,16 +136,6 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
         scoreLabel.text = viewModel.score
         countVoteLabel.text = viewModel.countVote
     }
-    
-    //MARK: - Navigation
-    // MARK: - TODO
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "SeasonsListSegue"{
-            if let vc = segue.destination as? SeasonsListViewController{
-                vc.seasonModel = viewModel?.buildSeasonViewModel()
-            }
-        }
-    }
 }
 
 extension TVShowDetailViewController {
@@ -153,7 +149,7 @@ extension TVShowDetailViewController {
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if indexPath.row == 1{
-            performSegue(withIdentifier: "SeasonsListSegue", sender: nil)
+            viewModel?.showSeasonList()
             return indexPath
         }else{
             return nil
@@ -193,8 +189,25 @@ extension TVShowDetailViewController {
     }
 }
 
+extension TVShowDetailViewController {
+    
+    //MARK: - TODO TVShowDetailViewModelRoute
+    func handle(_ route: TVShowDetailViewModelRoute) {
+        
+        switch route {
+        case .initial: break
+            
+        case .showSeasonsList(let tvshowResult):
+            let seasonsController = showDetailsViewControllersFactory .makeSeasonsListViewController(with: tvshowResult)
+            
+            navigationController?.pushViewController(seasonsController, animated: true)
+        }
+    }
+}
+
 // MARK: - TVShowDetailViewControllersFactory
 
 protocol TVShowDetailViewControllersFactory {
     
+    func makeSeasonsListViewController(with result: TVShowDetailResult) -> UIViewController
 }

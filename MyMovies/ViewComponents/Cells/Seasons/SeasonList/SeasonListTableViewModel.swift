@@ -29,10 +29,7 @@ final class SeasonListTableViewModel {
     }
     
     private func setupData(){
-        if let number = episode.episodeNumber{
-            episodeNumber = String(number) + "."
-        }
-        
+        episodeNumber = String(episode.episodeNumber) + "."
         episodeName = episode.name
         releaseDate = episode.airDate
         average = episode.average

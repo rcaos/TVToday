@@ -19,8 +19,8 @@ extension SeasonResult: Decodable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        self._id = try container.decode(String.self, forKey: ._id)
-        self.episodes = try container.decode([Episode].self, forKey: .episodes)
+        self._id = try container.decodeIfPresent(String.self, forKey: ._id)
+        self.episodes = try container.decodeIfPresent([Episode].self, forKey: .episodes)
         self.seasonNumber = try container.decode(Int.self, forKey: .seasonNumber)
     }
 }

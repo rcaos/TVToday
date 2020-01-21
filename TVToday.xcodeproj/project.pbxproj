@@ -29,7 +29,6 @@
 		770D1037233941BF00CD84B2 /* SeasonListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 770D1035233941BF00CD84B2 /* SeasonListTableViewCell.xib */; };
 		770D5B2E233584F000438937 /* SeasonResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770D5B2D233584F000438937 /* SeasonResult.swift */; };
 		770D5B302335858800438937 /* Episode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770D5B2F2335858800438937 /* Episode.swift */; };
-		77193F35232FD927007FA822 /* Bindable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77193F34232FD927007FA822 /* Bindable.swift */; };
 		77193F37232FE0CB007FA822 /* ShowsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77193F36232FE0CB007FA822 /* ShowsViewModel.swift */; };
 		77193F3B232FE2D9007FA822 /* PopularsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77193F3A232FE2D9007FA822 /* PopularsViewModel.swift */; };
 		77193F3D232FE57F007FA822 /* TVShowListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77193F3C232FE57F007FA822 /* TVShowListViewModel.swift */; };
@@ -134,7 +133,6 @@
 		770D1035233941BF00CD84B2 /* SeasonListTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SeasonListTableViewCell.xib; sourceTree = "<group>"; };
 		770D5B2D233584F000438937 /* SeasonResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonResult.swift; sourceTree = "<group>"; };
 		770D5B2F2335858800438937 /* Episode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Episode.swift; sourceTree = "<group>"; };
-		77193F34232FD927007FA822 /* Bindable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bindable.swift; sourceTree = "<group>"; };
 		77193F36232FE0CB007FA822 /* ShowsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowsViewModel.swift; sourceTree = "<group>"; };
 		77193F3A232FE2D9007FA822 /* PopularsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularsViewModel.swift; sourceTree = "<group>"; };
 		77193F3C232FE57F007FA822 /* TVShowListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowListViewModel.swift; sourceTree = "<group>"; };
@@ -312,7 +310,6 @@
 			isa = PBXGroup;
 			children = (
 				770860FA23CE753200625183 /* StoryboardInstantiable.swift */,
-				77193F34232FD927007FA822 /* Bindable.swift */,
 				7755D6DF23CCD02C0083CB53 /* Observable.swift */,
 				7755D6DD23CCCD860083CB53 /* SimpleViewState.swift */,
 			);
@@ -490,8 +487,8 @@
 		77CDBB4123438A4B00B29691 /* EmptyView */ = {
 			isa = PBXGroup;
 			children = (
-				77CDBB3D23438A3400B29691 /* EmptyView.xib */,
 				77CDBB3F23438A4600B29691 /* EmptyView.swift */,
+				77CDBB3D23438A3400B29691 /* EmptyView.xib */,
 			);
 			path = EmptyView;
 			sourceTree = "<group>";
@@ -499,8 +496,8 @@
 		77CDBB4623439C8400B29691 /* ErrorView */ = {
 			isa = PBXGroup;
 			children = (
-				77CDBB4223439C7300B29691 /* ErrorView.xib */,
 				77CDBB4423439C7F00B29691 /* ErrorView.swift */,
+				77CDBB4223439C7300B29691 /* ErrorView.xib */,
 			);
 			path = ErrorView;
 			sourceTree = "<group>";
@@ -526,9 +523,9 @@
 		77E119DD232DD42800A01ACF /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				77E119DF232DE02A00A01ACF /* TVShowCellViewModel.swift */,
 				77B3CCD2232D7CC100921D23 /* TVShowViewCell.swift */,
 				77B3CCD3232D7CC100921D23 /* TVShowViewCell.xib */,
-				77E119DF232DE02A00A01ACF /* TVShowCellViewModel.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -888,7 +885,6 @@
 				77193F42232FF168007FA822 /* ResultsSearchViewModel.swift in Sources */,
 				772244B72358B1B000AB67DA /* FooterReusableView.swift in Sources */,
 				77E119E2232DE39900A01ACF /* AiringTodayViewModel.swift in Sources */,
-				77193F35232FD927007FA822 /* Bindable.swift in Sources */,
 				7703738B234517B000775698 /* AiringTodayCollectionViewModel.swift in Sources */,
 				77E119DA232DD3C200A01ACF /* GenreViewCell.swift in Sources */,
 				77193F3F232FEB4A007FA822 /* SearchViewModel.swift in Sources */,

@@ -16,7 +16,7 @@ class AiringTodayCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var showNameLabel: UILabel!
     @IBOutlet weak var averageLabel: UILabel!
     
-    var viewModel: AiringTodayCollectionViewModel?{
+    var viewModel: AiringTodayCollectionViewModel? {
         didSet{
             setupUI()
         }
@@ -39,13 +39,11 @@ class AiringTodayCollectionViewCell: UICollectionViewCell {
             viewModel.downloadImage()
         }
         
-        viewModel.imageData.bindAndFire({ [weak self] data in
-            if let data = data{
-                DispatchQueue.main.async {
-                    self?.backImageView.image = UIImage(data: data)
-                }
+        viewModel.imageData.observe(on: self) { [weak self] data in
+            if let data = data {
+                self?.backImageView.image = UIImage(data: data)
             }
-        })
+        }
         
         containerView.layer.cornerRadius = 14
         containerView.clipsToBounds = true
@@ -54,7 +52,7 @@ class AiringTodayCollectionViewCell: UICollectionViewCell {
     }
     
     override func prepareForReuse() {
-        viewModel?.imageData.listener = nil
+        viewModel?.imageData.remove(observer: self)
         backImageView.image = nil
     }
 

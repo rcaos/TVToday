@@ -22,8 +22,7 @@ final class SeasonsListViewModel {
     private var cellModels: [Int:[SeasonListTableViewModel]]
     private var viewSeasonModel:SeasonEpisodeTableViewModel?
     
-    //Bindables
-    var viewState:Bindable<ViewState> = Bindable(.loading)
+    var viewState:Observable<ViewState> = Observable(.loading)
     
     private var showsLoadTask: Cancellable? {
         willSet {

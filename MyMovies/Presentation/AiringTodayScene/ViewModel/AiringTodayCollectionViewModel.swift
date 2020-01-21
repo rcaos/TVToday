@@ -22,12 +22,11 @@ final class AiringTodayCollectionViewModel {
     var showName: String!
     var average: String!
     
-    //Bindable
-    var imageData:Bindable<Data?>
+    var imageData:Observable<Data?>
     
     init(show: TVShow, posterImagesRepository: PosterImageRepository) {
         self.show = show
-        self.imageData = Bindable(nil)
+        self.imageData = Observable(nil)
         self.posterImagesRepository = posterImagesRepository
         
         setup()

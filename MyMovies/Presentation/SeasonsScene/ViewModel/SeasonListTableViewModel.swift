@@ -25,14 +25,13 @@ final class SeasonListTableViewModel {
     
     var episode: Episode!
     
-    //Bindables
-    var imageData: Bindable<Data?>
+    var imageData: Observable<Data?>
     
     var imageNotFound: Data?
     
     init(episode: Episode, posterImagesRepository: PosterImageRepository) {
         self.episode = episode
-        self.imageData = Bindable(nil)
+        self.imageData = Observable(nil)
         self.posterImagesRepository = posterImagesRepository
         setupData()
     }

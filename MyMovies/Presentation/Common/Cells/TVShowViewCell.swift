@@ -13,15 +13,14 @@ class TVShowViewCell: UITableViewCell {
     @IBOutlet weak private var nameLabel: UILabel!
     @IBOutlet weak private var averageLabel: UILabel!
 
-    var viewModel:TVShowCellViewModel?{
-        didSet{
+    var viewModel:TVShowCellViewModel? {
+        didSet {
             setupUI()
         }
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
     
     func setupUI(){

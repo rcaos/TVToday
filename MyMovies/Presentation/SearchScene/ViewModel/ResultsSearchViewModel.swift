@@ -13,7 +13,7 @@ final class ResultsSearchViewModel: ShowsViewModel {
     var fetchTVShowsUseCase: FetchTVShowsUseCase
     
     var filter: TVShowsListFilter = .search(query: "")
-    var viewState:Bindable<SimpleViewState<TVShow>> = Bindable(.loading)
+    var viewState:Observable<SimpleViewState<TVShow>> = Observable(.loading)
     
     var shows: [TVShow]
     var cellsmodels: [TVShowCellViewModel]

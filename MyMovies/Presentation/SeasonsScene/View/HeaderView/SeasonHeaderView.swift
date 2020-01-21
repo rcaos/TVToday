@@ -20,12 +20,10 @@ class SeasonHeaderView: UIView {
     
     //MARK: - Life Cycle
     override func awakeFromNib() {
-        //print("--NIB: Se cargo Header View..")
         super.awakeFromNib()
     }
     
     func setupUI() {
-        //print("Se Setean las variables...")
         showNameLabel.text = viewModel?.showName
     }
 }

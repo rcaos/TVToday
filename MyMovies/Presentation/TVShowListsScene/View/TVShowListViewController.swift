@@ -65,12 +65,9 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
         guard let viewModel = viewModel else { return }
         
         //Binding
-        viewModel.viewState.bindAndFire({[weak self] state in
-            guard let strongSelf = self else { return }
-            DispatchQueue.main.async {
-                strongSelf.configView(with: state)
-            }
-        })
+        viewModel.viewState.observe(on: self) {[weak self] state in
+            self?.configView(with: state)
+        }
         
         viewModel.getShows(for: 1)
     }

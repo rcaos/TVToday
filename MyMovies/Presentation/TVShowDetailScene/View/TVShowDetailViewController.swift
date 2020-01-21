@@ -63,34 +63,26 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
     
     private func setupBindables() {
         
-        viewModel?.viewState.bindAndFire({[weak self] state in
-            DispatchQueue.main.async {
-                self?.configView(with: state)
-            }
-        })
+        viewModel?.viewState.observe(on: self) {[weak self] state in
+            self?.configView(with: state)
+        }
         
-        viewModel?.route.bind({ [weak self] route in
-            DispatchQueue.main.async {
-                self?.handle(route)
-            }
-        })
+        viewModel?.route.observe(on: self) { [weak self] route in
+            self?.handle(route)
+        }
         
         //Poster and BackDrop
-        viewModel?.dropData.bind({ [weak self] data in
-            DispatchQueue.main.async {
-                if let data = data{
-                    self?.backDropImage.image = UIImage(data: data)
-                }
+        viewModel?.dropData.observe(on: self) { [weak self] data in
+            if let data = data {
+                self?.backDropImage.image = UIImage(data: data)
             }
-        })
+        }
         
-        viewModel?.posterData.bind({ [weak self] data in
-            DispatchQueue.main.async {
-                if let data = data{
-                    self?.posterImage.image = UIImage(data: data)
-                }
+        viewModel?.posterData.observe(on: self) { [weak self] data in
+            if let data = data {
+                self?.posterImage.image = UIImage(data: data)
             }
-        })
+        }
     }
     
     //TODO: - handle other states -

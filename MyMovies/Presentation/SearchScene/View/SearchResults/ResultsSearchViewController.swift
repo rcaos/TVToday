@@ -55,14 +55,12 @@ class ResultsSearchViewController: UIViewController {
     }
     
     //MARK: - SetupViewModel
+    
     func setupViewModel() {
         
-        //Binding
-        viewModel.viewState.bind({[weak self] state in
-            DispatchQueue.main.async {
-                self?.configView(with: state)
-            }
-        })
+        viewModel.viewState.observe(on: self) {[weak self] state in
+            self?.configView(with: state)
+        }
     }
     
     func configView(with state: SimpleViewState<TVShow>) {

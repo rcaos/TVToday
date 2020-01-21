@@ -15,7 +15,7 @@ final class TVShowCellViewModel{
     init(show: TVShow) {
         name = show.name
         
-        if let voteAverage = show.voteAverage{
+        if let voteAverage = show.voteAverage {
             average = String(voteAverage)
         }else{
             average = ""

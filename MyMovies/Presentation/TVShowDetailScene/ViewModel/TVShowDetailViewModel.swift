@@ -32,13 +32,11 @@ final class TVShowDetailViewModel {
     
     var showDetail: TVShowDetailResult?
     
-    //Bindables
-    var viewState:Bindable<ViewState> = Bindable(.loading)
-    var dropData:Bindable<Data?> = Bindable(nil)
-    var posterData:Bindable<Data?> = Bindable(nil)
+    var viewState:Observable<ViewState> = Observable(.loading)
+    var dropData:Observable<Data?> = Observable(nil)
+    var posterData:Observable<Data?> = Observable(nil)
     
-    // Routing
-    var route: Bindable<TVShowDetailViewModelRoute> = Bindable(.initial)
+    var route: Observable<TVShowDetailViewModelRoute> = Observable(.initial)
     
     private var showsLoadTask: Cancellable? {
         willSet {

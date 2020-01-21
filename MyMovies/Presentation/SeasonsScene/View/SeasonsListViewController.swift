@@ -111,13 +111,10 @@ class SeasonsListViewController: UIViewController, StoryboardInstantiable {
     }
     
     private func setupBindables() {
-        viewModel.viewState.bindAndFire({[weak self] state in
-            guard let strongSelf = self else { return }
-            DispatchQueue.main.async {
-                strongSelf.configureView(with: state)
-                strongSelf.reloadSection(at: 1)
-            }
-        })
+        viewModel.viewState.observe(on: self) {[weak self] state in
+            self?.configureView(with: state)
+            self?.reloadSection(at: 1)
+        }
     }
     
     private func configureView(with state: SeasonsListViewModel.ViewState) {

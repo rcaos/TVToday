@@ -20,11 +20,10 @@ final class SearchViewModel {
     
     var genres:[Genre]
     
-    //Bindables
-    var viewState:Bindable<ViewState> = Bindable(.loading)
+    var viewState:Observable<ViewState> = Observable(.loading)
     
     // Routing
-    var route: Bindable<SearchViewModelRoute> = Bindable(.initial)
+    var route: Observable<SearchViewModelRoute> = Observable(.initial)
     
     private var showsLoadTask: Cancellable? {
         willSet {

@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol SeasonEpisodeTableViewCellDelegate: class{
+protocol SeasonEpisodeTableViewCellDelegate: class {
     
     func didSelectedSeason(at index: Int)
 }
@@ -17,8 +17,8 @@ class SeasonEpisodeTableViewCell: UITableViewCell {
 
     @IBOutlet weak var collectionView: UICollectionView!
     
-    var viewModel: SeasonEpisodeTableViewModel?{
-        didSet{
+    var viewModel: SeasonEpisodeTableViewModel? {
+        didSet {
             setupBindables()
         }
     }
@@ -30,7 +30,7 @@ class SeasonEpisodeTableViewCell: UITableViewCell {
         setupUI()
     }
     
-    func setupUI(){
+    func setupUI() {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.allowsMultipleSelection = false
@@ -39,7 +39,7 @@ class SeasonEpisodeTableViewCell: UITableViewCell {
         collectionView.register(nibName, forCellWithReuseIdentifier: "SeasonEpisodeCollectionViewCell")
     }
     
-    func setupBindables(){
+    func setupBindables() {
         viewModel?.selectedCell = { index in
             DispatchQueue.main.async {
                 self.selectedSeason(at: index)
@@ -47,13 +47,13 @@ class SeasonEpisodeTableViewCell: UITableViewCell {
         }
     }
     
-    func selectedSeason(at index: Int){
+    func selectedSeason(at index: Int) {
         let indexPath = IndexPath(row: index - 1, section: 0)
         collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .top)
     }
 }
 
-extension SeasonEpisodeTableViewCell: UICollectionViewDataSource{
+extension SeasonEpisodeTableViewCell: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let viewModel = viewModel else { return 0 }
@@ -67,14 +67,14 @@ extension SeasonEpisodeTableViewCell: UICollectionViewDataSource{
     }
 }
 
-extension SeasonEpisodeTableViewCell: UICollectionViewDelegate{
+extension SeasonEpisodeTableViewCell: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         delegate?.didSelectedSeason(at: indexPath.row)
     }
 }
 
-extension SeasonEpisodeTableViewCell: UICollectionViewDelegateFlowLayout{
+extension SeasonEpisodeTableViewCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 50, height: 50)
     }

@@ -16,7 +16,7 @@ protocol ShowsViewModel: class {
     
     var filter: TVShowsListFilter { get set }
     
-    var viewState: Bindable<SimpleViewState<TVShow>> { get set }
+    var viewState: Observable<SimpleViewState<TVShow>> { get set }
     
     var shows: [TVShow] { get set }
     

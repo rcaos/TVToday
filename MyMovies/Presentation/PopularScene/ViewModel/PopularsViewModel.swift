@@ -13,7 +13,7 @@ final class PopularViewModel: ShowsViewModel {
     var fetchTVShowsUseCase: FetchTVShowsUseCase
     
     var filter: TVShowsListFilter = .popular
-    var viewState:Bindable<SimpleViewState<TVShow>> = Bindable(.loading)
+    var viewState:Observable<SimpleViewState<TVShow>> = Observable(.loading)
     
     var shows: [TVShow]
     var cellsmodels: [TVShowCellViewModel]

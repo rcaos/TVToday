@@ -49,16 +49,14 @@ class SeasonListTableViewCell: UITableViewCell {
             episodeImage.image = UIImage(data: data)
         }
         
-        viewModel.imageData.bind({[weak self] data in
+        viewModel.imageData.observe(on: self) {[weak self] data in
             if let data = data {
-                DispatchQueue.main.async {
-                    self?.episodeImage.image = UIImage(data: data)
-                }
+                self?.episodeImage.image = UIImage(data: data)
             }
-        })
+        }
     }
     
     override func prepareForReuse() {
-        viewModel?.imageData.listener = nil
+        viewModel?.imageData.remove(observer: self)
     }
 }

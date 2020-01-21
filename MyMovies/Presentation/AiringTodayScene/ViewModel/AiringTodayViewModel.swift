@@ -14,7 +14,7 @@ final class AiringTodayViewModel: ShowsViewModel {
     var posterImageRepository: PosterImageRepository
     
     var filter: TVShowsListFilter = .today
-    var viewState:Bindable<SimpleViewState<TVShow>> = Bindable(.loading)
+    var viewState:Observable<SimpleViewState<TVShow>> = Observable(.loading)
     
     var shows: [TVShow]
     var cellsmodels: [AiringTodayCollectionViewModel]

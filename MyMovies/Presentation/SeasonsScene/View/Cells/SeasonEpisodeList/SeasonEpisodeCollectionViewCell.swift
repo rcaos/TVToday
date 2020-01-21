@@ -10,7 +10,7 @@ import UIKit
 
 class SeasonEpisodeCollectionViewCell: UICollectionViewCell {
 
-    @IBOutlet weak var seasonNumber: UILabel!{
+    @IBOutlet weak var seasonNumber: UILabel! {
         didSet{
             self.seasonNumber.backgroundColor = ColorsForCell.normal.rawValue
             self.seasonNumber.textColor = .black
@@ -21,7 +21,7 @@ class SeasonEpisodeCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    var viewModel: SeasonEpisodeCollectionViewModel?{
+    var viewModel: SeasonEpisodeCollectionViewModel? {
         didSet{
             setupUI()
         }

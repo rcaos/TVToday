@@ -72,10 +72,10 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
             }
         })
         
-        viewModel.getMoviesForGenre(from: 1)
+        viewModel.getShows(for: 1)
     }
     
-    func configView(with state: TVShowListViewModel.ViewState) {
+    func configView(with state: SimpleViewState<TVShow>) {
         switch state {
         case .populated(_):
             self.tableView.reloadData()
@@ -109,18 +109,18 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
 extension TVShowListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let viewModel = viewModel else { return 0 }
-        return viewModel.viewState.value.currentEpisodes.count
+        return viewModel.viewState.value.currentEntities.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let viewModel = viewModel else { fatalError() }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
-        cell.viewModel = viewModel.models[indexPath.row]
+        cell.viewModel = viewModel.getModelFor(indexPath.row)
         
         if case .paging(_, let nextPage) = viewModel.viewState.value,
-            indexPath.row == viewModel.viewState.value.currentEpisodes.count - 1 {
-            viewModel.getMoviesForGenre(from: nextPage)
+            indexPath.row == viewModel.viewState.value.currentEntities.count - 1 {
+            viewModel.getShows(for: nextPage)
         }
         
         return cell

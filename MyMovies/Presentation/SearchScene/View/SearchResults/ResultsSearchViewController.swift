@@ -65,7 +65,7 @@ class ResultsSearchViewController: UIViewController {
         })
     }
     
-    func configView(with state: ResultsSearchViewModel.ViewState) {
+    func configView(with state: SimpleViewState<TVShow>) {
         
         let tableView = resultView.tableView
         
@@ -120,17 +120,17 @@ class ResultsSearchViewController: UIViewController {
 extension ResultsSearchViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.viewState.value.currentEpisodes.count
+        return viewModel.viewState.value.currentEntities.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
-        cell.viewModel = viewModel.models[indexPath.row]
+        cell.viewModel = viewModel.getModelFor(indexPath.row)
         
         if case .paging(_, let nextPage) = viewModel.viewState.value,
-            indexPath.row == viewModel.viewState.value.currentEpisodes.count - 1 {
+            indexPath.row == viewModel.viewState.value.currentEntities.count - 1 {
             print("Necesito otra page: \(nextPage)")
-            viewModel.searchShow(for: nextPage)
+            viewModel.searchShows(for: nextPage)
         }
         
         return cell

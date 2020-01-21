@@ -61,16 +61,17 @@ class PopularsViewController: UITableViewController, StoryboardInstantiable {
     func setupViewModel() {
         
         //Binding
-        viewModel.viewState.bindAndFire({ [unowned self] state in
+        viewModel.viewState.bindAndFire({ [weak self] state in
+            guard let strongSelf = self else { return }
             DispatchQueue.main.async {
-                self.configView(with: state)
+                strongSelf.configView(with: state)
             }
         })
         
         viewModel.getShows(for: 1)
     }
     
-    func configView(with state: PopularViewModel.ViewState) {
+    func configView(with state: SimpleViewState<TVShow>) {
         
         switch state {
         case .populated(_) :
@@ -107,15 +108,15 @@ extension PopularsViewController{
     // MARK: - Table view data source
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.viewState.value.currentEpisodes.count
+        return viewModel.viewState.value.currentEntities.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
-        cell.viewModel = viewModel.models[indexPath.row]
+        cell.viewModel = viewModel.getModelFor(indexPath.row)
         
         if case .paging(_, let nextPage) = viewModel.viewState.value ,
-            indexPath.row == viewModel.viewState.value.currentEpisodes.count - 1  {
+            indexPath.row == viewModel.viewState.value.currentEntities.count - 1  {
             viewModel.getShows(for: nextPage)
         }
         

@@ -36,7 +36,7 @@ extension PopularShowsSceneDIContainer {
     // MARK: - TODO cambiar ViewModel por protocolm, Agregar repository de Imágenes
     
     private func makePopularsViewModel() -> PopularViewModel {
-        return PopularViewModel(fetchPopularsShowsUseCase: makeFetchPopularsShowsUseCase())
+        return PopularViewModel(fetchTVShowsUseCase: makeFetchPopularsShowsUseCase())
     }
     
     // MARK: - Use Cases

@@ -61,9 +61,10 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable {
     //MARK: - SetupViewModel
     func setupViewModel() {
         //Binding
-        viewModel.viewState.bindAndFire({ state in
+        viewModel.viewState.bindAndFire({ [weak self] state in
+            guard let strongSelf = self else { return }
             DispatchQueue.main.async {
-                self.configView(with: state)
+                strongSelf.configView(with: state)
             }
         })
         

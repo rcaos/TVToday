@@ -10,84 +10,40 @@ import Foundation
 
 final class TVShowListViewModel: ShowsViewModel {
     
-    private let fetchShowListUseCase: FetchTVShowsUseCase
+    var fetchTVShowsUseCase: FetchTVShowsUseCase
+    
+    var filter: TVShowsListFilter
+    var viewState:Bindable<SimpleViewState<TVShow>> = Bindable(.loading)
     
     var shows: [TVShow]
-    var models: [TVShowCellViewModel]
+    var cellsmodels: [TVShowCellViewModel]
     
-    var genreId: Int!
-    
-    var viewState:Bindable<ViewState> = Bindable(.loading)
-    
-    private var showsLoadTask: Cancellable? {
+    var showsLoadTask: Cancellable? {
         willSet {
             showsLoadTask?.cancel()
         }
     }
     
+    var genreId: Int!
+    
     // MARK: - Initializers
     
-    init(genreId: Int, fetchShowListUseCase: FetchTVShowsUseCase) {
-        self.fetchShowListUseCase = fetchShowListUseCase
+    init(genreId: Int, fetchTVShowsUseCase: FetchTVShowsUseCase) {
+        self.fetchTVShowsUseCase = fetchTVShowsUseCase
         self.genreId = genreId
         shows = []
-        models = []
+        cellsmodels = []
+        filter = .byGenre(genreId: genreId)
     }
     
-    func getMoviesForGenre(from page: Int) {
-        
-        viewState.value = .loading
-        
-        let request = FetchTVShowsUseCaseRequestValue(filter: .byGenre(genreId: genreId), page: page)
-        
-        showsLoadTask = fetchShowListUseCase.execute(requestValue: request) { [weak self ] result in
-            guard let strongSelf = self else { return }
-            switch result{
-            case .success(let response):
-                strongSelf.processFetched(for: response)
-            case .failure(let error):
-                // MARK: - TODO // handle errror view
-                print(error)
-                strongSelf.viewState.value = .error(error)
-            }
-        }
+    func createModels(for fetched: [TVShow]) {
+        self.cellsmodels.append(contentsOf:
+            fetched.map({
+                TVShowCellViewModel(show: $0)
+        }))
     }
     
-    //MARK: - Private
-    
-    private func processFetched(for response: TVShowResult ) {
-        let fetchedShows = response.results ?? []
-        
-        self.shows.append(contentsOf: fetchedShows)
-        self.models.append(contentsOf: fetchedShows.map({ return TVShowCellViewModel(show: $0) }) )
-        
-        if response.hasMorePages {
-            self.viewState.value = .paging(shows, response.nextPage)
-        } else{
-            self.viewState.value = .populated(shows)
-        }
-    }
-}
-
-extension TVShowListViewModel {
-    
-    enum ViewState {
-        
-        case loading
-        case populated([TVShow])
-        case paging([TVShow], Int)
-        case empty
-        case error(Error)
-        
-        var currentEpisodes : [TVShow] {
-            switch self{
-            case .populated(let episodes):
-                return episodes
-            case .paging(let episodes, _):
-                return episodes
-            default:
-                return []
-            }
-        }
+    func getModelFor(_ index:Int) -> TVShowCellViewModel {
+        return cellsmodels[index]
     }
 }

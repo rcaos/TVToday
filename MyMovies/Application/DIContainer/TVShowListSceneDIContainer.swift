@@ -35,7 +35,7 @@ extension TVShowListSceneDIContainer {
     // MARK: - TODO cambiar ViewModel por protocolm, Agregar repository de Imágenes
     
     private func makeShowListViewModel(with identifier: Int) -> TVShowListViewModel {
-        return TVShowListViewModel(genreId: identifier, fetchShowListUseCase: makeShowListUseCase())
+        return TVShowListViewModel(genreId: identifier, fetchTVShowsUseCase: makeShowListUseCase())
     }
     
     // MARK: - Use Cases

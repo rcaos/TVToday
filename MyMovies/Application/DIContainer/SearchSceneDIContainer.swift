@@ -31,7 +31,7 @@ final class SearchSceneDIContainer {
     // MARK: - TODO thats correct?
     
     public func makeSearchResultsViewModel() -> ResultsSearchViewModel {
-        return ResultsSearchViewModel(fetchSearchShowsUseCase: makeFetchSearchResultsShowsUseCase())
+        return ResultsSearchViewModel(fetchTVShowsUseCase: makeFetchSearchResultsShowsUseCase())
     }
     
     public func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController {

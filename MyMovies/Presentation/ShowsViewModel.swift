@@ -8,50 +8,62 @@
 
 import Foundation
 
-protocol ShowsViewModel{
+protocol ShowsViewModel: class {
     
-//    associatedtype TVShowCellViewModel
-//
-//    var searchShowsUseCase: String { get set }
-//
-//    var posterImageRepository: String { get set}
-//
-//    //var filter: MovieListFilter { get set}
-//
-//    var viewState: Bindable<SimpleViewState<TVShow>> { get set }
-//
-//    var tvShowsCells: [TVShowCellViewModel] { get set }
-//    var tvShows: [TVShow] { get }
+    associatedtype TVShowCellViewModel
+    
+    var fetchTVShowsUseCase: FetchTVShowsUseCase { get set }
+    
+    var filter: TVShowsListFilter { get set }
+    
+    var viewState: Bindable<SimpleViewState<TVShow>> { get set }
+    
+    var shows: [TVShow] { get set }
+    
+    var cellsmodels: [TVShowCellViewModel] { get set }
+    
+    var showsLoadTask: Cancellable? { get set }
+    
+    func createModels(for fetched: [TVShow])
 }
 
-//extension ShowsViewModel {
-//    
-//    var tvShows: [TVShow] {
-//        return viewState.value.currentEntities
-//    }
-//    
-//    func buildDetailViewModel(at index: Int) -> TVShowDetailViewModel? {
-//        // Tmb Agregar dependencias, Networking, Persistence
-//        return TVShowDetailViewModel( tvShows[index].id  )
-//    }
-//    
-//    private func fetchShows(currentPage: Int) {
-//        //Caso de uso .getShows
-//    }
-//    private func processShowsResult(_ showResult: TVShowResult) {
-//        let fetchedShows = showResult.results ?? []
-//        
-//        let allShows = viewState.value.currentEntities + fetchedShows
-//        
-//        if allShows.isEmpty {
-//            viewState.value = .empty
-//            return
-//        }
-//        
-//        if showResult.hasMorePages {
-//            viewState.value = .paging(allShows, next: showResult.nextPage)
-//        } else {
-//            viewState.value = .populated( allShows )
-//        }
-//    }
-//}
+extension ShowsViewModel {
+    
+    func getShows(for page: Int) {
+        
+        if viewState.value.isInitialPage {
+            viewState.value =  .loading
+        }
+        
+        let request = FetchTVShowsUseCaseRequestValue(filter: filter, page: page)
+        
+        showsLoadTask = fetchTVShowsUseCase.execute(requestValue: request) { [weak self] result in
+            guard let strongSelf = self else { return }
+            switch result {
+            case .success(let results):
+                strongSelf.processFetched(for: results)
+            case .failure(let error):
+                strongSelf.viewState.value = .error(error.localizedDescription)
+            }
+        }
+    }
+    
+    private func processFetched(for response: TVShowResult) {
+        let fetchedShows = response.results ?? []
+        
+        self.shows.append(contentsOf: fetchedShows)
+        
+        if self.shows.isEmpty {
+            viewState.value = .empty
+            return
+        }
+        
+        if response.hasMorePages {
+            self.viewState.value = .paging(shows, next: response.nextPage)
+        } else {
+            self.viewState.value = .populated(shows)
+        }
+        
+        self.createModels(for: fetchedShows)
+    }
+}

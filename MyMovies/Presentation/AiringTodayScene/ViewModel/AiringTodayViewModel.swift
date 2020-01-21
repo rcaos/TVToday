@@ -8,20 +8,18 @@
 
 import Foundation
 
-final class AiringTodayViewModel {
+final class AiringTodayViewModel: ShowsViewModel {
     
-    private let fetchTodayShowsUseCase: FetchTVShowsUseCase
-    private let posterImageRepository: PosterImageRepository
+    var fetchTVShowsUseCase: FetchTVShowsUseCase
+    var posterImageRepository: PosterImageRepository
     
-    var tvShowsCells: [AiringTodayCollectionViewModel] = []
-    
+    var filter: TVShowsListFilter = .today
     var viewState:Bindable<SimpleViewState<TVShow>> = Bindable(.loading)
     
-    var tvShows: [TVShow] {
-        return viewState.value.currentEntities
-    }
+    var shows: [TVShow]
+    var cellsmodels: [AiringTodayCollectionViewModel]
     
-    private var showsLoadTask: Cancellable? {
+    var showsLoadTask: Cancellable? {
         willSet {
             showsLoadTask?.cancel()
         }
@@ -29,57 +27,21 @@ final class AiringTodayViewModel {
     
     // MARK: - Initializers
     
-    init(fetchTodayShowsUseCase: FetchTVShowsUseCase, posterImageRepository: PosterImageRepository) {
-        self.fetchTodayShowsUseCase = fetchTodayShowsUseCase
+    init(fetchTVShowsUseCase: FetchTVShowsUseCase, posterImageRepository: PosterImageRepository) {
+        self.fetchTVShowsUseCase = fetchTVShowsUseCase
         self.posterImageRepository = posterImageRepository
+        shows = []
+        cellsmodels = []
     }
     
-    // MARK: - Fetch Shows
-    
-    func getShows(for page: Int) {
-        if viewState.value.isInitialPage {
-            viewState.value =  .loading
-        }
-        
-        let request = FetchTVShowsUseCaseRequestValue(filter: .today, page: page)
-        
-        showsLoadTask = fetchTodayShowsUseCase.execute(requestValue: request) { [weak self] result in
-            guard let strongSelf = self else { return }
-            switch result {
-            case .success(let results):
-                strongSelf.processFetched(for: results)
-            case .failure(let error):
-                // MARK: - TODO // Handle error at View
-                print("Error to fetch Case use \(error)")
-            }
-        }
+    func createModels(for fetched: [TVShow]) {
+        self.cellsmodels.append(contentsOf:
+            fetched.map({
+                AiringTodayCollectionViewModel(show: $0, posterImagesRepository: self.posterImageRepository)
+        }))
     }
     
     func getModelFor(_ index:Int) -> AiringTodayCollectionViewModel {
-        return tvShowsCells[index]
-    }
-    
-    // MARK: - Private
-    
-    private func processFetched(for response: TVShowResult) {
-        let fetchedShows = response.results ?? []
-        
-        tvShowsCells.append(contentsOf:
-            fetchedShows.map({
-                AiringTodayCollectionViewModel(show: $0, posterImagesRepository: self.posterImageRepository)
-        }))
-        
-        let allShows = viewState.value.currentEntities + fetchedShows
-        
-        if allShows.isEmpty {
-            viewState.value = .empty
-            return
-        }
-
-        if response.hasMorePages {
-            self.viewState.value = .paging(allShows, next: response.nextPage)
-        } else {
-            self.viewState.value = .populated(allShows)
-        }
+        return cellsmodels[index]
     }
 }

@@ -14,10 +14,6 @@ enum GenreProvider {
 
 extension GenreProvider: EndPoint {
     
-    var baseURL: String {
-        return "https://api.themoviedb.org"
-    }
-    
     var path: String {
         switch self {
         case .getAll:
@@ -32,16 +28,6 @@ extension GenreProvider: EndPoint {
         case .getAll:
             params["api_key"] = config.queryParameters["api_key"]
             params["language"] = config.queryParameters["language"]
-        }
-        return params
-    }
-    
-    var parameters: [String: Any]? {
-        var params: [String: Any] = ["api_key": "06e1a8c1f39b7a033e2efb972625fee2"]
-        
-        switch self {
-        case .getAll:
-            params["language"] = "en-US"
         }
         return params
     }

@@ -21,13 +21,13 @@ final class AppDIContainer {
             baseURL: appConfigurations.apiBaseURL,
             queryParameters: queryParameters)
         
-        return ApiClientNew<TVShowsProvider>(with: configuration)
+        return ApiClient<TVShowsProvider>(with: configuration)
     }()
     
     lazy var imageTransferService: DataTransferService = {
         let configuration = ApiDataNetworkConfig(
             baseURL: appConfigurations.imagesBaseURL)
-        return ApiClientNew<ImagesProvider>(with: configuration)
+        return ApiClient<ImagesProvider>(with: configuration)
     }()
 }
 

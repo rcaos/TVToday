@@ -2,23 +2,59 @@
 //  ApiClient.swift
 //  TVToday
 //
-//  Created by Jeans on 10/14/19.
-//  Copyright © 2019 Jeans. All rights reserved.
+//  Created by Jeans Ruiz on 1/15/20.
+//  Copyright © 2020 Jeans. All rights reserved.
 //
 
 import Foundation
 
+public protocol DataTransferService {
+    
+    typealias CompletionHandler<T> = (Result<T, Error>) -> Void
+    
+    func request<T: EndPoint> (service: T, completion: @escaping CompletionHandler<Data>) -> NetworkCancellable?
+    
+    func request<T: EndPoint, U: Decodable>(service: T, decodeType: U.Type, completion: @escaping CompletionHandler<U>) -> NetworkCancellable?
+}
+
+public protocol NetworkCancellable {
+    func cancel()
+}
+
 class ApiClient<T: EndPoint> {
-    var urlSession = URLSession.shared
     
-    init() { }
+    private let configuration: NetworkConfigurable
     
-    func load(service: T, completion: @escaping (Result<Data, APIError>) -> Void) {
-        call(service.urlRequest, completion: completion)
+    init(with configuration: NetworkConfigurable) {
+        self.configuration = configuration
+    }
+}
+
+// MARK: - DataTransferService
+
+extension ApiClient: DataTransferService {
+    
+    func request<T>(service: T,
+                    completion: @escaping CompletionHandler<Data>) -> NetworkCancellable?
+        where T: EndPoint {
+            
+        let task = request(service.getUrlRequest(with: configuration)) { result in
+            switch result {
+            case .success(let data):
+                completion( .success(data) )
+            case .failure(let error):
+                completion( .failure(error) )
+            }
+        }
+        return task
     }
     
-    func load<U>(service: T, decodeType: U.Type, completion: @escaping (Result<U, APIError>) -> Void) where U: Decodable {
-        call(service.urlRequest) { result in
+    func request<T,U>(service: T,
+                      decodeType: U.Type,
+                      completion: @escaping CompletionHandler<U>) -> NetworkCancellable?
+        where T: EndPoint, U: Decodable {
+            
+        let task = request(service.getUrlRequest(with: configuration)) { result in
             switch result {
             case .success(let data):
                 let decoder = JSONDecoder()
@@ -28,20 +64,28 @@ class ApiClient<T: EndPoint> {
                 }
                 catch {
                     print("error to Decode: [\(error)]")
-                    completion(.failure( .requestFailed ))
+                    completion(.failure( error ))
                 }
             case .failure(let error):
                 print("error server: [\(error)]")
                 completion(.failure(error))
             }
         }
+        return task
     }
 }
 
+extension URLSessionTask: NetworkCancellable { }
+
+// MARK: - Private
+
 extension ApiClient {
-    private func call(_ request: URLRequest, deliverQueue: DispatchQueue = DispatchQueue.main, completion: @escaping (Result<Data, APIError>) -> Void) {
+    
+    private func request(_ request: URLRequest,
+                         deliverQueue: DispatchQueue = DispatchQueue.main,
+                         completion: @escaping (Result<Data, APIError>) -> Void) -> NetworkCancellable {
         print( "url request: [\(request)]" )
-        let task = urlSession.dataTask(with: request) { (data, response, _) in
+        let task = URLSession.shared.dataTask(with: request) { (data, response, _) in
             
             guard let httpResponse = response as? HTTPURLResponse else {
                 deliverQueue.async {
@@ -67,5 +111,6 @@ extension ApiClient {
             }
         }
         task.resume()
+        return task
     }
 }

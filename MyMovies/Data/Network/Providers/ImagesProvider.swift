@@ -15,10 +15,6 @@ enum ImagesProvider {
 
 extension ImagesProvider: EndPoint {
     
-    var baseURL: String {
-        return "https://image.tmdb.org"
-    }
-    
     var path: String {
         switch self {
         case .getPoster(let size, let path):
@@ -29,10 +25,6 @@ extension ImagesProvider: EndPoint {
     }
     
     func getParameters(with config: NetworkConfigurable) -> [String: Any] {
-        return [:]
-    }
-    
-    var parameters: [String: Any]? {
         return [:]
     }
     

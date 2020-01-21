@@ -19,11 +19,7 @@ enum TVShowsProvider {
 }
 
 extension TVShowsProvider: EndPoint {
-    
-    var baseURL: String {
-        return "https://api.themoviedb.org"
-    }
-    
+        
     var path: String {
         switch self {
         case .getAiringTodayShows:
@@ -74,35 +70,6 @@ extension TVShowsProvider: EndPoint {
             params["include_null_first_air_dates"] = "false"
         }
         
-        return params
-    }
-    
-    var parameters: [String: Any]? {
-        var params: [String: Any] = ["api_key": "06e1a8c1f39b7a033e2efb972625fee2"]
-        
-        switch self {
-        case .getAiringTodayShows(let page):
-            params["language"] = "en-US"
-            params["page"] = page
-        case .getPopularTVShows(let page):
-            params["language"] = "en-US"
-            params["page"] = page
-        case .getTVShowDetail(_):
-            params["language"] = "en-US"
-        case .getEpisodesFor(_, _):
-            params["language"] = "en-US"
-        case .searchTVShow(let query, let page):
-            params["language"] = "en-US"
-            params["query"] = query
-            params["page"] = page
-        case .listTVShowsBy(let genre, let page):
-            params["language"] = "en-US"
-            params["with_genres"] = genre
-            params["sort_by"] = "popularity.desc"
-            params["page"] = page
-            params["timezone"] = "America%2FNew_York"
-            params["include_null_first_air_dates"] = "false"
-        }
         return params
     }
     

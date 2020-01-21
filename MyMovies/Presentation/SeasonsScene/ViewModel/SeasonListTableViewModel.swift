@@ -28,14 +28,14 @@ final class SeasonListTableViewModel {
         setupData()
     }
     
-    private func setupData(){
+    private func setupData() {
         episodeNumber = String(episode.episodeNumber) + "."
         episodeName = episode.name
         releaseDate = episode.airDate
         average = episode.average
     }
     
-    func downloadImage(){
+    func downloadImage() {
         guard let episodePath = episode.episodePath else { return }
         
         imageService.load(service: .getPoster(.mediumPoster , episodePath) , completion: { result in

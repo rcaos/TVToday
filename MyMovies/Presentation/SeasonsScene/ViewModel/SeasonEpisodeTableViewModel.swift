@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class SeasonEpisodeTableViewModel{
+final class SeasonEpisodeTableViewModel {
     
     var seasons:[Int]
     
@@ -22,15 +22,15 @@ final class SeasonEpisodeTableViewModel{
     var selectedCell: ( (Int) -> Void)?
     
     //MARK: Life Cycle
-    init( seasons: [Int] ){
+    init( seasons: [Int] ) {
         self.seasons = seasons
     }
     
-    func getSeasonNumber(for index: Int) -> Int?{
+    func getSeasonNumber(for index: Int) -> Int? {
         return seasons[index]
     }
     
-    func getNumberOfSeasons() -> Int{
+    func getNumberOfSeasons() -> Int {
         return seasons.count
     }
     

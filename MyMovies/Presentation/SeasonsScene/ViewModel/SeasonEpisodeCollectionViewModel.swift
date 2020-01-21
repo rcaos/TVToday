@@ -8,18 +8,11 @@
 
 import Foundation
 
-final class SeasonEpisodeCollectionViewModel{
+final class SeasonEpisodeCollectionViewModel {
     
-    //var season:Int
-    //var isSelected = false
     var seasonNumber: String?
 
-    init( seasonNumber: Int){
+    init( seasonNumber: Int) {
         self.seasonNumber = String(seasonNumber)
     }
-    
-//    init( seasonNumber: Int){
-//        self.season = seasonNumber
-//        self.seasonNumber = String(seasonNumber)
-//    }
 }

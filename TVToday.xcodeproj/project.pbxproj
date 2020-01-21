@@ -103,6 +103,8 @@
 		77F46345230CB059008FB9D6 /* TVShowResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F46344230CB059008FB9D6 /* TVShowResult.swift */; };
 		77F49CAA2357864200AF12F8 /* CustomFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F49CA92357864200AF12F8 /* CustomFooterView.swift */; };
 		77F49CAC2357866900AF12F8 /* CustomFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77F49CAB2357866900AF12F8 /* CustomFooterView.xib */; };
+		77FAAEBA23D7475400AFAB10 /* PosterImageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FAAEB923D7475400AFAB10 /* PosterImageRepository.swift */; };
+		77FAAEBC23D74B0100AFAB10 /* DefaultPosterImageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FAAEBB23D74B0100AFAB10 /* DefaultPosterImageRepository.swift */; };
 		77FFB0912339544D00D17CF0 /* SeasonsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FFB0902339544D00D17CF0 /* SeasonsListViewController.swift */; };
 		77FFB0932339556B00D17CF0 /* SeasonsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FFB0922339556B00D17CF0 /* SeasonsListViewModel.swift */; };
 		77FFDE2D233BA54600C4096F /* SeasonHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77FFDE2C233BA54600C4096F /* SeasonHeaderView.xib */; };
@@ -209,6 +211,8 @@
 		77F46344230CB059008FB9D6 /* TVShowResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowResult.swift; sourceTree = "<group>"; };
 		77F49CA92357864200AF12F8 /* CustomFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFooterView.swift; sourceTree = "<group>"; };
 		77F49CAB2357866900AF12F8 /* CustomFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomFooterView.xib; sourceTree = "<group>"; };
+		77FAAEB923D7475400AFAB10 /* PosterImageRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosterImageRepository.swift; sourceTree = "<group>"; };
+		77FAAEBB23D74B0100AFAB10 /* DefaultPosterImageRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultPosterImageRepository.swift; sourceTree = "<group>"; };
 		77FFB0902339544D00D17CF0 /* SeasonsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonsListViewController.swift; sourceTree = "<group>"; };
 		77FFB0922339556B00D17CF0 /* SeasonsListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonsListViewModel.swift; sourceTree = "<group>"; };
 		77FFDE2C233BA54600C4096F /* SeasonHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SeasonHeaderView.xib; sourceTree = "<group>"; };
@@ -443,6 +447,7 @@
 				77C1AFBD23D1072E00E4A965 /* GenresRepository.swift */,
 				77C1AFC523D119AD00E4A965 /* TVShowDetailsRepository.swift */,
 				77B8E03723D60B8400DBFD00 /* TVEpisodesRepository.swift */,
+				77FAAEB923D7475400AFAB10 /* PosterImageRepository.swift */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -462,6 +467,7 @@
 				77C1AFBF23D1077D00E4A965 /* DefaultGenresRepository.swift */,
 				77C1AFC723D11A0E00E4A965 /* DefaultTVShowDetailsRepository.swift */,
 				77B8E03B23D60E2C00DBFD00 /* DefaultTVEpisodesRepository.swift */,
+				77FAAEBB23D74B0100AFAB10 /* DefaultPosterImageRepository.swift */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -900,10 +906,12 @@
 				7701B33A23D0C3E3003DA227 /* Episode+Decodable.swift in Sources */,
 				77EEF804233AA70A0054A499 /* SeasonEpisodeTableViewCell.swift in Sources */,
 				778B47EF23CE0C65009AE084 /* TVShowsRepository.swift in Sources */,
+				77FAAEBC23D74B0100AFAB10 /* DefaultPosterImageRepository.swift in Sources */,
 				7787CFD123553EC1007DA54E /* EndPoint.swift in Sources */,
 				770D5B302335858800438937 /* Episode.swift in Sources */,
 				77E37AAE23142CAC00C692DA /* ResultsSearchViewController.swift in Sources */,
 				7787CFCF23553E79007DA54E /* ApiClient.swift in Sources */,
+				77FAAEBA23D7475400AFAB10 /* PosterImageRepository.swift in Sources */,
 				7722CE60230DA1C3003DC4C5 /* TVShowDetailViewController.swift in Sources */,
 				77FFDE32233BB5FE00C4096F /* SeasonHeaderViewModel.swift in Sources */,
 				77F4633D230CA864008FB9D6 /* TVShow.swift in Sources */,

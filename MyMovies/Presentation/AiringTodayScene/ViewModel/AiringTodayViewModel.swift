@@ -11,6 +11,7 @@ import Foundation
 final class AiringTodayViewModel {
     
     private let fetchTodayShowsUseCase: FetchTVShowsUseCase
+    private let posterImageRepository: PosterImageRepository
     
     var tvShowsCells: [AiringTodayCollectionViewModel] = []
     
@@ -28,8 +29,9 @@ final class AiringTodayViewModel {
     
     // MARK: - Initializers
     
-    init(fetchTodayShowsUseCase: FetchTVShowsUseCase) {
+    init(fetchTodayShowsUseCase: FetchTVShowsUseCase, posterImageRepository: PosterImageRepository) {
         self.fetchTodayShowsUseCase = fetchTodayShowsUseCase
+        self.posterImageRepository = posterImageRepository
     }
     
     // MARK: - Fetch Shows
@@ -62,7 +64,10 @@ final class AiringTodayViewModel {
     private func processFetched(for response: TVShowResult) {
         let fetchedShows = response.results ?? []
         
-        tvShowsCells.append(contentsOf: fetchedShows.map({ AiringTodayCollectionViewModel(show: $0) }))
+        tvShowsCells.append(contentsOf:
+            fetchedShows.map({
+                AiringTodayCollectionViewModel(show: $0, posterImagesRepository: self.posterImageRepository)
+        }))
         
         let allShows = viewState.value.currentEntities + fetchedShows
         

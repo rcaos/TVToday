@@ -8,9 +8,15 @@
 
 import Foundation
 
-final class AiringTodayCollectionViewModel{
+final class AiringTodayCollectionViewModel {
     
-    private let imageService = ApiClient<ImagesProvider>()
+    private let posterImagesRepository: PosterImageRepository
+    
+    private var imageLoadTask: Cancellable? {
+        willSet {
+            imageLoadTask?.cancel()
+        }
+    }
     
     var show: TVShow
     var showName: String!
@@ -19,36 +25,38 @@ final class AiringTodayCollectionViewModel{
     //Bindable
     var imageData:Bindable<Data?>
     
-    init(show: TVShow) {
+    init(show: TVShow, posterImagesRepository: PosterImageRepository) {
         self.show = show
         self.imageData = Bindable(nil)
+        self.posterImagesRepository = posterImagesRepository
+        
         setup()
     }
     
-    func setup(){
-        if let name = show.name{
-            self.showName = name
-        }else{
-            self.showName = ""
-        }
+    func setup() {
+        self.showName = show.name ?? ""
         
-        if let average = show.voteAverage{
+        if let average = show.voteAverage {
             self.average = String(average)
-        }else{
+        }else {
             average = "0.0"
         }
     }
     
-    func downloadImage(){
+    func downloadImage() {
         guard let backDropPath = show.backDropPath else { return }
         
-        imageService.load(service: .getBackDrop(.mediumBackDrop, backDropPath) , completion: { result in
-            switch result{
-            case .success(let response):
-                self.imageData.value = response
-            case .failure(let error):
-                print("error: [\(error)]")
+        let imageType = PosterImageType.backDrop(backDropSize: .mediumBackDrop)
+        
+        imageLoadTask = posterImagesRepository.image(with: backDropPath, type: imageType) { [weak self] result in
+            guard self?.show.backDropPath == backDropPath else { return }
+            
+            switch result {
+            case .success(let data):
+                self?.imageData.value = data
+            case .failure: break
             }
-        })
+            self?.imageLoadTask = nil
+        }
     }
 }

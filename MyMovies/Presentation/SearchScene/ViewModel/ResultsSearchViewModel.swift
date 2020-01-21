@@ -12,8 +12,6 @@ final class ResultsSearchViewModel: ShowsViewModel {
     
     private let fetchSearchShowsUseCase: FetchTVShowsUseCase?
     
-//    private let showsService = ApiClient<TVShowsProvider>()
-    
     var shows: [TVShow]
     var models: [TVShowCellViewModel]
     
@@ -58,15 +56,6 @@ final class ResultsSearchViewModel: ShowsViewModel {
                 print("Error to fetch Case use \(error)")
             }
         }
-        
-//        showsService.load(service: .searchTVShow(name, page) , decodeType: TVShowResult.self, completion: { result in
-//            switch result{
-//            case .success(let response):
-//                self.processFetched(for: response)
-//            case .failure(let error):
-//                print("error: [\(error)")
-//            }
-//        })
     }
     
     func clearShows() {

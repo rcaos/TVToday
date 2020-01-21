@@ -36,7 +36,8 @@ extension TodayShowsSceneDIContainer {
     // MARK: - TODO cambiar ViewModel por protocolm, Agregar repository de Imágenes
     
     private func makeAiringTodayViewModel() -> AiringTodayViewModel {
-        return AiringTodayViewModel(fetchTodayShowsUseCase: makeFetchTodayShowsUseCase())
+        return AiringTodayViewModel(fetchTodayShowsUseCase: makeFetchTodayShowsUseCase(),
+                                    posterImageRepository: makePosterImageRepository())
     }
     
     // MARK: - Use Cases
@@ -49,6 +50,11 @@ extension TodayShowsSceneDIContainer {
     
     private func makeTVShowsRepository() -> TVShowsRepository {
         return DefaultTVShowsRepository(dataTransferService: dependencies.apiDataTransferService)
+    }
+    
+    private func makePosterImageRepository() -> PosterImageRepository {
+        return DefaultPosterImageRepository(dataTransferService: dependencies.imageDataTransferService,
+                                            imageNotFoundData: UIImage(named: "placeholder")?.pngData() )
     }
 }
 

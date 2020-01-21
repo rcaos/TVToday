@@ -9,7 +9,14 @@
 import Foundation
 
 final class SeasonListTableViewModel {
-    private let imageService = ApiClient<ImagesProvider>()
+    
+    private let posterImagesRepository: PosterImageRepository
+    
+    private var imageLoadTask: Cancellable? {
+        willSet {
+            imageLoadTask?.cancel()
+        }
+    }
     
     var episodeNumber: String?
     var episodeName: String?
@@ -21,10 +28,12 @@ final class SeasonListTableViewModel {
     //Bindables
     var imageData: Bindable<Data?>
     
+    var imageNotFound: Data?
     
-    init(episode: Episode) {
+    init(episode: Episode, posterImagesRepository: PosterImageRepository) {
         self.episode = episode
         self.imageData = Bindable(nil)
+        self.posterImagesRepository = posterImagesRepository
         setupData()
     }
     
@@ -33,19 +42,27 @@ final class SeasonListTableViewModel {
         episodeName = episode.name
         releaseDate = episode.airDate
         average = episode.average
+        
+        imageNotFound = posterImagesRepository.imageNotFound
+        imageData.value = posterImagesRepository.imageNotFound
     }
     
     func downloadImage() {
         guard let episodePath = episode.episodePath else { return }
         
-        imageService.load(service: .getPoster(.mediumPoster , episodePath) , completion: { result in
-            switch result{
+        let posterType = PosterImageType.poster(posterSize: .mediumPoster)
+        
+        imageLoadTask = posterImagesRepository.image(with: episodePath, type: posterType) { [weak self] result in
+            guard self?.episode.episodePath == episodePath else { return }
+            
+            switch result {
             case .success(let data):
-                self.imageData.value = data
+                self?.imageData.value = data
             case .failure(let error):
-                print("error to Download Image: [\(error)]")
+                print("error to Download Poster Image: [\(error)]")
             }
-        })
+            self?.imageLoadTask = nil
+        }
     }
 }
 

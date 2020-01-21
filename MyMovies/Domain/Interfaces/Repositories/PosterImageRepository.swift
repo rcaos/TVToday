@@ -10,6 +10,8 @@ import Foundation
 
 protocol PosterImageRepository {
     
+    var imageNotFound: Data? { get }
+    
     func image(with imagePath: String,
                type: PosterImageType,
                completion: @escaping (Result<Data, Error>) -> Void) -> Cancellable?

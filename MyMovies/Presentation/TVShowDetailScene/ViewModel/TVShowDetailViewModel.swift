@@ -15,9 +15,8 @@ enum TVShowDetailViewModelRoute {
 
 final class TVShowDetailViewModel {
     
-    private let fetchDetailShowUseCase: FetchTVShowDetailsUseCase?
-    
-    private let imagesService = ApiClient<ImagesProvider>()
+    private let fetchDetailShowUseCase: FetchTVShowDetailsUseCase
+    private let posterImagesRepository: PosterImageRepository
     
     var id: Int!
     var backDropPath:String?
@@ -47,8 +46,21 @@ final class TVShowDetailViewModel {
         }
     }
     
-    init(_ idShow: Int, fetchDetailShowUseCase: FetchTVShowDetailsUseCase?) {
+    private var posterLoadTask: Cancellable? {
+        willSet {
+            posterLoadTask?.cancel()
+        }
+    }
+    
+    private var backDropLoadTask: Cancellable? {
+        willSet {
+            backDropLoadTask?.cancel()
+        }
+    }
+    
+    init(_ idShow: Int, fetchDetailShowUseCase: FetchTVShowDetailsUseCase, posterImagesRepository: PosterImageRepository) {
         self.fetchDetailShowUseCase = fetchDetailShowUseCase
+        self.posterImagesRepository = posterImagesRepository
         id = idShow
     }
     
@@ -74,7 +86,7 @@ final class TVShowDetailViewModel {
         
         let request = FetchTVShowDetailsUseCaseRequestValue(identifier: id)
         
-        showsLoadTask = fetchDetailShowUseCase?.execute(requestValue: request) { [weak self] result in
+        showsLoadTask = fetchDetailShowUseCase.execute(requestValue: request) { [weak self] result in
             guard let strongSelf = self else { return }
             switch result {
             case .success(let response):
@@ -96,28 +108,33 @@ final class TVShowDetailViewModel {
     
     private func downloadImages(for show: TVShowDetailResult) {
         
-        if let backDropPath = show.backDropPath {
-            imagesService.load(service: .getBackDrop(.mediumBackDrop, backDropPath), completion: { result in
-                switch result{
-                case .success(let data):
-                    self.dropData.value = data
-                case .failure(let error):
-                    print("error to download Image: [\(error)]")
-                }
-                
-            })
-        }
+        guard let backDropPath = show.backDropPath ,
+            let posterPath = show.posterPath else { return }
         
-        if let posterPath = show.posterPath {
-            imagesService.load(service: .getPoster( .mediumPoster, posterPath), completion: { result in
-                switch result{
-                case .success(let data):
-                    self.posterData.value = data
-                case .failure(let error):
-                    print("error to download Image: [\(error)]")
-                }
-                
-            })
+        let backDropType = PosterImageType.backDrop(backDropSize: .mediumBackDrop)
+        backDropLoadTask = posterImagesRepository.image(with: backDropPath, type: backDropType) { [weak self] result in
+                   guard show.backDropPath == backDropPath else { return }
+                   
+                   switch result {
+                   case .success(let data):
+                       self?.dropData.value = data
+                   case .failure(let error):
+                        print("error to download BackDrop Image: [\(error)]")
+                   }
+                   self?.backDropLoadTask = nil
+               }
+        
+        let posterType = PosterImageType.poster(posterSize: .mediumPoster)
+        posterLoadTask = posterImagesRepository.image(with: posterPath, type: posterType) { [weak self] result in
+            guard show.posterPath == posterPath else { return }
+            
+            switch result {
+            case .success(let data):
+                self?.posterData.value = data
+            case .failure(let error):
+                print("error to download Poster Image: [\(error)]")
+            }
+            self?.posterLoadTask = nil
         }
     }
         

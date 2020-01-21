@@ -17,7 +17,7 @@ class SeasonListTableViewCell: UITableViewCell {
     @IBOutlet private weak var durationLabel: UILabel!
     @IBOutlet private weak var averageLabel: UILabel!
     
-    var viewModel: SeasonListTableViewModel?{
+    var viewModel: SeasonListTableViewModel? {
         didSet{
             setupUI()
             setupBindables()
@@ -28,30 +28,29 @@ class SeasonListTableViewCell: UITableViewCell {
         super.awakeFromNib()
     }
     
-    func setupUI(){
+    func setupUI() {
         durationLabel.text = ""
         
         episodeNumberLabel.text = viewModel?.episodeNumber
         episodeNameLabel.text = viewModel?.episodeName
         releaseLabel.text = viewModel?.releaseDate
         averageLabel.text = viewModel?.average
-        episodeImage.image = UIImage(named: "placeholder2")
     }
     
-    func setupBindables(){
+    func setupBindables() {
         guard let viewModel = viewModel else { return }
         
-        if viewModel.imageData.value == nil{
+        if viewModel.imageData.value == viewModel.imageNotFound {
             print("Se descargará imagen solo para Episode : \(viewModel.episodeNumber)")
             viewModel.downloadImage()
         }
         
-        if let data = viewModel.imageData.value{
+        if let data = viewModel.imageData.value {
             episodeImage.image = UIImage(data: data)
         }
         
         viewModel.imageData.bind({[weak self] data in
-            if let data = data{
+            if let data = data {
                 DispatchQueue.main.async {
                     self?.episodeImage.image = UIImage(data: data)
                 }

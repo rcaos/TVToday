@@ -51,7 +51,8 @@ extension TVShowDetailsSceneDIContainer {
 
     private func makeTVShowDetailsViewModel(with identifier: Int) -> TVShowDetailViewModel {
         return TVShowDetailViewModel(identifier,
-                                     fetchDetailShowUseCase: makeFetchTVShowDetailsUseCase())
+                                     fetchDetailShowUseCase: makeFetchTVShowDetailsUseCase(),
+                                     posterImagesRepository: makePosterImageRepository())
     }
 
     // MARK: - Use Cases
@@ -66,6 +67,11 @@ extension TVShowDetailsSceneDIContainer {
     private func makeTVShowDetailsRepository() -> TVShowDetailsRepository {
         return DefaultTVShowDetailsRepository(
             dataTransferService: dependencies.apiDataTransferService)
+    }
+    
+    private func makePosterImageRepository() -> PosterImageRepository {
+        return DefaultPosterImageRepository(dataTransferService: dependencies.imageDataTransferService,
+                                            imageNotFoundData: UIImage(named: "placeholder")?.pngData() )
     }
 }
 

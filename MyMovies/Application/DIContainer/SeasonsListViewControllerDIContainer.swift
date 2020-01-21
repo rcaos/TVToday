@@ -39,7 +39,8 @@ extension SeasonsListViewControllerDIContainer {
     
     private func makeSeasonsListViewModel(with result: TVShowDetailResult) -> SeasonsListViewModel {
         return SeasonsListViewModel(showDetailResult: result,
-                                           fetchEpisodesUseCase: makeFetchEpisodesShowsUseCase())
+                                           fetchEpisodesUseCase: makeFetchEpisodesShowsUseCase(),
+                                           posterImageRepository: makePosterImageRepository())
     }
     
     // MARK: - Use Cases
@@ -52,6 +53,11 @@ extension SeasonsListViewControllerDIContainer {
     
     private func makeEpisodesRepository() -> TVEpisodesRepository {
         return DefaultTVEpisodesRepository(dataTransferService: dependencies.apiDataTransferService)
+    }
+    
+    private func makePosterImageRepository() -> PosterImageRepository {
+        return DefaultPosterImageRepository(dataTransferService: dependencies.imageDataTransferService,
+                                            imageNotFoundData: UIImage(named: "placeholder")?.pngData() )
     }
 }
 

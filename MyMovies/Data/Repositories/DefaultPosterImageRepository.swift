@@ -21,6 +21,10 @@ final class DefaultPosterImageRepository {
 
 extension DefaultPosterImageRepository: PosterImageRepository {
     
+    var imageNotFound: Data? {
+        return imageNotFoundData
+    }
+    
     func image(with imagePath: String,
                type: PosterImageType,
                completion: @escaping (Result<Data, Error>) -> Void) -> Cancellable? {

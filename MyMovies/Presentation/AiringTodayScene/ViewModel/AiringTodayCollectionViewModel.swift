@@ -54,7 +54,8 @@ final class AiringTodayCollectionViewModel {
             switch result {
             case .success(let data):
                 self?.imageData.value = data
-            case .failure: break
+            case .failure(let error):
+            print("error to Download Poster Image: [\(error)]")
             }
             self?.imageLoadTask = nil
         }

@@ -11,6 +11,7 @@ import Foundation
 final class SeasonsListViewModel {
     
     private let fetchEpisodesUseCase: FetchEpisodesUseCase
+    private let posterImageRepository: PosterImageRepository
     
     private var idShow: Int!
     private var showDetailResult: TVShowDetailResult?
@@ -39,13 +40,14 @@ final class SeasonsListViewModel {
 //        cellModels = [:]
 //    }
     
-    init(showDetailResult: TVShowDetailResult, fetchEpisodesUseCase: FetchEpisodesUseCase) {
+    init(showDetailResult: TVShowDetailResult, fetchEpisodesUseCase: FetchEpisodesUseCase, posterImageRepository: PosterImageRepository) {
         self.idShow = showDetailResult.id
         self.showDetailResult = showDetailResult
         episodes = [:]
         cellModels = [:]
             
         self.fetchEpisodesUseCase = fetchEpisodesUseCase
+        self.posterImageRepository = posterImageRepository
     }
     
     func getFirstSeason() {
@@ -175,7 +177,8 @@ final class SeasonsListViewModel {
     
     private func createModels(for season: Int, _ episodes: [Episode]) {
         let models = episodes.map({
-            return SeasonListTableViewModel(episode: $0)
+            return SeasonListTableViewModel(
+                episode: $0, posterImagesRepository: self.posterImageRepository)
         })
         
         if models.count > 0{

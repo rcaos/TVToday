@@ -82,10 +82,4 @@ final class AiringTodayViewModel {
             self.viewState.value = .populated(allShows)
         }
     }
-    
-    // MARK: - Build Models - BORRAR
-    
-    func buildShowDetailViewModel(for showId: Int) -> TVShowDetailViewModel {
-        return TVShowDetailViewModel(showId, fetchDetailShowUseCase: nil)
-    }
 }

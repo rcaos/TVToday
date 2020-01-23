@@ -28,13 +28,6 @@ final class DefaultFetchGenresUseCase: FetchGenresUseCase {
     
     func execute(requestValue: FetchGenresUseCaseRequestValue,
                  completion: @escaping (Result<GenreListResult, Error>) -> Void) -> Cancellable? {
-        return genresRepository.genresList() { result in
-            switch result {
-            case .success:
-                completion(result)
-            case .failure:
-                completion(result)
-            }
-        }
+        return genresRepository.genresList(completion: completion)
     }
 }

@@ -31,13 +31,7 @@ final class DefaultFetchEpisodesUseCase: FetchEpisodesUseCase {
         
         return episodesRepository.tvEpisodesList(
             for: requestValue.showIdentifier,
-            season: requestValue.seasonNumber) { result in
-                switch result {
-                case .success:
-                    completion(result)
-                case .failure:
-                    completion(result)
-                }
-        }
+            season: requestValue.seasonNumber,
+            completion: completion)
     }
 }

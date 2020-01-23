@@ -32,14 +32,7 @@ final class DefaultFetchTVShowsUseCase: FetchTVShowsUseCase {
                  completion: @escaping (Result<TVShowResult, Error>) -> Void) -> Cancellable? {
         
         return tvShowsRepository.tvShowsList(with: requestValue.filter,
-                                             page: requestValue.page) { result in
-            switch result {
-            case .success:
-                completion(result)
-            case .failure:
-                completion(result)
-            }
-        }
+                                             page: requestValue.page,
+                                             completion: completion)
     }
-    
 }

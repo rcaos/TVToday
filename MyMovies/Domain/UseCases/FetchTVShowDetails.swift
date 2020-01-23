@@ -30,13 +30,6 @@ final class DefaultFetchTVShowDetailsUseCase: FetchTVShowDetailsUseCase {
     func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue,
                  completion: @escaping (Result<TVShowDetailResult, Error>) -> Void) -> Cancellable? {
         
-        return tvShowDetailsRepository.tvShowDetails(with: requestValue.identifier) { result in
-            switch result {
-            case .success:
-                completion(result)
-            case .failure:
-                completion(result)
-            }
-        }
+        return tvShowDetailsRepository.tvShowDetails(with: requestValue.identifier, completion: completion)
     }
 }

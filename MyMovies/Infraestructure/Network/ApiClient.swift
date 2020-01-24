@@ -21,7 +21,7 @@ public protocol NetworkCancellable {
     func cancel()
 }
 
-class ApiClient<T: EndPoint> {
+class ApiClient {
     
     private let configuration: NetworkConfigurable
     

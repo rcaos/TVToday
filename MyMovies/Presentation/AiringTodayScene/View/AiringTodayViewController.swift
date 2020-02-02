@@ -15,8 +15,6 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable {
     private var viewModel: AiringTodayViewModel!
     private var airingTodayViewControllersFactory: AiringTodayViewControllersFactory!
     
-    // MARK: - TODO, cambiar por protocol del ViewModel
-    
     static func create(with viewModel: AiringTodayViewModel,
                        airingTodayViewControllersFactory: AiringTodayViewControllersFactory) -> AiringTodayViewController {
         let controller = AiringTodayViewController.instantiateViewController()
@@ -39,13 +37,15 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable {
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
-    //MARK: - SetupView
+    // MARK: - SetupView
+    
     func setupUI() {
         navigationItem.title = "Today on TV"
         setupCollection()
     }
     
-    //MARK: - SetupTable
+    // MARK: - SetupTable
+    
     func setupCollection() {
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -131,7 +131,6 @@ extension AiringTodayViewController: UICollectionViewDelegateFlowLayout {
             return CGSize(width: 0, height: 0)
         }
     }
-    
 }
 
 
@@ -139,7 +138,8 @@ extension AiringTodayViewController: UICollectionViewDelegateFlowLayout {
 
 extension AiringTodayViewController {
     
-    //MARK: - TODO AiringTodayViewModelRoute
+    //MARK: - TODO Handle navigation
+    
     func handle(_ route: Int?) {
         guard let identifier = route else { return }
         let detailController = airingTodayViewControllersFactory.makeTVShowDetailsViewController(with: identifier)

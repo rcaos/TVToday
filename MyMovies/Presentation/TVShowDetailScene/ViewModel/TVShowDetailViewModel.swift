@@ -90,7 +90,6 @@ final class TVShowDetailViewModel {
             case .success(let response):
                 strongSelf.processFetched(for: response)
             case .failure(let error):
-                // MARK: - TODO // Handle error at View
                 print("Error to fetch Case use \(error)")
             }
         }

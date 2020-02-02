@@ -6,9 +6,6 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
-//TODO: - implement "ParameterEncoding" -
-//FIXME: - implement POST http method
-
 import Foundation
 
 public protocol EndPoint {

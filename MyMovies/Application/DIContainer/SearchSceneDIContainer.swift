@@ -28,8 +28,6 @@ final class SearchSceneDIContainer {
                                               searchViewControllersFactory: self)
     }
     
-    // MARK: - TODO thats correct?
-    
     public func makeSearchResultsViewModel() -> ResultsSearchViewModel {
         return ResultsSearchViewModel(fetchTVShowsUseCase: makeFetchSearchResultsShowsUseCase())
     }
@@ -61,7 +59,7 @@ final class SearchSceneDIContainer {
 
 extension SearchSceneDIContainer {
     
-    // MARK: - TODO cambiar ViewModel por protocolm, Agregar repository de Imágenes
+    // MARK: - ViewModel
     
     private func makeSearchViewModel() -> SearchViewModel {
         return SearchViewModel(fetchGenresUseCase: makeFetchPopularsShowsUseCase())

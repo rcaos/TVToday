@@ -11,6 +11,5 @@ import UIKit
 class ErrorView: UIView {
 
     override func awakeFromNib() {
-        print("init Error View")
     }
 }

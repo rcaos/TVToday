@@ -18,7 +18,6 @@ class SeasonHeaderView: UIView {
         }
     }
     
-    //MARK: - Life Cycle
     override func awakeFromNib() {
         super.awakeFromNib()
     }

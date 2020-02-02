@@ -130,9 +130,9 @@ extension PopularsViewController{
 //MARK: - Navigation
 
 extension PopularsViewController {
+
+    // MARK: - Handle Navigation
     
-    //PopularViewModelRoute
-    // MARK: - TODO
     func handle(_ route: Int?) {
         guard let identifier = route else { return }
         let detailController = popularViewControllersFactory.makeTVShowDetailsViewController(with: identifier)

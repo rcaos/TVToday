@@ -30,14 +30,7 @@ final class SeasonsListViewModel {
         }
     }
     
-    //MARK: - Life cycle
-    
-//    init(show: Int)
-//        MARK: - TODO , este constructor requiere 2 querys.
-//        self.idShow = show
-//        episodes = [:]
-//        cellModels = [:]
-//    }
+    //MARK: - Initializers
     
     init(showDetailResult: TVShowDetailResult, fetchEpisodesUseCase: FetchEpisodesUseCase, posterImageRepository: PosterImageRepository) {
         self.idShow = showDetailResult.id

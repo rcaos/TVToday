@@ -91,7 +91,7 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
         viewModel.getGenres()
     }
     
-    // MARK: - TODO: -handle other states-
+    // MARK: - TODO handle other states
     
     func configView(with state: SearchViewModel.ViewState){
         

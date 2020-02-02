@@ -37,6 +37,7 @@ class ResultsSearchViewController: UIViewController {
     }
     
     //MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -80,7 +81,6 @@ class ResultsSearchViewController: UIViewController {
             tableView.separatorStyle = .singleLine
             tableView.reloadData()
         default:
-            print("default state")
             tableView.tableFooterView = loadingView
         }
     }
@@ -127,7 +127,6 @@ extension ResultsSearchViewController: UITableViewDataSource {
         
         if case .paging(_, let nextPage) = viewModel.viewState.value,
             indexPath.row == viewModel.viewState.value.currentEntities.count - 1 {
-            print("Necesito otra page: \(nextPage)")
             viewModel.searchShows(for: nextPage)
         }
         

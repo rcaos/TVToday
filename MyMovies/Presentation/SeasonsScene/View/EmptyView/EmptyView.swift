@@ -14,6 +14,5 @@ class EmptyView: UIView {
     @IBOutlet weak var descriptionLabel: UILabel!
     
     override func awakeFromNib() {
-        print("Load xbib Empty View")
     }
 }

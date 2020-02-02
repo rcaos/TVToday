@@ -18,8 +18,6 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
     
     var loadingView: UIView!
     
-    // MARK: - TODO, cambiar por protocol del ViewModel
-    
     static func create(with viewModel: TVShowListViewModel,
                        showsListViewControllersFactory: TVShowListViewControllersFactory) -> TVShowListViewController {
         let controller = TVShowListViewController.instantiateViewController()
@@ -64,7 +62,6 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
     func setupViewModel() {
         guard let viewModel = viewModel else { return }
         
-        //Binding
         viewModel.viewState.observe(on: self) {[weak self] state in
             self?.configView(with: state)
         }
@@ -139,7 +136,8 @@ extension TVShowListViewController: UITableViewDelegate {
 
 extension TVShowListViewController {
     
-    // MARK: - TODO AiringTodayViewModelRoute
+    // MARK: - TODO Handle Navigation
+    
     func handle(_ route: Int?) {
         guard let identifier = route else { return }
         let detailController =  showsListViewControllersFactory.makeTVShowDetailsViewController(with: identifier)

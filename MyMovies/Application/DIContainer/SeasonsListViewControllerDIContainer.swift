@@ -23,8 +23,6 @@ final class SeasonsListViewControllerDIContainer {
         self.dependencies = dependencies
     }
     
-    // Correct? o deberia tener otro wrapper??
-    
     public func makeSeasonsListViewController(with result: TVShowDetailResult) -> UIViewController {
         return SeasonsListViewController.create(with: makeSeasonsListViewModel(with: result),
                                                  seasonsListViewControllers: self)
@@ -35,7 +33,7 @@ final class SeasonsListViewControllerDIContainer {
 
 extension SeasonsListViewControllerDIContainer {
     
-    // MARK: - TODO cambiar ViewModel por protocolm, Agregar repository de Imágenes
+    // MARK: - View Model
     
     private func makeSeasonsListViewModel(with result: TVShowDetailResult) -> SeasonsListViewModel {
         return SeasonsListViewModel(showDetailResult: result,

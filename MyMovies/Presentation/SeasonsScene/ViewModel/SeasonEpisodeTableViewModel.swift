@@ -18,10 +18,10 @@ final class SeasonEpisodeTableViewModel {
         } )
     }
     
-    //Reactive
     var selectedCell: ( (Int) -> Void)?
     
-    //MARK: Life Cycle
+    // MARK: Initalizer
+    
     init( seasons: [Int] ) {
         self.seasons = seasons
     }

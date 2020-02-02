@@ -22,7 +22,6 @@ final class SearchViewModel {
     
     var viewState:Observable<ViewState> = Observable(.loading)
     
-    // Routing
     var route: Observable<SearchViewModelRoute> = Observable(.initial)
     
     private var showsLoadTask: Cancellable? {
@@ -44,7 +43,6 @@ final class SearchViewModel {
             case .success(let response):
                 strongSelf.processFetched(for: response)
             case .failure(let error):
-                // MARK: - TODO // Handle error at View
                 print("Error to fetch Case use \(error)")
             }
         }

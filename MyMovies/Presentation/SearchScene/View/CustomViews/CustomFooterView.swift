@@ -13,7 +13,6 @@ class CustomFooterView: UIView {
     @IBOutlet weak var messageLabel: UILabel!
     
     override func awakeFromNib() {
-        print("awake CustomFooterView")
     }
 
 }

@@ -8,8 +8,6 @@
 
 import UIKit
 
-// MARK: - TODO Debería ser final class??
-
 final class TVShowDetailsSceneDIContainer {
 
     struct Dependencies {

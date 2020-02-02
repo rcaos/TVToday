@@ -18,7 +18,6 @@ class GenreViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
     
     func setupUI(){

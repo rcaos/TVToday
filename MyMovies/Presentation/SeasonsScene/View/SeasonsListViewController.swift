@@ -18,8 +18,6 @@ class SeasonsListViewController: UIViewController, StoryboardInstantiable {
     private var viewModel: SeasonsListViewModel!
     private var seasonsListViewControllers: SeasonsListViewControllersFactory!
     
-    // MARK: - TODO, cambiar por protocol del ViewModel
-    
     static func create(with viewModel: SeasonsListViewModel,
                        seasonsListViewControllers: SeasonsListViewControllersFactory) -> SeasonsListViewController {
         let controller = SeasonsListViewController.instantiateViewController()
@@ -131,7 +129,6 @@ class SeasonsListViewController: UIViewController, StoryboardInstantiable {
             tableView.tableFooterView = buildErrorView()
             tableView.separatorStyle = .none
         default:
-            //Loading
             tableView.tableFooterView = buildActivityIndicator()
             tableView.separatorStyle = .none
         }
@@ -145,9 +142,10 @@ class SeasonsListViewController: UIViewController, StoryboardInstantiable {
     }
 }
 
+// MARK: - UITableViewDataSource
+
 extension SeasonsListViewController: UITableViewDataSource {
     
-    // MARK: - Table view data source
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }

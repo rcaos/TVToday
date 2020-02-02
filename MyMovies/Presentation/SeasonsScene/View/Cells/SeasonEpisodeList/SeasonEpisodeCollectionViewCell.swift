@@ -27,7 +27,6 @@ class SeasonEpisodeCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    //MARK: - Life cycle
     override func awakeFromNib() {
         super.awakeFromNib()
     }
@@ -45,7 +44,6 @@ class SeasonEpisodeCollectionViewCell: UICollectionViewCell {
     func setupUI(){
         seasonNumber.text = viewModel?.seasonNumber
     }
-
 }
 
 enum ColorsForCell{

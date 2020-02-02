@@ -27,8 +27,6 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
     
     private var loadingView: UIView!
     
-    // MARK: - TODO, cambiar por protocol del ViewModel
-    
     static func create(with viewModel: TVShowDetailViewModel,
                        showDetailsViewControllersFactory: TVShowDetailViewControllersFactory) -> TVShowDetailViewController {
         let controller = TVShowDetailViewController.instantiateViewController()
@@ -85,7 +83,6 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
         }
     }
     
-    //TODO: - handle other states -
     func configView(with state: TVShowDetailViewModel.ViewState) {
         
         if let customView = loadingView{
@@ -183,7 +180,6 @@ extension TVShowDetailViewController {
 
 extension TVShowDetailViewController {
     
-    //MARK: - TODO TVShowDetailViewModelRoute
     func handle(_ route: TVShowDetailViewModelRoute) {
         
         switch route {
@@ -201,5 +197,6 @@ extension TVShowDetailViewController {
 
 protocol TVShowDetailViewControllersFactory {
     
+    // MARK: - TODO, Entitie at view
     func makeSeasonsListViewController(with result: TVShowDetailResult) -> UIViewController
 }

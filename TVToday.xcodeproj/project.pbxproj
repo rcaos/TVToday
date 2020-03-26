@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B58BC9FA5F959E417DFC783 /* Pods_TVToday.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE94CDC6BAA4992FDBBFA2F8 /* Pods_TVToday.framework */; };
 		7701B33423D0BDBD003DA227 /* TVShow+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7701B33323D0BDBD003DA227 /* TVShow+Decodable.swift */; };
 		7701B33623D0C08B003DA227 /* Genre+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7701B33523D0C08B003DA227 /* Genre+Decodable.swift */; };
 		7701B33823D0C0C5003DA227 /* TVShowDetailResult+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7701B33723D0C0C5003DA227 /* TVShowDetailResult+Decodable.swift */; };
@@ -41,6 +42,7 @@
 		7722CE5A230D924C003DC4C5 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7722CE59230D924C003DC4C5 /* SearchViewController.swift */; };
 		7722CE5E230D9A36003DC4C5 /* GenreListResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7722CE5D230D9A36003DC4C5 /* GenreListResult.swift */; };
 		7722CE60230DA1C3003DC4C5 /* TVShowDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7722CE5F230DA1C3003DC4C5 /* TVShowDetailViewController.swift */; };
+		772C5104242C0B020014F96D /* UIImageView+Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772C5103242C0B020014F96D /* UIImageView+Kingfisher.swift */; };
 		7736A088231FF25500566F0B /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7736A087231FF25500566F0B /* MainTabBarController.swift */; };
 		7736A08B231FF84A00566F0B /* AiringTodayViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7736A08A231FF84A00566F0B /* AiringTodayViewController.storyboard */; };
 		7736A08D231FF8BF00566F0B /* PopularsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7736A08C231FF8BF00566F0B /* PopularsViewController.storyboard */; };
@@ -111,6 +113,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6B31C5D8C8975410C9632334 /* Pods-TVToday.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TVToday.release.xcconfig"; path = "Target Support Files/Pods-TVToday/Pods-TVToday.release.xcconfig"; sourceTree = "<group>"; };
 		7701B33323D0BDBD003DA227 /* TVShow+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TVShow+Decodable.swift"; sourceTree = "<group>"; };
 		7701B33523D0C08B003DA227 /* Genre+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Genre+Decodable.swift"; sourceTree = "<group>"; };
 		7701B33723D0C0C5003DA227 /* TVShowDetailResult+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TVShowDetailResult+Decodable.swift"; sourceTree = "<group>"; };
@@ -145,6 +148,7 @@
 		7722CE59230D924C003DC4C5 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		7722CE5D230D9A36003DC4C5 /* GenreListResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreListResult.swift; sourceTree = "<group>"; };
 		7722CE5F230DA1C3003DC4C5 /* TVShowDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowDetailViewController.swift; sourceTree = "<group>"; };
+		772C5103242C0B020014F96D /* UIImageView+Kingfisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Kingfisher.swift"; sourceTree = "<group>"; };
 		7736A087231FF25500566F0B /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		7736A08A231FF84A00566F0B /* AiringTodayViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AiringTodayViewController.storyboard; sourceTree = "<group>"; };
 		7736A08C231FF8BF00566F0B /* PopularsViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PopularsViewController.storyboard; sourceTree = "<group>"; };
@@ -214,6 +218,8 @@
 		77FFDE2C233BA54600C4096F /* SeasonHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SeasonHeaderView.xib; sourceTree = "<group>"; };
 		77FFDE2F233BA6C500C4096F /* SeasonHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonHeaderView.swift; sourceTree = "<group>"; };
 		77FFDE31233BB5FE00C4096F /* SeasonHeaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonHeaderViewModel.swift; sourceTree = "<group>"; };
+		B95ED2A422A05D8E2A1DCD58 /* Pods-TVToday.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TVToday.debug.xcconfig"; path = "Target Support Files/Pods-TVToday/Pods-TVToday.debug.xcconfig"; sourceTree = "<group>"; };
+		DE94CDC6BAA4992FDBBFA2F8 /* Pods_TVToday.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TVToday.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -221,12 +227,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B58BC9FA5F959E417DFC783 /* Pods_TVToday.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		648B86FDAE2FF3F0A0713B4C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DE94CDC6BAA4992FDBBFA2F8 /* Pods_TVToday.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		770373892345134700775698 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -320,6 +335,7 @@
 			isa = PBXGroup;
 			children = (
 				770860FC23CE753500625183 /* Protocols */,
+				772C5105242C0B060014F96D /* Extensions */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -393,6 +409,14 @@
 				770A117C23D2250D00B57A6F /* ResultListView.swift */,
 			);
 			path = SearchResults;
+			sourceTree = "<group>";
+		};
+		772C5105242C0B060014F96D /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				772C5103242C0B020014F96D /* UIImageView+Kingfisher.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		7736A089231FF43100566F0B /* TabBarScene */ = {
@@ -564,6 +588,8 @@
 			children = (
 				77F46325230C9F5A008FB9D6 /* MyMovies */,
 				77F46324230C9F5A008FB9D6 /* Products */,
+				80E5B0D51B32A6D5D94AD7AD /* Pods */,
+				648B86FDAE2FF3F0A0713B4C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -768,6 +794,15 @@
 			path = HeaderView;
 			sourceTree = "<group>";
 		};
+		80E5B0D51B32A6D5D94AD7AD /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B95ED2A422A05D8E2A1DCD58 /* Pods-TVToday.debug.xcconfig */,
+				6B31C5D8C8975410C9632334 /* Pods-TVToday.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -775,9 +810,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 77F46335230C9F5C008FB9D6 /* Build configuration list for PBXNativeTarget "TVToday" */;
 			buildPhases = (
+				FA7E97A9206573CF12A57BDB /* [CP] Check Pods Manifest.lock */,
 				77F4631F230C9F5A008FB9D6 /* Sources */,
 				77F46320230C9F5A008FB9D6 /* Frameworks */,
 				77F46321230C9F5A008FB9D6 /* Resources */,
+				5104FCB0F649D9AD5ECB2DEB /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -849,6 +886,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		5104FCB0F649D9AD5ECB2DEB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TVToday/Pods-TVToday-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TVToday/Pods-TVToday-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TVToday/Pods-TVToday-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FA7E97A9206573CF12A57BDB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TVToday-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		77F4631F230C9F5A008FB9D6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -902,6 +981,7 @@
 				77FAAEBC23D74B0100AFAB10 /* DefaultPosterImageRepository.swift in Sources */,
 				7787CFD123553EC1007DA54E /* EndPoint.swift in Sources */,
 				770D5B302335858800438937 /* Episode.swift in Sources */,
+				772C5104242C0B020014F96D /* UIImageView+Kingfisher.swift in Sources */,
 				77E37AAE23142CAC00C692DA /* ResultsSearchViewController.swift in Sources */,
 				77FAAEBA23D7475400AFAB10 /* PosterImageRepository.swift in Sources */,
 				7722CE60230DA1C3003DC4C5 /* TVShowDetailViewController.swift in Sources */,
@@ -1072,6 +1152,7 @@
 		};
 		77F46336230C9F5C008FB9D6 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B95ED2A422A05D8E2A1DCD58 /* Pods-TVToday.debug.xcconfig */;
 			buildSettings = {
 				API_BASE_URL = "https://api.themoviedb.org";
 				API_KEY = 06e1a8c1f39b7a033e2efb972625fee2;
@@ -1093,6 +1174,7 @@
 		};
 		77F46337230C9F5C008FB9D6 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6B31C5D8C8975410C9632334 /* Pods-TVToday.release.xcconfig */;
 			buildSettings = {
 				API_BASE_URL = "https://api.themoviedb.org";
 				API_KEY = 06e1a8c1f39b7a033e2efb972625fee2;

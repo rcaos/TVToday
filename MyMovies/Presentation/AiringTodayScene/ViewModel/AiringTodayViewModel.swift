@@ -11,7 +11,6 @@ import Foundation
 final class AiringTodayViewModel: ShowsViewModel {
     
     var fetchTVShowsUseCase: FetchTVShowsUseCase
-    var posterImageRepository: PosterImageRepository
     
     var filter: TVShowsListFilter = .today
     var viewState:Observable<SimpleViewState<TVShow>> = Observable(.loading)
@@ -27,18 +26,15 @@ final class AiringTodayViewModel: ShowsViewModel {
     
     // MARK: - Initializers
     
-    init(fetchTVShowsUseCase: FetchTVShowsUseCase, posterImageRepository: PosterImageRepository) {
+    init(fetchTVShowsUseCase: FetchTVShowsUseCase) {
         self.fetchTVShowsUseCase = fetchTVShowsUseCase
-        self.posterImageRepository = posterImageRepository
         shows = []
         cellsmodels = []
     }
     
     func createModels(for fetched: [TVShow]) {
         self.cellsmodels.append(contentsOf:
-            fetched.map({
-                AiringTodayCollectionViewModel(show: $0, posterImagesRepository: self.posterImageRepository)
-        }))
+            fetched.map { AiringTodayCollectionViewModel(show: $0) })
     }
     
     func getModelFor(_ index:Int) -> AiringTodayCollectionViewModel {

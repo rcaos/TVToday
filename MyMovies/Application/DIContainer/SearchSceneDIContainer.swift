@@ -9,90 +9,87 @@
 import UIKit
 
 final class SearchSceneDIContainer {
+  
+  struct Dependencies {
+    let apiDataTransferService: DataTransferService
+  }
+  
+  private let dependencies: Dependencies
+  
+  // MARK: - Initializers
+  
+  init(dependencies: Dependencies) {
+    self.dependencies = dependencies
+  }
+  
+  func makeSearchViewController() -> UIViewController {
+    return SearchViewController.create( with: makeSearchViewModel(),
+                                        searchViewControllersFactory: self)
+  }
+  
+  public func makeSearchResultsViewModel() -> ResultsSearchViewModel {
+    return ResultsSearchViewModel(fetchTVShowsUseCase: makeFetchSearchResultsShowsUseCase())
+  }
+  
+  public func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController {
+    let showDetailsDependencies = TVShowDetailsSceneDIContainer.Dependencies(
+      apiDataTransferService: dependencies.apiDataTransferService)
     
-    struct Dependencies {
-        let apiDataTransferService: DataTransferService
-        let imageDataTransferService: DataTransferService
-    }
+    let container =  TVShowDetailsSceneDIContainer(dependencies: showDetailsDependencies)
     
-    private let dependencies: Dependencies
+    return container.makeTVShowDetailsViewController(with: identifier)
+  }
+  
+  public func makeShowListViewControll(with genre: Int) -> UIViewController {
     
-    // MARK: - Initializers
+    let showDetailsDependencies = TVShowListSceneDIContainer.Dependencies(
+      apiDataTransferService: dependencies.apiDataTransferService)
     
-    init(dependencies: Dependencies) {
-        self.dependencies = dependencies
-    }
+    let container = TVShowListSceneDIContainer(dependencies: showDetailsDependencies)
     
-    func makeSearchViewController() -> UIViewController {
-        return SearchViewController.create( with: makeSearchViewModel(),
-                                              searchViewControllersFactory: self)
-    }
-    
-    public func makeSearchResultsViewModel() -> ResultsSearchViewModel {
-        return ResultsSearchViewModel(fetchTVShowsUseCase: makeFetchSearchResultsShowsUseCase())
-    }
-    
-    public func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController {
-        let showDetailsDependencies = TVShowDetailsSceneDIContainer.Dependencies(
-                apiDataTransferService: dependencies.apiDataTransferService,
-                imageDataTransferService: dependencies.imageDataTransferService)
-            
-        let container =  TVShowDetailsSceneDIContainer(dependencies: showDetailsDependencies)
-        
-        return container.makeTVShowDetailsViewController(with: identifier)
-    }
-    
-    public func makeShowListViewControll(with genre: Int) -> UIViewController {
-        
-        let showDetailsDependencies = TVShowListSceneDIContainer.Dependencies(
-                apiDataTransferService: dependencies.apiDataTransferService,
-                imageDataTransferService: dependencies.imageDataTransferService)
-            
-        let container = TVShowListSceneDIContainer(dependencies: showDetailsDependencies)
-        
-        return container.makeShowListViewController(with: genre)
-    }
-    
+    return container.makeShowListViewController(with: genre)
+  }
+  
 }
 
 // MARK: - Private
 
 extension SearchSceneDIContainer {
-    
-    // MARK: - ViewModel
-    
-    private func makeSearchViewModel() -> SearchViewModel {
-        return SearchViewModel(fetchGenresUseCase: makeFetchPopularsShowsUseCase())
-    }
-    
-    // MARK: - Use Cases
-    
-    private func makeFetchPopularsShowsUseCase() -> FetchGenresUseCase {
-        return DefaultFetchGenresUseCase(genresRepository:
-            makeGenresRepository())
-    }
-    
-    // MARK: - Repositories
-    
-    private func makeGenresRepository() -> GenresRepository {
-        return DefaultGenreRepository(dataTransferService:
-            dependencies.apiDataTransferService)
-    }
+  
+  // MARK: - ViewModel
+  
+  private func makeSearchViewModel() -> SearchViewModel {
+    return SearchViewModel(fetchGenresUseCase: makeFetchPopularsShowsUseCase())
+  }
+  
+  // MARK: - Use Cases
+  
+  private func makeFetchPopularsShowsUseCase() -> FetchGenresUseCase {
+    return DefaultFetchGenresUseCase(genresRepository:
+      makeGenresRepository())
+  }
+  
+  // MARK: - Repositories
+  
+  private func makeGenresRepository() -> GenresRepository {
+    return DefaultGenreRepository(dataTransferService:
+      dependencies.apiDataTransferService)
+  }
 }
 
 extension SearchSceneDIContainer {
-        
-    private func makeFetchSearchResultsShowsUseCase() -> FetchTVShowsUseCase {
-        return DefaultFetchTVShowsUseCase(tvShowsRepository: makeTVShowsRespository())
-    }
-    
-    private func makeTVShowsRespository() -> TVShowsRepository {
-        return DefaultTVShowsRepository(dataTransferService: dependencies.apiDataTransferService)
-    }
+  
+  private func makeFetchSearchResultsShowsUseCase() -> FetchTVShowsUseCase {
+    return DefaultFetchTVShowsUseCase(tvShowsRepository: makeTVShowsRespository())
+  }
+  
+  private func makeTVShowsRespository() -> TVShowsRepository {
+    return DefaultTVShowsRepository(dataTransferService: dependencies.apiDataTransferService)
+  }
 }
 
 // MARK: - SearchViewControllersFactory
 
 extension SearchSceneDIContainer: SearchViewControllersFactory {
-    
+  
 }

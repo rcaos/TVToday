@@ -9,54 +9,29 @@
 import Foundation
 
 final class AiringTodayCollectionViewModel {
+  
+  private var show: TVShow
+  
+  public var showName: String?
+  public var average: String?
+  
+  public var posterURL: URL? {
+    return show.getbackDropPathURL()
+  }
+  
+  // MARK: - TODO, remove Poster Repository
+  init(show: TVShow) {
+    self.show = show
+    setup()
+  }
+  
+  fileprivate func setup() {
+    self.showName = show.name ?? ""
     
-    private let posterImagesRepository: PosterImageRepository
-    
-    private var imageLoadTask: Cancellable? {
-        willSet {
-            imageLoadTask?.cancel()
-        }
+    if let average = show.voteAverage {
+      self.average = String(average)
+    }else {
+      average = "0.0"
     }
-    
-    var show: TVShow
-    var showName: String!
-    var average: String!
-    
-    var imageData:Observable<Data?>
-    
-    init(show: TVShow, posterImagesRepository: PosterImageRepository) {
-        self.show = show
-        self.imageData = Observable(nil)
-        self.posterImagesRepository = posterImagesRepository
-        
-        setup()
-    }
-    
-    func setup() {
-        self.showName = show.name ?? ""
-        
-        if let average = show.voteAverage {
-            self.average = String(average)
-        }else {
-            average = "0.0"
-        }
-    }
-    
-    func downloadImage() {
-        guard let backDropPath = show.backDropPath else { return }
-        
-        let imageType = PosterImageType.backDrop(backDropSize: .mediumBackDrop)
-        
-        imageLoadTask = posterImagesRepository.image(with: backDropPath, type: imageType) { [weak self] result in
-            guard self?.show.backDropPath == backDropPath else { return }
-            
-            switch result {
-            case .success(let data):
-                self?.imageData.value = data
-            case .failure(let error):
-            print("error to Download Poster Image: [\(error)]")
-            }
-            self?.imageLoadTask = nil
-        }
-    }
+  }
 }

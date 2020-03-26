@@ -9,59 +9,57 @@
 import UIKit
 
 final class TVShowListSceneDIContainer {
-    
-    struct Dependencies {
-        let apiDataTransferService: DataTransferService
-        let imageDataTransferService: DataTransferService
-    }
-    
-    private let dependencies: Dependencies
-    
-    // MARK: - Initializers
-    
-    init(dependencies: Dependencies) {
-        self.dependencies = dependencies
-    }
-    
-    public func makeShowListViewController(with identifier: Int) -> UIViewController {
-        return TVShowListViewController.create( with: makeShowListViewModel(with: identifier), showsListViewControllersFactory: self)
-    }
+  
+  struct Dependencies {
+    let apiDataTransferService: DataTransferService
+  }
+  
+  private let dependencies: Dependencies
+  
+  // MARK: - Initializers
+  
+  init(dependencies: Dependencies) {
+    self.dependencies = dependencies
+  }
+  
+  public func makeShowListViewController(with identifier: Int) -> UIViewController {
+    return TVShowListViewController.create( with: makeShowListViewModel(with: identifier), showsListViewControllersFactory: self)
+  }
 }
 
 // MARK: - Private
 
 extension TVShowListSceneDIContainer {
-    
-    // MARK: - View Model
-    
-    private func makeShowListViewModel(with identifier: Int) -> TVShowListViewModel {
-        return TVShowListViewModel(genreId: identifier, fetchTVShowsUseCase: makeShowListUseCase())
-    }
-    
-    // MARK: - Use Cases
-    
-    private func makeShowListUseCase() -> FetchTVShowsUseCase {
-        return DefaultFetchTVShowsUseCase(tvShowsRepository: makeTVShowsRepository())
-    }
-    
-    // MARK: - Repositories
-    
-    private func makeTVShowsRepository() -> TVShowsRepository {
-        return DefaultTVShowsRepository(dataTransferService: dependencies.apiDataTransferService)
-    }
+  
+  // MARK: - View Model
+  
+  private func makeShowListViewModel(with identifier: Int) -> TVShowListViewModel {
+    return TVShowListViewModel(genreId: identifier, fetchTVShowsUseCase: makeShowListUseCase())
+  }
+  
+  // MARK: - Use Cases
+  
+  private func makeShowListUseCase() -> FetchTVShowsUseCase {
+    return DefaultFetchTVShowsUseCase(tvShowsRepository: makeTVShowsRepository())
+  }
+  
+  // MARK: - Repositories
+  
+  private func makeTVShowsRepository() -> TVShowsRepository {
+    return DefaultTVShowsRepository(dataTransferService: dependencies.apiDataTransferService)
+  }
 }
 
 // MARK: - TVShowListViewControllersFactory
 
 extension TVShowListSceneDIContainer: TVShowListViewControllersFactory {
-     
-    public func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController {
-        let showDetailsDependencies = TVShowDetailsSceneDIContainer.Dependencies(
-                apiDataTransferService: dependencies.apiDataTransferService,
-                imageDataTransferService: dependencies.imageDataTransferService)
-            
-        let container =  TVShowDetailsSceneDIContainer(dependencies: showDetailsDependencies)
-        
-        return container.makeTVShowDetailsViewController(with: identifier)
-    }
+  
+  public func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController {
+    let showDetailsDependencies = TVShowDetailsSceneDIContainer.Dependencies(
+      apiDataTransferService: dependencies.apiDataTransferService)
+    
+    let container =  TVShowDetailsSceneDIContainer(dependencies: showDetailsDependencies)
+    
+    return container.makeTVShowDetailsViewController(with: identifier)
+  }
 }

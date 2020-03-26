@@ -9,72 +9,64 @@
 import UIKit
 
 final class TVShowDetailsSceneDIContainer {
-
-    struct Dependencies {
-        let apiDataTransferService: DataTransferService
-        let imageDataTransferService: DataTransferService
-    }
-
-    private let dependencies: Dependencies
-
-    // MARK: - Initializers
-
-    init(dependencies: Dependencies) {
-        self.dependencies = dependencies
-    }
-
-    public func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController {
-        return TVShowDetailViewController.create(
-            with: makeTVShowDetailsViewModel(with: identifier),
-            showDetailsViewControllersFactory: self)
-    }
+  
+  struct Dependencies {
+    let apiDataTransferService: DataTransferService
+  }
+  
+  private let dependencies: Dependencies
+  
+  // MARK: - Initializers
+  
+  init(dependencies: Dependencies) {
+    self.dependencies = dependencies
+  }
+  
+  public func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController {
+    return TVShowDetailViewController.create(
+      with: makeTVShowDetailsViewModel(with: identifier),
+      showDetailsViewControllersFactory: self)
+  }
+  
+  public func makeSeasonsListViewController(with result: TVShowDetailResult) -> UIViewController {
     
-    public func makeSeasonsListViewController(with result: TVShowDetailResult) -> UIViewController {
-        
-        let dependenciesForSeasons = SeasonsListViewControllerDIContainer.Dependencies(
-                apiDataTransferService: dependencies.apiDataTransferService,
-                imageDataTransferService: dependencies.imageDataTransferService)
-            
-        let container = SeasonsListViewControllerDIContainer(dependencies: dependenciesForSeasons)
-        
-        return container.makeSeasonsListViewController(with: result)
-    }
+    let dependenciesForSeasons = SeasonsListViewControllerDIContainer.Dependencies(
+      apiDataTransferService: dependencies.apiDataTransferService)
+    
+    let container = SeasonsListViewControllerDIContainer(dependencies: dependenciesForSeasons)
+    
+    return container.makeSeasonsListViewController(with: result)
+  }
 }
 
 // MARK: - Private
 
 extension TVShowDetailsSceneDIContainer {
-
-    // MARK: - TODO cambiar ViewModel por protocolm, Agregar repository de Imágenes
-
-    private func makeTVShowDetailsViewModel(with identifier: Int) -> TVShowDetailViewModel {
-        return TVShowDetailViewModel(identifier,
-                                     fetchDetailShowUseCase: makeFetchTVShowDetailsUseCase(),
-                                     posterImagesRepository: makePosterImageRepository())
-    }
-
-    // MARK: - Use Cases
-
-    private func makeFetchTVShowDetailsUseCase() -> FetchTVShowDetailsUseCase {
-        return DefaultFetchTVShowDetailsUseCase(
-            tvShowDetailsRepository: makeTVShowDetailsRepository())
-    }
-
-    // MARK: - Repositories
-
-    private func makeTVShowDetailsRepository() -> TVShowDetailsRepository {
-        return DefaultTVShowDetailsRepository(
-            dataTransferService: dependencies.apiDataTransferService)
-    }
-    
-    private func makePosterImageRepository() -> PosterImageRepository {
-        return DefaultPosterImageRepository(dataTransferService: dependencies.imageDataTransferService,
-                                            imageNotFoundData: UIImage(named: "placeholder")?.pngData() )
-    }
+  
+  // MARK: - TODO cambiar ViewModel por protocolm, Agregar repository de Imágenes
+  
+  private func makeTVShowDetailsViewModel(with identifier: Int) -> TVShowDetailViewModel {
+    return TVShowDetailViewModel(identifier,
+                                 fetchDetailShowUseCase: makeFetchTVShowDetailsUseCase())
+  }
+  
+  // MARK: - Use Cases
+  
+  private func makeFetchTVShowDetailsUseCase() -> FetchTVShowDetailsUseCase {
+    return DefaultFetchTVShowDetailsUseCase(
+      tvShowDetailsRepository: makeTVShowDetailsRepository())
+  }
+  
+  // MARK: - Repositories
+  
+  private func makeTVShowDetailsRepository() -> TVShowDetailsRepository {
+    return DefaultTVShowDetailsRepository(
+      dataTransferService: dependencies.apiDataTransferService)
+  }
 }
 
 // MARK: - TVShowDetailViewControllersFactory
 
 extension TVShowDetailsSceneDIContainer: TVShowDetailViewControllersFactory {
-
+  
 }

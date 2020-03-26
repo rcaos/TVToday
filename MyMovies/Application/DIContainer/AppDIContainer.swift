@@ -37,8 +37,7 @@ extension AppDIContainer {
     
     func makeTodayShowsSceneDIContainer() -> TodayShowsSceneDIContainer {
         let dependencies = TodayShowsSceneDIContainer.Dependencies(
-            apiDataTransferService: apiDataTransferService,
-            imageDataTransferService: imageTransferService)
+            apiDataTransferService: apiDataTransferService)
         return TodayShowsSceneDIContainer(dependencies: dependencies)
     }
     
@@ -46,8 +45,7 @@ extension AppDIContainer {
     
     func makePopularsSceneDIContainer() -> PopularShowsSceneDIContainer {
         let dependencies = PopularShowsSceneDIContainer.Dependencies(
-            apiDataTransferService: apiDataTransferService,
-            imageDataTransferService: imageTransferService)
+            apiDataTransferService: apiDataTransferService)
         return PopularShowsSceneDIContainer(dependencies: dependencies)
     }
     
@@ -56,8 +54,7 @@ extension AppDIContainer {
     
     func makeSearchSceneDIContainer() -> SearchSceneDIContainer {
         let dependencies = SearchSceneDIContainer.Dependencies(
-            apiDataTransferService: apiDataTransferService,
-            imageDataTransferService: imageTransferService)
+            apiDataTransferService: apiDataTransferService)
         return SearchSceneDIContainer(dependencies: dependencies)
     }
 }

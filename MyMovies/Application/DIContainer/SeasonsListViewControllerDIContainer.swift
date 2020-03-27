@@ -22,8 +22,8 @@ final class SeasonsListViewControllerDIContainer {
     self.dependencies = dependencies
   }
   
-  public func makeSeasonsListViewController(with result: TVShowDetailResult) -> UIViewController {
-    return SeasonsListViewController.create(with: makeSeasonsListViewModel(with: result),
+  public func makeSeasonsListViewController(with tvShowId: Int) -> UIViewController {
+    return SeasonsListViewController.create(with: makeSeasonsListViewModel(with: tvShowId),
                                             seasonsListViewControllers: self)
   }
 }
@@ -34,8 +34,8 @@ extension SeasonsListViewControllerDIContainer {
   
   // MARK: - View Model
   
-  private func makeSeasonsListViewModel(with result: TVShowDetailResult) -> SeasonsListViewModel {
-    return SeasonsListViewModel(showDetailResult: result,
+  private func makeSeasonsListViewModel(with tvShowId: Int) -> SeasonsListViewModel {
+    return SeasonsListViewModel(tvShowId: tvShowId,
                                 fetchEpisodesUseCase: makeFetchEpisodesShowsUseCase())
   }
   

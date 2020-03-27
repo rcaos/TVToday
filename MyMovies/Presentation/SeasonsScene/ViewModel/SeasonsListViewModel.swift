@@ -31,10 +31,9 @@ final class SeasonsListViewModel {
   
   //MARK: - Initializers
   
-  // MARK: - TODO, remove poster Repository
-  init(showDetailResult: TVShowDetailResult, fetchEpisodesUseCase: FetchEpisodesUseCase) {
-    self.idShow = showDetailResult.id
-    self.showDetailResult = showDetailResult
+  init(tvShowId: Int, fetchEpisodesUseCase: FetchEpisodesUseCase) {
+    self.idShow = tvShowId  // Change Name
+    self.showDetailResult = nil // Remove
     episodes = [:]
     cellModels = [:]
     

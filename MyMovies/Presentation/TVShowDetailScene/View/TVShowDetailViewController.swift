@@ -7,10 +7,12 @@
 //
 
 import UIKit
+import RxSwift
+import RxDataSources
 
 class TVShowDetailViewController: UITableViewController, StoryboardInstantiable {
   
-  var viewModel: TVShowDetailViewModel?
+  var viewModel: TVShowDetailViewModel!
   
   private var showDetailsViewControllersFactory: TVShowDetailViewControllersFactory!
   
@@ -25,7 +27,10 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
   @IBOutlet weak private var scoreLabel: UILabel!
   @IBOutlet weak private var countVoteLabel: UILabel!
   
-  private var loadingView: UIView!
+  private let loadingView = LoadingView(frame: .zero)
+  private let messageView = MessageView(frame: .zero)
+  
+  private let disposeBag = DisposeBag()
   
   static func create(with viewModel: TVShowDetailViewModel,
                      showDetailsViewControllersFactory: TVShowDetailViewControllersFactory) -> TVShowDetailViewController {
@@ -37,6 +42,12 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
   
   //MARK: - Life Cycle
   
+  override func loadView() {
+    super.loadView()
+    loadingView.frame = view.frame
+    messageView.frame = view.frame
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     navigationController?.navigationBar.prefersLargeTitles = false
@@ -44,15 +55,9 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
     setupViewModel()
   }
   
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-  }
-  
   deinit {
     print("deinit TVShowDetailViewController")
   }
-  
-  //MARK: - SetupViewModel
   
   private func setupViewModel() {
     setupBindables()
@@ -61,9 +66,12 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
   
   private func setupBindables() {
     
-    viewModel?.viewState.observe(on: self) {[weak self] state in
-      self?.configView(with: state)
-    }
+    viewModel?.output.viewState
+      .subscribe(onNext: { [weak self] state in
+        guard let strongSelf = self else { return }
+        strongSelf.configView(with: state)
+      })
+      .disposed(by: disposeBag)
     
     viewModel?.route.observe(on: self) { [weak self] route in
       self?.handle(route)
@@ -71,66 +79,51 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
   }
   
   func configView(with state: TVShowDetailViewModel.ViewState) {
-    
-    if let customView = loadingView{
-      customView.removeFromSuperview()
-    }
+    loadingView.removeFromSuperview()
+    messageView.removeFromSuperview()
     
     switch state {
-    case .populated:
-      self.setupUI()
+    case .populated(let tvShowDetail) :
+      setupUI(with: tvShowDetail)
+    case .loading :
+      view.addSubview(loadingView)
+    case .error(let message) :
+      messageView.messageLabel.text = message
+      view.addSubview(messageView)
+      break
     default:
-      self.buildLoadingView()
-      self.view.addSubview( loadingView )
+      break
     }
   }
   
-  func buildLoadingView() {
-    let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
-    activityIndicator.color = .darkGray
-    activityIndicator.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
+  private func setupUI(with show: TVShowDetailViewModel.TVShowDetailInfo) {
+    nameLabel.text = show.nameShow
+    yearsRelease.text = show.yearsRelease
     
-    loadingView = UIView(frame: self.view.frame)
-    loadingView.backgroundColor = .white
+    durationLabel.text = show.duration
+    genreLabel.text = show.genre
     
-    activityIndicator.center = loadingView.center
-    loadingView.addSubview(activityIndicator)
-    activityIndicator.startAnimating()
-  }
-  
-  private func setupUI() {
-    guard let viewModel = viewModel else { return }
+    numberOfEpisodes.text = show.numberOfEpisodes
+    overViewLabel.text = show.overView
+    scoreLabel.text = show.score
+    countVoteLabel.text = show.countVote
     
-    nameLabel.text = viewModel.nameShow
-    yearsRelease.text = viewModel.yearsRelease
-    
-    durationLabel.text = viewModel.duration
-    genreLabel.text = viewModel.genre
-    
-    numberOfEpisodes.text = viewModel.numberOfEpisodes
-    overViewLabel.text = viewModel.overView
-    scoreLabel.text = viewModel.score
-    countVoteLabel.text = viewModel.countVote
-    
-    backDropImage.setImage(with: viewModel.backDropPath)
-    posterImage.setImage(with: viewModel.posterPath)
+    backDropImage.setImage(with: show.backDropPath)
+    posterImage.setImage(with: show.posterPath)
   }
 }
 
 extension TVShowDetailViewController {
   
   override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-    if indexPath.row == 1{
-      return true
-    }
-    return false
+    return indexPath.row == 1
   }
   
   override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-    if indexPath.row == 1{
+    if indexPath.row == 1 {
       viewModel?.showSeasonList()
       return indexPath
-    }else{
+    } else {
       return nil
     }
   }
@@ -153,20 +146,22 @@ extension TVShowDetailViewController {
     
     var heightrow = CGFloat(0.0)
     
-    if indexPath.row == 0{
+    if indexPath.row == 0 {
       heightrow =  totalHeight * ( percentFirstRow )
-    }else if indexPath.row == 1{
+    } else if indexPath.row == 1 {
       heightrow = fixedSecondRow
-    }else if indexPath.row == 2{
+    } else if indexPath.row == 2 {
       heightrow = restOfHeight * 0.65
-    }else if indexPath.row == 3{
+    } else if indexPath.row == 3 {
       heightrow = restOfHeight * 0.35
-    }else{
+    } else {
       heightrow = 0
     }
     return CGFloat(heightrow)
   }
 }
+
+// MARK: - TODO Refactoring Navigation
 
 extension TVShowDetailViewController {
   
@@ -175,18 +170,15 @@ extension TVShowDetailViewController {
     switch route {
     case .initial: break
       
-    case .showSeasonsList(let tvshowResult):
-      let seasonsController = showDetailsViewControllersFactory .makeSeasonsListViewController(with: tvshowResult)
+    case .showSeasonsList(let tvShowId):
+      let seasonsController = showDetailsViewControllersFactory .makeSeasonsListViewController(with: tvShowId)
       
       navigationController?.pushViewController(seasonsController, animated: true)
     }
   }
 }
 
-// MARK: - TVShowDetailViewControllersFactory
-
 protocol TVShowDetailViewControllersFactory {
   
-  // MARK: - TODO, Entitie at view
-  func makeSeasonsListViewController(with result: TVShowDetailResult) -> UIViewController
+  func makeSeasonsListViewController(with tvShowId: Int) -> UIViewController
 }

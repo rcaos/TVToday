@@ -7,149 +7,151 @@
 //
 
 import UIKit
+import RxSwift
+import RxDataSources
 
 class AiringTodayViewController: UIViewController, StoryboardInstantiable {
+  
+  @IBOutlet weak var collectionView: UICollectionView!
+  
+  private var viewModel: AiringTodayViewModel!
+  private var airingTodayViewControllersFactory: AiringTodayViewControllersFactory!
+  
+  static func create(with viewModel: AiringTodayViewModel,
+                     airingTodayViewControllersFactory: AiringTodayViewControllersFactory) -> AiringTodayViewController {
+    let controller = AiringTodayViewController.instantiateViewController()
+    controller.viewModel = viewModel
+    controller.airingTodayViewControllersFactory = airingTodayViewControllersFactory
+    return controller
+  }
+  
+  fileprivate let disposeBag = DisposeBag()
+  
+  //MARK: - Life Cycle
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
     
-    @IBOutlet weak var collectionView: UICollectionView!
+    setupUI()
+    viewModel.getShows(for: 1)
+  }
+  
+  // MARK: - SetupView
+  
+  func setupUI() {
+    navigationItem.title = "Today on TV"
+    setupCollectionView()
+  }
+  
+  // MARK: - Setup CollectionView
+  
+  func setupCollectionView() {
+    let nibName = UINib(nibName: "AiringTodayCollectionViewCell", bundle: nil)
+    collectionView.register(nibName, forCellWithReuseIdentifier: "AiringTodayCollectionViewCell")
+    collectionView.register(FooterReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter , withReuseIdentifier: "FooterReusableView")
+    collectionView.backgroundColor = UIColor.groupTableViewBackground
     
-    private var viewModel: AiringTodayViewModel!
-    private var airingTodayViewControllersFactory: AiringTodayViewControllersFactory!
+    let (configureCollectionViewCell, configureSupplementaryView) = configureCollectionViewDataSource()
     
-    static func create(with viewModel: AiringTodayViewModel,
-                       airingTodayViewControllersFactory: AiringTodayViewControllersFactory) -> AiringTodayViewController {
-        let controller = AiringTodayViewController.instantiateViewController()
-        controller.viewModel = viewModel
-        controller.airingTodayViewControllersFactory = airingTodayViewControllersFactory
-        return controller
-    }
+    let dataSource = RxCollectionViewSectionedReloadDataSource<SectionCustomData>(
+      configureCell: configureCollectionViewCell,
+      configureSupplementaryView: configureSupplementaryView)
     
-    //MARK: - Life Cycle
+    viewModel.output
+      .shows
+      .map { [SectionCustomData(header: "Shows Today", items: $0.currentEntities) ] }
+      .bind(to: collectionView.rx.items(dataSource: dataSource))
+      .disposed(by: disposeBag)
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        setupUI()
-        setupViewModel()
-    }
+    collectionView.rx
+      .setDelegate(self)
+      .disposed(by: disposeBag)
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.navigationBar.prefersLargeTitles = true
-    }
-    
-    // MARK: - SetupView
-    
-    func setupUI() {
-        navigationItem.title = "Today on TV"
-        setupCollection()
-    }
-    
-    // MARK: - SetupTable
-    
-    func setupCollection() {
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        
-        let nibName = UINib(nibName: "AiringTodayCollectionViewCell", bundle: nil)
-        collectionView.register(nibName, forCellWithReuseIdentifier: "AiringTodayCollectionViewCell")
-        
-        collectionView.register(FooterReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter , withReuseIdentifier: "FooterReusableView")
-        
-        collectionView.backgroundColor = UIColor.groupTableViewBackground
-    }
-    
-    //MARK: - SetupViewModel
-    
-    func setupViewModel() {
-        viewModel.viewState.observe(on: self) { [weak self] state in
-            self?.configView(with: state)
-        }
-        
-        viewModel.getShows(for: 1)
-    }
-    
-    func configView(with state: SimpleViewState<TVShow>) {
-        
-        switch state {
-        case .populated(_):
-            self.collectionView.reloadData()
-        case .paging(_, _):
-            self.collectionView.reloadData()
-        default:
-            print("Default state.")
-        }
-    }
+    collectionView.rx
+      .modelSelected( TVShow.self)
+      .subscribe(onNext: { [weak self] tvShow in
+        guard let strongSelf = self else { return }
+        strongSelf.handle( tvShow.id )
+      })
+      .disposed(by: disposeBag)
+  }
 }
 
-//MARK: - DataSource, Delegate
+// MARK: - Configure CollectionView Views
 
-extension AiringTodayViewController: UICollectionViewDataSource {
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.viewState.value.currentEntities.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let item = collectionView.dequeueReusableCell(withReuseIdentifier: "AiringTodayCollectionViewCell", for: indexPath) as! AiringTodayCollectionViewCell
-        item.viewModel = viewModel.getModelFor(indexPath.row)
+extension AiringTodayViewController {
+  
+  func configureCollectionViewDataSource() -> (
+    CollectionViewSectionedDataSource<SectionCustomData>.ConfigureCell,
+    CollectionViewSectionedDataSource<SectionCustomData>.ConfigureSupplementaryView
+    ) {
+      let configureCell: CollectionViewSectionedDataSource<SectionCustomData>.ConfigureCell = {
+        [weak self] dataSource, collectionView, indexPath, item in
+        guard let strongSelf = self else { fatalError() }
         
-        if case .paging(_, let nextPage) = viewModel.viewState.value,
-            indexPath.row == viewModel.viewState.value.currentEntities.count - 1 {
-            print("get next Page: \(nextPage)")
-            viewModel.getShows(for: nextPage)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AiringTodayCollectionViewCell", for: indexPath) as! AiringTodayCollectionViewCell
+        cell.viewModel = self?.viewModel.getModelFor(indexPath.row)
+        print("retornar cell: \(indexPath)")
+        
+        if case .paging(_, let nextPage) = try? strongSelf.viewModel.showsObservableSubject.value(),
+          let totalItems = dataSource.sectionModels.first?.items.count, indexPath.row == totalItems - 1 {
+          strongSelf.viewModel.getShows(for: nextPage)
         }
         
-        return item
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "FooterReusableView", for: indexPath) as! FooterReusableView
-        return footer
-    }
+        return cell
+      }
+      
+      let configureFooterView: CollectionViewSectionedDataSource<SectionCustomData>.ConfigureSupplementaryView = {
+        dataSource, collectionView, kindOfView, indexPath in
+        let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kindOfView, withReuseIdentifier: "FooterReusableView", for: indexPath) as! FooterReusableView
+        return footerView
+      }
+      
+      return (configureCell, configureFooterView)
+  }
+  
 }
+
+
+// MARK: - UICollectionViewDelegateFlowLayout
 
 extension AiringTodayViewController: UICollectionViewDelegateFlowLayout {
+  
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    let width = collectionView.frame.width
+    return CGSize(width: width, height: 275)
+  }
+  
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+    guard let state = try? viewModel.showsObservableSubject.value() else { return .zero }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let idSelected = viewModel.viewState.value.currentEntities[indexPath.row].id
-        handle( idSelected )
-        
-        collectionView.deselectItem(at: indexPath, animated: true)
+    switch state {
+    case .loading, .paging(_, _):
+      return CGSize(width: collectionView.frame.width, height: 100)
+    default:
+      return .zero
     }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.frame.width
-        return CGSize(width: width, height: 275)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        let state = viewModel.viewState.value
-        switch state {
-        case .loading, .paging(_, _):
-            return CGSize(width: collectionView.frame.width, height: 100)
-        default:
-            return CGSize(width: 0, height: 0)
-        }
-    }
+  }
 }
 
 
 //MARK: - Navigation
 
 extension AiringTodayViewController {
-    
-    //MARK: - TODO Handle navigation
-    
-    func handle(_ route: Int?) {
-        guard let identifier = route else { return }
-        let detailController = airingTodayViewControllersFactory.makeTVShowDetailsViewController(with: identifier)
-        navigationController?.pushViewController(detailController, animated: true)
-    }
+  
+  //MARK: - TODO, implementar Coordinator Pattern
+  // Este VC no debe conocer nada de los Detalles del Próximo VC
+  
+  func handle(_ route: Int?) {
+    guard let identifier = route else { return }
+    let detailController = airingTodayViewControllersFactory.makeTVShowDetailsViewController(with: identifier)
+    navigationController?.pushViewController(detailController, animated: true)
+  }
 }
 
 // MARK: - AiringTodayViewControllersFactory
 
 protocol AiringTodayViewControllersFactory {
-    
-    func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController
+  
+  func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController
 }

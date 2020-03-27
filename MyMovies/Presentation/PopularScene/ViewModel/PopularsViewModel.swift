@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 final class PopularViewModel: ShowsViewModel {
     
@@ -23,6 +24,8 @@ final class PopularViewModel: ShowsViewModel {
             showsLoadTask?.cancel()
         }
     }
+  
+    var showsObservableSubject: BehaviorSubject<SimpleViewState<TVShow>> = .init(value: .loading)
     
     // MARK: - Initializers
     

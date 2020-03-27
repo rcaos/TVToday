@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 final class ResultsSearchViewModel: ShowsViewModel {
     
@@ -25,6 +26,10 @@ final class ResultsSearchViewModel: ShowsViewModel {
             showsLoadTask?.cancel()
         }
     }
+  
+  var showsObservableSubject: BehaviorSubject<SimpleViewState<TVShow>> = .init(value: .loading)
+  
+  // MARK: - Init
     
     init(fetchTVShowsUseCase: FetchTVShowsUseCase) {
         self.fetchTVShowsUseCase = fetchTVShowsUseCase

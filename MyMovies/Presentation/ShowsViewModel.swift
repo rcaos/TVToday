@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 protocol ShowsViewModel: class {
   
@@ -16,6 +17,7 @@ protocol ShowsViewModel: class {
   
   var filter: TVShowsListFilter { get set }
   
+  // MARK: - TODO, remove viewState
   var viewState: Observable<SimpleViewState<TVShow>> { get set }
   
   var shows: [TVShow] { get set }
@@ -25,6 +27,8 @@ protocol ShowsViewModel: class {
   var showsLoadTask: Cancellable? { get set }
   
   func createModels(for fetched: [TVShow])
+  
+  var showsObservableSubject: RxSwift.BehaviorSubject<SimpleViewState<TVShow>> { get set }
 }
 
 extension ShowsViewModel {
@@ -33,6 +37,7 @@ extension ShowsViewModel {
     
     if viewState.value.isInitialPage {
       viewState.value =  .loading
+      showsObservableSubject.onNext(.loading)
     }
     
     let request = FetchTVShowsUseCaseRequestValue(filter: filter, page: page)
@@ -44,6 +49,7 @@ extension ShowsViewModel {
         strongSelf.processFetched(for: results)
       case .failure(let error):
         strongSelf.viewState.value = .error(error.localizedDescription)
+        strongSelf.showsObservableSubject.onNext(.error(error.localizedDescription))
       }
     }
   }
@@ -58,13 +64,16 @@ extension ShowsViewModel {
     if self.shows.isEmpty ||
       (fetchedShows.isEmpty && response.page == 1) {
       viewState.value = .empty
+      showsObservableSubject.onNext(.empty)
       return
     }
     
     if response.hasMorePages {
       self.viewState.value = .paging(shows, next: response.nextPage)
+      showsObservableSubject.onNext( .paging(shows, next: response.nextPage) )
     } else {
       self.viewState.value = .populated(shows)
+      showsObservableSubject.onNext( .populated(shows) )
     }
   }
 }

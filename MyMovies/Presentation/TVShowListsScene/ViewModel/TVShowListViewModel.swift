@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RxSwift
 
 final class TVShowListViewModel: ShowsViewModel {
     
@@ -25,6 +26,8 @@ final class TVShowListViewModel: ShowsViewModel {
     }
     
     var genreId: Int!
+  
+  var showsObservableSubject: BehaviorSubject<SimpleViewState<TVShow>> = .init(value: .loading)
     
     // MARK: - Initializers
     

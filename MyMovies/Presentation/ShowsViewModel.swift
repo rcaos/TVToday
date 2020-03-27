@@ -68,7 +68,8 @@ extension ShowsViewModel {
       return
     }
     
-    if response.hasMorePages {
+    // MARK: for test, only 3 pages
+    if response.hasMorePages && response.nextPage < 4 {
       self.viewState.value = .paging(shows, next: response.nextPage)
       showsObservableSubject.onNext( .paging(shows, next: response.nextPage) )
     } else {

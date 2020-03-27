@@ -7,143 +7,142 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
+import RxDataSources
 
-class PopularsViewController: UITableViewController, StoryboardInstantiable {
-
-    var viewModel:PopularViewModel!
-    private var popularViewControllersFactory: PopularViewControllersFactory!
+class PopularsViewController: UIViewController, StoryboardInstantiable {
+  
+  @IBOutlet weak var tableView: UITableView!
+  
+  var viewModel:PopularViewModel!
+  private var popularViewControllersFactory: PopularViewControllersFactory!
+  
+  static func create(with viewModel: PopularViewModel,
+                     popularViewControllersFactory: PopularViewControllersFactory) -> PopularsViewController {
+    let controller = PopularsViewController.instantiateViewController()
+    controller.viewModel = viewModel
+    controller.popularViewControllersFactory = popularViewControllersFactory
+    return controller
+  }
+  
+  lazy var loadingView = LoadingView(frame: .zero)
+  lazy var emptyView = MessageView(message: "No TVShow to show")
+  
+  let disposeBag = DisposeBag()
+  
+  //MARK: - Life Cycle
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
     
-    var loadingView: UIView!
+    setupUI()
+    setupViewModel()
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    navigationController?.navigationBar.prefersLargeTitles = false
+  }
+  
+  //MARK: - Setup UI
+  
+  func setupUI() {
+    navigationItem.title = "Popular TV Shows"
+    setupTable()
+    setupViews()
+  }
+  
+  func setupViews() {
+    loadingView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
+    emptyView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
+  }
+  
+  func setupTable() {
+    let nibName = UINib(nibName: "TVShowViewCell", bundle: nil)
+    tableView.register(nibName, forCellReuseIdentifier: "TVShowViewCell")
     
-    static func create(with viewModel: PopularViewModel,
-                       popularViewControllersFactory: PopularViewControllersFactory) -> PopularsViewController {
-        let controller = PopularsViewController.instantiateViewController()
-        controller.viewModel = viewModel
-        controller.popularViewControllersFactory = popularViewControllersFactory
-        return controller
-    }
-    
-    //MARK: - Life Cycle
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    tableView.tableFooterView = loadingView
+    tableView.rowHeight = UITableView.automaticDimension
+  }
+  
+  // MARK: - Setup ViewModel
+  
+  func setupViewModel() {
+    viewModel.output
+      .shows
+      .map { $0.currentEntities }
+      .bind(to: tableView.rx.items(cellIdentifier: "TVShowViewCell", cellType: TVShowViewCell.self)) {
+        [weak self] (index, element, cell) in
+        guard let strongSelf = self else { return }
         
-        setupUI()
-        setupViewModel()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.navigationBar.prefersLargeTitles = true
-    }
-    
-    //MARK: - SetupView
-    
-    func setupUI() {
-        navigationItem.title = "Popular TV Shows"
-        setupTable()
-    }
-    
-    //MARK: - SetupTable
-    
-    func setupTable() {
-        tableView.dataSource = self
-        tableView.delegate = self
+        cell.viewModel = self?.viewModel.getModelFor(index)
         
-        let nibName = UINib(nibName: "TVShowViewCell", bundle: nil)
-        tableView.register(nibName, forCellReuseIdentifier: "TVShowViewCell")
-        
-        buildLoadingView()
-    }
-    
-    //MARK: - SetupUI
-    
-    func setupViewModel() {
-        viewModel.viewState.observe(on: self) { [weak self] state in
-            self?.configView(with: state)
+        if case .paging(let entities, let nextPage) = try? strongSelf.viewModel.showsObservableSubject.value(),
+          index == entities.count - 1  {
+          strongSelf.viewModel.getShows(for: nextPage)
         }
-        viewModel.getShows(for: 1)
     }
+    .disposed(by: disposeBag)
     
-    func configView(with state: SimpleViewState<TVShow>) {
-        
-        switch state {
-        case .populated(_) :
-            self.tableView.reloadData()
-            self.tableView.tableFooterView = UIView()
-        case .paging(_, _) :
-            self.tableView.reloadData()
-            self.tableView.tableFooterView = loadingView
-        case .loading :
-            self.tableView.tableFooterView = loadingView
-        default:
-            print("Default State")
-        }
-    }
+    viewModel.output
+      .shows
+      .subscribe(onNext: { [weak self] state in
+        guard let strongSelf = self else { return }
+        strongSelf.handleTableState(with: state)
+      })
+      .disposed(by: disposeBag)
     
-    func buildLoadingView() {
-        let defaultFrame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
-        
-        let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
-        activityIndicator.color = .darkGray
-        activityIndicator.frame = defaultFrame
-        
-        loadingView = UIView(frame: defaultFrame)
-        loadingView.backgroundColor = .white
-        
-        activityIndicator.center = loadingView.center
-        loadingView.addSubview(activityIndicator)
-        activityIndicator.startAnimating()
+    tableView.rx
+      .itemSelected
+      .subscribe(onNext: { [weak self] indexPath in
+        guard let strongSelf = self else { return }
+        strongSelf.tableView.deselectRow(at: indexPath, animated: true)
+      })
+      .disposed(by: disposeBag)
+    
+    tableView.rx
+      .modelSelected(TVShow.self)
+      .subscribe(onNext: { [weak self] tvShow in
+        guard let strongSelf = self else { return }
+        strongSelf.handle( tvShow.id )
+      })
+      .disposed(by: disposeBag)
+    
+    viewModel.getShows(for: 1)
+  }
+  
+  fileprivate func handleTableState(with state: SimpleViewState<TVShow>) {
+    switch state {
+    case .loading, .paging :
+      tableView.tableFooterView = loadingView
+    case .empty:
+      tableView.tableFooterView = emptyView
+    case .error(let message):
+      emptyView.messageLabel.text = message
+      tableView.tableFooterView = emptyView
+    default:
+      tableView.tableFooterView = nil
     }
+  }
 }
 
-extension PopularsViewController{
-    
-    // MARK: - Table view data source
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.viewState.value.currentEntities.count
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
-        cell.viewModel = viewModel.getModelFor(indexPath.row)
-        
-        if case .paging(_, let nextPage) = viewModel.viewState.value ,
-            indexPath.row == viewModel.viewState.value.currentEntities.count - 1  {
-            viewModel.getShows(for: nextPage)
-        }
-        
-        return cell
-    }
-    
-    //MARK: - TableView Delegate
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-        let idShow = viewModel.shows[indexPath.row].id!
-        handle(idShow)
-    }
-}
-
-//MARK: - Navigation
+// MARK: - Navigation
+// MARK: - TODO, refactor navigation
 
 extension PopularsViewController {
-
-    // MARK: - Handle Navigation
-    
-    func handle(_ route: Int?) {
-        guard let identifier = route else { return }
-        let detailController = popularViewControllersFactory.makeTVShowDetailsViewController(with: identifier)
-        navigationController?.pushViewController(detailController, animated: true)
-    }
+  
+  func handle(_ route: Int?) {
+    guard let identifier = route else { return }
+    let detailController = popularViewControllersFactory.makeTVShowDetailsViewController(with: identifier)
+    navigationController?.pushViewController(detailController, animated: true)
+  }
 }
 
 // MARK: - PopularViewControllersFactory
 
 protocol PopularViewControllersFactory {
-    
-    func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController
+  
+  func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController
 }
 

@@ -1,30 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="08J-lJ-oGe">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="3Ap-lq-28T">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Populars View Controller-->
-        <scene sceneID="K1a-bz-hOD">
+        <scene sceneID="Qza-3l-uRf">
             <objects>
-                <tableViewController id="08J-lJ-oGe" customClass="PopularsViewController" customModule="TVToday" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="Zkm-z9-YTt">
+                <viewController id="3Ap-lq-28T" customClass="PopularsViewController" customModule="TVToday" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Qwh-wQ-BOX">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <connections>
-                            <outlet property="dataSource" destination="08J-lJ-oGe" id="MVf-Cp-dtG"/>
-                            <outlet property="delegate" destination="08J-lJ-oGe" id="PMd-pS-mAy"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" id="3AF-DG-39u"/>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="L5m-QY-1bY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zIH-QF-d7T">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="zIH-QF-d7T" firstAttribute="leading" secondItem="jvU-3x-zDm" secondAttribute="leading" id="6rR-Sm-mj4"/>
+                            <constraint firstItem="jvU-3x-zDm" firstAttribute="trailing" secondItem="zIH-QF-d7T" secondAttribute="trailing" id="Sy7-8t-ik8"/>
+                            <constraint firstItem="zIH-QF-d7T" firstAttribute="top" secondItem="jvU-3x-zDm" secondAttribute="top" id="w6z-Ce-SJN"/>
+                            <constraint firstItem="jvU-3x-zDm" firstAttribute="bottom" secondItem="zIH-QF-d7T" secondAttribute="bottom" id="xrl-T5-NKS"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="jvU-3x-zDm"/>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="zIH-QF-d7T" id="40E-6a-AXp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DwX-UM-aNw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1846" y="448"/>
+            <point key="canvasLocation" x="-213" y="-99"/>
         </scene>
     </scenes>
 </document>

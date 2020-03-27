@@ -10,43 +10,60 @@ import Foundation
 import RxSwift
 
 final class TVShowListViewModel: ShowsViewModel {
-    
-    var fetchTVShowsUseCase: FetchTVShowsUseCase
-    
-    var filter: TVShowsListFilter
-    var viewState:Observable<SimpleViewState<TVShow>> = Observable(.loading)
-    
-    var shows: [TVShow]
-    var cellsmodels: [TVShowCellViewModel]
-    
-    var showsLoadTask: Cancellable? {
-        willSet {
-            showsLoadTask?.cancel()
-        }
+  
+  var fetchTVShowsUseCase: FetchTVShowsUseCase
+  
+  var filter: TVShowsListFilter
+  var viewState:Observable<SimpleViewState<TVShow>> = Observable(.loading)
+  
+  var shows: [TVShow]
+  var cellsmodels: [TVShowCellViewModel]
+  
+  var showsLoadTask: Cancellable? {
+    willSet {
+      showsLoadTask?.cancel()
     }
-    
-    var genreId: Int!
+  }
+  
+  var genreId: Int
+  
+  // MARK: - Base ViewModel
+  var input: Input
+  var output: Output
   
   var showsObservableSubject: BehaviorSubject<SimpleViewState<TVShow>> = .init(value: .loading)
+  
+  // MARK: - Initializers
+  
+  init(genreId: Int, fetchTVShowsUseCase: FetchTVShowsUseCase) {
+    self.fetchTVShowsUseCase = fetchTVShowsUseCase
+    self.genreId = genreId
+    shows = []
+    cellsmodels = []
+    filter = .byGenre(genreId: genreId)
     
-    // MARK: - Initializers
-    
-    init(genreId: Int, fetchTVShowsUseCase: FetchTVShowsUseCase) {
-        self.fetchTVShowsUseCase = fetchTVShowsUseCase
-        self.genreId = genreId
-        shows = []
-        cellsmodels = []
-        filter = .byGenre(genreId: genreId)
-    }
-    
-    func createModels(for fetched: [TVShow]) {
-        self.cellsmodels.append(contentsOf:
-            fetched.map({
-                TVShowCellViewModel(show: $0)
-        }))
-    }
-    
-    func getModelFor(_ index:Int) -> TVShowCellViewModel {
-        return cellsmodels[index]
-    }
+    self.input = Input()
+    self.output = Output(viewState: showsObservableSubject.asObservable())
+  }
+  
+  // MARK: - Remove from Protocol
+  func createModels(for fetched: [TVShow]) {
+  }
+  
+  func getModelFor(_ entity: TVShow) -> TVShowCellViewModel {
+    return TVShowCellViewModel(show: entity)
+  }
+}
+
+// MARK: - ViewModel Base
+
+extension TVShowListViewModel {
+  
+  public struct Input { }
+  
+  public struct Output {
+    // MARK: - TODO, Change for State
+    // MARK: - TODO, change RxSwift
+    let viewState: RxSwift.Observable<SimpleViewState<TVShow>>
+  }
 }

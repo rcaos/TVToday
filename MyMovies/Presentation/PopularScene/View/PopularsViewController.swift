@@ -38,6 +38,7 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
     
     setupUI()
     setupViewModel()
+    viewModel.getShows(for: 1)
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -76,7 +77,7 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
         [weak self] (index, element, cell) in
         guard let strongSelf = self else { return }
         
-        cell.viewModel = self?.viewModel.getModelFor(index)
+        cell.viewModel = self?.viewModel.getModelFor(element)
         
         if case .paging(let entities, let nextPage) = try? strongSelf.viewModel.showsObservableSubject.value(),
           index == entities.count - 1  {
@@ -99,10 +100,8 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
         guard let strongSelf = self else { return }
         strongSelf.tableView.deselectRow(at: indexPath, animated: true)
         strongSelf.handle(item.id)
-      }
-      .disposed(by: disposeBag)
-    
-    viewModel.getShows(for: 1)
+    }
+    .disposed(by: disposeBag)
   }
   
   fileprivate func handleTableState(with state: SimpleViewState<TVShow>) {
@@ -120,7 +119,6 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
   }
 }
 
-// MARK: - Navigation
 // MARK: - TODO, refactor navigation
 
 extension PopularsViewController {

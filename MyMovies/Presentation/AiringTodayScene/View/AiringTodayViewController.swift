@@ -90,7 +90,7 @@ extension AiringTodayViewController {
         guard let strongSelf = self else { fatalError() }
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AiringTodayCollectionViewCell", for: indexPath) as! AiringTodayCollectionViewCell
-        cell.viewModel = self?.viewModel.getModelFor(indexPath.row)
+        cell.viewModel = self?.viewModel.getModelFor(item)
         print("retornar cell: \(indexPath)")
         
         if case .paging(_, let nextPage) = try? strongSelf.viewModel.showsObservableSubject.value(),

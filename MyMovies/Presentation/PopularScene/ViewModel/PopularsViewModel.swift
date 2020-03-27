@@ -42,15 +42,12 @@ final class PopularViewModel: ShowsViewModel {
     self.output = Output(shows: showsObservableSubject.asObservable())
   }
   
+  // MARK: - TODO, Remove from protocol
   func createModels(for fetched: [TVShow]) {
-    self.cellsmodels.append(contentsOf:
-      fetched.map({
-        TVShowCellViewModel(show: $0)
-      }))
   }
   
-  func getModelFor(_ index:Int) -> TVShowCellViewModel {
-    return cellsmodels[index]
+  func getModelFor(_ entity: TVShow) -> TVShowCellViewModel {
+    return TVShowCellViewModel(show: entity)
   }
 }
 

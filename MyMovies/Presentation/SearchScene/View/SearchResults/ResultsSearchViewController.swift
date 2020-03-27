@@ -93,10 +93,12 @@ class ResultsSearchViewController: UIViewController {
     }
     .disposed(by: disposeBag)
     
-    resultView.tableView.rx
-      .modelSelected(TVShow.self)
-      .subscribe(onNext: { [weak self] show in
+    RxSwift.Observable
+      .zip(resultView.tableView.rx.itemSelected,
+           resultView.tableView.rx.modelSelected(TVShow.self))
+      .subscribe(onNext: { [weak self] (index, show) in
         guard let strongSelf = self else { return }
+        strongSelf.resultView.tableView.deselectRow(at: index, animated: true)
         strongSelf.delegate?.resultsSearchViewController(strongSelf, didSelectedMovie: show.id)
       })
       .disposed(by: disposeBag)

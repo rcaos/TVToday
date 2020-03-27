@@ -43,13 +43,12 @@ final class AiringTodayViewModel: ShowsViewModel {
     self.output = Output(shows: showsObservableSubject.asObservable())
   }
   
+  // MARK: - TODO, remove from protocol
   func createModels(for fetched: [TVShow]) {
-    self.cellsmodels.append(contentsOf:
-      fetched.map { AiringTodayCollectionViewModel(show: $0) })
   }
   
-  func getModelFor(_ index:Int) -> AiringTodayCollectionViewModel {
-    return cellsmodels[index]
+  func getModelFor(_ entity: TVShow) -> AiringTodayCollectionViewModel {
+    return TVShowCellViewModel(show: entity)
   }
 }
 

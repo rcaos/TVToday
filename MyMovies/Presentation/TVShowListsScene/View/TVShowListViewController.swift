@@ -7,147 +7,131 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class TVShowListViewController: UIViewController, StoryboardInstantiable {
+  
+  @IBOutlet weak var tableView: UITableView!
+  
+  private var viewModel: TVShowListViewModel!
+  
+  private var showsListViewControllersFactory: TVShowListViewControllersFactory!
+  
+  let disposeBag = DisposeBag()
+  // MARK: - TOOD Use localized String
+  var emptyView = MessageView(message: "No results to Show")
+  var loadingView = LoadingView(frame: .zero)
+  
+  static func create(with viewModel: TVShowListViewModel,
+                     showsListViewControllersFactory: TVShowListViewControllersFactory) -> TVShowListViewController {
+    let controller = TVShowListViewController.instantiateViewController()
+    controller.viewModel = viewModel
+    controller.showsListViewControllersFactory = showsListViewControllersFactory
+    return controller
+  }
+  
+  // MARK: - Life Cycle
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
     
-    @IBOutlet weak var tableView: UITableView!
+    setupViews()
+    setupTable()
+    setupViewModel()
+    viewModel.getShows(for: 1)
+  }
+  
+  deinit {
+    print("deinit TVShowListViewController")
+  }
+  
+  //MARK: - SetupView
+  
+  func setupViews() {
+    emptyView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
+    loadingView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
+  }
+  
+  // MARK: - SetupTable
+  
+  func setupTable() {
+    let nibName = UINib(nibName: "TVShowViewCell", bundle: nil)
+    tableView.register(nibName, forCellReuseIdentifier: "TVShowViewCell")
+  }
+  
+  // MARK: - SetupViewModel
+  
+  func setupViewModel() {
+    viewModel.output
+      .viewState
+      .subscribe(onNext: { [weak self] state in
+        guard let strongSelf = self else { return }
+        strongSelf.configView(with: state)
+      })
+      .disposed(by: disposeBag)
     
-    private var viewModel: TVShowListViewModel!
-    
-    private var showsListViewControllersFactory: TVShowListViewControllersFactory!
-    
-    var loadingView: UIView!
-    
-    static func create(with viewModel: TVShowListViewModel,
-                       showsListViewControllersFactory: TVShowListViewControllersFactory) -> TVShowListViewController {
-        let controller = TVShowListViewController.instantiateViewController()
-        controller.viewModel = viewModel
-        controller.showsListViewControllersFactory = showsListViewControllersFactory
-        return controller
-    }
-    
-    // MARK: - Life Cycle
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    viewModel.output
+      .viewState
+      .map { $0.currentEntities }
+      .bind(to: tableView.rx.items(cellIdentifier: "TVShowViewCell", cellType: TVShowViewCell.self )) {
+        [weak self] (index, element, cell) in
+        guard let strongSelf = self else { return }
         
-        setupUI()
-        setupViewModel()
-    }
-    
-    deinit {
-        print("deinit TVShowListViewController")
-    }
-    
-    //MARK: - SetupView
-    
-    func setupUI() {
-        setupTable()
-    }
-    
-    // MARK: - SetupTable
-    
-    func setupTable() {
-        tableView.dataSource = self
-        tableView.delegate = self
+        cell.viewModel = strongSelf.viewModel.getModelFor(element)
         
-        let nibName = UINib(nibName: "TVShowViewCell", bundle: nil)
-        tableView.register(nibName, forCellReuseIdentifier: "TVShowViewCell")
-        
-        buildLoadingView()
-    }
-    
-    // MARK: - SetupViewModel
-    
-    func setupViewModel() {
-        guard let viewModel = viewModel else { return }
-        
-        viewModel.viewState.observe(on: self) {[weak self] state in
-            self?.configView(with: state)
+        // MARK: - TODO, call "showsObservableSubject" dont be stay here
+        if case .paging(let entities, let nextPage) = try? strongSelf.viewModel.showsObservableSubject.value(),
+          index == entities.count - 1 {
+          strongSelf.viewModel.getShows(for: nextPage)
         }
-        
-        viewModel.getShows(for: 1)
     }
+    .disposed(by: disposeBag)
     
-    func configView(with state: SimpleViewState<TVShow>) {
-        switch state {
-        case .populated(_):
-            self.tableView.reloadData()
-        case .paging(_, _):
-            self.tableView.reloadData()
-            self.tableView.tableFooterView = loadingView
-        default:
-            self.tableView.tableFooterView = loadingView
-        }
+    // MARK - TODO, change RxSwift
+    RxSwift.Observable
+      .zip( tableView.rx.itemSelected, tableView.rx.modelSelected(TVShow.self) )
+      .bind { [weak self] (indexPath, item) in
+        guard let strongSelf = self else { return }
+        strongSelf.tableView.deselectRow(at: indexPath, animated: true)
+        strongSelf.handle(item.id)
     }
+    .disposed(by: disposeBag)
     
-    func buildLoadingView() {
-        let defaultFrame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
-        
-        let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
-        activityIndicator.color = .darkGray
-        activityIndicator.frame = defaultFrame
-        
-        loadingView = UIView(frame: defaultFrame)
-        loadingView.backgroundColor = .white
-        
-        activityIndicator.center = loadingView.center
-        loadingView.addSubview(activityIndicator)
-        activityIndicator.startAnimating()
+  }
+  
+  func configView(with state: SimpleViewState<TVShow>) {
+    switch state {
+    case .populated(_):
+      tableView.tableFooterView = nil
+      tableView.separatorStyle = .singleLine
+      tableView.reloadData()
+    case .empty:
+      tableView.tableFooterView = emptyView
+      tableView.separatorStyle = .none
+      tableView.reloadData()
+    case .paging(_, _):
+      tableView.tableFooterView = loadingView
+      tableView.separatorStyle = .singleLine
+      tableView.reloadData()
+    default:
+      tableView.tableFooterView = loadingView
     }
-    
+  }
 }
 
-// MARK: - UITableViewDataSource
-
-extension TVShowListViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let viewModel = viewModel else { return 0 }
-        return viewModel.viewState.value.currentEntities.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let viewModel = viewModel else { fatalError() }
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
-        cell.viewModel = viewModel.getModelFor(indexPath.row)
-        
-        if case .paging(_, let nextPage) = viewModel.viewState.value,
-            indexPath.row == viewModel.viewState.value.currentEntities.count - 1 {
-            viewModel.getShows(for: nextPage)
-        }
-        
-        return cell
-    }
-}
-
-// MARK: - UITableViewDelegate
-
-extension TVShowListViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        let idToSend = viewModel?.shows[indexPath.row].id
-        handle(idToSend)
-    }
-}
-
-// MARK: - Navigation
+// MARK: - TODO, refactor Navigation
 
 extension TVShowListViewController {
-    
-    // MARK: - TODO Handle Navigation
-    
-    func handle(_ route: Int?) {
-        guard let identifier = route else { return }
-        let detailController =  showsListViewControllersFactory.makeTVShowDetailsViewController(with: identifier)
-        navigationController?.pushViewController(detailController, animated: true)
-    }
+  
+  func handle(_ route: Int?) {
+    guard let identifier = route else { return }
+    let detailController =  showsListViewControllersFactory.makeTVShowDetailsViewController(with: identifier)
+    navigationController?.pushViewController(detailController, animated: true)
+  }
 }
 
-// MARK: - TVShowListViewControllersFactory
-
 protocol TVShowListViewControllersFactory {
-    
-    func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController
+  
+  func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController
 }

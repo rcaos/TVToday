@@ -93,20 +93,13 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
       })
       .disposed(by: disposeBag)
     
-    tableView.rx
-      .itemSelected
-      .subscribe(onNext: { [weak self] indexPath in
+    RxSwift.Observable
+      .zip( tableView.rx.itemSelected, tableView.rx.modelSelected(TVShow.self) )
+      .bind { [weak self] (indexPath, item) in
         guard let strongSelf = self else { return }
         strongSelf.tableView.deselectRow(at: indexPath, animated: true)
-      })
-      .disposed(by: disposeBag)
-    
-    tableView.rx
-      .modelSelected(TVShow.self)
-      .subscribe(onNext: { [weak self] tvShow in
-        guard let strongSelf = self else { return }
-        strongSelf.handle( tvShow.id )
-      })
+        strongSelf.handle(item.id)
+      }
       .disposed(by: disposeBag)
     
     viewModel.getShows(for: 1)

@@ -9,23 +9,19 @@
 import UIKit
 
 class GenreViewCell: UITableViewCell {
-
-    var genre:Genre?{
-        didSet{
-            setupUI()
-        }
+  
+  var genre: Genre? {
+    didSet {
+      setupUI()
     }
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-    
-    func setupUI(){
-        guard let genre = genre else {
-            return
-        }
-        
-        textLabel?.text = genre.name
-    }
-    
+  }
+  
+  override func awakeFromNib() {
+    super.awakeFromNib()
+  }
+  
+  func setupUI() {
+    textLabel?.text = genre?.name
+  }
+  
 }

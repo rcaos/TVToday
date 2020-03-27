@@ -7,86 +7,78 @@
 //
 
 import Foundation
+import RxSwift
 
 enum SearchViewModelRoute {
-    case initial
-    case showMovieDetail(identifier: Int)
-    case showShowList(genreId: Int)
+  case initial
+  case showMovieDetail(identifier: Int)
+  case showShowList(genreId: Int)
 }
 
 final class SearchViewModel {
+  
+  private let fetchGenresUseCase: FetchGenresUseCase
+  var route: Observable<SearchViewModelRoute> = Observable(.initial)
+  
+  var input: Input
+  var output: Output
+  
+  private let viewStateObservableSubject = BehaviorSubject<SimpleViewState<Genre>>(value: .loading)
+  
+  // MARK: - Initializer
+  
+  init(fetchGenresUseCase: FetchGenresUseCase) {
+    self.fetchGenresUseCase = fetchGenresUseCase
     
-    private let fetchGenresUseCase: FetchGenresUseCase
+    self.input = Input()
+    self.output = Output(viewState: viewStateObservableSubject.asObservable())
+  }
+  
+  func getGenres() {
     
-    var genres:[Genre]
-    
-    var viewState:Observable<ViewState> = Observable(.loading)
-    
-    var route: Observable<SearchViewModelRoute> = Observable(.initial)
-    
-    private var showsLoadTask: Cancellable? {
-        willSet {
-            showsLoadTask?.cancel()
-        }
+    let _ = fetchGenresUseCase.execute(requestValue: FetchGenresUseCaseRequestValue()) { [weak self] result in
+      guard let strongSelf = self else { return }
+      switch result {
+      case .success(let response):
+        strongSelf.processFetched(for: response)
+      case .failure(let error):
+        print("Error to fetch Case use \(error)")
+        strongSelf.viewStateObservableSubject.onNext( .error(error.localizedDescription) )
+      }
     }
+  }
+  
+  // MARK: - Private
+  
+  private func processFetched(for response: GenreListResult) {
+    let fetchedGenres = response.genres ?? []
     
-    init(fetchGenresUseCase: FetchGenresUseCase) {
-        self.fetchGenresUseCase = fetchGenresUseCase
-        genres = []
+    if fetchedGenres.isEmpty {
+      viewStateObservableSubject.onNext(.empty)
+      return
     }
-    
-    func getGenres() {
-        
-        showsLoadTask =  fetchGenresUseCase.execute(requestValue: FetchGenresUseCaseRequestValue()) { [weak self] result in
-            guard let strongSelf = self else { return }
-            switch result {
-            case .success(let response):
-                strongSelf.processFetched(for: response)
-            case .failure(let error):
-                print("Error to fetch Case use \(error)")
-            }
-        }
-    }
-    
-    //MARK: - Private
-    
-    private func processFetched(for response: GenreListResult) {
-        let fetchedGenres = response.genres ?? []
-        
-        if fetchedGenres.isEmpty {
-            viewState.value = .empty
-            return
-        }
-        
-        self.genres.append(contentsOf: fetchedGenres)
-        self.viewState.value = .populated(genres)
-    }
-    
-    func showTVShowDetails(with identifier: Int) {
-        route.value = .showMovieDetail(identifier: identifier)
-    }
-    
-    func showShowsList(indexPath: Int) {
-        guard let genreId = genres[indexPath].id else { return }
-        route.value = .showShowList(genreId: genreId)
-    }
+    viewStateObservableSubject.onNext( .populated(fetchedGenres) )
+  }
+  
+  // MARK: - Navigation
+  func showTVShowDetails(with identifier: Int) {
+    route.value = .showMovieDetail(identifier: identifier)
+  }
+  
+  func showShowsList(genreId: Int) {
+    route.value = .showShowList(genreId: genreId)
+  }
 }
 
+// MARK: - ViewModel Base
+
 extension SearchViewModel {
-    
-    enum ViewState {
-        case loading
-        case populated([Genre])
-        case empty
-        case error(Error)
-        
-        var currentEpisodes : [Genre] {
-            switch self{
-            case .populated(let genres):
-                return genres
-            default:
-                return []
-            }
-        }
-    }
+  
+  public struct Input { }
+  
+  public struct Output {
+    // MARK: - TODO, Change for State
+    // MARK: - TODO, change RxSwift
+    let viewState: RxSwift.Observable<SimpleViewState<Genre>>
+  }
 }

@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
+import RxDataSources
 
 protocol ResultsSearchViewControllerDelegate: class {
   func resultsSearchViewController(_ resultsSearchViewController: ResultsSearchViewController, didSelectedMovie movie: Int )
@@ -16,11 +19,16 @@ class ResultsSearchViewController: UIViewController {
   
   var resultView: ResultListView = ResultListView()
   
-  var delegate:ResultsSearchViewControllerDelegate?
-  
-  var loadingView: UIView!
+  var delegate: ResultsSearchViewControllerDelegate?
   
   var viewModel: ResultsSearchViewModel
+  
+  let disposeBag = DisposeBag()
+  // MARK: - TOOD Use localized String
+  var emptyView = MessageView(message: "No results to Show")
+  var loadingView = LoadingView(frame: .zero)
+  
+  // MARK: - Life Cycle
   
   init(viewModel: ResultsSearchViewModel) {
     self.viewModel = viewModel
@@ -41,27 +49,57 @@ class ResultsSearchViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    setupViews()
     setupTable()
     setupViewModel()
   }
   
+  func setupViews() {
+    emptyView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
+    loadingView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
+  }
+  
   func setupTable() {
-    resultView.tableView.dataSource = self
-    resultView.tableView.delegate = self
-    
     let nibName = UINib(nibName: "TVShowViewCell", bundle: nil)
     resultView.tableView.register(nibName, forCellReuseIdentifier: "TVShowViewCell")
-    
-    buildLoadingView()
   }
   
   //MARK: - SetupViewModel
   
   func setupViewModel() {
     
-    viewModel.viewState.observe(on: self) {[weak self] state in
-      self?.configView(with: state)
+    viewModel.output
+      .viewState
+      .subscribe(onNext: { [weak self] state in
+        guard let strongSelf = self else { return }
+        strongSelf.configView(with: state)
+      })
+      .disposed(by: disposeBag)
+    
+    viewModel.output
+      .viewState
+      .map { $0.currentEntities }
+      .bind(to: resultView.tableView.rx.items(cellIdentifier: "TVShowViewCell", cellType: TVShowViewCell.self )) {
+        [weak self] (index, element, cell) in
+        guard let strongSelf = self else { return }
+        
+        cell.viewModel = strongSelf.viewModel.getModelFor(entity: element)
+        
+        // MARK: - TODO, call "showsObservableSubject" dont be stay here
+        if case .paging(let entities, let nextPage) = try? strongSelf.viewModel.showsObservableSubject.value(),
+          index == entities.count - 1 {
+          strongSelf.viewModel.searchShows(for: nextPage)
+        }
     }
+    .disposed(by: disposeBag)
+    
+    resultView.tableView.rx
+      .modelSelected(TVShow.self)
+      .subscribe(onNext: { [weak self] show in
+        guard let strongSelf = self else { return }
+        strongSelf.delegate?.resultsSearchViewController(strongSelf, didSelectedMovie: show.id)
+      })
+      .disposed(by: disposeBag)
   }
   
   func configView(with state: SimpleViewState<TVShow>) {
@@ -70,11 +108,11 @@ class ResultsSearchViewController: UIViewController {
     
     switch state {
     case .populated(_):
-      tableView.tableFooterView = UIView()
+      tableView.tableFooterView = nil
       tableView.separatorStyle = .singleLine
       tableView.reloadData()
     case .empty:
-      tableView.tableFooterView = buildEmptyView()
+      tableView.tableFooterView = emptyView
       tableView.separatorStyle = .none
       tableView.reloadData()
     case .paging(_, _):
@@ -84,65 +122,5 @@ class ResultsSearchViewController: UIViewController {
     default:
       tableView.tableFooterView = loadingView
     }
-  }
-  
-  func buildEmptyView() -> UIView {
-    let frame = CGRect(x: 0, y: 0, width: resultView.tableView.frame.width, height: 100)
-    let nib = UINib(nibName: "CustomFooterView", bundle: nil)
-    
-    let emptyView = nib.instantiate(withOwner: nil, options: nil).first as! CustomFooterView
-    emptyView.frame = frame
-    
-    emptyView.messageLabel.text = "No results to show"
-    
-    return emptyView
-  }
-  
-  func buildLoadingView() {
-    let defaultFrame = CGRect(x: 0, y: 0, width: resultView.tableView.frame.width, height: 100)
-    
-    let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
-    activityIndicator.color = .darkGray
-    activityIndicator.frame = defaultFrame
-    
-    loadingView = UIView(frame: defaultFrame)
-    loadingView.backgroundColor = .white
-    
-    activityIndicator.center = loadingView.center
-    loadingView.addSubview(activityIndicator)
-    activityIndicator.startAnimating()
-  }
-}
-
-//MARK: - UITableViewDataSource
-
-extension ResultsSearchViewController: UITableViewDataSource {
-  
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return viewModel.viewState.value.currentEntities.count
-  }
-  
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: "TVShowViewCell", for: indexPath) as! TVShowViewCell
-    cell.viewModel = viewModel.getModelFor(indexPath.row)
-    
-    if case .paging(_, let nextPage) = viewModel.viewState.value,
-      indexPath.row == viewModel.viewState.value.currentEntities.count - 1 {
-      viewModel.searchShows(for: nextPage)
-    }
-    
-    return cell
-  }
-}
-
-//MARK: - UITableViewDelegate
-
-extension ResultsSearchViewController: UITableViewDelegate {
-  
-  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    let selectedShow = viewModel.shows[indexPath.row]
-    delegate?.resultsSearchViewController(self, didSelectedMovie: selectedShow.id)
-    
-    tableView.deselectRow(at: indexPath, animated: true)
   }
 }

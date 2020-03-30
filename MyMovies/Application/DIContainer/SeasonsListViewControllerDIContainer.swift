@@ -35,11 +35,18 @@ extension SeasonsListViewControllerDIContainer {
   // MARK: - View Model
   
   private func makeSeasonsListViewModel(with tvShowId: Int) -> SeasonsListViewModel {
-    return SeasonsListViewModel(tvShowId: tvShowId,
-                                fetchEpisodesUseCase: makeFetchEpisodesShowsUseCase())
+    return SeasonsListViewModel(
+      tvShowId: tvShowId,
+      fetchDetailShowUseCase: makeFetchDetailShowUseCase(),
+      fetchEpisodesUseCase: makeFetchEpisodesShowsUseCase())
   }
   
   // MARK: - Use Cases
+  
+  private func makeFetchDetailShowUseCase() -> FetchTVShowDetailsUseCase {
+    return DefaultFetchTVShowDetailsUseCase(tvShowDetailsRepository:
+      DefaultTVShowDetailsRepository(dataTransferService: dependencies.apiDataTransferService))
+  }
   
   private func makeFetchEpisodesShowsUseCase() -> FetchEpisodesUseCase {
     return DefaultFetchEpisodesUseCase(episodesRepository: makeEpisodesRepository())

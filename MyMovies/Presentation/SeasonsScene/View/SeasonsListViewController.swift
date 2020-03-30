@@ -7,207 +7,191 @@
 //
 
 import UIKit
+import RxSwift
+import RxDataSources
 
 private let reuseIdentifierForEpisode = "identifierForEpisodeSeason"
 private let reuseIdentifierForSeasons = "identifierForSeason"
 
 class SeasonsListViewController: UIViewController, StoryboardInstantiable {
+  
+  @IBOutlet weak var tableView: UITableView!
+  
+  private var viewModel: SeasonsListViewModel!
+  private var seasonsListViewControllers: SeasonsListViewControllersFactory!
+  
+  let loadingView = LoadingView(frame: .zero)
+  
+  static func create(with viewModel: SeasonsListViewModel,
+                     seasonsListViewControllers: SeasonsListViewControllersFactory) -> SeasonsListViewController {
+    let controller = SeasonsListViewController.instantiateViewController()
+    controller.viewModel = viewModel
+    controller.seasonsListViewControllers = seasonsListViewControllers
+    return controller
+  }
+  
+  private let disposeBag = DisposeBag()
+  
+  //MARK: - Life Cycle
+  
+  override func loadView() {
+    super.loadView()
+    loadingView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
+  }
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    configureTable()
+    setupBindables()
+    viewModel?.getShowDetails()
+  }
+  
+  deinit {
+    print("deinit child DefaultSeasonTableViewController")
+  }
+  
+  private func configureTable() {
+    let nibName = UINib(nibName: "SeasonListTableViewCell", bundle: nil)
+    tableView.register(nibName, forCellReuseIdentifier: reuseIdentifierForEpisode)
     
-    @IBOutlet weak var tableView: UITableView!
-
-    private var viewModel: SeasonsListViewModel!
-    private var seasonsListViewControllers: SeasonsListViewControllersFactory!
+    let nibColl = UINib(nibName: "SeasonEpisodeTableViewCell", bundle: nil)
+    tableView.register(nibColl, forCellReuseIdentifier: reuseIdentifierForSeasons)
+  }
+  
+  private func setupTableHeaderView() {
+    let nib = UINib(nibName: "SeasonHeaderView", bundle: nil)
+    let headerView = nib.instantiate(withOwner: nil, options: nil).first as! SeasonHeaderView
+    headerView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 150)
+    headerView.viewModel = viewModel.buildHeaderViewModel()
     
-    static func create(with viewModel: SeasonsListViewModel,
-                       seasonsListViewControllers: SeasonsListViewControllersFactory) -> SeasonsListViewController {
-        let controller = SeasonsListViewController.instantiateViewController()
-        controller.viewModel = viewModel
-        controller.seasonsListViewControllers = seasonsListViewControllers
-        return controller
-    }
-        
-    //MARK: - Life Cycle
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupTable()
-        setupTableHeaderView()
-        setupViewModel()
-    }
+    tableView.tableHeaderView = headerView
+  }
+  
+  // MARK: - TODO dont be here
+  func buildEmptyView() -> UIView {
     
-    deinit {
-        print("deinit child DefaultSeasonTableViewController")
-    }
+    let frame = CGRect(x: 0, y: 0, width: tableView.frame.height, height: 200)
+    let nib = UINib(nibName: "EmptyView", bundle: nil)
     
-    override func viewDidAppear(_ animated: Bool) {
-        viewModel.selectFirstSeason()
-    }
+    let emptyView = nib.instantiate(withOwner: nil, options: nil).first as! EmptyView
+    emptyView.frame = frame
     
-    private func setupTable() {
-        let nibName = UINib(nibName: "SeasonListTableViewCell", bundle: nil)
-        tableView.register(nibName, forCellReuseIdentifier: reuseIdentifierForEpisode)
-        
-        let nibColl = UINib(nibName: "SeasonEpisodeTableViewCell", bundle: nil)
-        tableView.register(nibColl, forCellReuseIdentifier: reuseIdentifierForSeasons)
-        
-        tableView.dataSource = self
-        tableView.delegate = self
-    }
+    return emptyView
+  }
+  
+  // MARK: - TODO dont be here
+  func buildErrorView() -> UIView {
     
-    private func setupTableHeaderView() {
-        let nib = UINib(nibName: "SeasonHeaderView", bundle: nil)
-        let headerView = nib.instantiate(withOwner: nil, options: nil).first as! SeasonHeaderView
-        headerView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 150)
-        headerView.viewModel = viewModel.buildHeaderViewModel()
-        
-        tableView.tableHeaderView = headerView
-    }
+    let frame = CGRect(x: 0, y: 0, width: tableView.frame.height, height: 200)
+    let nib = UINib(nibName: "ErrorView", bundle: nil)
     
-    func buildActivityIndicator() -> UIView {
-        let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
-        activityIndicator.color = .darkGray
-        activityIndicator.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
-        
-        let containerView = UIView(frame: self.view.frame)
-        containerView.backgroundColor = .white
-        
-        activityIndicator.center = containerView.center
-        containerView.addSubview(activityIndicator)
-        
-        self.view.addSubview(containerView)
-        
-        activityIndicator.startAnimating()
-        
-        return containerView
-    }
+    let emptyView = nib.instantiate(withOwner: nil, options: nil).first as! ErrorView
+    emptyView.frame = frame
     
-    func buildEmptyView() -> UIView {
-        
-        let frame = CGRect(x: 0, y: 0, width: tableView.frame.height, height: 200)
-        let nib = UINib(nibName: "EmptyView", bundle: nil)
-        
-        let emptyView = nib.instantiate(withOwner: nil, options: nil).first as! EmptyView
-        emptyView.frame = frame
-        
-        return emptyView
-    }
-    
-    func buildErrorView() -> UIView {
-        
-        let frame = CGRect(x: 0, y: 0, width: tableView.frame.height, height: 200)
-        let nib = UINib(nibName: "ErrorView", bundle: nil)
-        
-        let emptyView = nib.instantiate(withOwner: nil, options: nil).first as! ErrorView
-        emptyView.frame = frame
-        
-        return emptyView
+    return emptyView
+  }
+  
+  private func setupBindables() {
+    viewModel.viewState.observe(on: self) {[weak self] state in
+      self?.configureView(with: state)
     }
     
-    private func setupViewModel() {
-        setupBindables()
-        viewModel.getFirstSeason()
+    viewModel.didLoad.observe(on: self) { [weak self] didAppear in
+      guard didAppear else { return }
+      self?.setupTableHeaderView()
     }
     
-    private func setupBindables() {
-        viewModel.viewState.observe(on: self) {[weak self] state in
-            self?.configureView(with: state)
-            self?.reloadSection(at: 1)
+    let dataSource = RxTableViewSectionedReloadDataSource<SeasonsSectionModel>(
+      configureCell: { [weak self] (_, tableView, indexPath, element) -> UITableViewCell in
+        guard let strongSelf = self else { fatalError() }
+        switch element {
+        case .seasons(number: let numberOfSeasons):
+          return strongSelf.makeCellForSeasonNumber(at: indexPath, element: numberOfSeasons)
+        case .episodes(items: let episode):
+          return strongSelf.makeCellForEpisode(at: indexPath, element: episode)
         }
-    }
+    })
     
-    private func configureView(with state: SeasonsListViewModel.ViewState) {
-        
-        switch state {
-        case .populated:
-            print("Populated state")
-            tableView.tableFooterView = UIView()
-            tableView.separatorStyle = .singleLine
-        case .empty:
-            tableView.tableFooterView = buildEmptyView()
-            tableView.separatorStyle = .none
-        case .error(_):
-            tableView.tableFooterView = buildErrorView()
-            tableView.separatorStyle = .none
-        default:
-            tableView.tableFooterView = buildActivityIndicator()
-            tableView.separatorStyle = .none
-        }
-    }
+    viewModel.output
+      .data
+      .bind(to: tableView.rx.items(dataSource: dataSource) )
+      .disposed(by: disposeBag)
     
-    func reloadSection(at section: Int) {
-        let index = IndexSet(integer: section)
-        tableView.beginUpdates()
-        tableView.reloadSections(index, with: .automatic)
-        tableView.endUpdates()
+    tableView.rx.setDelegate(self)
+      .disposed(by: disposeBag)
+  }
+  
+  private func configureView(with state: SeasonsListViewModel.ViewState) {
+    
+    switch state {
+    case .populated:
+      print("Populated state")
+      tableView.tableFooterView = UIView()
+      tableView.separatorStyle = .singleLine
+    case .empty:
+      tableView.tableFooterView = buildEmptyView()
+      tableView.separatorStyle = .none
+    case .error(_):
+      tableView.tableFooterView = buildErrorView()
+      tableView.separatorStyle = .none
+    default:
+      tableView.tableFooterView = loadingView
+      tableView.separatorStyle = .none
     }
+  }
+  
+  func reloadSection(at section: Int) {
+    let index = IndexSet(integer: section)
+    tableView.beginUpdates()
+    tableView.reloadSections(index, with: .automatic)
+    tableView.endUpdates()
+  }
 }
 
-// MARK: - UITableViewDataSource
+// MARK: - Confgure Cells
 
-extension SeasonsListViewController: UITableViewDataSource {
+extension SeasonsListViewController {
+  
+  private func makeCellForSeasonNumber(at indexPath: IndexPath, element: Int) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifierForSeasons, for: indexPath) as! SeasonEpisodeTableViewCell
+    cell.viewModel = viewModel.buildModelForSeasons(with: element)
+    cell.delegate = self
+    return cell
+  }
+  
+  private func makeCellForEpisode(at indexPath: IndexPath, element: Episode) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifierForEpisode, for: indexPath) as! SeasonListTableViewCell
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+    if let model = viewModel.getModel(for: element) {
+      cell.viewModel = model
     }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return 1
-        }else{
-            return viewModel.viewState.value.currentEpisodes.count
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0{
-            return makeCellForSeasonNumber(tableView, cellForRowAt: indexPath)
-        }else{
-            return makeCellForEpisode(tableView, cellForRowAt: indexPath)
-        }
-    }
-    
-    private func makeCellForSeasonNumber(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifierForSeasons, for: indexPath) as! SeasonEpisodeTableViewCell
-        cell.viewModel = viewModel.buildModelForSeasons()
-        cell.delegate = self
-        return cell
-    }
-    
-    private func makeCellForEpisode(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifierForEpisode, for: indexPath) as! SeasonListTableViewCell
-        
-        if let model = viewModel.getModel(for: indexPath.row){
-            cell.viewModel = model
-        }
-        return cell
-    }
-    
+    return cell
+  }
 }
+
+// MARK: - UITableViewDelegate
 
 extension SeasonsListViewController: UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 0 {
-            return 65
-        }else{
-            return 110
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-    }
+  
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    let height:CGFloat = (indexPath.section == 0) ? 65.0 : 110.0
+    return height
+  }
+  
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    tableView.deselectRow(at: indexPath, animated: true)
+  }
 }
 
 extension SeasonsListViewController: SeasonEpisodeTableViewCellDelegate {
-    
-    func didSelectedSeason(at index: Int) {
-        viewModel.getSeason(at: index)
-    }
+  
+  func didSelectedSeason(at index: Int) {
+    viewModel.getSeason(at: index)
+  }
 }
 
 // MARK: - AiringTodayViewControllersFactory
 
 protocol SeasonsListViewControllersFactory {
-    
+  
 }

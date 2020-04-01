@@ -9,10 +9,10 @@
 import Foundation
 
 final class SeasonEpisodeCollectionViewModel {
-    
-    var seasonNumber: String?
-
-    init( seasonNumber: Int) {
-        self.seasonNumber = String(seasonNumber)
-    }
+  
+  var seasonNumber: String
+  
+  init( seasonNumber: Int) {
+    self.seasonNumber = String(seasonNumber)
+  }
 }

@@ -54,6 +54,7 @@
 		7755D6DE23CCCD860083CB53 /* SimpleViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7755D6DD23CCCD860083CB53 /* SimpleViewState.swift */; };
 		7755D6E023CCD02C0083CB53 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7755D6DF23CCD02C0083CB53 /* Observable.swift */; };
 		7755D6E223CCD1F50083CB53 /* Cancelable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7755D6E123CCD1F50083CB53 /* Cancelable.swift */; };
+		775927A12434FA1C004BB04E /* MessageImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775927A02434FA1C004BB04E /* MessageImageView.swift */; };
 		7787CFD123553EC1007DA54E /* EndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7787CFD023553EC1007DA54E /* EndPoint.swift */; };
 		7787CFD323553ED0007DA54E /* ApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7787CFD223553ED0007DA54E /* ApiError.swift */; };
 		7787CFD723554208007DA54E /* TVShowsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7787CFD623554208007DA54E /* TVShowsProvider.swift */; };
@@ -79,10 +80,6 @@
 		77C1AFC623D119AD00E4A965 /* TVShowDetailsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C1AFC523D119AD00E4A965 /* TVShowDetailsRepository.swift */; };
 		77C1AFC823D11A0E00E4A965 /* DefaultTVShowDetailsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C1AFC723D11A0E00E4A965 /* DefaultTVShowDetailsRepository.swift */; };
 		77C1AFCA23D1236200E4A965 /* TVShowDetailsSceneDIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C1AFC923D1236200E4A965 /* TVShowDetailsSceneDIContainer.swift */; };
-		77CDBB3E23438A3400B29691 /* EmptyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77CDBB3D23438A3400B29691 /* EmptyView.xib */; };
-		77CDBB4023438A4600B29691 /* EmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77CDBB3F23438A4600B29691 /* EmptyView.swift */; };
-		77CDBB4323439C7300B29691 /* ErrorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77CDBB4223439C7300B29691 /* ErrorView.xib */; };
-		77CDBB4523439C8000B29691 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77CDBB4423439C7F00B29691 /* ErrorView.swift */; };
 		77D6BF3823CF7AF60045CAB5 /* ApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D6BF3723CF7AF60045CAB5 /* ApiClient.swift */; };
 		77DB76EA231487BE00A1DE77 /* TVShowListViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77DB76E9231487BE00A1DE77 /* TVShowListViewController.storyboard */; };
 		77DB76EC2314890A00A1DE77 /* TVShowListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DB76EB2314890A00A1DE77 /* TVShowListViewController.swift */; };
@@ -163,6 +160,7 @@
 		7755D6DD23CCCD860083CB53 /* SimpleViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleViewState.swift; sourceTree = "<group>"; };
 		7755D6DF23CCD02C0083CB53 /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		7755D6E123CCD1F50083CB53 /* Cancelable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cancelable.swift; sourceTree = "<group>"; };
+		775927A02434FA1C004BB04E /* MessageImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageImageView.swift; sourceTree = "<group>"; };
 		7787CFD023553EC1007DA54E /* EndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPoint.swift; sourceTree = "<group>"; };
 		7787CFD223553ED0007DA54E /* ApiError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiError.swift; sourceTree = "<group>"; };
 		7787CFD623554208007DA54E /* TVShowsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowsProvider.swift; sourceTree = "<group>"; };
@@ -188,10 +186,6 @@
 		77C1AFC523D119AD00E4A965 /* TVShowDetailsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowDetailsRepository.swift; sourceTree = "<group>"; };
 		77C1AFC723D11A0E00E4A965 /* DefaultTVShowDetailsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTVShowDetailsRepository.swift; sourceTree = "<group>"; };
 		77C1AFC923D1236200E4A965 /* TVShowDetailsSceneDIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowDetailsSceneDIContainer.swift; sourceTree = "<group>"; };
-		77CDBB3D23438A3400B29691 /* EmptyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyView.xib; sourceTree = "<group>"; };
-		77CDBB3F23438A4600B29691 /* EmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyView.swift; sourceTree = "<group>"; };
-		77CDBB4223439C7300B29691 /* ErrorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ErrorView.xib; sourceTree = "<group>"; };
-		77CDBB4423439C7F00B29691 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		77D6BF3723CF7AF60045CAB5 /* ApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiClient.swift; sourceTree = "<group>"; };
 		77DB76E9231487BE00A1DE77 /* TVShowListViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TVShowListViewController.storyboard; sourceTree = "<group>"; };
 		77DB76EB2314890A00A1DE77 /* TVShowListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowListViewController.swift; sourceTree = "<group>"; };
@@ -517,24 +511,6 @@
 			path = Infraestructure;
 			sourceTree = "<group>";
 		};
-		77CDBB4123438A4B00B29691 /* EmptyView */ = {
-			isa = PBXGroup;
-			children = (
-				77CDBB3F23438A4600B29691 /* EmptyView.swift */,
-				77CDBB3D23438A3400B29691 /* EmptyView.xib */,
-			);
-			path = EmptyView;
-			sourceTree = "<group>";
-		};
-		77CDBB4623439C8400B29691 /* ErrorView */ = {
-			isa = PBXGroup;
-			children = (
-				77CDBB4423439C7F00B29691 /* ErrorView.swift */,
-				77CDBB4223439C7300B29691 /* ErrorView.xib */,
-			);
-			path = ErrorView;
-			sourceTree = "<group>";
-		};
 		77DB76ED2314890E00A1DE77 /* TVShowListsScene */ = {
 			isa = PBXGroup;
 			children = (
@@ -678,6 +654,7 @@
 				77E119DD232DD42800A01ACF /* Cells */,
 				77F784B0242DAACF0053806C /* LoadingView.swift */,
 				7716DD32242E3FEB009A0EDC /* MessageView.swift */,
+				775927A02434FA1C004BB04E /* MessageImageView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -748,8 +725,6 @@
 				77B8E03D23D6134400DBFD00 /* SeasonsListViewController.storyboard */,
 				770D1030233940B200CD84B2 /* Cells */,
 				77FFDE2E233BA54B00C4096F /* HeaderView */,
-				77CDBB4123438A4B00B29691 /* EmptyView */,
-				77CDBB4623439C8400B29691 /* ErrorView */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -868,12 +843,10 @@
 				77E119DB232DD3C200A01ACF /* GenreViewCell.xib in Resources */,
 				77EEF805233AA70A0054A499 /* SeasonEpisodeTableViewCell.xib in Resources */,
 				77E37AAA2314270700C692DA /* TVShowDetailViewController.storyboard in Resources */,
-				77CDBB4323439C7300B29691 /* ErrorView.xib in Resources */,
 				77F46331230C9F5C008FB9D6 /* LaunchScreen.storyboard in Resources */,
 				77B3CCD5232D7CC100921D23 /* TVShowViewCell.xib in Resources */,
 				77FFDE2D233BA54600C4096F /* SeasonHeaderView.xib in Resources */,
 				7736A08B231FF84A00566F0B /* AiringTodayViewController.storyboard in Resources */,
-				77CDBB3E23438A3400B29691 /* EmptyView.xib in Resources */,
 				7736A08D231FF8BF00566F0B /* PopularsViewController.storyboard in Resources */,
 				77B8E03E23D6134400DBFD00 /* SeasonsListViewController.storyboard in Resources */,
 				77DB76EA231487BE00A1DE77 /* TVShowListViewController.storyboard in Resources */,
@@ -936,7 +909,6 @@
 				77B8E03623D5ECA400DBFD00 /* TVShowListSceneDIContainer.swift in Sources */,
 				77C1AFC423D118AC00E4A965 /* FetchTVShowDetails.swift in Sources */,
 				7722CE5A230D924C003DC4C5 /* SearchViewController.swift in Sources */,
-				77CDBB4023438A4600B29691 /* EmptyView.swift in Sources */,
 				778B47EC23CE0C0C009AE084 /* FetchGenresUseCase.swift in Sources */,
 				77193F3D232FE57F007FA822 /* TVShowListViewModel.swift in Sources */,
 				77B8E03C23D60E2C00DBFD00 /* DefaultTVEpisodesRepository.swift in Sources */,
@@ -957,7 +929,6 @@
 				77FFB0912339544D00D17CF0 /* SeasonsListViewController.swift in Sources */,
 				77C1AFC223D108B200E4A965 /* SearchSceneDIContainer.swift in Sources */,
 				7722CE5E230D9A36003DC4C5 /* GenreListResult.swift in Sources */,
-				77CDBB4523439C8000B29691 /* ErrorView.swift in Sources */,
 				7787CFDC23554609007DA54E /* ImagesProvider.swift in Sources */,
 				770860FB23CE753200625183 /* StoryboardInstantiable.swift in Sources */,
 				770B5C35230E06B2002019E6 /* TVShowDetailResult.swift in Sources */,
@@ -977,6 +948,7 @@
 				778B47F323CE1778009AE084 /* DefaultTVShowsRepository.swift in Sources */,
 				77054AAA233999440026B868 /* SeasonListTableViewModel.swift in Sources */,
 				7701B33A23D0C3E3003DA227 /* Episode+Decodable.swift in Sources */,
+				775927A12434FA1C004BB04E /* MessageImageView.swift in Sources */,
 				77EEF804233AA70A0054A499 /* SeasonEpisodeTableViewCell.swift in Sources */,
 				778B47EF23CE0C65009AE084 /* TVShowsRepository.swift in Sources */,
 				77FAAEBC23D74B0100AFAB10 /* DefaultPosterImageRepository.swift in Sources */,

@@ -9,20 +9,20 @@
 import UIKit
 
 class SeasonHeaderView: UIView {
-
-    @IBOutlet weak var showNameLabel: UILabel!
-    
-    var viewModel:SeasonHeaderViewModel? {
-        didSet{
-            setupUI()
-        }
+  
+  @IBOutlet weak var showNameLabel: UILabel!
+  
+  var viewModel: SeasonHeaderViewModel? {
+    didSet {
+      setupUI()
     }
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-    
-    func setupUI() {
-        showNameLabel.text = viewModel?.showName
-    }
+  }
+  
+  override func awakeFromNib() {
+    super.awakeFromNib()
+  }
+  
+  func setupUI() {
+    showNameLabel.text = viewModel?.showName
+  }
 }

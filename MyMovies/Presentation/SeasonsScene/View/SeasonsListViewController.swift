@@ -21,6 +21,8 @@ class SeasonsListViewController: UIViewController, StoryboardInstantiable {
   private var seasonsListViewControllers: SeasonsListViewControllersFactory!
   
   let loadingView = LoadingView(frame: .zero)
+  let emptyView = MessageImageView(message: "No episodes available", image: "tvshowEmpty")
+  let errorView = MessageImageView(message: "Unable to connect to server", image: "error")
   
   static func create(with viewModel: SeasonsListViewModel,
                      seasonsListViewControllers: SeasonsListViewControllersFactory) -> SeasonsListViewController {
@@ -32,11 +34,13 @@ class SeasonsListViewController: UIViewController, StoryboardInstantiable {
   
   private let disposeBag = DisposeBag()
   
-  //MARK: - Life Cycle
+  // MARK: - Life Cycle
   
   override func loadView() {
     super.loadView()
     loadingView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
+    emptyView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 200)
+    errorView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 200)
   }
   
   override func viewDidLoad() {
@@ -47,7 +51,7 @@ class SeasonsListViewController: UIViewController, StoryboardInstantiable {
   }
   
   deinit {
-    print("deinit child DefaultSeasonTableViewController")
+    print("deinit DefaultSeasonTableViewController")
   }
   
   private func configureTable() {
@@ -61,34 +65,10 @@ class SeasonsListViewController: UIViewController, StoryboardInstantiable {
   private func setupTableHeaderView() {
     let nib = UINib(nibName: "SeasonHeaderView", bundle: nil)
     let headerView = nib.instantiate(withOwner: nil, options: nil).first as! SeasonHeaderView
-    headerView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 150)
+    headerView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 110)
     headerView.viewModel = viewModel.buildHeaderViewModel()
-    
+
     tableView.tableHeaderView = headerView
-  }
-  
-  // MARK: - TODO dont be here
-  func buildEmptyView() -> UIView {
-    
-    let frame = CGRect(x: 0, y: 0, width: tableView.frame.height, height: 200)
-    let nib = UINib(nibName: "EmptyView", bundle: nil)
-    
-    let emptyView = nib.instantiate(withOwner: nil, options: nil).first as! EmptyView
-    emptyView.frame = frame
-    
-    return emptyView
-  }
-  
-  // MARK: - TODO dont be here
-  func buildErrorView() -> UIView {
-    
-    let frame = CGRect(x: 0, y: 0, width: tableView.frame.height, height: 200)
-    let nib = UINib(nibName: "ErrorView", bundle: nil)
-    
-    let emptyView = nib.instantiate(withOwner: nil, options: nil).first as! ErrorView
-    emptyView.frame = frame
-    
-    return emptyView
   }
   
   private func setupBindables() {
@@ -98,7 +78,8 @@ class SeasonsListViewController: UIViewController, StoryboardInstantiable {
     
     viewModel.didLoad.observe(on: self) { [weak self] didAppear in
       guard didAppear else { return }
-      self?.setupTableHeaderView()
+      guard let strongSelf = self else { return }
+      strongSelf.setupTableHeaderView()
     }
     
     let dataSource = RxTableViewSectionedAnimatedDataSource<SeasonsSectionModel>(
@@ -126,26 +107,18 @@ class SeasonsListViewController: UIViewController, StoryboardInstantiable {
     
     switch state {
     case .populated:
-      print("Populated state")
       tableView.tableFooterView = UIView()
       tableView.separatorStyle = .singleLine
     case .empty:
-      tableView.tableFooterView = buildEmptyView()
+      tableView.tableFooterView = emptyView
       tableView.separatorStyle = .none
     case .error(_):
-      tableView.tableFooterView = buildErrorView()
+      tableView.tableFooterView = errorView
       tableView.separatorStyle = .none
     default:
       tableView.tableFooterView = loadingView
       tableView.separatorStyle = .none
     }
-  }
-  
-  func reloadSection(at section: Int) {
-    let index = IndexSet(integer: section)
-    tableView.beginUpdates()
-    tableView.reloadSections(index, with: .automatic)
-    tableView.endUpdates()
   }
 }
 
@@ -155,12 +128,13 @@ extension SeasonsListViewController {
   
   private func makeCellForSeasonNumber(at indexPath: IndexPath, element: Int) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifierForSeasons, for: indexPath) as! SeasonEpisodeTableViewCell
-    cell.viewModel = viewModel.buildModelForSeasons(with: element)
-    cell.delegate = self
+    if cell.viewModel == nil {
+      cell.viewModel = viewModel.buildModelForSeasons(with: element)
+      cell.delegate = self
+    }
     return cell
   }
   
-  //private func makeCellForEpisode(at indexPath: IndexPath, element: Episode) -> UITableViewCell {
   private func makeCellForEpisode(at indexPath: IndexPath, element: EpisodeSectionModelType) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifierForEpisode, for: indexPath) as! SeasonListTableViewCell
     
@@ -185,14 +159,16 @@ extension SeasonsListViewController: UITableViewDelegate {
   }
 }
 
+// MARK: - SeasonEpisodeTableViewCellDelegate
+
 extension SeasonsListViewController: SeasonEpisodeTableViewCellDelegate {
   
-  func didSelectedSeason(at index: Int) {
-    viewModel.getSeason(at: index)
+  func didSelectedSeason(at season: Int) {
+    viewModel.getSeason(at: season)
   }
 }
 
-// MARK: - AiringTodayViewControllersFactory
+// MARK: - TODO, refactor Navigation
 
 protocol SeasonsListViewControllersFactory {
   

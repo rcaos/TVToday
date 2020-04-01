@@ -12,7 +12,7 @@ import RxDataSources
 
 protocol SeasonEpisodeTableViewCellDelegate: class {
   
-  func didSelectedSeason(at index: Int)
+  func didSelectedSeason(at season: Int)
 }
 
 class SeasonEpisodeTableViewCell: UITableViewCell {
@@ -43,21 +43,18 @@ class SeasonEpisodeTableViewCell: UITableViewCell {
     
     let nibName = UINib(nibName: "SeasonEpisodeCollectionViewCell", bundle: nil)
     collectionView.register(nibName, forCellWithReuseIdentifier: "SeasonEpisodeCollectionViewCell")
+    
+    collectionView.rx
+      .setDelegate(self)
+      .disposed(by: disposeBag)
   }
   
   func setupBindables() {
-    viewModel?.selectedCell = { index in
-      DispatchQueue.main.async {
-        self.selectedSeason(at: index)
-      }
-    }
-    
     let dataSource = RxCollectionViewSectionedReloadDataSource<SectionSeasonsList>(configureCell: configureCollectionViewCell())
     
     viewModel?.output
       .seasons
       .map { [SectionSeasonsList(header: "Seasons", items: $0 )] }
-      .debug()
       .bind(to: collectionView.rx.items(dataSource: dataSource) )
       .disposed(by: disposeBag)
     
@@ -65,17 +62,22 @@ class SeasonEpisodeTableViewCell: UITableViewCell {
       .modelSelected(Int.self)
       .subscribe(onNext: { [weak self] season in
         guard let strongSelf = self else { return }
-        print("--> seasonSelected to Delegate: \(season)")
-        strongSelf.delegate?.didSelectedSeason(at: season - 1)
+        strongSelf.delegate?.didSelectedSeason(at: season)
       })
       .disposed(by: disposeBag)
     
-    collectionView.rx
-    .setDelegate(self)
-    .disposed(by: disposeBag)
+    viewModel?.output.seasonSelected
+      .filter { $0 > 0 }
+      .subscribe(onNext: { [weak self] season in
+        guard let strongSelf = self else { return }
+        DispatchQueue.main.async {
+          strongSelf.selectedSeason(at: season)
+        }
+      })
+      .disposed(by: disposeBag)
   }
   
-  func selectedSeason(at index: Int) {
+  fileprivate func selectedSeason(at index: Int) {
     let indexPath = IndexPath(row: index - 1, section: 0)
     collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .top)
   }
@@ -87,17 +89,11 @@ class SeasonEpisodeTableViewCell: UITableViewCell {
       guard let strongSelf = self else { fatalError() }
       
       let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SeasonEpisodeCollectionViewCell", for: indexPath) as! SeasonEpisodeCollectionViewCell
-      cell.viewModel = strongSelf.viewModel?.getModelFor(indexPath.row)
+      cell.viewModel = 
+        strongSelf.viewModel?.getModel(for: item)
       return cell
     }
     return configureCell
-  }
-  
-  // MARK: - TODO. reuse cell
-  override func prepareForReuse() {
-    super.prepareForReuse()
-    print("reuse Cell")
-    disposeBag = DisposeBag()
   }
 }
 

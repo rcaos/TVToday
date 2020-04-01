@@ -17,6 +17,10 @@ final class SeasonsListViewModel {
   
   private var tvShowId: Int!
   private var showDetailResult: TVShowDetailResult?
+  private var totalSeasons: Int {
+    guard let totalSeasons = showDetailResult?.numberOfSeasons else { return 0 }
+    return totalSeasons
+  }
   
   private let allEpisodesSubject = BehaviorSubject<[Int:[Episode]]>(value: [:])
   
@@ -89,45 +93,16 @@ final class SeasonsListViewModel {
   
   fileprivate func changeToSeason(number: Int, episodes: [Episode]) {
     self.viewState.value = .populated(episodes)
-    if let numberOfSeasons = showDetailResult?.numberOfSeasons {
-      createSectionModel(with: numberOfSeasons, seasonSelected: number, and: episodes)
-    }
-  }
-  
-  func getShowDetails() {
-    fetchShowDetails(for: tvShowId)
-  }
-  
-  fileprivate func createSeasonsModel(with numberOfSeasons: Int?) {
-    guard let numberOfSeasons = numberOfSeasons else { return }
-    print("--> Creando SeasonListViewModel ...")
-    let seasons: [Int] = (1...numberOfSeasons).map { $0 }
-    seasonListViewModel = SeasonEpisodeTableViewModel(seasons: seasons)
+    createSectionModel(with: totalSeasons, seasonSelected: number, and: episodes)
   }
   
   fileprivate func selectFirstSeason() {
     let firstSeason = 1
     seasonSelectedSubject.onNext(firstSeason)
-    
-    // Para hacer Scroll en la CV de seasons, Why?
-    // MARK: - TODO
-    //      if let model = viewSeasonModel,
-    //        let selectedFunction = model.selectedCell {
-    //        selectedFunction(firstSeason)
-    //      }
+    seasonListViewModel?.selectSeason(firstSeason)
   }
   
-  func getSeason(at index: Int) {
-    let numberOfSeason = index + 1
-    seasonSelectedSubject.onNext(numberOfSeason)
-  }
-  
-  func buildHeaderViewModel() -> SeasonHeaderViewModel? {
-    guard let show = showDetailResult else { return nil }
-    return SeasonHeaderViewModel(showDetail: show)
-  }
-  
-  //MARK: - Helper
+  //MARK: - Networking
   
   fileprivate func fetchShowDetails(for tvShowId: Int) {
     let request = FetchTVShowDetailsUseCaseRequestValue(identifier: tvShowId)
@@ -136,11 +111,8 @@ final class SeasonsListViewModel {
       switch result {
       case .success(let response):
         strongSelf.showDetailResult = response
-        strongSelf.createSeasonsModel(with: response.numberOfSeasons)
         strongSelf.didLoad.value = true
         strongSelf.selectFirstSeason()
-        
-        
       case .failure(let error):
         strongSelf.viewState.value = .error(error)
       }
@@ -152,9 +124,7 @@ final class SeasonsListViewModel {
     
     self.viewState.value = .loading
     // Like a new State
-    if let numberOfSeasons = showDetailResult?.numberOfSeasons {
-      createSectionModel(with: numberOfSeasons, seasonSelected: seasonNumber, and: [])
-    }
+    createSectionModel(with: totalSeasons, seasonSelected: seasonNumber, and: [])
     
     let request = FetchEpisodesUseCaseRequestValue(showIdentifier: tvShowId, seasonNumber: seasonNumber)
     
@@ -166,30 +136,34 @@ final class SeasonsListViewModel {
         strongSelf.processFetched(with: response)
       case .failure(let error):
         print("error: [\(error)]")
+        strongSelf.createSectionModel(with: strongSelf.totalSeasons, seasonSelected: seasonNumber, and: [])
         strongSelf.viewState.value = .error(error)
       }
     }
   }
   
   fileprivate func processFetched(with response: SeasonResult) {
-    let fetchedEpisodes = response.episodes ?? []
-    let season = response.seasonNumber
+    var fetchedEpisodes = response.episodes ?? []
+    let seasonFetched = response.seasonNumber
     
-    print("Se recibieron: \(fetchedEpisodes.count) episodios para Season: \(season)")
+    // test for empty View
+    if seasonFetched == totalSeasons {
+      fetchedEpisodes.removeAll()
+    }
+    
+    print("Se recibieron: \(fetchedEpisodes.count) episodios para Season: \(seasonFetched)")
     if fetchedEpisodes.isEmpty{
-      self.viewState.value = .empty
+      createSectionModel(with: totalSeasons, seasonSelected: seasonFetched, and: [])
+      viewState.value = .empty
+      return
     }
     
     let ordered = fetchedEpisodes.sorted(by: { $0.episodeNumber < $1.episodeNumber })
+    allEpisodesSubject.onNext([seasonFetched:ordered])
     
-    allEpisodesSubject.onNext([season:ordered])
-    
+    // Populated State
+    createSectionModel(with: totalSeasons, seasonSelected: seasonFetched, and: ordered)
     self.viewState.value = .populated(ordered)
-    
-    // Like a new State
-    if let numberOfSeasons = showDetailResult?.numberOfSeasons {
-      createSectionModel(with: numberOfSeasons, seasonSelected: season, and: ordered)
-    }
   }
   
   fileprivate func createSectionModel(with numberOfSeasons: Int, seasonSelected: Int, and episodes: [Episode]) {
@@ -204,15 +178,25 @@ final class SeasonsListViewModel {
     ])
   }
   
-  func buildModelForSeasons(with numberOfSeasons: Int) -> SeasonEpisodeTableViewModel {
-    if let viewModel = seasonListViewModel {
-      print("--> Existe ya SeasonListViewModel")
-      return viewModel
-    } else {
-      print("--> NO Existe SeasonListViewModel, crear")
-      createSeasonsModel(with: numberOfSeasons)
-      return seasonListViewModel!
-    }
+  // MARK: - Public
+  
+  func getShowDetails() {
+    fetchShowDetails(for: tvShowId)
+  }
+  
+  func getSeason(at numberOfSeason: Int) {
+    seasonSelectedSubject.onNext(numberOfSeason)
+  }
+  
+  func buildHeaderViewModel() -> SeasonHeaderViewModel? {
+    guard let show = showDetailResult else { return nil }
+    return SeasonHeaderViewModel(showDetail: show)
+  }
+  
+  func buildModelForSeasons(with numberOfSeasons: Int) -> SeasonEpisodeTableViewModel? {
+    let seasons: [Int] = (1...numberOfSeasons).map { $0 }
+    seasonListViewModel = SeasonEpisodeTableViewModel(seasons: seasons)
+    return seasonListViewModel
   }
   
   func getModel(for episode: EpisodeSectionModelType) -> SeasonListTableViewModel? {

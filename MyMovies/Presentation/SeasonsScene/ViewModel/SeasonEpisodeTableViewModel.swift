@@ -12,47 +12,41 @@ import RxDataSources
 
 final class SeasonEpisodeTableViewModel {
   
-  var seasons:[Int]
-  
-  var cellModels:[SeasonEpisodeCollectionViewModel] {
-    return seasons.map( {
-      SeasonEpisodeCollectionViewModel(seasonNumber: $0)
-    } )
-  }
-  
-  var selectedCell: ( (Int) -> Void)?
-  
+  private var seasonsList:[Int]
   
   // MARK: - Base ViewModel
   var input: Input
   var output: Output
   
   // MARK: - Output VM
-  var seasonsObservableSubject: BehaviorSubject<[Int]>
+  private var seasonsObservableSubject: BehaviorSubject<[Int]>
   
+  private var seasonSelectedObservableSubject = BehaviorSubject<Int>(value: 0)
   
   // MARK: Initalizer
   
   init( seasons: [Int] ) {
-    self.seasons = seasons
+    self.seasonsList = seasons
     
     // MARK: - TODO, input select Season should be here
     self.input = Input()
     
     self.seasonsObservableSubject = BehaviorSubject(value: seasons)
-    self.output = Output(seasons: seasonsObservableSubject.asObservable())
+    self.output = Output(
+      seasons: seasonsObservableSubject.asObservable(),
+      seasonSelected: seasonSelectedObservableSubject.asObservable())
   }
   
-  func getSeasonNumber(for index: Int) -> Int? {
-    return seasons[index]
+  // MARK: - Public
+  
+  func getModel(for season: Int) -> SeasonEpisodeCollectionViewModel {
+    return SeasonEpisodeCollectionViewModel(seasonNumber: season)
   }
   
-  func getNumberOfSeasons() -> Int {
-    return seasons.count
-  }
-  
-  func getModelFor(_ indexPath: Int) -> SeasonEpisodeCollectionViewModel {
-    return cellModels[indexPath]
+  func selectSeason(_ season: Int) {
+    if seasonsList.contains(season) {
+      seasonSelectedObservableSubject.onNext(season)
+    }
   }
 }
 
@@ -69,6 +63,7 @@ extension SeasonEpisodeTableViewModel {
     // MARK: - TODO, Change for State
     // MARK: - TODO, change RxSwift
     let seasons: RxSwift.Observable<[Int]>
+    let seasonSelected: RxSwift.Observable<Int>
   }
 }
 

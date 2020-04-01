@@ -1,5 +1,5 @@
 //
-//  SeasonEpisodeCollectionViewModel.swift
+//  SeasonEpisodeViewModel.swift
 //  MyTvShows
 //
 //  Created by Jeans on 9/24/19.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class SeasonEpisodeCollectionViewModel {
+final class SeasonEpisodeViewModel {
   
   var seasonNumber: String
   

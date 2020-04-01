@@ -1,5 +1,5 @@
 //
-//  SeasonsListViewModel.swift
+//  EpisodesListViewModel.swift
 //  MyTvShows
 //
 //  Created by Jeans on 9/23/19.
@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 import RxDataSources
 
-final class SeasonsListViewModel {
+final class EpisodesListViewModel {
   
   private let fetchEpisodesUseCase: FetchEpisodesUseCase
   private let fetchDetailShowUseCase: FetchTVShowDetailsUseCase
@@ -40,7 +40,7 @@ final class SeasonsListViewModel {
   // what happen its exists season 0?
   private let seasonSelectedSubject = BehaviorSubject<Int>(value: 0)
   
-  private var seasonListViewModel: SeasonEpisodeTableViewModel?
+  private var seasonListViewModel: SeasonListViewModel?
   
   //MARK: - Initializers
   
@@ -193,18 +193,18 @@ final class SeasonsListViewModel {
     return SeasonHeaderViewModel(showDetail: show)
   }
   
-  func buildModelForSeasons(with numberOfSeasons: Int) -> SeasonEpisodeTableViewModel? {
+  func buildModelForSeasons(with numberOfSeasons: Int) -> SeasonListViewModel? {
     let seasons: [Int] = (1...numberOfSeasons).map { $0 }
-    seasonListViewModel = SeasonEpisodeTableViewModel(seasons: seasons)
+    seasonListViewModel = SeasonListViewModel(seasons: seasons)
     return seasonListViewModel
   }
   
-  func getModel(for episode: EpisodeSectionModelType) -> SeasonListTableViewModel? {
-    return SeasonListTableViewModel(episode: EpisodeSectionModelType.buildEpisode(from: episode) )
+  func getModel(for episode: EpisodeSectionModelType) -> EpisodeItemViewModel? {
+    return EpisodeItemViewModel(episode: EpisodeSectionModelType.buildEpisode(from: episode) )
   }
 }
 
-extension SeasonsListViewModel {
+extension EpisodesListViewModel {
   
   enum ViewState {
     
@@ -226,7 +226,7 @@ extension SeasonsListViewModel {
 
 // MARK: - ViewModel Base
 
-extension SeasonsListViewModel {
+extension EpisodesListViewModel {
   
   public struct Input { }
   

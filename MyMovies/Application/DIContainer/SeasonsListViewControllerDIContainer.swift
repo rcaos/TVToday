@@ -23,7 +23,7 @@ final class SeasonsListViewControllerDIContainer {
   }
   
   public func makeSeasonsListViewController(with tvShowId: Int) -> UIViewController {
-    return SeasonsListViewController.create(with: makeSeasonsListViewModel(with: tvShowId),
+    return EpisodesListViewController.create(with: makeSeasonsListViewModel(with: tvShowId),
                                             seasonsListViewControllers: self)
   }
 }
@@ -34,8 +34,8 @@ extension SeasonsListViewControllerDIContainer {
   
   // MARK: - View Model
   
-  private func makeSeasonsListViewModel(with tvShowId: Int) -> SeasonsListViewModel {
-    return SeasonsListViewModel(
+  private func makeSeasonsListViewModel(with tvShowId: Int) -> EpisodesListViewModel {
+    return EpisodesListViewModel(
       tvShowId: tvShowId,
       fetchDetailShowUseCase: makeFetchDetailShowUseCase(),
       fetchEpisodesUseCase: makeFetchEpisodesShowsUseCase())

@@ -10,16 +10,16 @@ import UIKit
 import RxSwift
 import RxDataSources
 
-protocol SeasonEpisodeTableViewCellDelegate: class {
+protocol SeasonListTableViewCellDelegate: class {
   
   func didSelectedSeason(at season: Int)
 }
 
-class SeasonEpisodeTableViewCell: UITableViewCell {
+class SeasonListTableViewCell: UITableViewCell {
   
   @IBOutlet weak var collectionView: UICollectionView!
   
-  var viewModel: SeasonEpisodeTableViewModel? {
+  var viewModel: SeasonListViewModel? {
     didSet {
       DispatchQueue.main.async { [weak self] in
         self?.setupBindables()
@@ -27,7 +27,7 @@ class SeasonEpisodeTableViewCell: UITableViewCell {
     }
   }
   
-  weak var delegate: SeasonEpisodeTableViewCellDelegate?
+  weak var delegate: SeasonListTableViewCellDelegate?
   
   private var disposeBag = DisposeBag()
   
@@ -99,7 +99,7 @@ class SeasonEpisodeTableViewCell: UITableViewCell {
 
 // MARK: - UICollectionViewDelegateFlowLayout
 
-extension SeasonEpisodeTableViewCell: UICollectionViewDelegateFlowLayout {
+extension SeasonListTableViewCell: UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     return CGSize(width: 50, height: 50)
   }

@@ -21,7 +21,7 @@ class SeasonEpisodeCollectionViewCell: UICollectionViewCell {
     }
   }
   
-  var viewModel: SeasonEpisodeCollectionViewModel? {
+  var viewModel: SeasonEpisodeViewModel? {
     didSet {
       setupUI()
     }

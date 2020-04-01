@@ -1,5 +1,5 @@
 //
-//  SeasonEpisodeTableViewModel.swift
+//  SeasonListViewModel.swift
 //  MyTvShows
 //
 //  Created by Jeans on 9/24/19.
@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 import RxDataSources
 
-final class SeasonEpisodeTableViewModel {
+final class SeasonListViewModel {
   
   private var seasonsList:[Int]
   
@@ -39,8 +39,8 @@ final class SeasonEpisodeTableViewModel {
   
   // MARK: - Public
   
-  func getModel(for season: Int) -> SeasonEpisodeCollectionViewModel {
-    return SeasonEpisodeCollectionViewModel(seasonNumber: season)
+  func getModel(for season: Int) -> SeasonEpisodeViewModel {
+    return SeasonEpisodeViewModel(seasonNumber: season)
   }
   
   func selectSeason(_ season: Int) {
@@ -52,7 +52,7 @@ final class SeasonEpisodeTableViewModel {
 
 // MARK: - ViewModel Base
 
-extension SeasonEpisodeTableViewModel {
+extension SeasonListViewModel {
   
   // MARK: - TODO, Selected season should be here
   public struct Input {

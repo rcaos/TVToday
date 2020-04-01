@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class SeasonListTableViewModel {
+final class EpisodeItemViewModel {
   
   var episodeNumber: String?
   var episodeName: String?

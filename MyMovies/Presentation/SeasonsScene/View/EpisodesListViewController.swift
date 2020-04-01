@@ -55,10 +55,10 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable {
   }
   
   private func configureTable() {
-    let nibName = UINib(nibName: "SeasonListTableViewCell", bundle: nil)
+    let nibName = UINib(nibName: "EpisodeItemTableViewCell", bundle: nil)
     tableView.register(nibName, forCellReuseIdentifier: reuseIdentifierForEpisode)
     
-    let nibColl = UINib(nibName: "SeasonEpisodeTableViewCell", bundle: nil)
+    let nibColl = UINib(nibName: "SeasonListTableViewCell", bundle: nil)
     tableView.register(nibColl, forCellReuseIdentifier: reuseIdentifierForSeasons)
   }
   
@@ -127,7 +127,7 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable {
 extension EpisodesListViewController {
   
   private func makeCellForSeasonNumber(at indexPath: IndexPath, element: Int) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifierForSeasons, for: indexPath) as! SeasonEpisodeTableViewCell
+    let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifierForSeasons, for: indexPath) as! SeasonListTableViewCell
     if cell.viewModel == nil {
       cell.viewModel = viewModel.buildModelForSeasons(with: element)
       cell.delegate = self
@@ -161,7 +161,7 @@ extension EpisodesListViewController: UITableViewDelegate {
 
 // MARK: - SeasonEpisodeTableViewCellDelegate
 
-extension EpisodesListViewController: SeasonEpisodeTableViewCellDelegate {
+extension EpisodesListViewController: SeasonListTableViewCellDelegate {
   
   func didSelectedSeason(at season: Int) {
     viewModel.getSeason(at: season)

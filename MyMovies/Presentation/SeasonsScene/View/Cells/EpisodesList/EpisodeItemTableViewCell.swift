@@ -1,5 +1,5 @@
 //
-//  SeasonListTableViewCell.swift
+//  EpisodeItemTableViewCell.swift
 //  MyTvShows
 //
 //  Created by Jeans on 9/23/19.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SeasonListTableViewCell: UITableViewCell {
+class EpisodeItemTableViewCell: UITableViewCell {
   
   @IBOutlet private weak var episodeImage: UIImageView!
   @IBOutlet private weak var episodeNumberLabel: UILabel!
@@ -17,7 +17,7 @@ class SeasonListTableViewCell: UITableViewCell {
   @IBOutlet private weak var durationLabel: UILabel!
   @IBOutlet private weak var averageLabel: UILabel!
   
-  var viewModel: SeasonListTableViewModel? {
+  var viewModel: EpisodeItemViewModel? {
     didSet{
       setupUI()
     }

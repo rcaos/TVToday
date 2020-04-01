@@ -1,5 +1,5 @@
 //
-//  SectionCustomData.swift
+//  SectionAiringToday.swift
 //  TVToday
 //
 //  Created by Jeans Ruiz on 3/26/20.
@@ -10,16 +10,16 @@ import Foundation
 import RxSwift
 import RxDataSources
 
-struct SectionCustomData {
+struct SectionAiringToday {
   var header: String
   var items: [Item]
 }
 
-extension SectionCustomData: SectionModelType {
+extension SectionAiringToday: SectionModelType {
   
   typealias Item = TVShow
   
-  init(original: SectionCustomData, items: [Item]) {
+  init(original: SectionAiringToday, items: [Item]) {
     self = original
     self.items = items
   }

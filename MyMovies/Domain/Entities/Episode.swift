@@ -10,6 +10,7 @@ import Foundation
 
 struct Episode {
   
+  var id: Int
   var episodeNumber: Int
   var name: String?
   var airDate: String?

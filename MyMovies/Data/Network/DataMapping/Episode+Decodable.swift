@@ -11,6 +11,7 @@ import Foundation
 extension Episode: Decodable {
     
     enum CodingKeys: String, CodingKey {
+        case id = "id"
         case episodeNumber = "episode_number"
         case name
         case airDate = "air_date"
@@ -21,6 +22,7 @@ extension Episode: Decodable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
+        self.id = try container.decode(Int.self, forKey: .id)
         self.episodeNumber = try container.decode(Int.self, forKey: .episodeNumber)
         self.name = try container.decodeIfPresent(String.self, forKey: .name)
         self.airDate = try container.decodeIfPresent(String.self, forKey: .airDate)

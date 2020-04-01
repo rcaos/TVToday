@@ -101,9 +101,10 @@ class SeasonsListViewController: UIViewController, StoryboardInstantiable {
       self?.setupTableHeaderView()
     }
     
-    let dataSource = RxTableViewSectionedReloadDataSource<SeasonsSectionModel>(
+    let dataSource = RxTableViewSectionedAnimatedDataSource<SeasonsSectionModel>(
       configureCell: { [weak self] (_, tableView, indexPath, element) -> UITableViewCell in
         guard let strongSelf = self else { fatalError() }
+        print("-- ask for Cell: \(indexPath)")
         switch element {
         case .seasons(number: let numberOfSeasons):
           return strongSelf.makeCellForSeasonNumber(at: indexPath, element: numberOfSeasons)
@@ -159,7 +160,8 @@ extension SeasonsListViewController {
     return cell
   }
   
-  private func makeCellForEpisode(at indexPath: IndexPath, element: Episode) -> UITableViewCell {
+  //private func makeCellForEpisode(at indexPath: IndexPath, element: Episode) -> UITableViewCell {
+  private func makeCellForEpisode(at indexPath: IndexPath, element: EpisodeSectionModelType) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifierForEpisode, for: indexPath) as! SeasonListTableViewCell
     
     if let model = viewModel.getModel(for: element) {

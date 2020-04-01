@@ -36,6 +36,8 @@ final class SeasonsListViewModel {
   // what happen its exists season 0?
   private let seasonSelectedSubject = BehaviorSubject<Int>(value: 0)
   
+  private var seasonListViewModel: SeasonEpisodeTableViewModel?
+  
   //MARK: - Initializers
   
   init(tvShowId: Int,fetchDetailShowUseCase: FetchTVShowDetailsUseCase, fetchEpisodesUseCase: FetchEpisodesUseCase) {
@@ -88,12 +90,19 @@ final class SeasonsListViewModel {
   fileprivate func changeToSeason(number: Int, episodes: [Episode]) {
     self.viewState.value = .populated(episodes)
     if let numberOfSeasons = showDetailResult?.numberOfSeasons {
-      createSectionModel(with: numberOfSeasons, and: episodes)
+      createSectionModel(with: numberOfSeasons, seasonSelected: number, and: episodes)
     }
   }
   
   func getShowDetails() {
     fetchShowDetails(for: tvShowId)
+  }
+  
+  fileprivate func createSeasonsModel(with numberOfSeasons: Int?) {
+    guard let numberOfSeasons = numberOfSeasons else { return }
+    print("--> Creando SeasonListViewModel ...")
+    let seasons: [Int] = (1...numberOfSeasons).map { $0 }
+    seasonListViewModel = SeasonEpisodeTableViewModel(seasons: seasons)
   }
   
   fileprivate func selectFirstSeason() {
@@ -127,8 +136,10 @@ final class SeasonsListViewModel {
       switch result {
       case .success(let response):
         strongSelf.showDetailResult = response
+        strongSelf.createSeasonsModel(with: response.numberOfSeasons)
         strongSelf.didLoad.value = true
         strongSelf.selectFirstSeason()
+        
         
       case .failure(let error):
         strongSelf.viewState.value = .error(error)
@@ -142,7 +153,7 @@ final class SeasonsListViewModel {
     self.viewState.value = .loading
     // Like a new State
     if let numberOfSeasons = showDetailResult?.numberOfSeasons {
-      createSectionModel(with: numberOfSeasons, and: [])
+      createSectionModel(with: numberOfSeasons, seasonSelected: seasonNumber, and: [])
     }
     
     let request = FetchEpisodesUseCaseRequestValue(showIdentifier: tvShowId, seasonNumber: seasonNumber)
@@ -177,26 +188,35 @@ final class SeasonsListViewModel {
     
     // Like a new State
     if let numberOfSeasons = showDetailResult?.numberOfSeasons {
-      createSectionModel(with: numberOfSeasons, and: ordered)
+      createSectionModel(with: numberOfSeasons, seasonSelected: season, and: ordered)
     }
   }
   
-  fileprivate func createSectionModel(with numberOfSeasons: Int, and episodes: [Episode]) {
+  fileprivate func createSectionModel(with numberOfSeasons: Int, seasonSelected: Int, and episodes: [Episode]) {
+    
+    let episodesSectioned = episodes.map {
+      EpisodeSectionModelType(episode: $0) }.map { SeasonsSectionItem.episodes(items: $0) }
+    
     dataObservableSubject.onNext(
       [
-        .seasons(title: "", items: [.seasons(number:numberOfSeasons)]),
-        .episodes(title: "", items: episodes.map { SeasonsSectionItem.episodes(items: $0) } )
+        .seasons(header: "Seasons", items: [.seasons(number:numberOfSeasons)]),
+        .episodes(header: "Episodes", items:  episodesSectioned )
     ])
   }
   
-  // New
   func buildModelForSeasons(with numberOfSeasons: Int) -> SeasonEpisodeTableViewModel {
-    let seasons: [Int] = (1...numberOfSeasons).map { $0 }
-    return SeasonEpisodeTableViewModel(seasons: seasons)
+    if let viewModel = seasonListViewModel {
+      print("--> Existe ya SeasonListViewModel")
+      return viewModel
+    } else {
+      print("--> NO Existe SeasonListViewModel, crear")
+      createSeasonsModel(with: numberOfSeasons)
+      return seasonListViewModel!
+    }
   }
   
-  func getModel(for episode: Episode) -> SeasonListTableViewModel? {
-    return SeasonListTableViewModel(episode: episode)
+  func getModel(for episode: EpisodeSectionModelType) -> SeasonListTableViewModel? {
+    return SeasonListTableViewModel(episode: EpisodeSectionModelType.buildEpisode(from: episode) )
   }
 }
 
@@ -230,43 +250,5 @@ extension SeasonsListViewModel {
     // MARK: - TODO, Change for State
     // MARK: - TODO, change RxSwift
     let data: RxSwift.Observable<[SeasonsSectionModel]>
-  }
-}
-
-// MARK: - RxDataSources
-
-//enum SeasonsSectionModel {
-enum SeasonsSectionModel {
-  case
-  seasons(title: String, items: [SeasonsSectionItem]),
-  episodes(title: String, items: [SeasonsSectionItem])
-}
-
-enum SeasonsSectionItem {
-  case
-  seasons(number: Int),
-  episodes(items: Episode)
-}
-
-extension SeasonsSectionModel: SectionModelType {
-  
-  typealias Item = SeasonsSectionItem
-  
-  var items: [SeasonsSectionItem] {
-    switch self {
-    case .seasons(title: _, items: let items):
-      return items
-    case .episodes(title: _, items: let items):
-      return items
-    }
-  }
-  
-  init(original: Self, items: [Self.Item]) {
-    switch original {
-    case .seasons(title: let title, items: _):
-      self = .seasons(title: title, items: items)
-    case .episodes(title: let title, items: _):
-      self = .episodes(title: title, items: items)
-    }
   }
 }

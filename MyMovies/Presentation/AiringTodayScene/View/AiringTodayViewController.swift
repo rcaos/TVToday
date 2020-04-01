@@ -53,13 +53,13 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable {
     
     let (configureCollectionViewCell, configureSupplementaryView) = configureCollectionViewDataSource()
     
-    let dataSource = RxCollectionViewSectionedReloadDataSource<SectionCustomData>(
+    let dataSource = RxCollectionViewSectionedReloadDataSource<SectionAiringToday>(
       configureCell: configureCollectionViewCell,
       configureSupplementaryView: configureSupplementaryView)
     
     viewModel.output
       .shows
-      .map { [SectionCustomData(header: "Shows Today", items: $0.currentEntities) ] }
+      .map { [SectionAiringToday(header: "Shows Today", items: $0.currentEntities) ] }
       .bind(to: collectionView.rx.items(dataSource: dataSource))
       .disposed(by: disposeBag)
     
@@ -82,10 +82,10 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable {
 extension AiringTodayViewController {
   
   func configureCollectionViewDataSource() -> (
-    CollectionViewSectionedDataSource<SectionCustomData>.ConfigureCell,
-    CollectionViewSectionedDataSource<SectionCustomData>.ConfigureSupplementaryView
+    CollectionViewSectionedDataSource<SectionAiringToday>.ConfigureCell,
+    CollectionViewSectionedDataSource<SectionAiringToday>.ConfigureSupplementaryView
     ) {
-      let configureCell: CollectionViewSectionedDataSource<SectionCustomData>.ConfigureCell = {
+      let configureCell: CollectionViewSectionedDataSource<SectionAiringToday>.ConfigureCell = {
         [weak self] dataSource, collectionView, indexPath, item in
         guard let strongSelf = self else { fatalError() }
         
@@ -101,7 +101,7 @@ extension AiringTodayViewController {
         return cell
       }
       
-      let configureFooterView: CollectionViewSectionedDataSource<SectionCustomData>.ConfigureSupplementaryView = {
+      let configureFooterView: CollectionViewSectionedDataSource<SectionAiringToday>.ConfigureSupplementaryView = {
         dataSource, collectionView, kindOfView, indexPath in
         let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kindOfView, withReuseIdentifier: "FooterReusableView", for: indexPath) as! FooterReusableView
         return footerView

@@ -19,7 +19,8 @@ final class AiringTodayCollectionViewModel {
     return show.getbackDropPathURL()
   }
   
-  // MARK: - TODO, remove Poster Repository
+  // MARK: - Initializers
+  
   init(show: TVShow) {
     self.show = show
     setup()

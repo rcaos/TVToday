@@ -138,12 +138,9 @@ extension AiringTodayViewController: UICollectionViewDelegateFlowLayout {
 }
 
 
-//MARK: - Navigation
+//MARK: - TODO, implementar Coordinator Pattern
 
 extension AiringTodayViewController {
-  
-  //MARK: - TODO, implementar Coordinator Pattern
-  // Este VC no debe conocer nada de los Detalles del Próximo VC
   
   func handle(_ route: Int?) {
     guard let identifier = route else { return }

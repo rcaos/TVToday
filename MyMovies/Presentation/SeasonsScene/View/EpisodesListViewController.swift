@@ -72,15 +72,12 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable {
   }
   
   private func setupBindables() {
-    viewModel.viewState.observe(on: self) {[weak self] state in
-      self?.configureView(with: state)
-    }
-    
-    viewModel.didLoad.observe(on: self) { [weak self] didAppear in
-      guard didAppear else { return }
-      guard let strongSelf = self else { return }
-      strongSelf.setupTableHeaderView()
-    }
+    viewModel.output.viewState
+      .subscribe(onNext: { [weak self] state in
+        guard let strongSelf = self else { return }
+        strongSelf.configureView(with: state)
+      })
+      .disposed(by: disposeBag)
     
     let dataSource = RxTableViewSectionedAnimatedDataSource<SeasonsSectionModel>(
       configureCell: { [weak self] (_, tableView, indexPath, element) -> UITableViewCell in
@@ -106,6 +103,8 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable {
   private func configureView(with state: EpisodesListViewModel.ViewState) {
     
     switch state {
+    case .didLoadHeader:
+      setupTableHeaderView()
     case .populated:
       tableView.tableFooterView = UIView()
       tableView.separatorStyle = .singleLine

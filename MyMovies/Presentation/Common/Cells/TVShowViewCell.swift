@@ -9,25 +9,25 @@
 import UIKit
 
 class TVShowViewCell: UITableViewCell {
-
-    @IBOutlet weak private var nameLabel: UILabel!
-    @IBOutlet weak private var averageLabel: UILabel!
-
-    var viewModel:TVShowCellViewModel? {
-        didSet {
-            setupUI()
-        }
+  
+  @IBOutlet weak private var nameLabel: UILabel!
+  @IBOutlet weak private var averageLabel: UILabel!
+  
+  var viewModel:TVShowCellViewModel? {
+    didSet {
+      setupUI()
     }
+  }
+  
+  override func awakeFromNib() {
+    super.awakeFromNib()
+  }
+  
+  func setupUI(){
+    guard let viewModel = viewModel else { return }
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-    
-    func setupUI(){
-        guard let viewModel = viewModel else { return }
-        
-        nameLabel.text = viewModel.name
-        averageLabel.text = viewModel.average
-    }
-    
+    nameLabel.text = viewModel.name
+    averageLabel.text = viewModel.average
+  }
+  
 }

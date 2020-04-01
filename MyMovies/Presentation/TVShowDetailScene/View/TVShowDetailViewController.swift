@@ -73,9 +73,12 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
       })
       .disposed(by: disposeBag)
     
-    viewModel?.route.observe(on: self) { [weak self] route in
-      self?.handle(route)
-    }
+    viewModel?.output.route
+      .subscribe(onNext: { [weak self] route in
+        guard let strongSelf = self else { return }
+        strongSelf.handle(route)
+      })
+      .disposed(by: disposeBag)
   }
   
   func configView(with state: TVShowDetailViewModel.ViewState) {

@@ -20,23 +20,27 @@ final class TVShowDetailViewModel {
   
   private let fetchDetailShowUseCase: FetchTVShowDetailsUseCase
   
-  var route: Observable<TVShowDetailViewModelRoute> = Observable(.initial)
+  private let showId: Int
   
-  let showId: Int
+  private var viewStateObservableSubject = BehaviorSubject<ViewState>(value: .loading)
+  
+  // MARK: - TODO refactor, routing
+  private var routeObservableSubject = BehaviorSubject<TVShowDetailViewModelRoute>(value: .initial)
   
   // MARK: - Base ViewModel
   var input: Input
   var output: Output
-   
-  var showsObservableSubject = BehaviorSubject<ViewState>(value: .loading)
   
   // MARK: - Initializers
+  
   init(_ showId: Int, fetchDetailShowUseCase: FetchTVShowDetailsUseCase) {
     self.fetchDetailShowUseCase = fetchDetailShowUseCase
     self.showId = showId
     
     self.input = Input()
-    self.output = Output(viewState: showsObservableSubject.asObservable())
+    self.output = Output(
+      viewState: viewStateObservableSubject.asObservable(),
+      route: routeObservableSubject.asObservable())
   }
   
   //MARK: - Networking
@@ -51,14 +55,14 @@ final class TVShowDetailViewModel {
       case .success(let response):
         strongSelf.processFetched(for: response)
       case .failure(let error):
-        strongSelf.showsObservableSubject.onNext(.error(error.localizedDescription))
+        strongSelf.viewStateObservableSubject.onNext(.error(error.localizedDescription))
       }
     }
   }
   
   private func processFetched(for response: TVShowDetailResult) {
     let showDetail = setupTVShow(response)
-    showsObservableSubject.onNext(.populated(showDetail))
+    viewStateObservableSubject.onNext(.populated(showDetail))
   }
   
   private func setupTVShow(_ show: TVShowDetailResult) -> TVShowDetailInfo {
@@ -77,7 +81,8 @@ final class TVShowDetailViewModel {
   }
   
   func showSeasonList() {
-    route.value = .showSeasonsList(tvShowId: showId)
+    routeObservableSubject.onNext(
+      .showSeasonsList(tvShowId: showId) )
   }
 }
 
@@ -115,8 +120,9 @@ extension TVShowDetailViewModel {
   public struct Input { }
   
   public struct Output {
-    // MARK: - TODO, Change for State
-    // MARK: - TODO, change RxSwift
-    let viewState: RxSwift.Observable<ViewState>
+    let viewState: Observable<ViewState>
+    
+    // MARK: - TODO, refactor navigation
+    let route: Observable<TVShowDetailViewModelRoute>
   }
 }

@@ -58,7 +58,7 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable {
       configureSupplementaryView: configureSupplementaryView)
     
     viewModel.output
-      .shows
+      .viewState
       .map { [SectionAiringToday(header: "Shows Today", items: $0.currentEntities) ] }
       .bind(to: collectionView.rx.items(dataSource: dataSource))
       .disposed(by: disposeBag)
@@ -93,7 +93,8 @@ extension AiringTodayViewController {
         cell.viewModel = self?.viewModel.getModelFor(item)
         print("retornar cell: \(indexPath)")
         
-        if case .paging(_, let nextPage) = try? strongSelf.viewModel.showsObservableSubject.value(),
+        // MARK: - TODO viewState dont be here !!
+        if case .paging(_, let nextPage) = try? strongSelf.viewModel.viewStateObservableSubject.value(),
           let totalItems = dataSource.sectionModels.first?.items.count, indexPath.row == totalItems - 1 {
           strongSelf.viewModel.getShows(for: nextPage)
         }
@@ -123,7 +124,9 @@ extension AiringTodayViewController: UICollectionViewDelegateFlowLayout {
   }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-    guard let state = try? viewModel.showsObservableSubject.value() else { return .zero }
+    
+    // MARK: - TODO  dont be here
+    guard let state = try? viewModel.viewStateObservableSubject.value() else { return .zero }
     
     switch state {
     case .loading, .paging(_, _):

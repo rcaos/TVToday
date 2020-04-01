@@ -18,12 +18,13 @@ enum SearchViewModelRoute {
 final class SearchViewModel {
   
   private let fetchGenresUseCase: FetchGenresUseCase
-  var route: Observable<SearchViewModelRoute> = Observable(.initial)
+  
+  private let viewStateObservableSubject = BehaviorSubject<SimpleViewState<Genre>>(value: .loading)
+  
+  private let routeObservableSubject = BehaviorSubject<SearchViewModelRoute>(value: .initial)
   
   var input: Input
   var output: Output
-  
-  private let viewStateObservableSubject = BehaviorSubject<SimpleViewState<Genre>>(value: .loading)
   
   // MARK: - Initializer
   
@@ -31,7 +32,8 @@ final class SearchViewModel {
     self.fetchGenresUseCase = fetchGenresUseCase
     
     self.input = Input()
-    self.output = Output(viewState: viewStateObservableSubject.asObservable())
+    self.output = Output(viewState: viewStateObservableSubject.asObservable(),
+                         route: routeObservableSubject.asObservable())
   }
   
   func getGenres() {
@@ -60,13 +62,16 @@ final class SearchViewModel {
     viewStateObservableSubject.onNext( .populated(fetchedGenres) )
   }
   
-  // MARK: - Navigation
+  // MARK: - Navigation, refactor, dont be here
+  
   func showTVShowDetails(with identifier: Int) {
-    route.value = .showMovieDetail(identifier: identifier)
+    routeObservableSubject.onNext(
+      .showMovieDetail(identifier: identifier) )
   }
   
   func showShowsList(genreId: Int) {
-    route.value = .showShowList(genreId: genreId)
+    routeObservableSubject.onNext(
+      .showShowList(genreId: genreId))
   }
 }
 
@@ -77,8 +82,9 @@ extension SearchViewModel {
   public struct Input { }
   
   public struct Output {
-    // MARK: - TODO, Change for State
-    // MARK: - TODO, change RxSwift
-    let viewState: RxSwift.Observable<SimpleViewState<Genre>>
+    let viewState: Observable<SimpleViewState<Genre>>
+    
+    // Refactor this, Navigation
+    let route: Observable<SearchViewModelRoute>
   }
 }

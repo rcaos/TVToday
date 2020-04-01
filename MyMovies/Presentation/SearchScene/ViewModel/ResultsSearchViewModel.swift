@@ -14,10 +14,8 @@ final class ResultsSearchViewModel: ShowsViewModel {
   var fetchTVShowsUseCase: FetchTVShowsUseCase
   
   var filter: TVShowsListFilter = .search(query: "")
-  var viewState: Observable<SimpleViewState<TVShow>> = Observable(.loading)
   
   var shows: [TVShow]
-  var cellsmodels: [TVShowCellViewModel] = [] // MARK: - TODO Quitar de Protocol
   
   var currentSearch = ""
   
@@ -30,17 +28,16 @@ final class ResultsSearchViewModel: ShowsViewModel {
   var input: Input
   var output: Output
   
-  var showsObservableSubject: BehaviorSubject<SimpleViewState<TVShow>> = .init(value: .populated([]))
+  var viewStateObservableSubject: BehaviorSubject<SimpleViewState<TVShow>> = .init(value: .populated([]))
   
   // MARK: - Init
   
   init(fetchTVShowsUseCase: FetchTVShowsUseCase) {
     self.fetchTVShowsUseCase = fetchTVShowsUseCase
     shows = []
-    cellsmodels = []
     
     self.input = Input()
-    self.output = Output(viewState: showsObservableSubject.asObservable())
+    self.output = Output(viewState: viewStateObservableSubject.asObservable())
   }
   
   func searchShows(for query: String, page: Int) {
@@ -59,12 +56,7 @@ final class ResultsSearchViewModel: ShowsViewModel {
   }
   
   func clearShows() {
-    showsObservableSubject.onNext(.populated([]))
-  }
-  
-  // MARK: - TODO remove from protocol
-  func createModels(for fetched: [TVShow]) {
-    
+    viewStateObservableSubject.onNext(.populated([]))
   }
   
   func getModelFor(entity: TVShow) -> TVShowCellViewModel {
@@ -77,8 +69,6 @@ extension ResultsSearchViewModel {
   public struct Input { }
   
   public struct Output {
-    // MARK: - TODO, Change for State
-    // MARK: - TODO, change RxSwift
-    let viewState: RxSwift.Observable<SimpleViewState<TVShow>>
+    let viewState: Observable<SimpleViewState<TVShow>>
   }
 }

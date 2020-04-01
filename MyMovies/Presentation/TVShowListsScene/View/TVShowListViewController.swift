@@ -18,10 +18,10 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
   
   private var showsListViewControllersFactory: TVShowListViewControllersFactory!
   
-  let disposeBag = DisposeBag()
-  // MARK: - TOOD Use localized String
-  var emptyView = MessageView(message: "No results to Show")
-  var loadingView = LoadingView(frame: .zero)
+  private let disposeBag = DisposeBag()
+  
+  private var emptyView = MessageView(message: "No results to Show")
+  private var loadingView = LoadingView(frame: .zero)
   
   static func create(with viewModel: TVShowListViewModel,
                      showsListViewControllersFactory: TVShowListViewControllersFactory) -> TVShowListViewController {
@@ -81,15 +81,14 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
         cell.viewModel = strongSelf.viewModel.getModelFor(element)
         
         // MARK: - TODO, call "showsObservableSubject" dont be stay here
-        if case .paging(let entities, let nextPage) = try? strongSelf.viewModel.showsObservableSubject.value(),
+        if case .paging(let entities, let nextPage) = try? strongSelf.viewModel.viewStateObservableSubject.value(),
           index == entities.count - 1 {
           strongSelf.viewModel.getShows(for: nextPage)
         }
     }
     .disposed(by: disposeBag)
     
-    // MARK - TODO, change RxSwift
-    RxSwift.Observable
+    Observable
       .zip( tableView.rx.itemSelected, tableView.rx.modelSelected(TVShow.self) )
       .bind { [weak self] (indexPath, item) in
         guard let strongSelf = self else { return }

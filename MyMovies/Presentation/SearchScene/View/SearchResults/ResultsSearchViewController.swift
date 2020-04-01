@@ -17,14 +17,14 @@ protocol ResultsSearchViewControllerDelegate: class {
 
 class ResultsSearchViewController: UIViewController {
   
+  let disposeBag = DisposeBag()
+  
   var resultView: ResultListView = ResultListView()
   
   var delegate: ResultsSearchViewControllerDelegate?
   
   var viewModel: ResultsSearchViewModel
   
-  let disposeBag = DisposeBag()
-  // MARK: - TOOD Use localized String
   var emptyView = MessageView(message: "No results to Show")
   var loadingView = LoadingView(frame: .zero)
   
@@ -86,14 +86,14 @@ class ResultsSearchViewController: UIViewController {
         cell.viewModel = strongSelf.viewModel.getModelFor(entity: element)
         
         // MARK: - TODO, call "showsObservableSubject" dont be stay here
-        if case .paging(let entities, let nextPage) = try? strongSelf.viewModel.showsObservableSubject.value(),
+        if case .paging(let entities, let nextPage) = try? strongSelf.viewModel.viewStateObservableSubject.value(),
           index == entities.count - 1 {
           strongSelf.viewModel.searchShows(for: nextPage)
         }
     }
     .disposed(by: disposeBag)
     
-    RxSwift.Observable
+    Observable
       .zip(resultView.tableView.rx.itemSelected,
            resultView.tableView.rx.modelSelected(TVShow.self))
       .subscribe(onNext: { [weak self] (index, show) in

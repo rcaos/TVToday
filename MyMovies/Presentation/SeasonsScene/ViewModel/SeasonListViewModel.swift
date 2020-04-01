@@ -14,14 +14,14 @@ final class SeasonListViewModel {
   
   private var seasonsList:[Int]
   
-  // MARK: - Base ViewModel
-  var input: Input
-  var output: Output
-  
   // MARK: - Output VM
   private var seasonsObservableSubject: BehaviorSubject<[Int]>
   
   private var seasonSelectedObservableSubject = BehaviorSubject<Int>(value: 0)
+  
+  // MARK: - Base ViewModel
+  var input: Input
+  var output: Output
   
   // MARK: Initalizer
   
@@ -60,10 +60,8 @@ extension SeasonListViewModel {
   }
   
   public struct Output {
-    // MARK: - TODO, Change for State
-    // MARK: - TODO, change RxSwift
-    let seasons: RxSwift.Observable<[Int]>
-    let seasonSelected: RxSwift.Observable<Int>
+    let seasons: Observable<[Int]>
+    let seasonSelected: Observable<Int>
   }
 }
 

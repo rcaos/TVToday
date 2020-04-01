@@ -14,10 +14,8 @@ final class PopularViewModel: ShowsViewModel {
   var fetchTVShowsUseCase: FetchTVShowsUseCase
   
   var filter: TVShowsListFilter = .popular
-  var viewState:Observable<SimpleViewState<TVShow>> = Observable(.loading)
   
   var shows: [TVShow]
-  var cellsmodels: [TVShowCellViewModel]
   
   var showsLoadTask: Cancellable? {
     willSet {
@@ -25,25 +23,20 @@ final class PopularViewModel: ShowsViewModel {
     }
   }
   
+  var viewStateObservableSubject: BehaviorSubject<SimpleViewState<TVShow>> = .init(value: .loading)
+  
   // MARK: - Base ViewModel
   var input: Input
   var output: Output
-  
-  var showsObservableSubject: BehaviorSubject<SimpleViewState<TVShow>> = .init(value: .loading)
   
   // MARK: - Initializers
   
   init(fetchTVShowsUseCase: FetchTVShowsUseCase) {
     self.fetchTVShowsUseCase = fetchTVShowsUseCase
     shows = []
-    cellsmodels = []
     
     self.input = Input()
-    self.output = Output(shows: showsObservableSubject.asObservable())
-  }
-  
-  // MARK: - TODO, Remove from protocol
-  func createModels(for fetched: [TVShow]) {
+    self.output = Output(viewState: viewStateObservableSubject.asObservable())
   }
   
   func getModelFor(_ entity: TVShow) -> TVShowCellViewModel {
@@ -58,9 +51,7 @@ extension PopularViewModel {
   public struct Input { }
   
   public struct Output {
-    // MARK: - TODO, Change for State
-    // MARK: - TODO, change RxSwift
-    let shows: RxSwift.Observable<SimpleViewState<TVShow>>
+    let viewState: Observable<SimpleViewState<TVShow>>
   }
 }
 

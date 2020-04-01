@@ -8,17 +8,17 @@
 
 import Foundation
 
-final class TVShowCellViewModel{
-    var name: String?
-    var average: String?
+final class TVShowCellViewModel {
+  var name: String?
+  var average: String?
+  
+  init(show: TVShow) {
+    name = show.name
     
-    init(show: TVShow) {
-        name = show.name
-        
-        if let voteAverage = show.voteAverage {
-            average = String(voteAverage)
-        }else{
-            average = ""
-        }
+    if let voteAverage = show.voteAverage {
+      average = String(voteAverage)
+    }else{
+      average = ""
     }
+  }
 }

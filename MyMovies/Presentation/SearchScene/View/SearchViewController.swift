@@ -53,6 +53,7 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
     setupTable()
     setupSearchBar()
     bind(to: viewModel)
+    viewModel.getGenres()
   }
   
   func setupViews() {
@@ -99,8 +100,7 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
     }
     .disposed(by: disposeBag)
     
-    // MARK: - Change rxSwift
-    RxSwift.Observable
+    Observable
       .zip( tableView.rx.itemSelected, tableView.rx.modelSelected(Genre.self) )
       .bind { [weak self] (indexPath, item) in
         guard let strongSelf = self else { return }
@@ -109,11 +109,13 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
     }
     .disposed(by: disposeBag)
     
-    viewModel.route.observe(on: self) { [weak self] routing in
-      self?.handle(routing)
-    }
-    
-    viewModel.getGenres()
+    viewModel.output
+      .route
+      .subscribe(onNext: { [weak self] route in
+        guard let strongSelf = self else { return }
+        strongSelf.handle(route)
+      })
+      .disposed(by: disposeBag)
   }
   
   func handleTableState(with state: SimpleViewState<Genre>) {

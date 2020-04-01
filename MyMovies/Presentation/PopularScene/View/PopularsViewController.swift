@@ -71,7 +71,7 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
   
   func setupViewModel() {
     viewModel.output
-      .shows
+      .viewState
       .map { $0.currentEntities }
       .bind(to: tableView.rx.items(cellIdentifier: "TVShowViewCell", cellType: TVShowViewCell.self)) {
         [weak self] (index, element, cell) in
@@ -79,7 +79,7 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
         
         cell.viewModel = self?.viewModel.getModelFor(element)
         
-        if case .paging(let entities, let nextPage) = try? strongSelf.viewModel.showsObservableSubject.value(),
+        if case .paging(let entities, let nextPage) = try? strongSelf.viewModel.viewStateObservableSubject.value(),
           index == entities.count - 1  {
           strongSelf.viewModel.getShows(for: nextPage)
         }
@@ -87,14 +87,14 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
     .disposed(by: disposeBag)
     
     viewModel.output
-      .shows
+      .viewState
       .subscribe(onNext: { [weak self] state in
         guard let strongSelf = self else { return }
         strongSelf.handleTableState(with: state)
       })
       .disposed(by: disposeBag)
     
-    RxSwift.Observable
+    Observable
       .zip( tableView.rx.itemSelected, tableView.rx.modelSelected(TVShow.self) )
       .bind { [weak self] (indexPath, item) in
         guard let strongSelf = self else { return }

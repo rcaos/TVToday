@@ -15,13 +15,12 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable {
   @IBOutlet weak var collectionView: UICollectionView!
   
   private var viewModel: AiringTodayViewModel!
-  private var airingTodayViewControllersFactory: AiringTodayViewControllersFactory!
+  //private var airingTodayViewControllersFactory: AiringTodayViewControllersFactory!
   
-  static func create(with viewModel: AiringTodayViewModel,
-                     airingTodayViewControllersFactory: AiringTodayViewControllersFactory) -> AiringTodayViewController {
+  static func create(with viewModel: AiringTodayViewModel) -> AiringTodayViewController {
     let controller = AiringTodayViewController.instantiateViewController()
     controller.viewModel = viewModel
-    controller.airingTodayViewControllersFactory = airingTodayViewControllersFactory
+    //controller.airingTodayViewControllersFactory = airingTodayViewControllersFactory
     return controller
   }
   
@@ -67,13 +66,13 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable {
       .setDelegate(self)
       .disposed(by: disposeBag)
     
-    collectionView.rx
-      .modelSelected( TVShow.self)
-      .subscribe(onNext: { [weak self] tvShow in
-        guard let strongSelf = self else { return }
-        strongSelf.handle( tvShow.id )
-      })
-      .disposed(by: disposeBag)
+//    collectionView.rx
+//      .modelSelected( TVShow.self)
+//      .subscribe(onNext: { [weak self] tvShow in
+//        guard let strongSelf = self else { return }
+//        strongSelf.handle( tvShow.id )
+//      })
+//      .disposed(by: disposeBag)
   }
 }
 
@@ -140,18 +139,18 @@ extension AiringTodayViewController: UICollectionViewDelegateFlowLayout {
 
 //MARK: - TODO, implementar Coordinator Pattern
 
-extension AiringTodayViewController {
-  
-  func handle(_ route: Int?) {
-    guard let identifier = route else { return }
-    let detailController = airingTodayViewControllersFactory.makeTVShowDetailsViewController(with: identifier)
-    navigationController?.pushViewController(detailController, animated: true)
-  }
-}
+//extension AiringTodayViewController {
+//
+//  func handle(_ route: Int?) {
+//    guard let identifier = route else { return }
+//    let detailController = airingTodayViewControllersFactory.makeTVShowDetailsViewController(with: identifier)
+//    navigationController?.pushViewController(detailController, animated: true)
+//  }
+//}
 
 // MARK: - AiringTodayViewControllersFactory
 
-protocol AiringTodayViewControllersFactory {
-  
-  func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController
-}
+//protocol AiringTodayViewControllersFactory {
+//
+//  func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController
+//}

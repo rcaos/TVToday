@@ -36,10 +36,6 @@ public class SearchFlow: Flow {
     return DefaultGenreRepository(dataTransferService: dependencies.apiDataTransferService)
   }()
   
-  private lazy var showDetailsRepository: TVShowDetailsRepository = {
-    return DefaultTVShowDetailsRepository(dataTransferService: dependencies.apiDataTransferService)
-  }()
-  
   // MARK: - Life Cycle
   
   public init(dependencies: Dependencies) {
@@ -87,13 +83,16 @@ public class SearchFlow: Flow {
   }
   
   fileprivate func navigateToShowDetailScreen(with id: Int) -> FlowContributors {
-    let viewModel = TVShowDetailViewModel(id, fetchDetailShowUseCase: makeFetchShowDetailsUseCase())
-    let detailVC = TVShowDetailViewController.create(with: viewModel)
-    
-    rootViewController.pushViewController(detailVC, animated: true)
+    let detailShowFlow = TVShowDetailFlow(rootViewController: rootViewController,
+      dependencies: TVShowDetailFlow.Dependencies(
+        apiDataTransferService: dependencies.apiDataTransferService,
+        imageTransferService: dependencies.imageTransferService))
     
     return .one(flowContributor: .contribute(
-      withNextPresentable: detailVC, withNextStepper: viewModel))
+      withNextPresentable: detailShowFlow,
+      withNextStepper:
+      OneStepper(withSingleStep:
+        ShowDetailsStep.showDetailsIsRequired(withId: id))))
   }
   
   // MARK: - Uses Cases
@@ -105,10 +104,6 @@ public class SearchFlow: Flow {
   private func makeShowListUseCase() -> FetchTVShowsUseCase {
     return DefaultFetchTVShowsUseCase(tvShowsRepository: showsRepository)
   }
-  
-  private func makeFetchShowDetailsUseCase() -> FetchTVShowDetailsUseCase {
-     return DefaultFetchTVShowDetailsUseCase(tvShowDetailsRepository: showDetailsRepository)
-   }
 }
 
 // MARK: - Steps

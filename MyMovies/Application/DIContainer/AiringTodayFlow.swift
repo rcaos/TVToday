@@ -32,14 +32,6 @@ public class AiringTodayFlow: Flow {
     return DefaultTVShowsRepository(dataTransferService: dependencies.apiDataTransferService)
   }()
   
-  private lazy var showDetailsRepository: TVShowDetailsRepository = {
-    return DefaultTVShowDetailsRepository(dataTransferService: dependencies.apiDataTransferService)
-  }()
-  
-  private lazy var episodesRepository: TVEpisodesRepository = {
-    return DefaultTVEpisodesRepository(dataTransferService: dependencies.apiDataTransferService)
-  }()
-  
   // MARK: - Life Cycle
   
   public init(dependencies: Dependencies) {
@@ -55,9 +47,6 @@ public class AiringTodayFlow: Flow {
       
     case AiringTodayStep.showIsPicked(let id):
       return navigateToShowDetailScreen(with: id)
-      
-    case ShowDetailsStep.seasonsAreRequired(let showId):
-      return navigateToSeasonsScreen(with: showId)
       
     default:
       return .none
@@ -75,37 +64,22 @@ public class AiringTodayFlow: Flow {
   }
   
   fileprivate func navigateToShowDetailScreen(with id: Int) -> FlowContributors {
-    let viewModel = TVShowDetailViewModel(id, fetchDetailShowUseCase: makeFetchShowDetailsUseCase())
-    let detailVC = TVShowDetailViewController.create(with: viewModel)
-    
-    rootViewController.pushViewController(detailVC, animated: true)
-    
-    return .one(flowContributor: .contribute(
-      withNextPresentable: detailVC, withNextStepper: viewModel))
-  }
-  
-  fileprivate func navigateToSeasonsScreen(with id: Int) -> FlowContributors {
-    let viewModel = EpisodesListViewModel(tvShowId: id, fetchDetailShowUseCase: makeFetchShowDetailsUseCase(), fetchEpisodesUseCase: makeFetchEpisodesUseCase())
-    let seasonsVC = EpisodesListViewController.create(with: viewModel)
-    
-    rootViewController.pushViewController(seasonsVC, animated: true)
+    let detailShowFlow = TVShowDetailFlow(rootViewController: rootViewController,
+      dependencies: TVShowDetailFlow.Dependencies(
+        apiDataTransferService: dependencies.apiDataTransferService,
+        imageTransferService: dependencies.imageTransferService))
     
     return .one(flowContributor: .contribute(
-      withNextPresentable: seasonsVC, withNextStepper: viewModel))
+      withNextPresentable: detailShowFlow,
+      withNextStepper:
+      OneStepper(withSingleStep:
+        ShowDetailsStep.showDetailsIsRequired(withId: id))))
   }
   
   // MARK: - Uses Cases
   
   private func makeFetchTodayShowsUseCase() -> FetchTVShowsUseCase {
     return DefaultFetchTVShowsUseCase(tvShowsRepository: showsRepository)
-  }
-  
-  private func makeFetchShowDetailsUseCase() -> FetchTVShowDetailsUseCase {
-    return DefaultFetchTVShowDetailsUseCase(tvShowDetailsRepository: showDetailsRepository)
-  }
-  
-  private func makeFetchEpisodesUseCase() -> FetchEpisodesUseCase {
-    return DefaultFetchEpisodesUseCase(episodesRepository: episodesRepository)
   }
 }
 

@@ -8,24 +8,19 @@
 
 // MARK: - TODO Implement Input Button Favorite movie ❤️
 
-import Foundation
 import RxSwift
-
-enum TVShowDetailViewModelRoute {
-  case initial
-  case showSeasonsList(tvShowId: Int)
-}
+import RxFlow
+import RxRelay
 
 final class TVShowDetailViewModel {
+  
+  var steps = PublishRelay<Step>()
   
   private let fetchDetailShowUseCase: FetchTVShowDetailsUseCase
   
   private let showId: Int
   
   private var viewStateObservableSubject = BehaviorSubject<ViewState>(value: .loading)
-  
-  // MARK: - TODO refactor, routing
-  private var routeObservableSubject = BehaviorSubject<TVShowDetailViewModelRoute>(value: .initial)
   
   // MARK: - Base ViewModel
   var input: Input
@@ -39,8 +34,7 @@ final class TVShowDetailViewModel {
     
     self.input = Input()
     self.output = Output(
-      viewState: viewStateObservableSubject.asObservable(),
-      route: routeObservableSubject.asObservable())
+      viewState: viewStateObservableSubject.asObservable())
   }
   
   //MARK: - Networking
@@ -79,11 +73,6 @@ final class TVShowDetailViewModel {
       score: (show.voteAverage != nil) ? String(show.voteAverage!) : "",
       countVote: (show.voteCount != nil) ? String(show.voteCount!) : "")
   }
-  
-  func showSeasonList() {
-    routeObservableSubject.onNext(
-      .showSeasonsList(tvShowId: showId) )
-  }
 }
 
 // MARK: - ViewState
@@ -121,8 +110,18 @@ extension TVShowDetailViewModel {
   
   public struct Output {
     let viewState: Observable<ViewState>
-    
-    // MARK: - TODO, refactor navigation
-    let route: Observable<TVShowDetailViewModelRoute>
+  }
+}
+
+// MARK: - Stepper
+
+extension TVShowDetailViewModel: Stepper {
+  
+  public func navigateTo(step: Step) {
+    steps.accept(step)
+  }
+  
+  public func navigateToSeasons() {
+    steps.accept( ShowDetailsStep.seasonsAreRequired(withId: showId) )
   }
 }

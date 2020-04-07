@@ -18,17 +18,14 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable {
   @IBOutlet weak var tableView: UITableView!
   
   private var viewModel: EpisodesListViewModel!
-  private var seasonsListViewControllers: SeasonsListViewControllersFactory!
   
   let loadingView = LoadingView(frame: .zero)
   let emptyView = MessageImageView(message: "No episodes available", image: "tvshowEmpty")
   let errorView = MessageImageView(message: "Unable to connect to server", image: "error")
   
-  static func create(with viewModel: EpisodesListViewModel,
-                     seasonsListViewControllers: SeasonsListViewControllersFactory) -> EpisodesListViewController {
+  static func create(with viewModel: EpisodesListViewModel) -> EpisodesListViewController {
     let controller = EpisodesListViewController.instantiateViewController()
     controller.viewModel = viewModel
-    controller.seasonsListViewControllers = seasonsListViewControllers
     return controller
   }
   
@@ -165,10 +162,4 @@ extension EpisodesListViewController: SeasonListTableViewCellDelegate {
   func didSelectedSeason(at season: Int) {
     viewModel.getSeason(at: season)
   }
-}
-
-// MARK: - TODO, refactor Navigation
-
-protocol SeasonsListViewControllersFactory {
-  
 }

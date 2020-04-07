@@ -6,34 +6,31 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
-import Foundation
 import RxSwift
-
-enum SearchViewModelRoute {
-  case initial
-  case showMovieDetail(identifier: Int)
-  case showShowList(genreId: Int)
-}
+import RxFlow
+import RxRelay
 
 final class SearchViewModel {
   
+  var steps = PublishRelay<Step>()
+  
   private let fetchGenresUseCase: FetchGenresUseCase
   
-  private let viewStateObservableSubject = BehaviorSubject<SimpleViewState<Genre>>(value: .loading)
+  private let fetchTVShowsUseCase: FetchTVShowsUseCase
   
-  private let routeObservableSubject = BehaviorSubject<SearchViewModelRoute>(value: .initial)
+  private let viewStateObservableSubject = BehaviorSubject<SimpleViewState<Genre>>(value: .loading)
   
   var input: Input
   var output: Output
   
   // MARK: - Initializer
   
-  init(fetchGenresUseCase: FetchGenresUseCase) {
+  init(fetchGenresUseCase: FetchGenresUseCase, fetchTVShowsUseCase: FetchTVShowsUseCase) {
     self.fetchGenresUseCase = fetchGenresUseCase
+    self.fetchTVShowsUseCase = fetchTVShowsUseCase
     
     self.input = Input()
-    self.output = Output(viewState: viewStateObservableSubject.asObservable(),
-                         route: routeObservableSubject.asObservable())
+    self.output = Output(viewState: viewStateObservableSubject.asObservable())
   }
   
   func getGenres() {
@@ -62,16 +59,10 @@ final class SearchViewModel {
     viewStateObservableSubject.onNext( .populated(fetchedGenres) )
   }
   
-  // MARK: - Navigation, refactor, dont be here
+  // MARK: - Build Models
   
-  func showTVShowDetails(with identifier: Int) {
-    routeObservableSubject.onNext(
-      .showMovieDetail(identifier: identifier) )
-  }
-  
-  func showShowsList(genreId: Int) {
-    routeObservableSubject.onNext(
-      .showShowList(genreId: genreId))
+  public func buildResultsSearchViewModel() -> ResultsSearchViewModel {
+    return ResultsSearchViewModel(fetchTVShowsUseCase: fetchTVShowsUseCase)
   }
 }
 
@@ -83,8 +74,14 @@ extension SearchViewModel {
   
   public struct Output {
     let viewState: Observable<SimpleViewState<Genre>>
-    
-    // Refactor this, Navigation
-    let route: Observable<SearchViewModelRoute>
+  }
+}
+
+// MARK: - Stepper
+
+extension SearchViewModel: Stepper {
+  
+  public func navigateTo(step: Step) {
+    steps.accept(step)
   }
 }

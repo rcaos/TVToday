@@ -19,7 +19,6 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
   var searchController:UISearchController!
   
   private var viewModel:SearchViewModel!
-  private var searchViewControllersFactory: SearchViewControllersFactory!
   
   var lastSearch = ""
   
@@ -28,11 +27,9 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
   
   let disposeBag = DisposeBag()
   
-  static func create(with viewModel: SearchViewModel,
-                     searchViewControllersFactory: SearchViewControllersFactory) -> SearchViewController {
+  static func create(with viewModel: SearchViewModel) -> SearchViewController {
     let controller = SearchViewController.instantiateViewController()
     controller.viewModel = viewModel
-    controller.searchViewControllersFactory = searchViewControllersFactory
     return controller
   }
   
@@ -67,7 +64,7 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
   }
   
   func setupSearchBar() {
-    let resultViewModel = searchViewControllersFactory.makeSearchResultsViewModel()
+    let resultViewModel = viewModel.buildResultsSearchViewModel()
     let resultsController = ResultsSearchViewController(viewModel: resultViewModel)
     
     resultsController.delegate = self
@@ -105,17 +102,9 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
       .bind { [weak self] (indexPath, item) in
         guard let strongSelf = self else { return }
         strongSelf.tableView.deselectRow(at: indexPath, animated: true)
-        strongSelf.viewModel.showShowsList(genreId: item.id)
+        strongSelf.viewModel.navigateTo(step: SearchStep.genreIsPicked(withId: item.id) )
     }
     .disposed(by: disposeBag)
-    
-    viewModel.output
-      .route
-      .subscribe(onNext: { [weak self] route in
-        guard let strongSelf = self else { return }
-        strongSelf.handle(route)
-      })
-      .disposed(by: disposeBag)
   }
   
   func handleTableState(with state: SimpleViewState<Genre>) {
@@ -183,37 +172,6 @@ extension SearchViewController: UISearchBarDelegate {
 extension SearchViewController: ResultsSearchViewControllerDelegate {
   
   func resultsSearchViewController(_ resultsSearchViewController: ResultsSearchViewController, didSelectedMovie movie: Int) {
-    viewModel.showTVShowDetails(with: movie)
+    viewModel.navigateTo(step: SearchStep.showIsPicked(withId: movie) )
   }
-}
-
-// MARK: - TODO: refactor Navigation
-
-extension SearchViewController {
-  
-  func handle(_ route: SearchViewModelRoute) {
-    switch route {
-      
-    case .initial: break
-      
-    case .showMovieDetail(let identifier):
-      let detailController = searchViewControllersFactory.makeTVShowDetailsViewController(with: identifier)
-      navigationController?.pushViewController(detailController, animated: true)
-      
-    case .showShowList(let genreId):
-      let listController = searchViewControllersFactory.makeShowListViewControll(with: genreId)
-      navigationController?.pushViewController(listController, animated: true)
-    }
-  }
-}
-
-// MARK: - SearchViewControllersFactory
-
-protocol SearchViewControllersFactory {
-  
-  func makeSearchResultsViewModel() -> ResultsSearchViewModel
-  
-  func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController
-  
-  func makeShowListViewControll(with genre: Int) -> UIViewController
 }

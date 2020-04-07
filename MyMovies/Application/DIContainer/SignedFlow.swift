@@ -49,16 +49,37 @@ public class SignedFlow: Flow {
       apiDataTransferService: apiDataTransferService,
       imageTransferService: imageTransferService)
     
-    Flows.whenReady(flow1: airingTodayFlow) {
-      (airingTodayRoot: UINavigationController) in
+    let popularFlow = PopularFlow(
+      apiDataTransferService: apiDataTransferService,
+      imageTransferService: imageTransferService)
+    
+    let searchFlow = SearchFlow(
+      apiDataTransferService: apiDataTransferService,
+      imageTransferService: imageTransferService)
+    
+    Flows.whenReady(flow1: airingTodayFlow, flow2: popularFlow, flow3: searchFlow) {
+      (airingTodayRoot: UINavigationController, popularRoot: UINavigationController,
+      searchRoot: UINavigationController) in
+      
       let airingTodayTabBarItem = UITabBarItem(title: "Today", image: UIImage(named: "calendar"), tag: 0)
       airingTodayRoot.tabBarItem = airingTodayTabBarItem
       
-      self.rootViewController.setViewControllers([airingTodayRoot], animated: true)
+      let popularTabBarItem = UITabBarItem(title: "Popular", image: UIImage(named: "popular"), tag: 1)
+      popularRoot.tabBarItem = popularTabBarItem
+      
+      let searchTabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 2)
+      searchRoot.tabBarItem = searchTabBarItem
+      
+      self.rootViewController.setViewControllers([airingTodayRoot, popularRoot, searchRoot], animated: true)
     }
     
     return .multiple(flowContributors: [
-      .contribute(withNextPresentable: airingTodayFlow, withNextStepper: OneStepper(withSingleStep: AiringTodayStep.todayFeatureInit))
+      .contribute(withNextPresentable: airingTodayFlow, withNextStepper:
+        OneStepper(withSingleStep: AiringTodayStep.todayFeatureInit)),
+      .contribute(withNextPresentable: popularFlow, withNextStepper:
+        OneStepper(withSingleStep: PopularStep.popularFeatureInit)),
+      .contribute(withNextPresentable: searchFlow, withNextStepper:
+        OneStepper(withSingleStep: SearchStep.searchFeatureInit)),
     ])
     
   }

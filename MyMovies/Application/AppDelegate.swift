@@ -11,7 +11,7 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
   
-  let appDIContainer = AppDIContainer()
+  //let appDIContainer = AppDIContainer()
   
   var window: UIWindow?
   

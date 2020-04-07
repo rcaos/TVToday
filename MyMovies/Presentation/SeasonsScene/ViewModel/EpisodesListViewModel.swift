@@ -6,11 +6,13 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
-import Foundation
 import RxSwift
-import RxDataSources
+import RxFlow
+import RxRelay
 
 final class EpisodesListViewModel {
+  
+  var steps = PublishRelay<Step>()
   
   private let fetchEpisodesUseCase: FetchEpisodesUseCase
   private let fetchDetailShowUseCase: FetchTVShowDetailsUseCase
@@ -220,5 +222,14 @@ extension EpisodesListViewModel {
     let data: Observable<[SeasonsSectionModel]>
     
     let viewState: Observable<ViewState>
+  }
+}
+
+// MARK: - Stepper
+
+extension EpisodesListViewModel: Stepper {
+  
+  public func navigateTo(step: Step) {
+    steps.accept(step)
   }
 }

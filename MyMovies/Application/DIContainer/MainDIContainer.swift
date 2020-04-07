@@ -9,6 +9,8 @@
 import UIKit
 import RxFlow
 
+// rename by AppDIContainer instead
+
 public class MainDIContainer {
   
   lazy var appConfigurations = AppConfigurations()

@@ -6,10 +6,13 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
-import Foundation
 import RxSwift
+import RxFlow
+import RxRelay
 
 final class TVShowListViewModel: ShowsViewModel {
+  
+  var steps = PublishRelay<Step>()
   
   var fetchTVShowsUseCase: FetchTVShowsUseCase
   
@@ -56,5 +59,14 @@ extension TVShowListViewModel {
   
   public struct Output {
     let viewState: Observable<SimpleViewState<TVShow>>
+  }
+}
+
+// MARK: - Stepper
+
+extension TVShowListViewModel: Stepper {
+  
+  public func navigateTo(step: Step) {
+    steps.accept(step)
   }
 }

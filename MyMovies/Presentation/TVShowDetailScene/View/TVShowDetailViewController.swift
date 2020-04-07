@@ -14,8 +14,6 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
   
   var viewModel: TVShowDetailViewModel!
   
-  private var showDetailsViewControllersFactory: TVShowDetailViewControllersFactory!
-  
   @IBOutlet weak private var backDropImage: UIImageView!
   @IBOutlet weak private var nameLabel: UILabel!
   @IBOutlet weak private var yearsRelease: UILabel!
@@ -32,11 +30,9 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
   
   private let disposeBag = DisposeBag()
   
-  static func create(with viewModel: TVShowDetailViewModel,
-                     showDetailsViewControllersFactory: TVShowDetailViewControllersFactory) -> TVShowDetailViewController {
+  static func create(with viewModel: TVShowDetailViewModel) -> TVShowDetailViewController {
     let controller = TVShowDetailViewController.instantiateViewController()
     controller.viewModel = viewModel
-    controller.showDetailsViewControllersFactory = showDetailsViewControllersFactory
     return controller
   }
   
@@ -70,13 +66,6 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
       .subscribe(onNext: { [weak self] state in
         guard let strongSelf = self else { return }
         strongSelf.configView(with: state)
-      })
-      .disposed(by: disposeBag)
-    
-    viewModel?.output.route
-      .subscribe(onNext: { [weak self] route in
-        guard let strongSelf = self else { return }
-        strongSelf.handle(route)
       })
       .disposed(by: disposeBag)
   }
@@ -124,7 +113,7 @@ extension TVShowDetailViewController {
   
   override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
     if indexPath.row == 1 {
-      viewModel?.showSeasonList()
+      viewModel?.navigateToSeasons()
       return indexPath
     } else {
       return nil
@@ -162,26 +151,4 @@ extension TVShowDetailViewController {
     }
     return CGFloat(heightrow)
   }
-}
-
-// MARK: - TODO Refactoring Navigation
-
-extension TVShowDetailViewController {
-  
-  func handle(_ route: TVShowDetailViewModelRoute) {
-    
-    switch route {
-    case .initial: break
-      
-    case .showSeasonsList(let tvShowId):
-      let seasonsController = showDetailsViewControllersFactory .makeSeasonsListViewController(with: tvShowId)
-      
-      navigationController?.pushViewController(seasonsController, animated: true)
-    }
-  }
-}
-
-protocol TVShowDetailViewControllersFactory {
-  
-  func makeSeasonsListViewController(with tvShowId: Int) -> UIViewController
 }

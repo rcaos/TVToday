@@ -1,5 +1,5 @@
 //
-//  AiringToday.swift
+//  PopularFlow.swift
 //  TVToday
 //
 //  Created by Jeans Ruiz on 4/7/20.
@@ -9,7 +9,7 @@
 import Foundation
 import RxFlow
 
-public class AiringTodayFlow: Flow {
+public class PopularFlow: Flow {
   
   public var root: Presentable {
     return self.rootViewController
@@ -20,21 +20,11 @@ public class AiringTodayFlow: Flow {
     return navigationController
   }()
   
-//  struct Dependencies {
-//    let apiDataTransferService: DataTransferService
-//  }
-//  
-//  private let dependencies: Dependencies
-//  
-//  init(dependencies: Dependencies) {
-//    self.dependencies = dependencies
-//  }
-  
   // Dependencies, use struct instead ?
   private let apiDataTransferService: DataTransferService
   private let imageTransferService: DataTransferService
   
-  // MARK: - TODO, Repositories are be the Same??
+  // Repositories
   private lazy var showsRepository: TVShowsRepository = {
     return DefaultTVShowsRepository(dataTransferService: apiDataTransferService)
   }()
@@ -60,10 +50,10 @@ public class AiringTodayFlow: Flow {
   
   public func navigate(to step: Step) -> FlowContributors {
     switch step {
-    case AiringTodayStep.todayFeatureInit:
-      return navigateToTodayFeature()
+    case PopularStep.popularFeatureInit :
+      return navigateToPopularFeature()
       
-    case AiringTodayStep.showIsPicked(let id):
+    case PopularStep.showIsPicked(let id) :
       return navigateToShowDetailScreen(with: id)
       
     case ShowDetailsStep.seasonsAreRequired(let showId):
@@ -74,14 +64,14 @@ public class AiringTodayFlow: Flow {
     }
   }
   
-  fileprivate func navigateToTodayFeature() -> FlowContributors {
-    let viewModel = AiringTodayViewModel(fetchTVShowsUseCase: makeFetchTodayShowsUseCase())
-    let todayVC = AiringTodayViewController.create(with: viewModel)
+  fileprivate func navigateToPopularFeature() -> FlowContributors {
+    let viewModel = PopularViewModel(fetchTVShowsUseCase: makeFetchTodayShowsUseCase())
+    let popularVC = PopularsViewController.create(with: viewModel)
     
-    rootViewController.pushViewController(todayVC, animated: true)
+    rootViewController.pushViewController(popularVC, animated: true)
     
     return .one(flowContributor: .contribute(
-      withNextPresentable: todayVC, withNextStepper: viewModel))
+      withNextPresentable: popularVC, withNextStepper: viewModel))
   }
   
   fileprivate func navigateToShowDetailScreen(with id: Int) -> FlowContributors {
@@ -104,6 +94,7 @@ public class AiringTodayFlow: Flow {
       withNextPresentable: seasonsVC, withNextStepper: viewModel))
   }
   
+  
   // MARK: - Uses Cases
   
   private func makeFetchTodayShowsUseCase() -> FetchTVShowsUseCase {
@@ -115,17 +106,17 @@ public class AiringTodayFlow: Flow {
   }
   
   private func makeFetchEpisodesUseCase() -> FetchEpisodesUseCase {
-    return DefaultFetchEpisodesUseCase(episodesRepository: episodesRepository)
-  }
+     return DefaultFetchEpisodesUseCase(episodesRepository: episodesRepository)
+   }
 }
 
 // MARK: - Steps
 
-public enum AiringTodayStep: Step {
+public enum PopularStep: Step {
   
   case
   
-  todayFeatureInit,
+  popularFeatureInit,
   
   showIsPicked(withId: Int)
 }

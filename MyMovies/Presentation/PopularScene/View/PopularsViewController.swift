@@ -16,13 +16,10 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
   @IBOutlet weak var tableView: UITableView!
   
   var viewModel:PopularViewModel!
-  private var popularViewControllersFactory: PopularViewControllersFactory!
   
-  static func create(with viewModel: PopularViewModel,
-                     popularViewControllersFactory: PopularViewControllersFactory) -> PopularsViewController {
+  static func create(with viewModel: PopularViewModel) -> PopularsViewController {
     let controller = PopularsViewController.instantiateViewController()
     controller.viewModel = viewModel
-    controller.popularViewControllersFactory = popularViewControllersFactory
     return controller
   }
   
@@ -99,7 +96,7 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
       .bind { [weak self] (indexPath, item) in
         guard let strongSelf = self else { return }
         strongSelf.tableView.deselectRow(at: indexPath, animated: true)
-        strongSelf.handle(item.id)
+        strongSelf.viewModel.navigateTo(step: PopularStep.showIsPicked(withId: item.id) )
     }
     .disposed(by: disposeBag)
   }
@@ -121,19 +118,19 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
 
 // MARK: - TODO, refactor navigation
 
-extension PopularsViewController {
-  
-  func handle(_ route: Int?) {
-    guard let identifier = route else { return }
-    let detailController = popularViewControllersFactory.makeTVShowDetailsViewController(with: identifier)
-    navigationController?.pushViewController(detailController, animated: true)
-  }
-}
-
-// MARK: - PopularViewControllersFactory
-
-protocol PopularViewControllersFactory {
-  
-  func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController
-}
+//extension PopularsViewController {
+//
+//  func handle(_ route: Int?) {
+//    guard let identifier = route else { return }
+//    let detailController = popularViewControllersFactory.makeTVShowDetailsViewController(with: identifier)
+//    navigationController?.pushViewController(detailController, animated: true)
+//  }
+//}
+//
+//// MARK: - PopularViewControllersFactory
+//
+//protocol PopularViewControllersFactory {
+//
+//  func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController
+//}
 

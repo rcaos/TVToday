@@ -16,18 +16,15 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
   
   private var viewModel: TVShowListViewModel!
   
-  private var showsListViewControllersFactory: TVShowListViewControllersFactory!
-  
   private let disposeBag = DisposeBag()
   
   private var emptyView = MessageView(message: "No results to Show")
+  
   private var loadingView = LoadingView(frame: .zero)
   
-  static func create(with viewModel: TVShowListViewModel,
-                     showsListViewControllersFactory: TVShowListViewControllersFactory) -> TVShowListViewController {
+  static func create(with viewModel: TVShowListViewModel) -> TVShowListViewController {
     let controller = TVShowListViewController.instantiateViewController()
     controller.viewModel = viewModel
-    controller.showsListViewControllersFactory = showsListViewControllersFactory
     return controller
   }
   
@@ -93,7 +90,7 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
       .bind { [weak self] (indexPath, item) in
         guard let strongSelf = self else { return }
         strongSelf.tableView.deselectRow(at: indexPath, animated: true)
-        strongSelf.handle(item.id)
+        strongSelf.viewModel.navigateTo(step: SearchStep.showIsPicked(withId: item.id) )
     }
     .disposed(by: disposeBag)
     
@@ -117,20 +114,4 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
       tableView.tableFooterView = loadingView
     }
   }
-}
-
-// MARK: - TODO, refactor Navigation
-
-extension TVShowListViewController {
-  
-  func handle(_ route: Int?) {
-    guard let identifier = route else { return }
-    let detailController =  showsListViewControllersFactory.makeTVShowDetailsViewController(with: identifier)
-    navigationController?.pushViewController(detailController, animated: true)
-  }
-}
-
-protocol TVShowListViewControllersFactory {
-  
-  func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController
 }

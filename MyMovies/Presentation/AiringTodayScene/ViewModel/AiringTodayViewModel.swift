@@ -59,8 +59,11 @@ extension AiringTodayViewModel {
   }
 }
 
-// MARK: - Stepper
+// MARK: - Stepper, Navigation
 
 extension AiringTodayViewModel: Stepper {
   
+  public func navigateTo(step: Step) {
+    steps.accept(step)
+  }
 }

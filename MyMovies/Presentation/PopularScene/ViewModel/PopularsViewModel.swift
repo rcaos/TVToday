@@ -6,10 +6,13 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
-import Foundation
 import RxSwift
+import RxFlow
+import RxRelay
 
 final class PopularViewModel: ShowsViewModel {
+  
+  var steps = PublishRelay<Step>()
   
   var fetchTVShowsUseCase: FetchTVShowsUseCase
   
@@ -55,3 +58,11 @@ extension PopularViewModel {
   }
 }
 
+// MARK: - Stepper
+
+extension PopularViewModel: Stepper {
+  
+  public func navigateTo(step: Step) {
+    steps.accept(step)
+  }
+}

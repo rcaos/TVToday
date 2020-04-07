@@ -1,5 +1,5 @@
 //
-//  MainDIContainer.swift
+//  AppDIContainer.swift
 //  TVToday
 //
 //  Created by Jeans Ruiz on 4/7/20.
@@ -9,9 +9,7 @@
 import UIKit
 import RxFlow
 
-// rename by AppDIContainer instead
-
-public class MainDIContainer {
+public class AppDIContainer {
   
   lazy var appConfigurations = AppConfigurations()
   
@@ -43,11 +41,10 @@ public class MainDIContainer {
     
     self.coordinator = FlowCoordinator()
     
-    // Create AppFlow
     self.appFlow = AppFlow(
       window: window,
-      apiDataTransferService: apiDataTransferService,
-      imageTransferService: imageTransferService)
+      dependencies: AppFlow.Dependencies(apiDataTransferService: apiDataTransferService,
+                           imageTransferService: imageTransferService))
     
     // Base on some Conditions, guest, logged, etc, launch "appFlow" with "First Step"
     // AppFlow handle "Flows.whenReady"

@@ -11,19 +11,16 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
   
-  //let appDIContainer = AppDIContainer()
-  
   var window: UIWindow?
   
-  // Change "MainDIContainer" for appDIContainer
-  private var dIContainer: MainDIContainer? = nil
+  private var appDIContainer: AppDIContainer? = nil
   
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     
     window = UIWindow(frame: UIScreen.main.bounds)
     
-    dIContainer = MainDIContainer(window: window!)
+    appDIContainer = AppDIContainer(window: window!)
+    
     return true
   }
 }
-

@@ -11,6 +11,13 @@ import RxFlow
 
 class AppFlow: Flow {
   
+  public struct Dependencies {
+    let apiDataTransferService: DataTransferService
+    let imageTransferService: DataTransferService
+  }
+  
+  private let dependencies: Dependencies
+  
   public var root: Presentable {
     let controller = UIViewController()
     controller.view.backgroundColor = .white
@@ -19,18 +26,12 @@ class AppFlow: Flow {
   
   private let rootWindow: UIWindow
   
-  // Dependencies, use struct instead
-  private let apiDataTransferService: DataTransferService
-  private let imageTransferService: DataTransferService
-  
   // MARK: - Life Cycle
+  
   public init(
-    window: UIWindow,
-    apiDataTransferService: DataTransferService,
-    imageTransferService: DataTransferService) {
+    window: UIWindow, dependencies: Dependencies) {
     self.rootWindow = window
-    self.apiDataTransferService = apiDataTransferService
-    self.imageTransferService = imageTransferService
+    self.dependencies = dependencies
   }
   
   func navigate(to step: Step) -> FlowContributors {
@@ -48,7 +49,9 @@ class AppFlow: Flow {
   }
   
   fileprivate func nagivateToSignedFlow() -> FlowContributors {
-    let signedFlow = SignedFlow(apiDataTransferService: apiDataTransferService, imageTransferService: imageTransferService)
+    let signedFlow = SignedFlow(dependencies:
+      SignedFlow.Dependencies(apiDataTransferService: dependencies.apiDataTransferService,
+                              imageTransferService: dependencies.imageTransferService))
     Flows.whenReady(flow1: signedFlow) { root in
       DispatchQueue.main.async {
         self.rootWindow.rootViewController = root

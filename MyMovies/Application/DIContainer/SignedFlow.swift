@@ -11,6 +11,13 @@ import RxFlow
 
 public class SignedFlow: Flow {
   
+  public struct Dependencies {
+    let apiDataTransferService: DataTransferService
+    let imageTransferService: DataTransferService
+  }
+  
+  private let dependencies: Dependencies
+  
   public var root: Presentable {
     return self.rootViewController
   }
@@ -20,17 +27,10 @@ public class SignedFlow: Flow {
     return tabBarController
   }()
   
-  // Dependencies, use struct instead ?
-  private let apiDataTransferService: DataTransferService
-  private let imageTransferService: DataTransferService
-  
   // MARK: - Life Cycle
   
-  public init(
-    apiDataTransferService: DataTransferService,
-    imageTransferService: DataTransferService) {
-    self.apiDataTransferService = apiDataTransferService
-    self.imageTransferService = imageTransferService
+  public init(dependencies: Dependencies) {
+    self.dependencies = dependencies
   }
   
   public func navigate(to step: Step) -> FlowContributors {
@@ -45,17 +45,17 @@ public class SignedFlow: Flow {
   }
   
   fileprivate func showMainFeatures() -> FlowContributors {
-    let airingTodayFlow = AiringTodayFlow(
-      apiDataTransferService: apiDataTransferService,
-      imageTransferService: imageTransferService)
+    let airingTodayFlow = AiringTodayFlow(dependencies:
+      AiringTodayFlow.Dependencies(apiDataTransferService: dependencies.apiDataTransferService,
+                                   imageTransferService: dependencies.imageTransferService) )
     
-    let popularFlow = PopularFlow(
-      apiDataTransferService: apiDataTransferService,
-      imageTransferService: imageTransferService)
+    let popularFlow = PopularFlow(dependencies:
+    PopularFlow.Dependencies(apiDataTransferService: dependencies.apiDataTransferService,
+                                 imageTransferService: dependencies.imageTransferService) )
     
-    let searchFlow = SearchFlow(
-      apiDataTransferService: apiDataTransferService,
-      imageTransferService: imageTransferService)
+    let searchFlow = SearchFlow(dependencies:
+    SearchFlow.Dependencies(apiDataTransferService: dependencies.apiDataTransferService,
+                                 imageTransferService: dependencies.imageTransferService) )
     
     Flows.whenReady(flow1: airingTodayFlow, flow2: popularFlow, flow3: searchFlow) {
       (airingTodayRoot: UINavigationController, popularRoot: UINavigationController,

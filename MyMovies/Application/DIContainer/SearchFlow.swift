@@ -11,6 +11,13 @@ import RxFlow
 
 public class SearchFlow: Flow {
   
+  public struct Dependencies {
+    let apiDataTransferService: DataTransferService
+    let imageTransferService: DataTransferService
+  }
+  
+  private let dependencies: Dependencies
+  
   public var root: Presentable {
     return self.rootViewController
   }
@@ -20,30 +27,23 @@ public class SearchFlow: Flow {
     return navigationController
   }()
   
-  // Dependencies, use struct instead ?
-  private let apiDataTransferService: DataTransferService
-  private let imageTransferService: DataTransferService
-  
   // Repositories
   private lazy var showsRepository: TVShowsRepository = {
-    return DefaultTVShowsRepository(dataTransferService: apiDataTransferService)
+    return DefaultTVShowsRepository(dataTransferService: dependencies.apiDataTransferService)
   }()
   
   private lazy var genresRepository: GenresRepository = {
-    return DefaultGenreRepository(dataTransferService: apiDataTransferService)
+    return DefaultGenreRepository(dataTransferService: dependencies.apiDataTransferService)
   }()
   
   private lazy var showDetailsRepository: TVShowDetailsRepository = {
-    return DefaultTVShowDetailsRepository(dataTransferService: apiDataTransferService)
+    return DefaultTVShowDetailsRepository(dataTransferService: dependencies.apiDataTransferService)
   }()
   
   // MARK: - Life Cycle
   
-  public init(
-    apiDataTransferService: DataTransferService,
-    imageTransferService: DataTransferService) {
-    self.apiDataTransferService = apiDataTransferService
-    self.imageTransferService = imageTransferService
+  public init(dependencies: Dependencies) {
+    self.dependencies = dependencies
   }
   
   // MARK: - Navigation

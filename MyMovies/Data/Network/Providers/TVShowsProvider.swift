@@ -9,71 +9,60 @@
 import Foundation
 
 enum TVShowsProvider {
-    
-    case getAiringTodayShows(Int)
-    case getPopularTVShows(Int)
-    case getTVShowDetail(Int)
-    case getEpisodesFor(Int,Int)
-    case searchTVShow(String, Int)
-    case listTVShowsBy(Int,Int)
+  
+  case getAiringTodayShows(Int)
+  case getPopularTVShows(Int)
+  case getTVShowDetail(Int)
+  case getEpisodesFor(Int,Int)
+  case searchTVShow(String, Int)
+  case listTVShowsBy(Int,Int)
 }
 
 extension TVShowsProvider: EndPoint {
-        
-    var path: String {
-        switch self {
-        case .getAiringTodayShows:
-            return "/3/tv/airing_today"
-        case .getPopularTVShows:
-            return "/3/tv/popular"
-        case .getTVShowDetail(let identifier):
-            return "/3/tv/\(identifier)"
-        case .getEpisodesFor(let show, let season):
-            return "/3/tv/\(show)/season/\(season)"
-        case .searchTVShow:
-            return "/3/search/tv"
-        case .listTVShowsBy:
-            return "/3/discover/tv"
-        }
+  
+  var path: String {
+    switch self {
+    case .getAiringTodayShows:
+      return "/3/tv/airing_today"
+    case .getPopularTVShows:
+      return "/3/tv/popular"
+    case .getTVShowDetail(let identifier):
+      return "/3/tv/\(identifier)"
+    case .getEpisodesFor(let show, let season):
+      return "/3/tv/\(show)/season/\(season)"
+    case .searchTVShow:
+      return "/3/search/tv"
+    case .listTVShowsBy:
+      return "/3/discover/tv"
     }
+  }
+  
+  var queryParameters: [String : Any] {
+    var parameters: [String: Any] = [:]
     
-    func getParameters(with config: NetworkConfigurable) -> [String: Any] {
-        var params: [String: Any] = [:]
-        
-        switch self {
-        case .getAiringTodayShows(let page):
-            params["api_key"] = config.queryParameters["api_key"]
-            params["language"] = config.queryParameters["language"]
-            params["page"] = page
-        case .getPopularTVShows(let page):
-            params["api_key"] = config.queryParameters["api_key"]
-            params["language"] = config.queryParameters["language"]
-            params["page"] = page
-        case .getTVShowDetail(_):
-            params["api_key"] = config.queryParameters["api_key"]
-            params["language"] = config.queryParameters["language"]
-        case .getEpisodesFor(_, _):
-            params["api_key"] = config.queryParameters["api_key"]
-            params["language"] = config.queryParameters["language"]
-        case .searchTVShow(let query, let page):
-            params["api_key"] = config.queryParameters["api_key"]
-            params["language"] = config.queryParameters["language"]
-            params["query"] = query
-            params["page"] = page
-        case .listTVShowsBy(let genre, let page):
-            params["api_key"] = config.queryParameters["api_key"]
-            params["language"] = config.queryParameters["language"]
-            params["with_genres"] = genre
-            params["page"] = page
-            params["sort_by"] = "popularity.desc"
-            params["timezone"] = "America%2FNew_York"
-            params["include_null_first_air_dates"] = "false"
-        }
-        
-        return params
+    switch self {
+    case .getAiringTodayShows(let page):
+      parameters["page"] = page
+    case .getPopularTVShows(let page):
+      parameters["page"] = page
+    case .getTVShowDetail:
+      break
+    case .getEpisodesFor:
+      break
+    case .searchTVShow(let query, let page):
+      parameters["query"] = query
+      parameters["page"] = page
+    case .listTVShowsBy(let genre, let page):
+      parameters["with_genres"] = genre
+      parameters["page"] = page
+      parameters["sort_by"] = "popularity.desc"
+      parameters["timezone"] = "America%2FNew_York"
+      parameters["include_null_first_air_dates"] = "false"
     }
-    
-    var method: ServiceMethod {
-        return .get
-    }
+    return parameters
+  }
+  
+  var method: ServiceMethod {
+    return .get
+  }
 }

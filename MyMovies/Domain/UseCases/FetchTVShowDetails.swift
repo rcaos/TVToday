@@ -7,10 +7,14 @@
 //
 
 import Foundation
+import RxSwift
 
 protocol FetchTVShowDetailsUseCase {
     func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue,
                  completion: @escaping(Result<TVShowDetailResult, Error>) -> Void) -> Cancellable?
+  
+  // Reactive way
+  func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> Observable<TVShowDetailResult>
 }
 
 struct FetchTVShowDetailsUseCaseRequestValue {
@@ -31,5 +35,10 @@ final class DefaultFetchTVShowDetailsUseCase: FetchTVShowDetailsUseCase {
                  completion: @escaping (Result<TVShowDetailResult, Error>) -> Void) -> Cancellable? {
         
         return tvShowDetailsRepository.tvShowDetails(with: requestValue.identifier, completion: completion)
+    }
+  
+    func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> Observable<TVShowDetailResult> {
+      
+        return tvShowDetailsRepository.fetchTVShowDetails(with: requestValue.identifier)
     }
 }

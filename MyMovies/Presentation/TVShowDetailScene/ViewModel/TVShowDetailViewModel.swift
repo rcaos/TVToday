@@ -26,6 +26,8 @@ final class TVShowDetailViewModel {
   var input: Input
   var output: Output
   
+  let disposeBag = DisposeBag()
+  
   // MARK: - Initializers
   
   init(_ showId: Int, fetchDetailShowUseCase: FetchTVShowDetailsUseCase) {
@@ -40,18 +42,24 @@ final class TVShowDetailViewModel {
   //MARK: - Networking
   
   func getShowDetails() {
-    
     let request = FetchTVShowDetailsUseCaseRequestValue(identifier: showId)
     
-    _ = fetchDetailShowUseCase.execute(requestValue: request) { [weak self] result in
-      guard let strongSelf = self else { return }
-      switch result {
-      case .success(let response):
+    fetchDetailShowUseCase.execute(requestValue: request)
+      .subscribe(onNext: { [weak self] response in
+        guard let strongSelf = self else { return }
         strongSelf.processFetched(for: response)
-      case .failure(let error):
-        strongSelf.viewStateObservableSubject.onNext(.error(error.localizedDescription))
-      }
-    }
+        },onError: { [weak self] error in
+          print("-- fetchDetailShowUseCase - onError")
+          guard let strongSelf = self else { return }
+          
+          strongSelf.viewStateObservableSubject.onNext(.error(error.localizedDescription))
+        }
+        ,onCompleted: {
+          print("-- fetchDetailShowUseCase - onCompleted")
+      },onDisposed: {
+        print("-- fetchDetailShowUseCase - onDisposed")
+      })
+      .disposed(by: disposeBag)
   }
   
   private func processFetched(for response: TVShowDetailResult) {

@@ -7,13 +7,17 @@
 //
 
 import Foundation
+import RxSwift
 
 final class DefaultTVShowDetailsRepository {
     
     private let dataTransferService: DataTransferService
+  
+  private let dataTransferServiceReactive: DataTransferServiceReactive
     
-    init(dataTransferService: DataTransferService) {
+  init(dataTransferService: DataTransferService, dataTransferServiceReactive: DataTransferServiceReactive) {
         self.dataTransferService = dataTransferService
+    self.dataTransferServiceReactive = dataTransferServiceReactive
     }
 }
 
@@ -30,4 +34,12 @@ extension DefaultTVShowDetailsRepository: TVShowDetailsRepository {
                          completion: completion)
         return RepositoryTask(networkTask: networkTask)
     }
+  
+  // Reactive way
+  func fetchTVShowDetails(with showId: Int) -> Observable<TVShowDetailResult> {
+    
+    let endPoint = TVShowsProvider.getTVShowDetail(showId)
+    
+    return dataTransferServiceReactive.request(endPoint, TVShowDetailResult.self)
+  }
 }

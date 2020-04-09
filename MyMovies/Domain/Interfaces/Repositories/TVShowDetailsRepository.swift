@@ -7,10 +7,13 @@
 //
 
 import Foundation
+import RxSwift
 
 protocol TVShowDetailsRepository {
 
     @discardableResult
     func tvShowDetails(with identifier: Int,
                        completion: @escaping(Result<TVShowDetailResult,Error>) -> Void) -> Cancellable?
+  
+  func fetchTVShowDetails(with showId: Int) -> Observable<TVShowDetailResult>
 }

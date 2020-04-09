@@ -14,6 +14,7 @@ public class SignedFlow: Flow {
   public struct Dependencies {
     let apiDataTransferService: DataTransferService
     let imageTransferService: DataTransferService
+    let apiDataTransferServiceReactive: DataTransferServiceReactive
   }
   
   private let dependencies: Dependencies
@@ -46,16 +47,22 @@ public class SignedFlow: Flow {
   
   fileprivate func showMainFeatures() -> FlowContributors {
     let airingTodayFlow = AiringTodayFlow(dependencies:
-      AiringTodayFlow.Dependencies(apiDataTransferService: dependencies.apiDataTransferService,
-                                   imageTransferService: dependencies.imageTransferService) )
+      AiringTodayFlow.Dependencies(
+        apiDataTransferService: dependencies.apiDataTransferService,
+        imageTransferService: dependencies.imageTransferService,
+        apiDataTransferServiceReactive: dependencies.apiDataTransferServiceReactive) )
     
     let popularFlow = PopularFlow(dependencies:
-    PopularFlow.Dependencies(apiDataTransferService: dependencies.apiDataTransferService,
-                                 imageTransferService: dependencies.imageTransferService) )
+    PopularFlow.Dependencies(
+      apiDataTransferService: dependencies.apiDataTransferService,
+      imageTransferService: dependencies.imageTransferService,
+      apiDataTransferServiceReactive: dependencies.apiDataTransferServiceReactive) )
     
     let searchFlow = SearchFlow(dependencies:
-    SearchFlow.Dependencies(apiDataTransferService: dependencies.apiDataTransferService,
-                                 imageTransferService: dependencies.imageTransferService) )
+    SearchFlow.Dependencies(
+      apiDataTransferService: dependencies.apiDataTransferService,
+      imageTransferService: dependencies.imageTransferService,
+      apiDataTransferServiceReactive: dependencies.apiDataTransferServiceReactive) )
     
     Flows.whenReady(flow1: airingTodayFlow, flow2: popularFlow, flow3: searchFlow) {
       (airingTodayRoot: UINavigationController, popularRoot: UINavigationController,

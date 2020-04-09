@@ -14,6 +14,7 @@ class AppFlow: Flow {
   public struct Dependencies {
     let apiDataTransferService: DataTransferService
     let imageTransferService: DataTransferService
+    let apiDataTransferServiceReactive: DataTransferServiceReactive
   }
   
   private let dependencies: Dependencies
@@ -50,8 +51,10 @@ class AppFlow: Flow {
   
   fileprivate func nagivateToSignedFlow() -> FlowContributors {
     let signedFlow = SignedFlow(dependencies:
-      SignedFlow.Dependencies(apiDataTransferService: dependencies.apiDataTransferService,
-                              imageTransferService: dependencies.imageTransferService))
+      SignedFlow.Dependencies(
+        apiDataTransferService: dependencies.apiDataTransferService,
+        imageTransferService: dependencies.imageTransferService,
+        apiDataTransferServiceReactive: dependencies.apiDataTransferServiceReactive))
     Flows.whenReady(flow1: signedFlow) { root in
       DispatchQueue.main.async {
         self.rootWindow.rootViewController = root

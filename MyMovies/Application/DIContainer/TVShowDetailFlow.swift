@@ -14,7 +14,6 @@ public class TVShowDetailFlow: Flow {
   public struct Dependencies {
     let apiDataTransferService: DataTransferService
     let imageTransferService: DataTransferService
-    let apiDataTransferServiceReactive: DataTransferServiceReactive
   }
   
   private let dependencies: Dependencies
@@ -27,7 +26,7 @@ public class TVShowDetailFlow: Flow {
   
   // Repositories
   private lazy var showDetailsRepository: TVShowDetailsRepository = {
-    return DefaultTVShowDetailsRepository(dataTransferService: dependencies.apiDataTransferService, dataTransferServiceReactive: dependencies.apiDataTransferServiceReactive)
+    return DefaultTVShowDetailsRepository(dataTransferService: dependencies.apiDataTransferService)
   }()
   
   private lazy var episodesRepository: TVEpisodesRepository = {

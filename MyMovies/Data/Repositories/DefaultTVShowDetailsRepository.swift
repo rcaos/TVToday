@@ -10,15 +10,12 @@ import Foundation
 import RxSwift
 
 final class DefaultTVShowDetailsRepository {
-    
-    private let dataTransferService: DataTransferService
   
-  private let dataTransferServiceReactive: DataTransferServiceReactive
-    
-  init(dataTransferService: DataTransferService, dataTransferServiceReactive: DataTransferServiceReactive) {
-        self.dataTransferService = dataTransferService
-    self.dataTransferServiceReactive = dataTransferServiceReactive
-    }
+  private let dataTransferService: DataTransferService
+  
+  init(dataTransferService: DataTransferService) {
+    self.dataTransferService = dataTransferService
+  }
 }
 
 // MARK: - TVShowDetailsRepository
@@ -40,6 +37,6 @@ extension DefaultTVShowDetailsRepository: TVShowDetailsRepository {
     
     let endPoint = TVShowsProvider.getTVShowDetail(showId)
     
-    return dataTransferServiceReactive.request(endPoint, TVShowDetailResult.self)
+    return dataTransferService.request(endPoint, TVShowDetailResult.self)
   }
 }

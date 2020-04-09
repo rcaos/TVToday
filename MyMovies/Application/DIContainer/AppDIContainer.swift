@@ -25,18 +25,6 @@ public class AppDIContainer {
     return ApiClient(with: configuration)
   }()
   
-  lazy var apiDataTransferServiceReactive: DataTransferServiceReactive = {
-    let queryParameters = [
-      "api_key": appConfigurations.apiKey,
-      "language": NSLocale.preferredLanguages.first ?? "en"]
-    
-    let configuration = ApiDataNetworkConfig(
-      baseURL: appConfigurations.apiBaseURL,
-      queryParameters: queryParameters)
-    
-    return ApiClientReactive(with: configuration)
-  }()
-  
   lazy var imageTransferService: DataTransferService = {
     let configuration = ApiDataNetworkConfig(
       baseURL: appConfigurations.imagesBaseURL)
@@ -57,8 +45,7 @@ public class AppDIContainer {
       window: window,
       dependencies: AppFlow.Dependencies(
         apiDataTransferService: apiDataTransferService,
-        imageTransferService: imageTransferService,
-        apiDataTransferServiceReactive: apiDataTransferServiceReactive))
+        imageTransferService: imageTransferService))
     
     // Base on some Conditions, guest, logged, etc, launch "appFlow" with "First Step"
     // AppFlow handle "Flows.whenReady"

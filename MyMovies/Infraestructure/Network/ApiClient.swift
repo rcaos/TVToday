@@ -6,7 +6,7 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import Foundation
+import RxSwift
 
 public protocol DataTransferService {
     
@@ -15,6 +15,8 @@ public protocol DataTransferService {
     func request<T: EndPoint> (service: T, completion: @escaping CompletionHandler<Data>) -> NetworkCancellable?
     
     func request<T: EndPoint, U: Decodable>(service: T, decodeType: U.Type, completion: @escaping CompletionHandler<U>) -> NetworkCancellable?
+  
+  func request<Element: Decodable>(_ router: EndPoint, _ type: Element.Type) -> Observable<Element>
 }
 
 public protocol NetworkCancellable {
@@ -73,6 +75,34 @@ extension ApiClient: DataTransferService {
         }
         return task
     }
+  
+  func request<Element>(_ router: EndPoint, _ decodingType: Element.Type) -> Observable<Element> where Element : Decodable {
+    return Observable<Element>.create { [unowned self] (event) -> Disposable in
+      
+      let task = self.request( router.getUrlRequest(with: self.configuration)) { result in
+        switch result {
+        case .success(let data):
+          let decoder = JSONDecoder()
+          do {
+            let resp = try decoder.decode(decodingType, from: data)
+            event.on( .next(resp) )
+          }
+          catch {
+            print("error to Decode: [\(error)]")
+            event.on( .error(error))
+          }
+        case .failure(let error):
+          print("error server: [\(error)]")
+          event.on( .error(error) )
+        }
+        event.onCompleted()
+      }
+      
+      return Disposables.create {
+        task.cancel()
+      }
+    }
+  }
 }
 
 extension URLSessionTask: NetworkCancellable { }

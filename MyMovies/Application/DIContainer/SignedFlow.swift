@@ -14,7 +14,6 @@ public class SignedFlow: Flow {
   public struct Dependencies {
     let apiDataTransferService: DataTransferService
     let imageTransferService: DataTransferService
-    let apiDataTransferServiceReactive: DataTransferServiceReactive
   }
   
   private let dependencies: Dependencies
@@ -49,20 +48,17 @@ public class SignedFlow: Flow {
     let airingTodayFlow = AiringTodayFlow(dependencies:
       AiringTodayFlow.Dependencies(
         apiDataTransferService: dependencies.apiDataTransferService,
-        imageTransferService: dependencies.imageTransferService,
-        apiDataTransferServiceReactive: dependencies.apiDataTransferServiceReactive) )
+        imageTransferService: dependencies.imageTransferService) )
     
     let popularFlow = PopularFlow(dependencies:
     PopularFlow.Dependencies(
       apiDataTransferService: dependencies.apiDataTransferService,
-      imageTransferService: dependencies.imageTransferService,
-      apiDataTransferServiceReactive: dependencies.apiDataTransferServiceReactive) )
+      imageTransferService: dependencies.imageTransferService) )
     
     let searchFlow = SearchFlow(dependencies:
     SearchFlow.Dependencies(
       apiDataTransferService: dependencies.apiDataTransferService,
-      imageTransferService: dependencies.imageTransferService,
-      apiDataTransferServiceReactive: dependencies.apiDataTransferServiceReactive) )
+      imageTransferService: dependencies.imageTransferService) )
     
     Flows.whenReady(flow1: airingTodayFlow, flow2: popularFlow, flow3: searchFlow) {
       (airingTodayRoot: UINavigationController, popularRoot: UINavigationController,

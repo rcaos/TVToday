@@ -14,7 +14,6 @@ public class SearchFlow: Flow {
   public struct Dependencies {
     let apiDataTransferService: DataTransferService
     let imageTransferService: DataTransferService
-    let apiDataTransferServiceReactive: DataTransferServiceReactive
   }
   
   private let dependencies: Dependencies
@@ -87,8 +86,7 @@ public class SearchFlow: Flow {
     let detailShowFlow = TVShowDetailFlow(rootViewController: rootViewController,
       dependencies: TVShowDetailFlow.Dependencies(
         apiDataTransferService: dependencies.apiDataTransferService,
-        imageTransferService: dependencies.imageTransferService,
-        apiDataTransferServiceReactive: dependencies.apiDataTransferServiceReactive))
+        imageTransferService: dependencies.imageTransferService))
     
     return .one(flowContributor: .contribute(
       withNextPresentable: detailShowFlow,

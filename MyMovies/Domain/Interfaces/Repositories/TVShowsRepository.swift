@@ -6,22 +6,21 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import Foundation
+import RxSwift
 
 protocol TVShowsRepository {
-    
-    func tvShowsList(with filter: TVShowsListFilter,
-                     page: Int,
-                     completion: @escaping(Result<TVShowResult,Error>) -> Void) -> Cancellable?
+  
+  func fetchTVShowsList(with filter: TVShowsListFilter,
+                          page: Int) -> Observable<TVShowResult>
 }
 
 // MARK: - TVShowsListFilter
 
 enum TVShowsListFilter {
-
-    case today, popular
-    
-    case byGenre(genreId: Int)
-    
-    case search(query: String)
+  
+  case today, popular
+  
+  case byGenre(genreId: Int)
+  
+  case search(query: String)
 }

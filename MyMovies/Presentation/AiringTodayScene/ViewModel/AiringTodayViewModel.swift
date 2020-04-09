@@ -20,11 +20,7 @@ final class AiringTodayViewModel: ShowsViewModel {
   
   var shows: [TVShow]
   
-  var showsLoadTask: Cancellable? {
-    willSet {
-      showsLoadTask?.cancel()
-    }
-  }
+  var disposeBag = DisposeBag()
   
   // MARK: - Base ViewModel
   var input: Input

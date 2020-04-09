@@ -20,13 +20,9 @@ final class PopularViewModel: ShowsViewModel {
   
   var shows: [TVShow]
   
-  var showsLoadTask: Cancellable? {
-    willSet {
-      showsLoadTask?.cancel()
-    }
-  }
-  
   var viewStateObservableSubject: BehaviorSubject<SimpleViewState<TVShow>> = .init(value: .loading)
+  
+  var  disposeBag = DisposeBag()
   
   // MARK: - Base ViewModel
   var input: Input

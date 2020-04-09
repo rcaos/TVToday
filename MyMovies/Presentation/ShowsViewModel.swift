@@ -16,10 +16,10 @@ protocol ShowsViewModel: class {
   var filter: TVShowsListFilter { get set }
   
   var shows: [TVShow] { get set }
-
-  var showsLoadTask: Cancellable? { get set }
   
   var viewStateObservableSubject: BehaviorSubject<SimpleViewState<TVShow>> { get set }
+  
+  var disposeBag: DisposeBag { get set }
 }
 
 extension ShowsViewModel {
@@ -32,15 +32,15 @@ extension ShowsViewModel {
     
     let request = FetchTVShowsUseCaseRequestValue(filter: filter, page: page)
     
-    showsLoadTask = fetchTVShowsUseCase.execute(requestValue: request) { [weak self] result in
-      guard let strongSelf = self else { return }
-      switch result {
-      case .success(let results):
-        strongSelf.processFetched(for: results)
-      case .failure(let error):
-        strongSelf.viewStateObservableSubject.onNext(.error(error.localizedDescription))
-      }
-    }
+    fetchTVShowsUseCase.execute(requestValue: request)
+      .subscribe(onNext: { [weak self] result in
+        guard let strongSelf = self else { return }
+        strongSelf.processFetched(for: result)
+        }, onError: { [weak self] error in
+          guard let strongSelf = self else { return }
+          strongSelf.viewStateObservableSubject.onNext(.error(error.localizedDescription))
+      })
+      .disposed(by: disposeBag)
   }
   
   private func processFetched(for response: TVShowResult) {

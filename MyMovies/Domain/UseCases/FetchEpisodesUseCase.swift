@@ -6,32 +6,31 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import Foundation
+import RxSwift
 
 protocol FetchEpisodesUseCase {
-    func execute(requestValue: FetchEpisodesUseCaseRequestValue, completion: @escaping (Result<SeasonResult, Error>) -> Void) -> Cancellable?
+  func execute(requestValue: FetchEpisodesUseCaseRequestValue) -> Observable<SeasonResult>
 }
 
 struct FetchEpisodesUseCaseRequestValue {
-    let showIdentifier: Int
-    let seasonNumber: Int
+  let showIdentifier: Int
+  let seasonNumber: Int
 }
 
 // MARK: - DefaultFetchEpisodesUseCase
 
 final class DefaultFetchEpisodesUseCase: FetchEpisodesUseCase {
+  
+  private let episodesRepository: TVEpisodesRepository
+  
+  init(episodesRepository: TVEpisodesRepository) {
+    self.episodesRepository = episodesRepository
+  }
+  
+  func execute(requestValue: FetchEpisodesUseCaseRequestValue) -> Observable<SeasonResult> {
     
-    private let episodesRepository: TVEpisodesRepository
-    
-    init(episodesRepository: TVEpisodesRepository) {
-        self.episodesRepository = episodesRepository
-    }
-    
-    func execute(requestValue: FetchEpisodesUseCaseRequestValue, completion: @escaping (Result<SeasonResult, Error>) -> Void) -> Cancellable? {
-        
-        return episodesRepository.tvEpisodesList(
-            for: requestValue.showIdentifier,
-            season: requestValue.seasonNumber,
-            completion: completion)
-    }
+    return episodesRepository.fetchEpisodesList(
+      for: requestValue.showIdentifier,
+      season: requestValue.seasonNumber)
+  }
 }

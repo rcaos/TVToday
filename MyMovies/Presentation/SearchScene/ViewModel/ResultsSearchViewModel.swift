@@ -19,11 +19,7 @@ final class ResultsSearchViewModel: ShowsViewModel {
   
   var currentSearch = ""
   
-  var showsLoadTask: Cancellable? {
-    willSet {
-      showsLoadTask?.cancel()
-    }
-  }
+  var disposeBag = DisposeBag()
   
   var input: Input
   var output: Output

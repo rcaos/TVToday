@@ -20,6 +20,8 @@ final class SearchViewModel {
   
   private let viewStateObservableSubject = BehaviorSubject<SimpleViewState<Genre>>(value: .loading)
   
+  private let disposeBag = DisposeBag()
+  
   var input: Input
   var output: Output
   
@@ -34,17 +36,16 @@ final class SearchViewModel {
   }
   
   func getGenres() {
-    
-    let _ = fetchGenresUseCase.execute(requestValue: FetchGenresUseCaseRequestValue()) { [weak self] result in
-      guard let strongSelf = self else { return }
-      switch result {
-      case .success(let response):
-        strongSelf.processFetched(for: response)
-      case .failure(let error):
-        print("Error to fetch Case use \(error)")
-        strongSelf.viewStateObservableSubject.onNext( .error(error.localizedDescription) )
-      }
-    }
+    fetchGenresUseCase.execute(requestValue: FetchGenresUseCaseRequestValue())
+      .subscribe(onNext: { [weak self] result in
+        guard let strongSelf = self else { return }
+        strongSelf.processFetched(for: result)
+        }, onError: { [weak self] error in
+          guard let strongSelf = self else { return }
+          print("Error to fetch Case use \(error)")
+          strongSelf.viewStateObservableSubject.onNext( .error(error.localizedDescription) )
+      })
+      .disposed(by: disposeBag)
   }
   
   // MARK: - Private

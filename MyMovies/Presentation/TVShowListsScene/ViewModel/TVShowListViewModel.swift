@@ -20,11 +20,7 @@ final class TVShowListViewModel: ShowsViewModel {
   
   var shows: [TVShow]
   
-  var showsLoadTask: Cancellable? {
-    willSet {
-      showsLoadTask?.cancel()
-    }
-  }
+  var disposeBag = DisposeBag()
   
   var genreId: Int
   

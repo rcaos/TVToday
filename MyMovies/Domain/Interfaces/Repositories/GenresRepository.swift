@@ -6,9 +6,9 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import Foundation
+import RxSwift
 
 protocol GenresRepository {
-    
-    func genresList(completion: @escaping(Result<GenreListResult,Error>) -> Void) -> Cancellable?
+  
+  func genresList() -> Observable<GenreListResult>
 }

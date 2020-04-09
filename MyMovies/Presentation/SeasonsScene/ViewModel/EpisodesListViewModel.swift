@@ -105,17 +105,18 @@ final class EpisodesListViewModel {
   
   fileprivate func fetchShowDetails(for tvShowId: Int) {
     let request = FetchTVShowDetailsUseCaseRequestValue(identifier: tvShowId)
-    _ = fetchDetailShowUseCase.execute(requestValue: request) { [weak self] result in
-      guard let strongSelf = self else { return }
-      switch result {
-      case .success(let response):
-        strongSelf.showDetailResult = response
+    
+    fetchDetailShowUseCase.execute(requestValue: request)
+      .subscribe(onNext: { [weak self] result in
+        guard let strongSelf = self else { return }
+        strongSelf.showDetailResult = result
         strongSelf.viewStateObservableSubject.onNext( .didLoadHeader )
         strongSelf.selectFirstSeason()
-      case .failure(let error):
-        strongSelf.viewStateObservableSubject.onNext( .error(error) )
-      }
-    }
+        }, onError: {[weak self] error in
+          guard let strongSelf = self else { return }
+          strongSelf.viewStateObservableSubject.onNext( .error(error) )
+      })
+      .disposed(by: disposeBag)
   }
   
   fileprivate func fetchEpisodesFor(season seasonNumber: Int) {
@@ -124,18 +125,17 @@ final class EpisodesListViewModel {
     
     let request = FetchEpisodesUseCaseRequestValue(showIdentifier: tvShowId, seasonNumber: seasonNumber)
     
-    _ = fetchEpisodesUseCase.execute(requestValue: request) { [weak self] result in
-      guard let strongSelf = self else { return }
-      
-      switch result {
-      case .success(let response):
-        strongSelf.processFetched(with: response)
-      case .failure(let error):
-        print("error: [\(error)]")
-        strongSelf.createSectionModel(state: .error(error), with: strongSelf.totalSeasons, seasonSelected: seasonNumber, and: [])
-        strongSelf.viewStateObservableSubject.onNext( .error(error) )
-      }
-    }
+    fetchEpisodesUseCase.execute(requestValue: request)
+      .subscribe(onNext: { [weak self] result in
+        guard let strongSelf = self else { return }
+        strongSelf.processFetched(with: result)
+        }, onError: { [weak self] error in
+          guard let strongSelf = self else { return }
+          print("error: [\(error)]")
+          strongSelf.createSectionModel(state: .error(error), with: strongSelf.totalSeasons, seasonSelected: seasonNumber, and: [])
+          strongSelf.viewStateObservableSubject.onNext( .error(error) )
+      })
+      .disposed(by: disposeBag)
   }
   
   fileprivate func processFetched(with response: SeasonResult) {

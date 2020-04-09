@@ -6,9 +6,9 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import Foundation
+import RxSwift
 
 protocol TVEpisodesRepository {
-    
-    func tvEpisodesList(for show: Int, season: Int, completion: @escaping (Result<SeasonResult, Error>) -> Void) -> Cancellable?
+  
+  func fetchEpisodesList(for show: Int, season: Int) -> Observable<SeasonResult>
 }

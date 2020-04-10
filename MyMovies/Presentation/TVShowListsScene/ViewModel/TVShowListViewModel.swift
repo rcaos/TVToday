@@ -47,9 +47,9 @@ final class TVShowListViewModel: ShowsViewModel {
   }
 }
 
-// MARK: - ViewModel Base
+// MARK: - BaseViewModel
 
-extension TVShowListViewModel {
+extension TVShowListViewModel: BaseViewModel {
   
   public struct Input { }
   
@@ -60,7 +60,7 @@ extension TVShowListViewModel {
 
 // MARK: - Stepper
 
-extension TVShowListViewModel: Stepper {
+extension TVShowListViewModel {
   
   public func navigateTo(step: Step) {
     steps.accept(step)

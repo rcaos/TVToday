@@ -43,9 +43,9 @@ final class PopularViewModel: ShowsViewModel {
   }
 }
 
-// MARK: - ViewModel Base
+// MARK: - BaseViewModel
 
-extension PopularViewModel {
+extension PopularViewModel: BaseViewModel {
   
   public struct Input { }
   
@@ -56,7 +56,7 @@ extension PopularViewModel {
 
 // MARK: - Stepper
 
-extension PopularViewModel: Stepper {
+extension PopularViewModel {
   
   public func navigateTo(step: Step) {
     steps.accept(step)

@@ -67,9 +67,9 @@ final class SearchViewModel {
   }
 }
 
-// MARK: - ViewModel Base
+// MARK: - BaseViewModel
 
-extension SearchViewModel {
+extension SearchViewModel: BaseViewModel {
   
   public struct Input { }
   
@@ -80,7 +80,7 @@ extension SearchViewModel {
 
 // MARK: - Stepper
 
-extension SearchViewModel: Stepper {
+extension SearchViewModel {
   
   public func navigateTo(step: Step) {
     steps.accept(step)

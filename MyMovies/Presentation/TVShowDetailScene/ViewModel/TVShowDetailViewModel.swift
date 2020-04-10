@@ -96,9 +96,9 @@ extension TVShowDetailViewModel {
   }
 }
 
-// MARK: - ViewModel Base
+// MARK: - BaseViewModel
 
-extension TVShowDetailViewModel {
+extension TVShowDetailViewModel: BaseViewModel {
   
   public struct TVShowDetailInfo {
     var id: Int
@@ -123,7 +123,7 @@ extension TVShowDetailViewModel {
 
 // MARK: - Stepper
 
-extension TVShowDetailViewModel: Stepper {
+extension TVShowDetailViewModel {
   
   public func navigateTo(step: Step) {
     steps.accept(step)

@@ -44,9 +44,9 @@ final class AiringTodayViewModel: ShowsViewModel {
   }
 }
 
-// MARK: - ViewModel Base
+// MARK: - BaseViewModel
 
-extension AiringTodayViewModel {
+extension AiringTodayViewModel: BaseViewModel {
   
   public struct Input { }
   
@@ -57,7 +57,7 @@ extension AiringTodayViewModel {
 
 // MARK: - Stepper, Navigation
 
-extension AiringTodayViewModel: Stepper {
+extension AiringTodayViewModel {
   
   public func navigateTo(step: Step) {
     steps.accept(step)

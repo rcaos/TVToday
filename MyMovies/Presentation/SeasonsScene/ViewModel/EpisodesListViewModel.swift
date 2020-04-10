@@ -217,9 +217,9 @@ extension EpisodesListViewModel {
   }
 }
 
-// MARK: - ViewModel Base
+// MARK: - BaseViewModel
 
-extension EpisodesListViewModel {
+extension EpisodesListViewModel: BaseViewModel {
   
   public struct Input { }
   
@@ -230,9 +230,9 @@ extension EpisodesListViewModel {
   }
 }
 
-// MARK: - Stepper
+// MARK: - Navigate
 
-extension EpisodesListViewModel: Stepper {
+extension EpisodesListViewModel {
   
   public func navigateTo(step: Step) {
     steps.accept(step)

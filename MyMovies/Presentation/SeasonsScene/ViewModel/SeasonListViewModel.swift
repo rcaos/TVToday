@@ -9,19 +9,21 @@
 import Foundation
 import RxSwift
 import RxDataSources
+import RxRelay
+import RxFlow
 
 final class SeasonListViewModel {
   
   private var seasonsList:[Int]
   
-  // MARK: - Output VM
   private var seasonsObservableSubject: BehaviorSubject<[Int]>
   
   private var seasonSelectedObservableSubject = BehaviorSubject<Int>(value: 0)
   
-  // MARK: - Base ViewModel
   var input: Input
   var output: Output
+  
+  var steps = PublishRelay<Step>()
   
   // MARK: Initalizer
   
@@ -50,9 +52,9 @@ final class SeasonListViewModel {
   }
 }
 
-// MARK: - ViewModel Base
+// MARK: - BaseViewModel
 
-extension SeasonListViewModel {
+extension SeasonListViewModel: BaseViewModel {
   
   // MARK: - TODO, Selected season should be here
   public struct Input {

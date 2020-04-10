@@ -13,7 +13,7 @@ class TVShowViewCell: UITableViewCell {
   @IBOutlet weak private var nameLabel: UILabel!
   @IBOutlet weak private var averageLabel: UILabel!
   
-  var viewModel:TVShowCellViewModel? {
+  var viewModel: TVShowCellViewModel? {
     didSet {
       setupUI()
     }

@@ -25,14 +25,13 @@ struct TVShow {
 
 extension TVShow {
   
-  // MARK: - TODO inject Base
-  public func getposterPathURL(base: String = "https://image.tmdb.org/t/p/w780") -> URL? {
-    guard let urlString = posterPath else { return nil }
-    return URL(string: "\(base)\(urlString)")
+  public var posterPathURL: URL? {
+    guard let urlString = posterPath else { return nil}
+    return URL(string: urlString)
   }
   
-  public func getbackDropPathURL(base: String = "https://image.tmdb.org/t/p/w780") -> URL? {
-    guard let backDropString = backDropPath else { return nil }
-    return URL(string: "\(base)\(backDropString)")
+  public var backDropPathURL: URL? {
+    guard let urlString = backDropPath else { return nil}
+    return URL(string: urlString)
   }
 }

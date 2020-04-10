@@ -14,10 +14,7 @@ final class EpisodeItemViewModel {
   var episodeName: String?
   var releaseDate: String?
   var average: String?
-  
-  var posterURL: URL? {
-    return episode.getposterPathURL()
-  }
+  var posterURL: URL?
   
   private let episode: Episode
   
@@ -31,5 +28,6 @@ final class EpisodeItemViewModel {
     episodeName = episode.name
     releaseDate = episode.airDate
     average = episode.average
+    posterURL = episode.posterPathURL
   }
 }

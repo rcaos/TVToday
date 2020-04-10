@@ -12,8 +12,12 @@ final class DefaultTVShowsRepository {
   
   private let dataTransferService: DataTransferService
   
-  init(dataTransferService: DataTransferService) {
+  private let basePath: String?
+  
+  init(dataTransferService: DataTransferService,
+       basePath: String? = nil) {
     self.dataTransferService = dataTransferService
+    self.basePath = basePath
   }
 }
 
@@ -25,6 +29,9 @@ extension DefaultTVShowsRepository: TVShowsRepository {
     let endPoint = getProvider(with: filter, page: page)
     
     return dataTransferService.request(endPoint, TVShowResult.self)
+      .flatMap { response -> Observable<TVShowResult> in
+        Observable.just( self.mapShowDetailsWithBasePath(response: response) )
+    }
   }
   
   private func getProvider(with filter: TVShowsListFilter, page: Int) -> TVShowsProvider {
@@ -38,5 +45,20 @@ extension DefaultTVShowsRepository: TVShowsRepository {
     case .search(let query):
       return TVShowsProvider.searchTVShow(query, page)
     }
+  }
+  
+  fileprivate func mapShowDetailsWithBasePath(response: TVShowResult) -> TVShowResult {
+    guard let basePath = basePath else { return response }
+    
+    var newResponse = response
+    
+    newResponse.results = response.results.map { (show: TVShow) -> TVShow in
+      var mutableShow = show
+      mutableShow.backDropPath = basePath + "/t/p/w780" + ( show.backDropPath ?? "" )
+      mutableShow.posterPath = basePath + "/t/p/w780" + ( show.posterPath ?? "" )
+      return mutableShow
+    }
+    
+    return newResponse
   }
 }

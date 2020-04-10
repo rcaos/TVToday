@@ -13,7 +13,7 @@ public class TVShowDetailFlow: Flow {
   
   public struct Dependencies {
     let apiDataTransferService: DataTransferService
-    let imageTransferService: DataTransferService
+    let appConfigurations: AppConfigurations
   }
   
   private let dependencies: Dependencies
@@ -21,16 +21,20 @@ public class TVShowDetailFlow: Flow {
   public var root: Presentable {
     return self.rootViewController
   }
-
+  
   private var rootViewController: UIViewController!
   
   // Repositories
   private lazy var showDetailsRepository: TVShowDetailsRepository = {
-    return DefaultTVShowDetailsRepository(dataTransferService: dependencies.apiDataTransferService)
+    return DefaultTVShowDetailsRepository(
+      dataTransferService: dependencies.apiDataTransferService,
+      basePath: dependencies.appConfigurations.imagesBaseURL)
   }()
   
   private lazy var episodesRepository: TVEpisodesRepository = {
-    return DefaultTVEpisodesRepository(dataTransferService: dependencies.apiDataTransferService)
+    return DefaultTVEpisodesRepository(
+      dataTransferService: dependencies.apiDataTransferService,
+      basePath: dependencies.appConfigurations.imagesBaseURL)
   }()
   
   // MARK: - Life Cycle
@@ -92,8 +96,8 @@ public class TVShowDetailFlow: Flow {
   }
   
   private func makeFetchEpisodesUseCase() -> FetchEpisodesUseCase {
-     return DefaultFetchEpisodesUseCase(episodesRepository: episodesRepository)
-   }
+    return DefaultFetchEpisodesUseCase(episodesRepository: episodesRepository)
+  }
 }
 
 

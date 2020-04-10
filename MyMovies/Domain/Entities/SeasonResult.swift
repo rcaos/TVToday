@@ -9,11 +9,11 @@
 import Foundation
 
 struct SeasonResult {
-    
-    let _id: String?
-    
-    let episodes: [Episode]?
-    
-    let seasonNumber: Int
-    
+  
+  let _id: String?
+  
+  var episodes: [Episode]?
+  
+  let seasonNumber: Int
+  
 }

@@ -9,20 +9,20 @@
 import Foundation
 
 struct TVShowResult {
-    
-    let page: Int!
-    let results: [TVShow]!
-    let totalResults: Int!
-    let totalPages: Int!
+  
+  let page: Int!
+  var results: [TVShow]!
+  let totalResults: Int!
+  let totalPages: Int!
 }
 
 extension TVShowResult {
-    
-    var hasMorePages: Bool {
-        return totalPages > page
-    }
-    
-    var nextPage: Int {
-        return page + 1
-    }
+  
+  var hasMorePages: Bool {
+    return totalPages > page
+  }
+  
+  var nextPage: Int {
+    return page + 1
+  }
 }

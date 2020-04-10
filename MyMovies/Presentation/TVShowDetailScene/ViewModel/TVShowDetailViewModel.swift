@@ -70,13 +70,13 @@ final class TVShowDetailViewModel {
   private func setupTVShow(_ show: TVShowDetailResult) -> TVShowDetailInfo {
     return TVShowDetailInfo(
       id: show.id,
-      backDropPath: show.getbackDropPathURL(),
+      backDropPath: show.backDropPathURL,
       nameShow: show.name,
       yearsRelease: show.releaseYears,
       duration: show.episodeDuration,
       genre: show.genreIds?.first?.name,
       numberOfEpisodes: (show.numberOfEpisodes != nil) ? String(show.numberOfEpisodes!) : "",
-      posterPath: show.getposterPathURL(),
+      posterPath: show.posterPathURL,
       overView: show.overview,
       score: (show.voteAverage != nil) ? String(show.voteAverage!) : "",
       countVote: (show.voteCount != nil) ? String(show.voteCount!) : "")

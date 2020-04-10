@@ -16,7 +16,7 @@ public struct EpisodeSectionModelType {
   var name: String?
   var airDate: String?
   var voteAverage: Double?
-  var episodePath: String?
+  var posterPath: String?
   
   init(episode: Episode) {
     self.id = episode.id
@@ -24,7 +24,7 @@ public struct EpisodeSectionModelType {
     self.name = episode.name
     self.airDate = episode.airDate
     self.voteAverage = episode.voteAverage
-    self.episodePath = episode.episodePath
+    self.posterPath = episode.posterPath
   }
   
   static func buildEpisode(from episodeSection: EpisodeSectionModelType) -> Episode {
@@ -33,7 +33,7 @@ public struct EpisodeSectionModelType {
                    name: episodeSection.name,
                    airDate: episodeSection.airDate,
                    voteAverage: episodeSection.voteAverage,
-                   episodePath: episodeSection.episodePath)
+                   posterPath: episodeSection.posterPath)
   }
 }
 

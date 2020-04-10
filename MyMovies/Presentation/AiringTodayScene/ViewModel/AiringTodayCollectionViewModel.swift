@@ -15,9 +15,7 @@ final class AiringTodayCollectionViewModel {
   public var showName: String?
   public var average: String?
   
-  public var posterURL: URL? {
-    return show.getbackDropPathURL()
-  }
+  public var posterURL: URL?
   
   // MARK: - Initializers
   
@@ -34,5 +32,6 @@ final class AiringTodayCollectionViewModel {
     }else {
       average = "0.0"
     }
+    self.posterURL = show.backDropPathURL
   }
 }

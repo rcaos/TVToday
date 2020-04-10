@@ -15,7 +15,7 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
   
   @IBOutlet weak var tableView: UITableView!
   
-  var viewModel:PopularViewModel!
+  var viewModel: PopularViewModel!
   
   static func create(with viewModel: PopularViewModel) -> PopularsViewController {
     let controller = PopularsViewController.instantiateViewController()
@@ -115,22 +115,3 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
     }
   }
 }
-
-// MARK: - TODO, refactor navigation
-
-//extension PopularsViewController {
-//
-//  func handle(_ route: Int?) {
-//    guard let identifier = route else { return }
-//    let detailController = popularViewControllersFactory.makeTVShowDetailsViewController(with: identifier)
-//    navigationController?.pushViewController(detailController, animated: true)
-//  }
-//}
-//
-//// MARK: - PopularViewControllersFactory
-//
-//protocol PopularViewControllersFactory {
-//
-//  func makeTVShowDetailsViewController(with identifier: Int) -> UIViewController
-//}
-

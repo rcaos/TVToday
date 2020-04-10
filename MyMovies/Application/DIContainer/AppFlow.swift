@@ -13,7 +13,7 @@ class AppFlow: Flow {
   
   public struct Dependencies {
     let apiDataTransferService: DataTransferService
-    let imageTransferService: DataTransferService
+    let appConfigurations: AppConfigurations
   }
   
   private let dependencies: Dependencies
@@ -52,7 +52,7 @@ class AppFlow: Flow {
     let signedFlow = SignedFlow(dependencies:
       SignedFlow.Dependencies(
         apiDataTransferService: dependencies.apiDataTransferService,
-        imageTransferService: dependencies.imageTransferService))
+        appConfigurations: dependencies.appConfigurations))
     Flows.whenReady(flow1: signedFlow) { root in
       DispatchQueue.main.async {
         self.rootWindow.rootViewController = root

@@ -15,24 +15,20 @@ struct Episode {
   var name: String?
   var airDate: String?
   var voteAverage: Double?
-  var episodePath: String?
+  var posterPath: String?
 }
 
 extension Episode {
   
-  var average: String {
+  public var average: String {
     if let voteAverage = self.voteAverage {
       return String(format: "%.1f", voteAverage)
     }
     return ""
   }
-}
-
-extension Episode {
   
-  // MARK: - TODO inject Base
-  public func getposterPathURL(base: String = "https://image.tmdb.org/t/p/w342") -> URL? {
-    guard let urlString = episodePath else { return nil }
-    return URL(string: "\(base)\(urlString)")
+  public var posterPathURL: URL? {
+    guard let urlString = posterPath else { return nil}
+    return URL(string: urlString)
   }
 }

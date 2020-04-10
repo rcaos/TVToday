@@ -25,12 +25,6 @@ public class AppDIContainer {
     return ApiClient(with: configuration)
   }()
   
-  lazy var imageTransferService: DataTransferService = {
-    let configuration = ApiDataNetworkConfig(
-      baseURL: appConfigurations.imagesBaseURL)
-    return ApiClient(with: configuration)
-  }()
-  
   public let coordinator: FlowCoordinator!
   
   private var appFlow: AppFlow!
@@ -45,7 +39,7 @@ public class AppDIContainer {
       window: window,
       dependencies: AppFlow.Dependencies(
         apiDataTransferService: apiDataTransferService,
-        imageTransferService: imageTransferService))
+        appConfigurations: appConfigurations))
     
     // Base on some Conditions, guest, logged, etc, launch "appFlow" with "First Step"
     // AppFlow handle "Flows.whenReady"

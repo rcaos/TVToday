@@ -13,7 +13,7 @@ public class AiringTodayFlow: Flow {
   
   public struct Dependencies {
     let apiDataTransferService: DataTransferService
-    let imageTransferService: DataTransferService
+    let appConfigurations: AppConfigurations
   }
   
   private let dependencies: Dependencies
@@ -29,7 +29,9 @@ public class AiringTodayFlow: Flow {
   
   // MARK: - TODO, Repositories are be the Same??
   private lazy var showsRepository: TVShowsRepository = {
-    return DefaultTVShowsRepository(dataTransferService: dependencies.apiDataTransferService)
+    return DefaultTVShowsRepository(
+      dataTransferService: dependencies.apiDataTransferService,
+      basePath: dependencies.appConfigurations.imagesBaseURL)
   }()
   
   // MARK: - Life Cycle
@@ -65,9 +67,9 @@ public class AiringTodayFlow: Flow {
   
   fileprivate func navigateToShowDetailScreen(with id: Int) -> FlowContributors {
     let detailShowFlow = TVShowDetailFlow(rootViewController: rootViewController,
-      dependencies: TVShowDetailFlow.Dependencies(
-        apiDataTransferService: dependencies.apiDataTransferService,
-        imageTransferService: dependencies.imageTransferService))
+                                          dependencies: TVShowDetailFlow.Dependencies(
+                                            apiDataTransferService: dependencies.apiDataTransferService,
+                                            appConfigurations: dependencies.appConfigurations))
     
     return .one(flowContributor: .contribute(
       withNextPresentable: detailShowFlow,

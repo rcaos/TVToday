@@ -13,8 +13,11 @@ final class DefaultTVShowDetailsRepository {
   
   private let dataTransferService: DataTransferService
   
-  init(dataTransferService: DataTransferService) {
+  private let basePath: String?
+  
+  init(dataTransferService: DataTransferService, basePath: String? = nil) {
     self.dataTransferService = dataTransferService
+    self.basePath = basePath
   }
 }
 
@@ -27,5 +30,17 @@ extension DefaultTVShowDetailsRepository: TVShowDetailsRepository {
     let endPoint = TVShowsProvider.getTVShowDetail(showId)
     
     return dataTransferService.request(endPoint, TVShowDetailResult.self)
+      .flatMap { response -> Observable<TVShowDetailResult> in
+        Observable.just( self.mapShowDetailsWithBasePath(response: response))
+      }
+  }
+  
+  fileprivate func mapShowDetailsWithBasePath(response: TVShowDetailResult) -> TVShowDetailResult {
+    guard let basePath = basePath else { return response }
+    
+    var newResponse = response
+    newResponse.backDropPath = basePath + "/t/p/w780" + ( response.backDropPath ?? "" )
+    newResponse.posterPath = basePath + "/t/p/w780" + ( response.posterPath ?? "" )
+    return newResponse
   }
 }

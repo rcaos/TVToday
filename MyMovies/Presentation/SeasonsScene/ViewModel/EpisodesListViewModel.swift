@@ -103,16 +103,21 @@ final class EpisodesListViewModel {
   
   //MARK: - Networking
   
-  fileprivate func fetchShowDetails(for tvShowId: Int) {
-    let request = FetchTVShowDetailsUseCaseRequestValue(identifier: tvShowId)
+  fileprivate func fetchShowDetailsAndFirstSeason() {
+    let requestDetailsShow = FetchTVShowDetailsUseCaseRequestValue(identifier: tvShowId)
+    let requestFirstSeason = FetchEpisodesUseCaseRequestValue(showIdentifier: tvShowId, seasonNumber: 1)
     
-    fetchDetailShowUseCase.execute(requestValue: request)
-      .subscribe(onNext: { [weak self] result in
+    Observable.zip(
+      fetchDetailShowUseCase.execute(requestValue: requestDetailsShow),
+      fetchEpisodesUseCase.execute(requestValue: requestFirstSeason))
+      .subscribe(onNext: { [weak self] (showDetails, firstSeason) in
         guard let strongSelf = self else { return }
-        strongSelf.showDetailResult = result
+        strongSelf.showDetailResult = showDetails
+        
         strongSelf.viewStateObservableSubject.onNext( .didLoadHeader )
+        strongSelf.processFetched(with: firstSeason)
         strongSelf.selectFirstSeason()
-        }, onError: {[weak self] error in
+        },onError: {[weak self] error in
           guard let strongSelf = self else { return }
           strongSelf.viewStateObservableSubject.onNext( .error(error) )
       })
@@ -175,8 +180,8 @@ final class EpisodesListViewModel {
   
   // MARK: - Public
   
-  func getShowDetails() {
-    fetchShowDetails(for: tvShowId)
+  func viewDidLoad() {
+    fetchShowDetailsAndFirstSeason()
   }
   
   func getSeason(at numberOfSeason: Int) {

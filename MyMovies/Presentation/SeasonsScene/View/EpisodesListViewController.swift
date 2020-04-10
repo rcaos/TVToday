@@ -44,7 +44,7 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable {
     super.viewDidLoad()
     configureTable()
     setupBindables()
-    viewModel?.getShowDetails()
+    viewModel?.viewDidLoad()
   }
   
   deinit {

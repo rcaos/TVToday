@@ -34,15 +34,14 @@ extension EndPoint {
     var urlComponents = URLComponents(string: config.baseURL)
     urlComponents?.path = path
     
-    var queryItems:[URLQueryItem] = []
-    
+    var queryItems: [URLQueryItem] = []
     
     if method == .get {
-      /// Global query parameters
+      // Global query parameters
       queryItems.append(contentsOf:
         mapToQueryItems(parameters: config.queryParameters))
       
-      /// Specifically for each Request
+      // Specifically for each Request
       queryItems.append(contentsOf:
         mapToQueryItems(parameters: queryParameters))
     }
@@ -51,7 +50,7 @@ extension EndPoint {
     return urlComponents?.url
   }
   
-  private func mapToQueryItems(parameters: [String:Any]) -> [URLQueryItem] {
+  private func mapToQueryItems(parameters: [String: Any]) -> [URLQueryItem] {
     return parameters.map { return URLQueryItem(name: "\($0)", value: "\($1)") }
   }
 }

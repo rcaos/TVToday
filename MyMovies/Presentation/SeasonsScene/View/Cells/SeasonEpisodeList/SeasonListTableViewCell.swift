@@ -88,7 +88,8 @@ class SeasonListTableViewCell: UITableViewCell {
       [weak self] dataSource, collectionView, indexPath, item in
       guard let strongSelf = self else { fatalError() }
       
-      let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SeasonEpisodeCollectionViewCell", for: indexPath) as! SeasonEpisodeCollectionViewCell
+      let cell = collectionView.dequeueReusableCell(
+        withReuseIdentifier: "SeasonEpisodeCollectionViewCell", for: indexPath) as! SeasonEpisodeCollectionViewCell
       cell.viewModel = 
         strongSelf.viewModel?.getModel(for: item)
       return cell
@@ -100,11 +101,15 @@ class SeasonListTableViewCell: UITableViewCell {
 // MARK: - UICollectionViewDelegateFlowLayout
 
 extension SeasonListTableViewCell: UICollectionViewDelegateFlowLayout {
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+  func collectionView(_ collectionView: UICollectionView,
+                      layout collectionViewLayout: UICollectionViewLayout,
+                      sizeForItemAt indexPath: IndexPath) -> CGSize {
     return CGSize(width: 50, height: 50)
   }
   
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+  func collectionView(_ collectionView: UICollectionView,
+                      layout collectionViewLayout: UICollectionViewLayout,
+                      insetForSectionAt section: Int) -> UIEdgeInsets {
     let height = collectionView.layer.frame.height
     let insetTop = (height - 50) / 2
     

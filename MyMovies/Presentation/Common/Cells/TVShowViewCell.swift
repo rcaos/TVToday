@@ -23,7 +23,7 @@ class TVShowViewCell: UITableViewCell {
     super.awakeFromNib()
   }
   
-  func setupUI(){
+  func setupUI() {
     guard let viewModel = viewModel else { return }
     
     nameLabel.text = viewModel.name

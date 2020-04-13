@@ -21,7 +21,7 @@ extension GenreProvider: EndPoint {
     }
   }
   
-  var queryParameters: [String : Any] {
+  var queryParameters: [String: Any] {
     return [:]
   }
   

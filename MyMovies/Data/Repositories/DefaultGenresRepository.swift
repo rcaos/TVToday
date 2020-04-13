@@ -25,6 +25,6 @@ extension DefaultGenreRepository: GenresRepository {
     
     let endPoint = GenreProvider.getAll
     
-    return dataTransferService.request(endPoint,GenreListResult.self)
+    return dataTransferService.request(endPoint, GenreListResult.self)
   }
 }

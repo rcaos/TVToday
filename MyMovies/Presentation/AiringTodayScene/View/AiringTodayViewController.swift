@@ -24,7 +24,7 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable {
   
   fileprivate let disposeBag = DisposeBag()
   
-  //MARK: - Life Cycle
+  // MARK: - Life Cycle
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -45,7 +45,9 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable {
   func setupCollectionView() {
     let nibName = UINib(nibName: "AiringTodayCollectionViewCell", bundle: nil)
     collectionView.register(nibName, forCellWithReuseIdentifier: "AiringTodayCollectionViewCell")
-    collectionView.register(FooterReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter , withReuseIdentifier: "FooterReusableView")
+    collectionView.register(FooterReusableView.self,
+                            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+                            withReuseIdentifier: "FooterReusableView")
     collectionView.backgroundColor = UIColor.groupTableViewBackground
     
     let (configureCollectionViewCell, configureSupplementaryView) = configureCollectionViewDataSource()
@@ -86,7 +88,9 @@ extension AiringTodayViewController {
         [weak self] dataSource, collectionView, indexPath, item in
         guard let strongSelf = self else { fatalError() }
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AiringTodayCollectionViewCell", for: indexPath) as! AiringTodayCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(
+          withReuseIdentifier: "AiringTodayCollectionViewCell",
+          for: indexPath) as! AiringTodayCollectionViewCell
         cell.viewModel = item
         print("retornar cell: \(indexPath)")
         
@@ -101,7 +105,9 @@ extension AiringTodayViewController {
       
       let configureFooterView: CollectionViewSectionedDataSource<SectionAiringToday>.ConfigureSupplementaryView = {
         dataSource, collectionView, kindOfView, indexPath in
-        let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kindOfView, withReuseIdentifier: "FooterReusableView", for: indexPath) as! FooterReusableView
+        let footerView = collectionView.dequeueReusableSupplementaryView(
+          ofKind: kindOfView,
+          withReuseIdentifier: "FooterReusableView", for: indexPath) as! FooterReusableView
         return footerView
       }
       
@@ -110,23 +116,26 @@ extension AiringTodayViewController {
   
 }
 
-
 // MARK: - UICollectionViewDelegateFlowLayout
 
 extension AiringTodayViewController: UICollectionViewDelegateFlowLayout {
   
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+  func collectionView(_ collectionView: UICollectionView,
+                      layout collectionViewLayout: UICollectionViewLayout,
+                      sizeForItemAt indexPath: IndexPath) -> CGSize {
     let width = collectionView.frame.width
     return CGSize(width: width, height: 275)
   }
   
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+  func collectionView(_ collectionView: UICollectionView,
+                      layout collectionViewLayout: UICollectionViewLayout,
+                      referenceSizeForFooterInSection section: Int) -> CGSize {
     
     // MARK: - TODO  dont be here
     guard let state = try? viewModel.viewStateObservableSubject.value() else { return .zero }
     
     switch state {
-    case .loading, .paging(_, _):
+    case .loading, .paging:
       return CGSize(width: collectionView.frame.width, height: 100)
     default:
       return .zero

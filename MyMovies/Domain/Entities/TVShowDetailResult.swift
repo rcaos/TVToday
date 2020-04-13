@@ -16,8 +16,8 @@ struct TVShowDetailResult {
   var lasttAirDate: String?
   var episodeRunTime: [Int]?
   var genreIds: [Genre]?
-  var numberOfEpisodes:Int?
-  var numberOfSeasons:Int?
+  var numberOfEpisodes: Int?
+  var numberOfSeasons: Int?
   
   var posterPath: String?
   var backDropPath: String?
@@ -31,7 +31,7 @@ struct TVShowDetailResult {
 
 extension TVShowDetailResult {
   
-  //MARK: - Computed
+  // MARK: - Computed
   
   var releaseYears: String? {
     let yearIni = getYear(from: firstAirDate)
@@ -56,7 +56,7 @@ extension TVShowDetailResult {
     return "\(duration) min"
   }
   
-  //MARK: - Helper for Dates
+  // MARK: - Helper for Dates
   
   private func getYear(from dateString: String?) -> String {
     guard let dateString = dateString else {

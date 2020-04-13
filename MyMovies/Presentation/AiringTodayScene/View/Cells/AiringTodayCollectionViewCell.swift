@@ -17,7 +17,7 @@ class AiringTodayCollectionViewCell: UICollectionViewCell {
   @IBOutlet weak var averageLabel: UILabel!
   
   var viewModel: AiringTodayCollectionViewModel? {
-    didSet{
+    didSet {
       setupUI()
     }
   }
@@ -26,7 +26,7 @@ class AiringTodayCollectionViewCell: UICollectionViewCell {
     super.awakeFromNib()
   }
   
-  func setupUI(){
+  func setupUI() {
     guard let viewModel = viewModel else { return }
     
     showNameLabel.text = viewModel.showName

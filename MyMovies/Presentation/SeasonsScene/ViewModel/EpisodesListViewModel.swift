@@ -24,7 +24,7 @@ final class EpisodesListViewModel {
     return totalSeasons
   }
   
-  private let allEpisodesSubject = BehaviorSubject<[Int:[Episode]]>(value: [:])
+  private let allEpisodesSubject = BehaviorSubject<[Int: [Episode]]>(value: [:])
   
   private var disposeBag = DisposeBag()
   
@@ -40,9 +40,9 @@ final class EpisodesListViewModel {
   var input: Input
   var output: Output
   
-  //MARK: - Initializers
+  // MARK: - Initializers
   
-  init(tvShowId: Int,fetchDetailShowUseCase: FetchTVShowDetailsUseCase, fetchEpisodesUseCase: FetchEpisodesUseCase) {
+  init(tvShowId: Int, fetchDetailShowUseCase: FetchTVShowDetailsUseCase, fetchEpisodesUseCase: FetchEpisodesUseCase) {
     self.tvShowId = tvShowId
     
     self.fetchDetailShowUseCase = fetchDetailShowUseCase
@@ -101,7 +101,7 @@ final class EpisodesListViewModel {
     seasonListViewModel?.selectSeason(firstSeason)
   }
   
-  //MARK: - Networking
+  // MARK: - Networking
   
   fileprivate func fetchShowDetailsAndFirstSeason() {
     let requestDetailsShow = FetchTVShowDetailsUseCaseRequestValue(identifier: tvShowId)
@@ -117,7 +117,7 @@ final class EpisodesListViewModel {
         strongSelf.viewStateObservableSubject.onNext( .didLoadHeader )
         strongSelf.processFetched(with: firstSeason)
         strongSelf.selectFirstSeason()
-        },onError: {[weak self] error in
+        }, onError: {[weak self] error in
           guard let strongSelf = self else { return }
           strongSelf.viewStateObservableSubject.onNext( .error(error) )
       })
@@ -160,7 +160,7 @@ final class EpisodesListViewModel {
     }
     
     let ordered = fetchedEpisodes.sorted(by: { $0.episodeNumber < $1.episodeNumber })
-    allEpisodesSubject.onNext([seasonFetched:ordered])
+    allEpisodesSubject.onNext([seasonFetched: ordered])
     
     // Populated State
     createSectionModel(state: .populated, with: totalSeasons, seasonSelected: seasonFetched, and: ordered)

@@ -10,7 +10,7 @@ import Foundation
 
 extension Genre: Decodable {
     
-    enum CodingKeys: String, CodingKey{
+    enum CodingKeys: String, CodingKey {
         case id
         case name
     }

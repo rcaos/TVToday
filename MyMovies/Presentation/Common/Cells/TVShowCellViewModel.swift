@@ -22,7 +22,7 @@ final class TVShowCellViewModel {
     
     if let voteAverage = show.voteAverage {
       average = String(voteAverage)
-    }else{
+    } else {
       average = ""
     }
   }

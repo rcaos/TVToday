@@ -75,7 +75,10 @@ public class TVShowDetailFlow: Flow {
   }
   
   fileprivate func navigateToSeasonsScreen(with id: Int) -> FlowContributors {
-    let viewModel = EpisodesListViewModel(tvShowId: id, fetchDetailShowUseCase: makeFetchShowDetailsUseCase(), fetchEpisodesUseCase: makeFetchEpisodesUseCase())
+    let viewModel = EpisodesListViewModel(
+      tvShowId: id,
+      fetchDetailShowUseCase: makeFetchShowDetailsUseCase(),
+      fetchEpisodesUseCase: makeFetchEpisodesUseCase())
     let seasonsVC = EpisodesListViewController.create(with: viewModel)
     
     if let navigationVC = rootViewController as? UINavigationController {
@@ -88,7 +91,6 @@ public class TVShowDetailFlow: Flow {
       withNextPresentable: seasonsVC, withNextStepper: viewModel))
   }
   
-  
   // MARK: - Uses Cases
   
   private func makeFetchShowDetailsUseCase() -> FetchTVShowDetailsUseCase {
@@ -99,7 +101,6 @@ public class TVShowDetailFlow: Flow {
     return DefaultFetchEpisodesUseCase(episodesRepository: episodesRepository)
   }
 }
-
 
 public enum ShowDetailsStep: Step {
   

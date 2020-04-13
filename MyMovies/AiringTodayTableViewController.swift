@@ -29,8 +29,8 @@ class PopularShowsTableViewController: UITableViewController {
     }
     */
     
-    func handleGetPopularShows(shows :[TVShow]?, error :Error?){
-        if let shows = shows{
+    func handleGetPopularShows(shows: [TVShow]?, error: Error?) {
+        if let shows = shows {
             Model.popularShows.append(contentsOf: shows)
             
             DispatchQueue.main.async {
@@ -41,9 +41,8 @@ class PopularShowsTableViewController: UITableViewController {
 
 }
 
-extension PopularShowsTableViewController{
+extension PopularShowsTableViewController {
     
-
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "AiringCell", for: indexPath) as! AiringTodayTableViewCell
         

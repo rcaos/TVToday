@@ -10,6 +10,6 @@ import Foundation
 
 struct GenreListResult {
     
-    var genres:[Genre]!
+    var genres: [Genre]!
     
 }

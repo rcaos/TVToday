@@ -9,9 +9,9 @@
 import UIKit
 
 public protocol StoryboardInstantiable: NSObjectProtocol {
-    associatedtype T
+    associatedtype ViewControllerType
     static var defaultFileName: String { get }
-    static func instantiateViewController(_ bundle: Bundle?) -> T
+    static func instantiateViewController(_ bundle: Bundle?) -> ViewControllerType
 }
 
 public extension StoryboardInstantiable where Self: UIViewController {
@@ -23,9 +23,9 @@ public extension StoryboardInstantiable where Self: UIViewController {
     static func instantiateViewController(_ bundle: Bundle? = nil) -> Self {
         let fileName = defaultFileName
         let storyboard = UIStoryboard(name: fileName, bundle: bundle)
-        guard let vc = storyboard.instantiateInitialViewController() as? Self else {
+        guard let viewController = storyboard.instantiateInitialViewController() as? Self else {
             fatalError("Cannot instantiate initial view controller \(Self.self) from storyboard with name \(fileName)")
         }
-        return vc
+        return viewController
     }
 }

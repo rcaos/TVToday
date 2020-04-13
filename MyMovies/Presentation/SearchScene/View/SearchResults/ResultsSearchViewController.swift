@@ -21,7 +21,7 @@ class ResultsSearchViewController: UIViewController {
   
   var resultView: ResultListView = ResultListView()
   
-  var delegate: ResultsSearchViewControllerDelegate?
+  weak var delegate: ResultsSearchViewControllerDelegate?
   
   var viewModel: ResultsSearchViewModel
   
@@ -44,7 +44,7 @@ class ResultsSearchViewController: UIViewController {
     view = resultView
   }
   
-  //MARK: - Life Cycle
+  // MARK: - Life Cycle
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -64,7 +64,7 @@ class ResultsSearchViewController: UIViewController {
     resultView.tableView.register(nibName, forCellReuseIdentifier: "TVShowViewCell")
   }
   
-  //MARK: - SetupViewModel
+  // MARK: - SetupViewModel
   
   func setupViewModel() {
     
@@ -79,8 +79,10 @@ class ResultsSearchViewController: UIViewController {
     viewModel.output
       .viewState
       .map { $0.currentEntities }
-      .bind(to: resultView.tableView.rx.items(cellIdentifier: "TVShowViewCell", cellType: TVShowViewCell.self )) {
-        [weak self] (index, element, cell) in
+      .bind(to:
+        resultView.tableView.rx.items(
+          cellIdentifier: "TVShowViewCell",
+          cellType: TVShowViewCell.self )) { [weak self] (index, element, cell) in
         guard let strongSelf = self else { return }
         
         cell.viewModel = element
@@ -109,15 +111,15 @@ class ResultsSearchViewController: UIViewController {
     let tableView = resultView.tableView
     
     switch state {
-    case .populated(_):
+    case .populated :
       tableView.tableFooterView = nil
       tableView.separatorStyle = .singleLine
       tableView.reloadData()
-    case .empty:
+    case .empty :
       tableView.tableFooterView = emptyView
       tableView.separatorStyle = .none
       tableView.reloadData()
-    case .paging(_, _):
+    case .paging :
       tableView.tableFooterView = loadingView
       tableView.separatorStyle = .singleLine
       tableView.reloadData()

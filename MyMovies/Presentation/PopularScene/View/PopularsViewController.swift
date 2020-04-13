@@ -28,7 +28,7 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
   
   let disposeBag = DisposeBag()
   
-  //MARK: - Life Cycle
+  // MARK: - Life Cycle
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -43,7 +43,7 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
     navigationController?.navigationBar.prefersLargeTitles = false
   }
   
-  //MARK: - Setup UI
+  // MARK: - Setup UI
   
   func setupUI() {
     navigationItem.title = "Popular TV Shows"
@@ -70,16 +70,17 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
     viewModel.output
       .viewState
       .map { $0.currentEntities }
-      .bind(to: tableView.rx.items(cellIdentifier: "TVShowViewCell", cellType: TVShowViewCell.self)) {
-        [weak self] (index, element, cell) in
-        guard let strongSelf = self else { return }
-        
-        cell.viewModel = element
-        
-        if case .paging(let entities, let nextPage) = try? strongSelf.viewModel.viewStateObservableSubject.value(),
-          index == entities.count - 1  {
-          strongSelf.viewModel.getShows(for: nextPage)
-        }
+      .bind(to:
+        tableView.rx.items( cellIdentifier: "TVShowViewCell",
+                            cellType: TVShowViewCell.self)) { [weak self] (index, element, cell) in
+            guard let strongSelf = self else { return }
+            
+            cell.viewModel = element
+            
+            if case .paging(let entities, let nextPage) = try? strongSelf.viewModel.viewStateObservableSubject.value(),
+              index == entities.count - 1 {
+              strongSelf.viewModel.getShows(for: nextPage)
+            }
     }
     .disposed(by: disposeBag)
     

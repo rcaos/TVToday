@@ -49,4 +49,3 @@ enum APIError: Error {
     }
   }
 }
-

@@ -9,18 +9,18 @@
 import Foundation
 
 extension SeasonResult: Decodable {
+  
+  enum CodingKeys: String, CodingKey {
+    case id = "_id"
+    case episodes
+    case seasonNumber = "season_number"
+  }
+  
+  public init(from decoder: Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
     
-    enum CodingKeys: String, CodingKey {
-        case _id
-        case episodes
-        case seasonNumber = "season_number"
-    }
-    
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        self._id = try container.decodeIfPresent(String.self, forKey: ._id)
-        self.episodes = try container.decodeIfPresent([Episode].self, forKey: .episodes)
-        self.seasonNumber = try container.decode(Int.self, forKey: .seasonNumber)
-    }
+    self.id = try container.decodeIfPresent(String.self, forKey: .id)
+    self.episodes = try container.decodeIfPresent([Episode].self, forKey: .episodes)
+    self.seasonNumber = try container.decode(Int.self, forKey: .seasonNumber)
+  }
 }

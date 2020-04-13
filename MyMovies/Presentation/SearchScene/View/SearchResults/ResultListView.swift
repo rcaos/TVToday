@@ -20,7 +20,7 @@ class ResultListView: UIView {
         return tableView
     }()
     
-    //MARK: - Life Cycle
+    // MARK: - Life Cycle
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,7 +32,7 @@ class ResultListView: UIView {
         setupUI()
     }
     
-    //MARK: - Private
+    // MARK: - Private
     
     private func setupUI() {
         backgroundColor = .white
@@ -50,4 +50,3 @@ class ResultListView: UIView {
                                      tableView.bottomAnchor.constraint(equalTo: bottomAnchor)])
     }
 }
-

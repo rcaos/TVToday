@@ -16,9 +16,9 @@ import RxDataSources
 class SearchViewController: UIViewController, StoryboardInstantiable {
   
   @IBOutlet var tableView: UITableView!
-  var searchController:UISearchController!
+  var searchController: UISearchController!
   
-  private var viewModel:SearchViewModel!
+  private var viewModel: SearchViewModel!
   
   var lastSearch = ""
   
@@ -33,14 +33,14 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
     return controller
   }
   
-  //MARK: - Life Cycle
+  // MARK: - Life Cycle
   
   override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
   }
   
-  //MARK: - SetupView
+  // MARK: - SetupView
   
   func setupUI() {
     navigationController?.navigationBar.prefersLargeTitles = false
@@ -92,7 +92,7 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
     
     viewModel.output.viewState
       .map { $0.currentEntities }
-      .bind(to: tableView.rx.items(cellIdentifier: "GenreViewCell", cellType: GenreViewCell.self)) { (index, element, cell) in
+      .bind(to: tableView.rx.items(cellIdentifier: "GenreViewCell", cellType: GenreViewCell.self)) { (_, element, cell) in
         cell.genre = element
     }
     .disposed(by: disposeBag)
@@ -137,7 +137,7 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
   
 }
 
-//MARK: - UISearchResultsUpdating
+// MARK: - UISearchResultsUpdating
 
 extension SearchViewController: UISearchResultsUpdating {
   
@@ -146,14 +146,14 @@ extension SearchViewController: UISearchResultsUpdating {
   }
 }
 
-//MARK: - UISearchBarDelegate
+// MARK: - UISearchBarDelegate
 
 extension SearchViewController: UISearchBarDelegate {
   
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
     if let query = searchBar.text {
       
-      if query.lowercased() != lastSearch.lowercased(){
+      if query.lowercased() != lastSearch.lowercased() {
         clearResults()
         lastSearch = query
         search(for: query)
@@ -167,7 +167,7 @@ extension SearchViewController: UISearchBarDelegate {
   }
 }
 
-//MARK: - ResultsSearchViewControllerDelegate
+// MARK: - ResultsSearchViewControllerDelegate
 
 extension SearchViewController: ResultsSearchViewControllerDelegate {
   

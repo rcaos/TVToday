@@ -60,9 +60,10 @@ public class SignedFlow: Flow {
         apiDataTransferService: dependencies.apiDataTransferService,
         appConfigurations: dependencies.appConfigurations) )
     
-    Flows.whenReady(flow1: airingTodayFlow, flow2: popularFlow, flow3: searchFlow) {
-      (airingTodayRoot: UINavigationController, popularRoot: UINavigationController,
-      searchRoot: UINavigationController) in
+    Flows.whenReady(
+      flow1: airingTodayFlow,
+      flow2: popularFlow,
+      flow3: searchFlow) { (airingTodayRoot: UINavigationController, popularRoot: UINavigationController, searchRoot: UINavigationController) in
       
       let airingTodayTabBarItem = UITabBarItem(title: "Today", image: UIImage(named: "calendar"), tag: 0)
       airingTodayRoot.tabBarItem = airingTodayTabBarItem
@@ -82,7 +83,7 @@ public class SignedFlow: Flow {
       .contribute(withNextPresentable: popularFlow, withNextStepper:
         OneStepper(withSingleStep: PopularStep.popularFeatureInit)),
       .contribute(withNextPresentable: searchFlow, withNextStepper:
-        OneStepper(withSingleStep: SearchStep.searchFeatureInit)),
+        OneStepper(withSingleStep: SearchStep.searchFeatureInit))
     ])
     
   }

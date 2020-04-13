@@ -10,7 +10,7 @@ import Foundation
 
 extension TVShowResult: Decodable {
     
-    enum CodingKeys: String, CodingKey{
+    enum CodingKeys: String, CodingKey {
         case page
         case results
         case totalResults = "total_results"

@@ -29,7 +29,7 @@ final class AiringTodayCollectionViewModel {
     
     if let average = show.voteAverage {
       self.average = String(average)
-    }else {
+    } else {
       average = "0.0"
     }
     self.posterURL = show.backDropPathURL

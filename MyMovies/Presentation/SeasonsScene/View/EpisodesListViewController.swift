@@ -77,7 +77,7 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable {
       .disposed(by: disposeBag)
     
     let dataSource = RxTableViewSectionedAnimatedDataSource<SeasonsSectionModel>(
-      configureCell: { [weak self] (_, tableView, indexPath, element) -> UITableViewCell in
+      configureCell: { [weak self] (_, _, indexPath, element) -> UITableViewCell in
         guard let strongSelf = self else { fatalError() }
         print("-- ask for Cell: \(indexPath)")
         switch element {
@@ -100,18 +100,18 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable {
   private func configureView(with state: EpisodesListViewModel.ViewState) {
     
     switch state {
-    case .didLoadHeader:
+    case .didLoadHeader :
       setupTableHeaderView()
-    case .populated:
+    case .populated :
       tableView.tableFooterView = UIView()
       tableView.separatorStyle = .singleLine
-    case .empty:
+    case .empty :
       tableView.tableFooterView = emptyView
       tableView.separatorStyle = .none
-    case .error(_):
+    case .error :
       tableView.tableFooterView = errorView
       tableView.separatorStyle = .none
-    default:
+    default :
       tableView.tableFooterView = loadingView
       tableView.separatorStyle = .none
     }
@@ -146,7 +146,7 @@ extension EpisodesListViewController {
 extension EpisodesListViewController: UITableViewDelegate {
   
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    let height:CGFloat = (indexPath.section == 0) ? 65.0 : 110.0
+    let height: CGFloat = (indexPath.section == 0) ? 65.0 : 110.0
     return height
   }
   

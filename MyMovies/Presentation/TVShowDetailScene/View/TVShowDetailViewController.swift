@@ -36,7 +36,7 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
     return controller
   }
   
-  //MARK: - Life Cycle
+  // MARK: - Life Cycle
   
   override func loadView() {
     super.loadView()
@@ -82,7 +82,6 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
     case .error(let message) :
       messageView.messageLabel.text = message
       view.addSubview(messageView)
-      break
     default:
       break
     }

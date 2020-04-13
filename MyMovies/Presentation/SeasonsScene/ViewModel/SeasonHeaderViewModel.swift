@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class SeasonHeaderViewModel{
+final class SeasonHeaderViewModel {
   
   var showName: String  = ""
   
@@ -24,7 +24,7 @@ final class SeasonHeaderViewModel{
       showName = name
     }
     
-    if let years = showDetail.releaseYears{
+    if let years = showDetail.releaseYears {
       showName += " (" + years + ")"
     }
   }

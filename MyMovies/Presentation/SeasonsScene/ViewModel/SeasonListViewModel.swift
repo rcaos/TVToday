@@ -14,7 +14,7 @@ import RxFlow
 
 final class SeasonListViewModel {
   
-  private var seasonsList:[Int]
+  private var seasonsList: [Int]
   
   private var seasonsObservableSubject: BehaviorSubject<[Int]>
   

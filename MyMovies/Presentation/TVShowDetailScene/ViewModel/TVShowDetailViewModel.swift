@@ -39,7 +39,7 @@ final class TVShowDetailViewModel {
       viewState: viewStateObservableSubject.asObservable())
   }
   
-  //MARK: - Networking
+  // MARK: - Networking
   
   func getShowDetails() {
     let request = FetchTVShowDetailsUseCaseRequestValue(identifier: showId)
@@ -48,15 +48,14 @@ final class TVShowDetailViewModel {
       .subscribe(onNext: { [weak self] response in
         guard let strongSelf = self else { return }
         strongSelf.processFetched(for: response)
-        },onError: { [weak self] error in
+        }, onError: { [weak self] error in
           print("-- fetchDetailShowUseCase - onError")
           guard let strongSelf = self else { return }
           
           strongSelf.viewStateObservableSubject.onNext(.error(error.localizedDescription))
-        }
-        ,onCompleted: {
+        }, onCompleted: {
           print("-- fetchDetailShowUseCase - onCompleted")
-      },onDisposed: {
+      }, onDisposed: {
         print("-- fetchDetailShowUseCase - onDisposed")
       })
       .disposed(by: disposeBag)

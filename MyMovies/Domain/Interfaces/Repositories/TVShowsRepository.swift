@@ -11,7 +11,7 @@ import RxSwift
 protocol TVShowsRepository {
   
   func fetchTVShowsList(with filter: TVShowsListFilter,
-                          page: Int) -> Observable<TVShowResult>
+                        page: Int) -> Observable<TVShowResult>
 }
 
 // MARK: - TVShowsListFilter

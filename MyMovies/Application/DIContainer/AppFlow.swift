@@ -65,7 +65,6 @@ class AppFlow: Flow {
         withNextPresentable: signedFlow, withNextStepper: OneStepper(withSingleStep: SignedStep.signedInit)))
   }
   
-  
 }
 
 // MARK: - Steps
@@ -74,16 +73,15 @@ public enum AppStep: Step {
   
   case
   
-  /// First Launch
+  // First Launch
   applicationFirstLaunch,
   
-  /// Session token expire
+  // Session token expire
   // applicationUnauthorized,
   
-  /// Default Launch
+  // Default Launch
   applicationAuthorized,
   
-  /// Launch app from tapping Notification and is already LoggedIn
+  // Launch app from tapping Notification and is already LoggedIn
   applicationFromNotification
 }
-

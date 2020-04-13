@@ -18,7 +18,7 @@ class EpisodeItemTableViewCell: UITableViewCell {
   @IBOutlet private weak var averageLabel: UILabel!
   
   var viewModel: EpisodeItemViewModel? {
-    didSet{
+    didSet {
       setupUI()
     }
   }

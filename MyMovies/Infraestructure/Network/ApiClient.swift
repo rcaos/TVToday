@@ -30,7 +30,7 @@ class ApiClient {
 
 extension ApiClient: DataTransferService {
   
-  func request<Element>(_ router: EndPoint, _ decodingType: Element.Type) -> Observable<Element> where Element : Decodable {
+  func request<Element>(_ router: EndPoint, _ decodingType: Element.Type) -> Observable<Element> where Element: Decodable {
     return Observable<Element>.create { [unowned self] (event) -> Disposable in
       
       let task = self.request( router.getUrlRequest(with: self.configuration)) { result in
@@ -40,8 +40,7 @@ extension ApiClient: DataTransferService {
           do {
             let resp = try decoder.decode(decodingType, from: data)
             event.on( .next(resp) )
-          }
-          catch {
+          } catch {
             print("error to Decode: [\(error)]")
             event.on( .error(error))
           }

@@ -13,9 +13,9 @@ enum TVShowsProvider {
   case getAiringTodayShows(Int)
   case getPopularTVShows(Int)
   case getTVShowDetail(Int)
-  case getEpisodesFor(Int,Int)
+  case getEpisodesFor(Int, Int)
   case searchTVShow(String, Int)
-  case listTVShowsBy(Int,Int)
+  case listTVShowsBy(Int, Int)
 }
 
 extension TVShowsProvider: EndPoint {
@@ -37,7 +37,7 @@ extension TVShowsProvider: EndPoint {
     }
   }
   
-  var queryParameters: [String : Any] {
+  var queryParameters: [String: Any] {
     var parameters: [String: Any] = [:]
     
     switch self {

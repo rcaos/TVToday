@@ -43,7 +43,7 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
     print("deinit TVShowListViewController")
   }
   
-  //MARK: - SetupView
+  // MARK: - SetupView
   
   func setupViews() {
     emptyView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
@@ -71,8 +71,7 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
     viewModel.output
       .viewState
       .map { $0.currentEntities }
-      .bind(to: tableView.rx.items(cellIdentifier: "TVShowViewCell", cellType: TVShowViewCell.self )) {
-        [weak self] (index, element, cell) in
+      .bind(to: tableView.rx.items(cellIdentifier: "TVShowViewCell", cellType: TVShowViewCell.self )) { [weak self] (index, element, cell) in
         guard let strongSelf = self else { return }
         
         cell.viewModel = element
@@ -98,7 +97,7 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
   
   func configView(with state: SimpleViewState<TVShowCellViewModel>) {
     switch state {
-    case .populated(_):
+    case .populated :
       tableView.tableFooterView = nil
       tableView.separatorStyle = .singleLine
       tableView.reloadData()
@@ -106,7 +105,7 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
       tableView.tableFooterView = emptyView
       tableView.separatorStyle = .none
       tableView.reloadData()
-    case .paging(_, _):
+    case .paging :
       tableView.tableFooterView = loadingView
       tableView.separatorStyle = .singleLine
       tableView.reloadData()

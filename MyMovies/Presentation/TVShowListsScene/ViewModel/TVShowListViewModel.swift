@@ -20,15 +20,17 @@ final class TVShowListViewModel: ShowsViewModel {
   
   var shows: [TVShow]
   
+  var showsCells: [TVShowCellViewModel] = []
+  
   var disposeBag = DisposeBag()
   
   var genreId: Int
   
-  // MARK: - Base ViewModel
   var input: Input
+  
   var output: Output
   
-  var viewStateObservableSubject: BehaviorSubject<SimpleViewState<TVShow>> = .init(value: .loading)
+  var viewStateObservableSubject: BehaviorSubject<SimpleViewState<TVShowCellViewModel>> = .init(value: .loading)
   
   // MARK: - Initializers
   
@@ -42,8 +44,8 @@ final class TVShowListViewModel: ShowsViewModel {
     self.output = Output(viewState: viewStateObservableSubject.asObservable())
   }
   
-  func getModelFor(_ entity: TVShow) -> TVShowCellViewModel {
-    return TVShowCellViewModel(show: entity)
+  func mapToCell(entites: [TVShow]) -> [TVShowCellViewModel] {
+    return entites.map { TVShowCellViewModel(show: $0) }
   }
 }
 
@@ -54,7 +56,7 @@ extension TVShowListViewModel: BaseViewModel {
   public struct Input { }
   
   public struct Output {
-    let viewState: Observable<SimpleViewState<TVShow>>
+    let viewState: Observable<SimpleViewState<TVShowCellViewModel>>
   }
 }
 

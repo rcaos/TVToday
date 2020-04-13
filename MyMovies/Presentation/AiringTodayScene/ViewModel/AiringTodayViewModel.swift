@@ -20,6 +20,8 @@ final class AiringTodayViewModel: ShowsViewModel {
   
   var shows: [TVShow]
   
+  var showsCells: [AiringTodayCollectionViewModel] = []
+  
   var disposeBag = DisposeBag()
   
   // MARK: - Base ViewModel
@@ -27,7 +29,7 @@ final class AiringTodayViewModel: ShowsViewModel {
   var output: Output
   
   // MARK: - Output VM
-  var viewStateObservableSubject = BehaviorSubject<SimpleViewState<TVShow>>(value: .loading)
+  var viewStateObservableSubject = BehaviorSubject<SimpleViewState<AiringTodayCollectionViewModel>>(value: .loading)
   
   // MARK: - Initializers
   
@@ -39,9 +41,10 @@ final class AiringTodayViewModel: ShowsViewModel {
     self.output = Output(viewState: viewStateObservableSubject.asObservable())
   }
   
-  func getModelFor(_ entity: TVShow) -> AiringTodayCollectionViewModel {
-    return AiringTodayCollectionViewModel(show: entity)
+  func mapToCell(entites: [TVShow]) -> [AiringTodayCollectionViewModel] {
+    return entites.map { AiringTodayCollectionViewModel(show: $0) }
   }
+  
 }
 
 // MARK: - BaseViewModel
@@ -51,7 +54,7 @@ extension AiringTodayViewModel: BaseViewModel {
   public struct Input { }
   
   public struct Output {
-    let viewState: Observable<SimpleViewState<TVShow>>
+    let viewState: Observable<SimpleViewState<AiringTodayCollectionViewModel>>
   }
 }
 

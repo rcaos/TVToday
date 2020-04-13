@@ -75,7 +75,7 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
         [weak self] (index, element, cell) in
         guard let strongSelf = self else { return }
         
-        cell.viewModel = strongSelf.viewModel.getModelFor(element)
+        cell.viewModel = element
         
         // MARK: - TODO, call "showsObservableSubject" dont be stay here
         if case .paging(let entities, let nextPage) = try? strongSelf.viewModel.viewStateObservableSubject.value(),
@@ -86,17 +86,17 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
     .disposed(by: disposeBag)
     
     Observable
-      .zip( tableView.rx.itemSelected, tableView.rx.modelSelected(TVShow.self) )
+      .zip( tableView.rx.itemSelected, tableView.rx.modelSelected(TVShowCellViewModel.self) )
       .bind { [weak self] (indexPath, item) in
         guard let strongSelf = self else { return }
         strongSelf.tableView.deselectRow(at: indexPath, animated: true)
-        strongSelf.viewModel.navigateTo(step: SearchStep.showIsPicked(withId: item.id) )
+        strongSelf.viewModel.navigateTo(step: SearchStep.showIsPicked(withId: item.entity .id) )
     }
     .disposed(by: disposeBag)
     
   }
   
-  func configView(with state: SimpleViewState<TVShow>) {
+  func configView(with state: SimpleViewState<TVShowCellViewModel>) {
     switch state {
     case .populated(_):
       tableView.tableFooterView = nil

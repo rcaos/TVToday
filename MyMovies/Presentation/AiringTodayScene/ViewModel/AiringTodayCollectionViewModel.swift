@@ -10,7 +10,7 @@ import Foundation
 
 final class AiringTodayCollectionViewModel {
   
-  private var show: TVShow
+  let show: TVShow
   
   public var showName: String?
   public var average: String?

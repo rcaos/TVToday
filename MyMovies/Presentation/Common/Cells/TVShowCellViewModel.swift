@@ -9,10 +9,15 @@
 import Foundation
 
 final class TVShowCellViewModel {
+  
+  let entity: TVShow
+  
   var name: String?
   var average: String?
   
   init(show: TVShow) {
+    self.entity = show
+    
     name = show.name
     
     if let voteAverage = show.voteAverage {

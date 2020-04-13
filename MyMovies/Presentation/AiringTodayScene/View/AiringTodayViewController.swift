@@ -65,10 +65,10 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable {
       .disposed(by: disposeBag)
     
     collectionView.rx
-      .modelSelected( TVShow.self)
-      .subscribe(onNext: { [weak self] tvShow in
+      .modelSelected( AiringTodayCollectionViewModel.self)
+      .subscribe(onNext: { [weak self] item in
         guard let strongSelf = self else { return }
-        strongSelf.viewModel.navigateTo(step: AiringTodayStep.showIsPicked(withId: tvShow.id ) )
+        strongSelf.viewModel.navigateTo(step: AiringTodayStep.showIsPicked(withId: item.show.id ) )
       })
       .disposed(by: disposeBag)
   }
@@ -87,7 +87,7 @@ extension AiringTodayViewController {
         guard let strongSelf = self else { fatalError() }
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AiringTodayCollectionViewCell", for: indexPath) as! AiringTodayCollectionViewCell
-        cell.viewModel = self?.viewModel.getModelFor(item)
+        cell.viewModel = item
         print("retornar cell: \(indexPath)")
         
         // MARK: - TODO viewState dont be here !!

@@ -17,14 +17,17 @@ final class ResultsSearchViewModel: ShowsViewModel {
   
   var shows: [TVShow]
   
+  var showsCells: [TVShowCellViewModel] = []
+  
   var currentSearch = ""
   
   var disposeBag = DisposeBag()
   
   var input: Input
+  
   var output: Output
   
-  var viewStateObservableSubject: BehaviorSubject<SimpleViewState<TVShow>> = .init(value: .populated([]))
+  var viewStateObservableSubject: BehaviorSubject<SimpleViewState<TVShowCellViewModel>> = .init(value: .populated([]))
   
   // MARK: - Init
   
@@ -55,8 +58,8 @@ final class ResultsSearchViewModel: ShowsViewModel {
     viewStateObservableSubject.onNext(.populated([]))
   }
   
-  func getModelFor(entity: TVShow) -> TVShowCellViewModel {
-    return TVShowCellViewModel(show: entity)
+  func mapToCell(entites: [TVShow]) -> [TVShowCellViewModel] {
+    return entites.map { TVShowCellViewModel(show: $0) }
   }
 }
 
@@ -65,6 +68,6 @@ extension ResultsSearchViewModel {
   public struct Input { }
   
   public struct Output {
-    let viewState: Observable<SimpleViewState<TVShow>>
+    let viewState: Observable<SimpleViewState<TVShowCellViewModel>>
   }
 }

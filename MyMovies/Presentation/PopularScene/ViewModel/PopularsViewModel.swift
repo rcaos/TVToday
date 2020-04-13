@@ -20,12 +20,14 @@ final class PopularViewModel: ShowsViewModel {
   
   var shows: [TVShow]
   
-  var viewStateObservableSubject: BehaviorSubject<SimpleViewState<TVShow>> = .init(value: .loading)
+  var showsCells: [TVShowCellViewModel] = []
+  
+  var viewStateObservableSubject: BehaviorSubject<SimpleViewState<TVShowCellViewModel>> = .init(value: .loading)
   
   var  disposeBag = DisposeBag()
   
-  // MARK: - Base ViewModel
   var input: Input
+  
   var output: Output
   
   // MARK: - Initializers
@@ -38,8 +40,8 @@ final class PopularViewModel: ShowsViewModel {
     self.output = Output(viewState: viewStateObservableSubject.asObservable())
   }
   
-  func getModelFor(_ entity: TVShow) -> TVShowCellViewModel {
-    return TVShowCellViewModel(show: entity)
+  func mapToCell(entites: [TVShow]) -> [TVShowCellViewModel] {
+    return entites.map { TVShowCellViewModel(show: $0) }
   }
 }
 
@@ -50,7 +52,7 @@ extension PopularViewModel: BaseViewModel {
   public struct Input { }
   
   public struct Output {
-    let viewState: Observable<SimpleViewState<TVShow>>
+    let viewState: Observable<SimpleViewState<TVShowCellViewModel>>
   }
 }
 

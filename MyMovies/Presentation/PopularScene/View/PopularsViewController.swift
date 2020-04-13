@@ -74,7 +74,7 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
         [weak self] (index, element, cell) in
         guard let strongSelf = self else { return }
         
-        cell.viewModel = self?.viewModel.getModelFor(element)
+        cell.viewModel = element
         
         if case .paging(let entities, let nextPage) = try? strongSelf.viewModel.viewStateObservableSubject.value(),
           index == entities.count - 1  {
@@ -92,16 +92,16 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
       .disposed(by: disposeBag)
     
     Observable
-      .zip( tableView.rx.itemSelected, tableView.rx.modelSelected(TVShow.self) )
+      .zip( tableView.rx.itemSelected, tableView.rx.modelSelected(TVShowCellViewModel.self) )
       .bind { [weak self] (indexPath, item) in
         guard let strongSelf = self else { return }
         strongSelf.tableView.deselectRow(at: indexPath, animated: true)
-        strongSelf.viewModel.navigateTo(step: PopularStep.showIsPicked(withId: item.id) )
+        strongSelf.viewModel.navigateTo(step: PopularStep.showIsPicked(withId: item.entity.id) )
     }
     .disposed(by: disposeBag)
   }
   
-  fileprivate func handleTableState(with state: SimpleViewState<TVShow>) {
+  fileprivate func handleTableState(with state: SimpleViewState<TVShowCellViewModel>) {
     switch state {
     case .loading, .paging :
       tableView.tableFooterView = loadingView

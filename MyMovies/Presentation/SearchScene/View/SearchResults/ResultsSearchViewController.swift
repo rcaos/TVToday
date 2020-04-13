@@ -83,7 +83,7 @@ class ResultsSearchViewController: UIViewController {
         [weak self] (index, element, cell) in
         guard let strongSelf = self else { return }
         
-        cell.viewModel = strongSelf.viewModel.getModelFor(entity: element)
+        cell.viewModel = element
         
         // MARK: - TODO, call "showsObservableSubject" dont be stay here
         if case .paging(let entities, let nextPage) = try? strongSelf.viewModel.viewStateObservableSubject.value(),
@@ -95,16 +95,16 @@ class ResultsSearchViewController: UIViewController {
     
     Observable
       .zip(resultView.tableView.rx.itemSelected,
-           resultView.tableView.rx.modelSelected(TVShow.self))
-      .subscribe(onNext: { [weak self] (index, show) in
+           resultView.tableView.rx.modelSelected(TVShowCellViewModel.self))
+      .subscribe(onNext: { [weak self] (index, element) in
         guard let strongSelf = self else { return }
         strongSelf.resultView.tableView.deselectRow(at: index, animated: true)
-        strongSelf.delegate?.resultsSearchViewController(strongSelf, didSelectedMovie: show.id)
+        strongSelf.delegate?.resultsSearchViewController(strongSelf, didSelectedMovie: element.entity.id)
       })
       .disposed(by: disposeBag)
   }
   
-  func configView(with state: SimpleViewState<TVShow>) {
+  func configView(with state: SimpleViewState<TVShowCellViewModel>) {
     
     let tableView = resultView.tableView
     

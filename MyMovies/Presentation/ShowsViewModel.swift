@@ -11,15 +11,21 @@ import RxSwift
 
 protocol ShowsViewModel: class {
   
+  associatedtype MovieCellViewModel
+  
   var fetchTVShowsUseCase: FetchTVShowsUseCase { get set }
   
   var filter: TVShowsListFilter { get set }
   
   var shows: [TVShow] { get set }
   
-  var viewStateObservableSubject: BehaviorSubject<SimpleViewState<TVShow>> { get set }
+  var showsCells: [MovieCellViewModel] { get set }
+  
+  var viewStateObservableSubject: BehaviorSubject<SimpleViewState<MovieCellViewModel>> { get set }
   
   var disposeBag: DisposeBag { get set }
+  
+  func mapToCell(entites: [TVShow]) -> [MovieCellViewModel]
 }
 
 extension ShowsViewModel {
@@ -54,12 +60,14 @@ extension ShowsViewModel {
       return
     }
     
+    let cellsShows = mapToCell(entites: shows)
+    
     // MARK: TODO, for test only, 3 pages, simulated Ended List
     if response.hasMorePages
       && response.nextPage < 4 {
-      viewStateObservableSubject.onNext( .paging(shows, next: response.nextPage) )
+      viewStateObservableSubject.onNext( .paging(cellsShows, next: response.nextPage) )
     } else {
-      viewStateObservableSubject.onNext( .populated(shows) )
+      viewStateObservableSubject.onNext( .populated(cellsShows) )
     }
   }
 }

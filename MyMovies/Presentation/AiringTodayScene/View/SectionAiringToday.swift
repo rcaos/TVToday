@@ -17,7 +17,7 @@ struct SectionAiringToday {
 
 extension SectionAiringToday: SectionModelType {
   
-  typealias Item = TVShow
+  typealias Item = AiringTodayCollectionViewModel
   
   init(original: SectionAiringToday, items: [Item]) {
     self = original

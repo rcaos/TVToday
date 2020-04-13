@@ -126,7 +126,6 @@ extension EpisodesListViewController {
     let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifierForSeasons, for: indexPath) as! SeasonListTableViewCell
     if cell.viewModel == nil {
       cell.viewModel = viewModel.buildModelForSeasons(with: element)
-      cell.delegate = self
     }
     return cell
   }
@@ -152,14 +151,5 @@ extension EpisodesListViewController: UITableViewDelegate {
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
-  }
-}
-
-// MARK: - SeasonEpisodeTableViewCellDelegate
-
-extension EpisodesListViewController: SeasonListTableViewCellDelegate {
-  
-  func didSelectedSeason(at season: Int) {
-    viewModel.getSeason(at: season)
   }
 }

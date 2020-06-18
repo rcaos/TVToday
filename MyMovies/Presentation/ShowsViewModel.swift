@@ -62,9 +62,10 @@ extension ShowsViewModel {
     
     let cellsShows = mapToCell(entites: shows)
     
-    // MARK: TODO, for test only, 3 pages, simulated Ended List
-    if response.hasMorePages
-      && response.nextPage < 4 {
+    // MARK: For test only, 3 pages, simulated Ended List.
+    let isEnded = response.nextPage < 4
+    
+    if response.hasMorePages && isEnded {
       viewStateObservableSubject.onNext( .paging(cellsShows, next: response.nextPage) )
     } else {
       viewStateObservableSubject.onNext( .populated(cellsShows) )

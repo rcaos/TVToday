@@ -56,6 +56,7 @@ final class ResultsSearchViewModel: ShowsViewModel {
   
   func clearShows() {
     viewStateObservableSubject.onNext(.populated([]))
+    shows.removeAll()
   }
   
   func mapToCell(entites: [TVShow]) -> [TVShowCellViewModel] {

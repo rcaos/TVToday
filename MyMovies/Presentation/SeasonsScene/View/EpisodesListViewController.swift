@@ -79,7 +79,6 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable {
     let dataSource = RxTableViewSectionedAnimatedDataSource<SeasonsSectionModel>(
       configureCell: { [weak self] (_, _, indexPath, element) -> UITableViewCell in
         guard let strongSelf = self else { fatalError() }
-        print("-- ask for Cell: \(indexPath)")
         switch element {
         case .seasons(number: let numberOfSeasons):
           return strongSelf.makeCellForSeasonNumber(at: indexPath, element: numberOfSeasons)

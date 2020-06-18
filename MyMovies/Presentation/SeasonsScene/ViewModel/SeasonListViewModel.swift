@@ -21,16 +21,18 @@ final class SeasonListViewModel {
   private var seasonSelectedObservableSubject = BehaviorSubject<Int>(value: 0)
   
   var input: Input
+  
   var output: Output
   
   var steps = PublishRelay<Step>()
+  
+  var disposeBag = DisposeBag()
   
   // MARK: Initalizer
   
   init( seasons: [Int] ) {
     self.seasonsList = seasons
     
-    // MARK: - TODO, input select Season should be here
     self.input = Input()
     
     self.seasonsObservableSubject = BehaviorSubject(value: seasons)
@@ -56,9 +58,8 @@ final class SeasonListViewModel {
 
 extension SeasonListViewModel: BaseViewModel {
   
-  // MARK: - TODO, Selected season should be here
   public struct Input {
-    // ...
+    let selectedSeason = BehaviorSubject<Int>(value: 0)
   }
   
   public struct Output {

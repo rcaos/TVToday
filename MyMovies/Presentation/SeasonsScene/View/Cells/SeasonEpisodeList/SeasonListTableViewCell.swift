@@ -10,11 +10,6 @@ import UIKit
 import RxSwift
 import RxDataSources
 
-protocol SeasonListTableViewCellDelegate: class {
-  
-  func didSelectedSeason(at season: Int)
-}
-
 class SeasonListTableViewCell: UITableViewCell {
   
   @IBOutlet weak var collectionView: UICollectionView!
@@ -26,8 +21,6 @@ class SeasonListTableViewCell: UITableViewCell {
       }
     }
   }
-  
-  weak var delegate: SeasonListTableViewCellDelegate?
   
   private var disposeBag = DisposeBag()
   
@@ -50,23 +43,21 @@ class SeasonListTableViewCell: UITableViewCell {
   }
   
   func setupBindables() {
+    guard let viewModel = viewModel else { return }
+    
     let dataSource = RxCollectionViewSectionedReloadDataSource<SectionSeasonsList>(configureCell: configureCollectionViewCell())
     
-    viewModel?.output
+    viewModel.output
       .seasons
       .map { [SectionSeasonsList(header: "Seasons", items: $0 )] }
       .bind(to: collectionView.rx.items(dataSource: dataSource) )
       .disposed(by: disposeBag)
     
-    collectionView.rx
-      .modelSelected(Int.self)
-      .subscribe(onNext: { [weak self] season in
-        guard let strongSelf = self else { return }
-        strongSelf.delegate?.didSelectedSeason(at: season)
-      })
+    collectionView.rx.modelSelected(Int.self)
+      .bind(to: viewModel.input.selectedSeason)
       .disposed(by: disposeBag)
     
-    viewModel?.output.seasonSelected
+    viewModel.output.seasonSelected
       .filter { $0 > 0 }
       .subscribe(onNext: { [weak self] season in
         guard let strongSelf = self else { return }

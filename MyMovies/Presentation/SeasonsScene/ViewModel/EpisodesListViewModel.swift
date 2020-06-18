@@ -60,6 +60,12 @@ final class EpisodesListViewModel {
     print("deinit SeasonsListViewModel")
   }
   
+  fileprivate func controlSeasonSelected(with viewModel: SeasonListViewModel) {
+    viewModel.input.selectedSeason
+      .bind(to: seasonSelectedSubject)
+      .disposed(by: viewModel.disposeBag)
+  }
+  
   fileprivate func controlSeasons() {
     
     let episodesObservable = allEpisodesSubject
@@ -184,10 +190,6 @@ final class EpisodesListViewModel {
     fetchShowDetailsAndFirstSeason()
   }
   
-  func getSeason(at numberOfSeason: Int) {
-    seasonSelectedSubject.onNext(numberOfSeason)
-  }
-  
   func buildHeaderViewModel() -> SeasonHeaderViewModel? {
     guard let show = showDetailResult else { return nil }
     return SeasonHeaderViewModel(showDetail: show)
@@ -196,6 +198,7 @@ final class EpisodesListViewModel {
   func buildModelForSeasons(with numberOfSeasons: Int) -> SeasonListViewModel? {
     let seasons: [Int] = (1...numberOfSeasons).map { $0 }
     seasonListViewModel = SeasonListViewModel(seasons: seasons)
+    controlSeasonSelected(with: seasonListViewModel!)
     return seasonListViewModel
   }
   

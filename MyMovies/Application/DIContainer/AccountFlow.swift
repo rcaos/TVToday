@@ -57,13 +57,22 @@ public class AccountFlow: Flow {
   }
   
   fileprivate func navigateToAccountFeature() -> FlowContributors {
-    let viewModel = AccountViewModel()
-    let accountVC = AccountViewController.create(with: viewModel)
     
-    rootViewController.pushViewController(accountVC, animated: true)
+    let signViewModel = SignInViewModel()
+    let signInViewController = SignInViewController.create(with: signViewModel)
+    
+    let profileViewModel = ProfileViewModel()
+    let profileViewController = ProfileViewController.create(with: profileViewModel)
+    
+    let accountViewModel = AccountViewModel(signInViewModel: signViewModel, profileViewMoel: profileViewModel)
+    let accountViewController = AccountViewController.create(with: accountViewModel,
+                                                 signInViewController: signInViewController,
+                                                 profileViewController: profileViewController)
+    
+    rootViewController.pushViewController(accountViewController, animated: true)
     
     return .one(flowContributor: .contribute(
-      withNextPresentable: accountVC, withNextStepper: viewModel))
+      withNextPresentable: accountViewController, withNextStepper: accountViewModel))
   }
   
   // MARK: - Uses Cases

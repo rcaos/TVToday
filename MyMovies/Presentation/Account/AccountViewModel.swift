@@ -18,9 +18,16 @@ final class AccountViewModel {
   
   var output: Output
   
+  private var signInViewModel: SignInViewModel
+  
+  private var profileViewMoel: ProfileViewModel
+  
   // MARK: - Initializers
   
-  init() {
+  init(signInViewModel: SignInViewModel, profileViewMoel: ProfileViewModel) {
+    self.signInViewModel = signInViewModel
+    self.profileViewMoel = profileViewMoel
+    
     input = Input()
     output = Output()
   }

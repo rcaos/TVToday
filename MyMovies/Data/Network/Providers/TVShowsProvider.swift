@@ -37,7 +37,7 @@ extension TVShowsProvider: EndPoint {
     }
   }
   
-  var queryParameters: [String: Any] {
+  var queryParameters: [String: Any]? {
     var parameters: [String: Any] = [:]
     
     switch self {

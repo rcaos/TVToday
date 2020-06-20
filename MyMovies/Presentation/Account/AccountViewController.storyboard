@@ -8,10 +8,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Sign In View Controller-->
         <scene sceneID="ijw-Hi-WD9">
             <objects>
-                <viewController storyboardIdentifier="LoginViewController" id="lTR-e6-oJn" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SignInViewController" id="lTR-e6-oJn" customClass="SignInViewController" customModule="TVToday" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Mat-8W-g0y">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -40,15 +40,18 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="zbW-yg-XW1"/>
                     </view>
+                    <connections>
+                        <outlet property="signInButton" destination="opf-FX-R8Y" id="Cik-3p-yDD"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2MH-sh-fAo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="550.72463768115949" y="-728.57142857142856"/>
         </scene>
-        <!--View Controller-->
+        <!--Profile View Controller-->
         <scene sceneID="EOn-zO-EtL">
             <objects>
-                <viewController storyboardIdentifier="ProfileViewController" id="XJm-Lb-yok" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ProfileViewController" id="XJm-Lb-yok" customClass="ProfileViewController" customModule="TVToday" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="znq-J1-jlq">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -68,10 +71,13 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="pD6-oY-3VE"/>
                     </view>
+                    <connections>
+                        <outlet property="mainLabel" destination="WeX-nX-0zh" id="rxE-M7-VRr"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DXC-GH-2lp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1348" y="-729"/>
+            <point key="canvasLocation" x="1345" y="-729"/>
         </scene>
         <!--Account View Controller-->
         <scene sceneID="hk1-8P-ZaY">
@@ -86,7 +92,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c07-uG-kOP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="946" y="-50"/>
+            <point key="canvasLocation" x="954" y="-59"/>
         </scene>
     </scenes>
     <resources>

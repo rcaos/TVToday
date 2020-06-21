@@ -80,6 +80,12 @@
 		778B47EC23CE0C0C009AE084 /* FetchGenresUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778B47EB23CE0C0C009AE084 /* FetchGenresUseCase.swift */; };
 		778B47EF23CE0C65009AE084 /* TVShowsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778B47EE23CE0C65009AE084 /* TVShowsRepository.swift */; };
 		778B47F323CE1778009AE084 /* DefaultTVShowsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778B47F223CE1778009AE084 /* DefaultTVShowsRepository.swift */; };
+		778C161F249F4BFA006BBD76 /* AccountProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778C161E249F4BFA006BBD76 /* AccountProvider.swift */; };
+		778C1621249F4CC2006BBD76 /* AccountRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778C1620249F4CC2006BBD76 /* AccountRepository.swift */; };
+		778C1623249F4D3A006BBD76 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778C1622249F4D3A006BBD76 /* Account.swift */; };
+		778C1625249F4DBA006BBD76 /* Account+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778C1624249F4DBA006BBD76 /* Account+Decodable.swift */; };
+		778C1627249F4F74006BBD76 /* FetchAccountDetailsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778C1626249F4F74006BBD76 /* FetchAccountDetailsUseCase.swift */; };
+		778C1629249F5180006BBD76 /* DefaultAccountRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778C1628249F5180006BBD76 /* DefaultAccountRepository.swift */; };
 		779ABBAD249DA9A40095EA3F /* AuthRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779ABBAC249DA9A40095EA3F /* AuthRepository.swift */; };
 		779ABBAF249DAA880095EA3F /* CreateTokenResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779ABBAE249DAA880095EA3F /* CreateTokenResult.swift */; };
 		779ABBB1249DAAD90095EA3F /* CreateSessionResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779ABBB0249DAAD90095EA3F /* CreateSessionResult.swift */; };
@@ -202,6 +208,12 @@
 		778B47EB23CE0C0C009AE084 /* FetchGenresUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchGenresUseCase.swift; sourceTree = "<group>"; };
 		778B47EE23CE0C65009AE084 /* TVShowsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowsRepository.swift; sourceTree = "<group>"; };
 		778B47F223CE1778009AE084 /* DefaultTVShowsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTVShowsRepository.swift; sourceTree = "<group>"; };
+		778C161E249F4BFA006BBD76 /* AccountProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountProvider.swift; sourceTree = "<group>"; };
+		778C1620249F4CC2006BBD76 /* AccountRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountRepository.swift; sourceTree = "<group>"; };
+		778C1622249F4D3A006BBD76 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
+		778C1624249F4DBA006BBD76 /* Account+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Account+Decodable.swift"; sourceTree = "<group>"; };
+		778C1626249F4F74006BBD76 /* FetchAccountDetailsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchAccountDetailsUseCase.swift; sourceTree = "<group>"; };
+		778C1628249F5180006BBD76 /* DefaultAccountRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAccountRepository.swift; sourceTree = "<group>"; };
 		779ABBAC249DA9A40095EA3F /* AuthRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRepository.swift; sourceTree = "<group>"; };
 		779ABBAE249DAA880095EA3F /* CreateTokenResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTokenResult.swift; sourceTree = "<group>"; };
 		779ABBB0249DAAD90095EA3F /* CreateSessionResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSessionResult.swift; sourceTree = "<group>"; };
@@ -311,6 +323,7 @@
 				7701B33D23D0C49D003DA227 /* SeasonResult+Decodable.swift */,
 				779ABBB4249DAEBC0095EA3F /* CreateTokenResult+Decodable.swift */,
 				779ABBB6249DAF4C0095EA3F /* CreateSessionResult+Decodable.swift */,
+				778C1624249F4DBA006BBD76 /* Account+Decodable.swift */,
 			);
 			path = DataMapping;
 			sourceTree = "<group>";
@@ -481,6 +494,7 @@
 				7787CFD623554208007DA54E /* TVShowsProvider.swift */,
 				7787CFD923554290007DA54E /* GenreProvider.swift */,
 				7726FE51249D882700D83C35 /* AuthProvider.swift */,
+				778C161E249F4BFA006BBD76 /* AccountProvider.swift */,
 			);
 			path = Providers;
 			sourceTree = "<group>";
@@ -504,6 +518,7 @@
 				77B8E03923D60C0500DBFD00 /* FetchEpisodesUseCase.swift */,
 				779ABBB2249DADD10095EA3F /* CreateTokenUseCase.swift */,
 				77443BAB249F403300703EA9 /* CreateSession.swift */,
+				778C1626249F4F74006BBD76 /* FetchAccountDetailsUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -516,6 +531,7 @@
 				77C1AFC523D119AD00E4A965 /* TVShowDetailsRepository.swift */,
 				77B8E03723D60B8400DBFD00 /* TVEpisodesRepository.swift */,
 				779ABBAC249DA9A40095EA3F /* AuthRepository.swift */,
+				778C1620249F4CC2006BBD76 /* AccountRepository.swift */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -536,6 +552,7 @@
 				77C1AFC723D11A0E00E4A965 /* DefaultTVShowDetailsRepository.swift */,
 				77B8E03B23D60E2C00DBFD00 /* DefaultTVEpisodesRepository.swift */,
 				779ABBB8249DAF9E0095EA3F /* DefaultAuthRepository.swift */,
+				778C1628249F5180006BBD76 /* DefaultAccountRepository.swift */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -668,6 +685,7 @@
 				770D5B2D233584F000438937 /* SeasonResult.swift */,
 				779ABBAE249DAA880095EA3F /* CreateTokenResult.swift */,
 				779ABBB0249DAAD90095EA3F /* CreateSessionResult.swift */,
+				778C1622249F4D3A006BBD76 /* Account.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -1006,6 +1024,7 @@
 				77E119E2232DE39900A01ACF /* AiringTodayViewModel.swift in Sources */,
 				7703738B234517B000775698 /* AiringTodayCollectionViewModel.swift in Sources */,
 				77E119DA232DD3C200A01ACF /* GenreViewCell.swift in Sources */,
+				778C1621249F4CC2006BBD76 /* AccountRepository.swift in Sources */,
 				77193F3F232FEB4A007FA822 /* SearchViewModel.swift in Sources */,
 				779ABBB1249DAAD90095EA3F /* CreateSessionResult.swift in Sources */,
 				7787CFDA23554290007DA54E /* GenreProvider.swift in Sources */,
@@ -1026,6 +1045,9 @@
 				7701B33A23D0C3E3003DA227 /* Episode+Decodable.swift in Sources */,
 				7762A948249DB5A200E00CDD /* AuthPermissionViewController.swift in Sources */,
 				775927A12434FA1C004BB04E /* MessageImageView.swift in Sources */,
+				778C1623249F4D3A006BBD76 /* Account.swift in Sources */,
+				778C1625249F4DBA006BBD76 /* Account+Decodable.swift in Sources */,
+				778C161F249F4BFA006BBD76 /* AccountProvider.swift in Sources */,
 				77EEF804233AA70A0054A499 /* SeasonListTableViewCell.swift in Sources */,
 				778B47EF23CE0C65009AE084 /* TVShowsRepository.swift in Sources */,
 				7787CFD123553EC1007DA54E /* EndPoint.swift in Sources */,
@@ -1067,10 +1089,12 @@
 				77544E672433FBBD00F02F9D /* SeasonsSectionModel.swift in Sources */,
 				770D5B2E233584F000438937 /* SeasonResult.swift in Sources */,
 				77DB76EC2314890A00A1DE77 /* TVShowListViewController.swift in Sources */,
+				778C1627249F4F74006BBD76 /* FetchAccountDetailsUseCase.swift in Sources */,
 				77B8E03823D60B8400DBFD00 /* TVEpisodesRepository.swift in Sources */,
 				770D1036233941BF00CD84B2 /* EpisodeItemTableViewCell.swift in Sources */,
 				7726FE43249D5F5600D83C35 /* AccountViewModel.swift in Sources */,
 				778B47E823CE0BE1009AE084 /* FetchShowsUseCase.swift in Sources */,
+				778C1629249F5180006BBD76 /* DefaultAccountRepository.swift in Sources */,
 				7726FE41249D5F4D00D83C35 /* AccountViewController.swift in Sources */,
 				7787CFD723554208007DA54E /* TVShowsProvider.swift in Sources */,
 				77E119E0232DE02A00A01ACF /* TVShowCellViewModel.swift in Sources */,

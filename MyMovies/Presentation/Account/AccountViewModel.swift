@@ -17,6 +17,8 @@ final class AccountViewModel {
   
   private let createNewSession: CreateSessionUseCase
   
+  private let fetchAccountDetails: FetchAccountDetailsUseCase
+  
   private let behaviorSubjectViewState: BehaviorSubject<ViewState> = .init(value: .login)
   
   var steps = PublishRelay<Step>()
@@ -38,9 +40,11 @@ final class AccountViewModel {
   
   init(requestToken: CreateTokenUseCase,
        createNewSession: CreateSessionUseCase,
+       fetchAccountDetails: FetchAccountDetailsUseCase,
        signInViewModel: SignInViewModel, profileViewMoel: ProfileViewModel) {
     self.requestToken = requestToken
     self.createNewSession = createNewSession
+    self.fetchAccountDetails = fetchAccountDetails
     self.signInViewModel = signInViewModel
     self.profileViewMoel = profileViewMoel
     
@@ -63,12 +67,23 @@ final class AccountViewModel {
   
   fileprivate func createSession() {
     createNewSession.execute(requestToken: tempToken)
-    .debug()
+      .debug()
       .subscribe(onNext: { [weak self] result in
         print("Session Creada Ok: [\(result)]")
         self?.behaviorSubjectViewState.onNext(.profile)
+        
+        guard let session = result.sessionId else { return }
+        self?.getDetails(session: session)
       })
-    .disposed(by: disposeBag)
+      .disposed(by: disposeBag)
+  }
+  
+  fileprivate func getDetails(session: String) {
+    fetchAccountDetails.execute(session: session)
+      .subscribe(onNext: { [weak self] result in
+        print("Details Okey: [\(result)]")
+      })
+      .disposed(by: disposeBag)
   }
 }
 

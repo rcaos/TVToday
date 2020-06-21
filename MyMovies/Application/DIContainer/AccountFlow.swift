@@ -31,6 +31,10 @@ public class AccountFlow: Flow {
     return DefaultAuthRepository(dataTransferService: dependencies.apiDataTransferService)
   }()
   
+  private lazy var accountRepository: AccountRepository = {
+    return DefaultAccountRepository(dataTransferService: dependencies.apiDataTransferService)
+  }()
+  
   // MARK: - Life Cycle
   
   public init(dependencies: Dependencies) {
@@ -66,6 +70,7 @@ public class AccountFlow: Flow {
     
     let accountViewModel = AccountViewModel(requestToken: makeCreateTokenUseCase(),
                                             createNewSession: makeCreateSessionUseCase(),
+                                            fetchAccountDetails: makeFetchAccountDetailsUseCase(),
                                             signInViewModel: signViewModel,
                                             profileViewMoel: profileViewModel)
     signViewModel.delegate = accountViewModel
@@ -99,6 +104,10 @@ public class AccountFlow: Flow {
   
   private func makeCreateSessionUseCase() -> CreateSessionUseCase {
     return DefaultCreateSessionUseCase(authRepository: authRepository)
+  }
+  
+  private func makeFetchAccountDetailsUseCase() -> FetchAccountDetailsUseCase {
+    return DefaultFetchAccountDetailsUseCase(accountRepository: accountRepository)
   }
   
 }

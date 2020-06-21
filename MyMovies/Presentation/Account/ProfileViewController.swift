@@ -15,7 +15,7 @@ class ProfileViewController: UIViewController, StoryboardInstantiable {
   private var viewModel: ProfileViewModel!
   
   static func create(with viewModel: ProfileViewModel) -> ProfileViewController {
-    let controller = ProfileViewController.instantiateViewController(from: "AccountViewController")
+    let controller = ProfileViewController.instantiateViewController(fromStoryBoard: "AccountViewController")
     controller.viewModel = viewModel
     return controller
   }

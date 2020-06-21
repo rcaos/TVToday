@@ -13,4 +13,5 @@ target 'TVToday' do
   pod 'RxDataSources',   '4.0.0'
   
   pod 'RxFlow',          '2.7.0'
+  pod 'KeychainSwift', 	 '14.0'
 end

@@ -57,11 +57,15 @@
 		7736A08B231FF84A00566F0B /* AiringTodayViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7736A08A231FF84A00566F0B /* AiringTodayViewController.storyboard */; };
 		7736A08D231FF8BF00566F0B /* PopularsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7736A08C231FF8BF00566F0B /* PopularsViewController.storyboard */; };
 		7736A091231FFFD300566F0B /* SearchViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7736A090231FFFD300566F0B /* SearchViewController.storyboard */; };
+		77443BAC249F403300703EA9 /* CreateSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77443BAB249F403300703EA9 /* CreateSession.swift */; };
 		774688BB243D0EEA00822598 /* PopularFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774688BA243D0EEA00822598 /* PopularFlow.swift */; };
 		774688BD243D132700822598 /* SearchFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774688BC243D132700822598 /* SearchFlow.swift */; };
 		77544E672433FBBD00F02F9D /* SeasonsSectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77544E662433FBBD00F02F9D /* SeasonsSectionModel.swift */; };
 		7755D6DE23CCCD860083CB53 /* SimpleViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7755D6DD23CCCD860083CB53 /* SimpleViewState.swift */; };
 		775927A12434FA1C004BB04E /* MessageImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 775927A02434FA1C004BB04E /* MessageImageView.swift */; };
+		7762A948249DB5A200E00CDD /* AuthPermissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7762A947249DB5A200E00CDD /* AuthPermissionViewController.swift */; };
+		7762A94A249DB63B00E00CDD /* AuthPermissionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7762A949249DB63B00E00CDD /* AuthPermissionViewModel.swift */; };
+		7762A94C249DC78300E00CDD /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7762A94B249DC78300E00CDD /* WebKit.framework */; };
 		7777E6E8243D3CCE00058686 /* TVShowDetailFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7777E6E7243D3CCE00058686 /* TVShowDetailFlow.swift */; };
 		777B1776243CD3CD002D5DCF /* AppDIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777B1775243CD3CD002D5DCF /* AppDIContainer.swift */; };
 		777B1778243CD676002D5DCF /* AppFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777B1777243CD676002D5DCF /* AppFlow.swift */; };
@@ -175,11 +179,15 @@
 		7736A08A231FF84A00566F0B /* AiringTodayViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AiringTodayViewController.storyboard; sourceTree = "<group>"; };
 		7736A08C231FF8BF00566F0B /* PopularsViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PopularsViewController.storyboard; sourceTree = "<group>"; };
 		7736A090231FFFD300566F0B /* SearchViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SearchViewController.storyboard; sourceTree = "<group>"; };
+		77443BAB249F403300703EA9 /* CreateSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSession.swift; sourceTree = "<group>"; };
 		774688BA243D0EEA00822598 /* PopularFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularFlow.swift; sourceTree = "<group>"; };
 		774688BC243D132700822598 /* SearchFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFlow.swift; sourceTree = "<group>"; };
 		77544E662433FBBD00F02F9D /* SeasonsSectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonsSectionModel.swift; sourceTree = "<group>"; };
 		7755D6DD23CCCD860083CB53 /* SimpleViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleViewState.swift; sourceTree = "<group>"; };
 		775927A02434FA1C004BB04E /* MessageImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageImageView.swift; sourceTree = "<group>"; };
+		7762A947249DB5A200E00CDD /* AuthPermissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPermissionViewController.swift; sourceTree = "<group>"; };
+		7762A949249DB63B00E00CDD /* AuthPermissionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPermissionViewModel.swift; sourceTree = "<group>"; };
+		7762A94B249DC78300E00CDD /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		7777E6E7243D3CCE00058686 /* TVShowDetailFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowDetailFlow.swift; sourceTree = "<group>"; };
 		777B1775243CD3CD002D5DCF /* AppDIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDIContainer.swift; sourceTree = "<group>"; };
 		777B1777243CD676002D5DCF /* AppFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFlow.swift; sourceTree = "<group>"; };
@@ -251,6 +259,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7762A94C249DC78300E00CDD /* WebKit.framework in Frameworks */,
 				0B58BC9FA5F959E417DFC783 /* Pods_TVToday.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -261,6 +270,7 @@
 		648B86FDAE2FF3F0A0713B4C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7762A94B249DC78300E00CDD /* WebKit.framework */,
 				DE94CDC6BAA4992FDBBFA2F8 /* Pods_TVToday.framework */,
 			);
 			name = Frameworks;
@@ -450,6 +460,8 @@
 				7726FE4B249D743900D83C35 /* SignInViewModel.swift */,
 				7726FE49249D72DA00D83C35 /* ProfileViewController.swift */,
 				7726FE4D249D793900D83C35 /* ProfileViewModel.swift */,
+				7762A947249DB5A200E00CDD /* AuthPermissionViewController.swift */,
+				7762A949249DB63B00E00CDD /* AuthPermissionViewModel.swift */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -491,6 +503,7 @@
 				77C1AFC323D118AC00E4A965 /* FetchTVShowDetails.swift */,
 				77B8E03923D60C0500DBFD00 /* FetchEpisodesUseCase.swift */,
 				779ABBB2249DADD10095EA3F /* CreateTokenUseCase.swift */,
+				77443BAB249F403300703EA9 /* CreateSession.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -822,8 +835,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 77F46335230C9F5C008FB9D6 /* Build configuration list for PBXNativeTarget "TVToday" */;
 			buildPhases = (
-				77CE74FD24441ED0004788C8 /* ShellScript */,
 				FA7E97A9206573CF12A57BDB /* [CP] Check Pods Manifest.lock */,
+				77CE74FD24441ED0004788C8 /* ShellScript */,
 				77F4631F230C9F5A008FB9D6 /* Sources */,
 				77F46320230C9F5A008FB9D6 /* Frameworks */,
 				77F46321230C9F5A008FB9D6 /* Resources */,
@@ -984,6 +997,7 @@
 				7722CE5E230D9A36003DC4C5 /* GenreListResult.swift in Sources */,
 				770860FB23CE753200625183 /* StoryboardInstantiable.swift in Sources */,
 				777B1778243CD676002D5DCF /* AppFlow.swift in Sources */,
+				77443BAC249F403300703EA9 /* CreateSession.swift in Sources */,
 				770B5C35230E06B2002019E6 /* TVShowDetailResult.swift in Sources */,
 				77193F42232FF168007FA822 /* ResultsSearchViewModel.swift in Sources */,
 				777B177E243CE1DA002D5DCF /* AiringTodayFlow.swift in Sources */,
@@ -1010,11 +1024,13 @@
 				7726FE4A249D72DA00D83C35 /* ProfileViewController.swift in Sources */,
 				77054AAA233999440026B868 /* EpisodeItemViewModel.swift in Sources */,
 				7701B33A23D0C3E3003DA227 /* Episode+Decodable.swift in Sources */,
+				7762A948249DB5A200E00CDD /* AuthPermissionViewController.swift in Sources */,
 				775927A12434FA1C004BB04E /* MessageImageView.swift in Sources */,
 				77EEF804233AA70A0054A499 /* SeasonListTableViewCell.swift in Sources */,
 				778B47EF23CE0C65009AE084 /* TVShowsRepository.swift in Sources */,
 				7787CFD123553EC1007DA54E /* EndPoint.swift in Sources */,
 				770D5B302335858800438937 /* Episode.swift in Sources */,
+				7762A94A249DB63B00E00CDD /* AuthPermissionViewModel.swift in Sources */,
 				7733F14724323EE700B41031 /* Episode+SectionModelType.swift in Sources */,
 				774688BD243D132700822598 /* SearchFlow.swift in Sources */,
 				772C5104242C0B020014F96D /* UIImageView+Kingfisher.swift in Sources */,

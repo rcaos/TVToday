@@ -9,7 +9,7 @@
 import RxSwift
 
 protocol CreateTokenUseCase {
-  func execute() -> Observable<CreateTokenResult>
+  func execute() -> Observable<(URL, String)>
 }
 
 final class DefaultCreateTokenUseCase: CreateTokenUseCase {
@@ -20,7 +20,17 @@ final class DefaultCreateTokenUseCase: CreateTokenUseCase {
     self.authRepository = authRepository
   }
   
-  func execute() -> Observable<CreateTokenResult> {
-    return authRepository.requestToken()
+  func execute() -> Observable<(URL, String)> {
+    return
+      authRepository.requestToken()
+        .map {
+          guard let token = $0.token else { throw CustomError.genericError }
+          guard let url = URL(string: "https://www.themoviedb.org/authenticate/\(token)") else { throw CustomError.genericError }
+          return (url, token)
+    }
   }
+}
+
+enum CustomError: Error {
+  case genericError
 }

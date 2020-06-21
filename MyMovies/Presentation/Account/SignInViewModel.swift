@@ -11,9 +11,14 @@ import RxSwift
 import RxFlow
 import RxRelay
 
+protocol SignInViewModelDelegate: class {
+  
+  func signInViewModel(_ signInViewModel: SignInViewModel, didTapSignInButton tapped: Bool)
+}
+
 class SignInViewModel {
   
-  var steps = PublishRelay<Step>()
+  weak var delegate: SignInViewModelDelegate?
   
   var input: Input
   
@@ -30,17 +35,18 @@ class SignInViewModel {
     subscribe()
   }
   
-  private func subscribe() {
+  fileprivate func subscribe() {
     input.tapButton.asObserver()
-      .subscribe(onNext: {
-        print("Tap en Button Login")
+      .subscribe(onNext: { [weak self] in
+        guard let strongSelf = self else { return }
+        strongSelf.delegate?.signInViewModel(strongSelf, didTapSignInButton: true)
       })
-    .disposed(by: disposeBag)
+      .disposed(by: disposeBag)
   }
   
 }
 
-extension SignInViewModel: BaseViewModel {
+extension SignInViewModel {
   
   public struct Input {
     let tapButton = PublishSubject<Void>()

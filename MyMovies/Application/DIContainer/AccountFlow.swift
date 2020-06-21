@@ -27,12 +27,8 @@ public class AccountFlow: Flow {
     return navigationController
   }()
   
-  // Repositories
-  // TODO
-  private lazy var showsRepository: TVShowsRepository = {
-    return DefaultTVShowsRepository(
-      dataTransferService: dependencies.apiDataTransferService,
-      basePath: dependencies.appConfigurations.imagesBaseURL)
+  private lazy var authRepository: AuthRepository = {
+    return DefaultAuthRepository(dataTransferService: dependencies.apiDataTransferService)
   }()
   
   // MARK: - Life Cycle
@@ -48,8 +44,12 @@ public class AccountFlow: Flow {
     case AccountStep.accountFeatureInit:
       return navigateToAccountFeature()
       
-//    case PopularStep.showIsPicked(let id) :
-//      return navigateToShowDetailScreen(with: id)
+    case AccountStep.signInIsPicked(let url, let delegate):
+      return navigateToAuthPermission(url: url, delegate: delegate)
+      
+    case AccountStep.authorizationIsComplete:
+      self.rootViewController.presentedViewController?.dismiss(animated: true)
+      return .none
       
     default:
       return .none
@@ -64,10 +64,14 @@ public class AccountFlow: Flow {
     let profileViewModel = ProfileViewModel()
     let profileViewController = ProfileViewController.create(with: profileViewModel)
     
-    let accountViewModel = AccountViewModel(signInViewModel: signViewModel, profileViewMoel: profileViewModel)
+    let accountViewModel = AccountViewModel(requestToken: makeCreateTokenUseCase(),
+                                            createNewSession: makeCreateSessionUseCase(),
+                                            signInViewModel: signViewModel,
+                                            profileViewMoel: profileViewModel)
+    signViewModel.delegate = accountViewModel
     let accountViewController = AccountViewController.create(with: accountViewModel,
-                                                 signInViewController: signInViewController,
-                                                 profileViewController: profileViewController)
+                                                             signInViewController: signInViewController,
+                                                             profileViewController: profileViewController)
     
     rootViewController.pushViewController(accountViewController, animated: true)
     
@@ -75,25 +79,43 @@ public class AccountFlow: Flow {
       withNextPresentable: accountViewController, withNextStepper: accountViewModel))
   }
   
+  fileprivate func navigateToAuthPermission(url: URL, delegate: AuthPermissionViewModelDelegate?) -> FlowContributors {
+    let authViewModel = AuthPermissionViewModel(url: url)
+    authViewModel.delegate = delegate
+    let authViewController = AuthPermissionViewController.create(with: authViewModel)
+    
+    let navController = UINavigationController(rootViewController: authViewController)
+    
+    rootViewController.present(navController, animated: true)
+    
+    return .none
+  }
+  
   // MARK: - Uses Cases
   
-//  private func makeFetchTodayShowsUseCase() -> FetchTVShowsUseCase {
-//    return DefaultFetchTVShowsUseCase(tvShowsRepository: showsRepository)
-//  }
+  private func makeCreateTokenUseCase() -> CreateTokenUseCase {
+    return DefaultCreateTokenUseCase(authRepository: authRepository)
+  }
+  
+  private func makeCreateSessionUseCase() -> CreateSessionUseCase {
+    return DefaultCreateSessionUseCase(authRepository: authRepository)
+  }
   
 }
 
 // MARK: - Steps
 
-public enum AccountStep: Step {
+enum AccountStep: Step {
   
   case
   
   accountFeatureInit,
   
-  profile,
+  signIsShow,
   
-  signInIsPicked
-    
-  //showIsPicked(withId: Int)
+  profileIsShow,
+  
+  signInIsPicked(url: URL, delegate: AuthPermissionViewModelDelegate?),
+  
+  authorizationIsComplete
 }

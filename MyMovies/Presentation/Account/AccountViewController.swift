@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 class AccountViewController: UIViewController, StoryboardInstantiable {
   
@@ -26,7 +27,7 @@ class AccountViewController: UIViewController, StoryboardInstantiable {
     return controller
   }
   
-  private var viewState: ViewState = .login
+  private let disposeBag = DisposeBag()
   
   // MARK: - Life Cycle
   
@@ -34,32 +35,29 @@ class AccountViewController: UIViewController, StoryboardInstantiable {
     super.viewDidLoad()
     view.backgroundColor = .cyan
     
-    setupUI()
+    subscribe()
   }
   
   // MARK: - Setup UI
   
-  func setupUI() {
-    switch viewState {
+  fileprivate func subscribe() {
+    viewModel.output.viewState
+      .debug()
+      .subscribe(onNext: { [weak self] viewState in
+        self?.setupUI(with: viewState)
+      })
+      .disposed(by: disposeBag)
+  }
+  
+  fileprivate func setupUI(with state: AccountViewModel.ViewState) {
+    switch state {
     case .login:
+      remove(asChildViewController: profileViewController)
       add(asChildViewController: signInViewController)
       
     case .profile:
-      break
+      remove(asChildViewController: signInViewController)
+      add(asChildViewController: profileViewController)
     }
   }
-  
-  func setupViews() {
-    
-  }
-}
-
-extension AccountViewController {
-  
-  private enum ViewState {
-    case login,
-    
-    profile
-  }
-  
 }

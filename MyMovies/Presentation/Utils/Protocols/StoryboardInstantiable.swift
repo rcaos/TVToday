@@ -29,7 +29,7 @@ public extension StoryboardInstantiable where Self: UIViewController {
     return viewController
   }
   
-  static func instantiateViewController(from storyBoard: String, _ bundle: Bundle? = nil) -> Self {
+  static func instantiateViewController(fromStoryBoard storyBoard: String, _ bundle: Bundle? = nil) -> Self {
     let identifier = defaultFileName
     let storyboard = UIStoryboard(name: storyBoard, bundle: bundle)
     guard let viewController = storyboard.instantiateViewController(withIdentifier: identifier) as? Self else {

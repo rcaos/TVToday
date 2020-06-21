@@ -92,7 +92,50 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c07-uG-kOP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="954" y="-59"/>
+            <point key="canvasLocation" x="-410" y="-421"/>
+        </scene>
+        <!--Auth Permission View Controller-->
+        <scene sceneID="1Yp-xU-4kw">
+            <objects>
+                <viewController storyboardIdentifier="AuthPermissionViewController" id="rTE-vL-Tcl" customClass="AuthPermissionViewController" customModule="TVToday" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="4Bg-Y6-c5w">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vis-Hj-ZD3">
+                                <rect key="frame" x="0.0" y="44" width="414" height="769"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Pn-tq-NFw">
+                                <rect key="frame" x="0.0" y="813" width="414" height="49"/>
+                                <items>
+                                    <barButtonItem title="Item" id="T7L-Jf-FvY"/>
+                                </items>
+                            </toolbar>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="1Pn-tq-NFw" firstAttribute="top" secondItem="Vis-Hj-ZD3" secondAttribute="bottom" id="3au-Eq-K3J"/>
+                            <constraint firstItem="Vis-Hj-ZD3" firstAttribute="leading" secondItem="siL-6d-JPz" secondAttribute="leading" id="4Ur-Jm-zkR"/>
+                            <constraint firstItem="siL-6d-JPz" firstAttribute="bottom" secondItem="1Pn-tq-NFw" secondAttribute="bottom" id="776-dm-PYl"/>
+                            <constraint firstItem="Vis-Hj-ZD3" firstAttribute="top" secondItem="siL-6d-JPz" secondAttribute="top" id="J22-qL-RSK"/>
+                            <constraint firstItem="siL-6d-JPz" firstAttribute="trailing" secondItem="Vis-Hj-ZD3" secondAttribute="trailing" id="RKv-ZO-5rS"/>
+                            <constraint firstItem="1Pn-tq-NFw" firstAttribute="leading" secondItem="siL-6d-JPz" secondAttribute="leading" id="aoT-hc-T6N"/>
+                            <constraint firstItem="1Pn-tq-NFw" firstAttribute="trailing" secondItem="siL-6d-JPz" secondAttribute="trailing" id="ilf-e4-EXB"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="siL-6d-JPz"/>
+                    </view>
+                    <connections>
+                        <outlet property="webView" destination="Vis-Hj-ZD3" id="XVM-bb-mRS"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aLX-ny-aYH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="551" y="-28"/>
         </scene>
     </scenes>
     <resources>

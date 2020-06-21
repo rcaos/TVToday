@@ -19,7 +19,7 @@ class SignInViewController: UIViewController, StoryboardInstantiable {
   private let disposeBag = DisposeBag()
   
   static func create(with viewModel: SignInViewModel) -> SignInViewController {
-    let controller = SignInViewController.instantiateViewController(from: "AccountViewController")
+    let controller = SignInViewController.instantiateViewController(fromStoryBoard: "AccountViewController")
     controller.viewModel = viewModel
     return controller
   }

@@ -46,11 +46,11 @@ extension EndPoint {
     
     var queryItems: [URLQueryItem] = []
     
+    // Global query parameters first
+    queryItems.append(contentsOf:
+      mapToQueryItems(parameters: config.queryParameters))
+    
     if method == .get {
-      // Global query parameters
-      queryItems.append(contentsOf:
-        mapToQueryItems(parameters: config.queryParameters))
-      
       // Specifically for each Request
       queryItems.append(contentsOf:
         mapToQueryItems(parameters: queryParameters))

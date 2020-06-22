@@ -18,6 +18,8 @@ class SignInViewModel {
   
   weak var delegate: SignInViewModelDelegate?
   
+  private let viewStateSubject: BehaviorSubject<ViewState> = .init(value: .initial)
+  
   var input: Input
   
   var output: Output
@@ -28,15 +30,24 @@ class SignInViewModel {
   
   init() {
     input = Input()
-    output = Output()
+    output = Output(viewState: viewStateSubject.asObservable())
     
     subscribe()
   }
+  
+  // MARK: - Public
+  
+  public func changeState(with state: SignInViewModel.ViewState) {
+    viewStateSubject.onNext(state)
+  }
+  
+  // MARK: - Private
   
   fileprivate func subscribe() {
     input.tapButton.asObserver()
       .subscribe(onNext: { [weak self] in
         guard let strongSelf = self else { return }
+        strongSelf.viewStateSubject.onNext(.loading)
         strongSelf.delegate?.signInViewModel(strongSelf, didTapSignInButton: true)
       })
       .disposed(by: disposeBag)
@@ -49,5 +60,16 @@ extension SignInViewModel {
     let tapButton = PublishSubject<Void>()
   }
   
-  public struct Output { }
+  public struct Output {
+    let viewState: Observable<ViewState>
+  }
+}
+
+extension SignInViewModel {
+  
+  enum ViewState {
+    case initial,
+    
+    loading
+  }
 }

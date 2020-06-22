@@ -12,7 +12,7 @@ import RxCocoa
 
 class SignInViewController: UIViewController, StoryboardInstantiable {
   
-  @IBOutlet weak var signInButton: UIButton!
+  @IBOutlet weak var signInButton: LoadableButton!
   
   private var viewModel: SignInViewModel!
   
@@ -34,13 +34,30 @@ class SignInViewController: UIViewController, StoryboardInstantiable {
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-    print("viewDidAppear SignInViewController")
   }
   
   fileprivate func setupButton() {
+    signInButton.defaultTitle = "Sign in with TheMovieDB"
+    
     signInButton.rx
       .tap
       .bind(to: viewModel.input.tapButton)
       .disposed(by: disposeBag)
+    
+    viewModel.output
+      .viewState
+      .subscribe(onNext: { [weak self] state in
+        self?.setupView(with: state)
+      })
+      .disposed(by: disposeBag)
+  }
+  
+  fileprivate func setupView(with state: SignInViewModel.ViewState) {
+    switch state {
+    case .initial:
+      signInButton.defaultHideLoadingView()
+    case .loading:
+      signInButton.defaultShowLoadingView()
+    }
   }
 }

@@ -21,6 +21,8 @@
 		770860EE23CE6C4900625183 /* TVShowResult+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770860ED23CE6C4900625183 /* TVShowResult+Decodable.swift */; };
 		770860F423CE6EB100625183 /* AppConfigurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770860F323CE6EB100625183 /* AppConfigurations.swift */; };
 		770860FB23CE753200625183 /* StoryboardInstantiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770860FA23CE753200625183 /* StoryboardInstantiable.swift */; };
+		77091F7624A0E967002486DD /* Loadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77091F7524A0E967002486DD /* Loadable.swift */; };
+		77091F7824A0E995002486DD /* LoadableButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77091F7724A0E995002486DD /* LoadableButton.swift */; };
 		770A117D23D2250D00B57A6F /* ResultListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770A117C23D2250D00B57A6F /* ResultListView.swift */; };
 		770A4544242D8DC6005DF8AA /* SectionAiringToday.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770A4543242D8DC6005DF8AA /* SectionAiringToday.swift */; };
 		770B5C35230E06B2002019E6 /* TVShowDetailResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770B5C34230E06B2002019E6 /* TVShowDetailResult.swift */; };
@@ -157,6 +159,8 @@
 		770860ED23CE6C4900625183 /* TVShowResult+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TVShowResult+Decodable.swift"; sourceTree = "<group>"; };
 		770860F323CE6EB100625183 /* AppConfigurations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfigurations.swift; sourceTree = "<group>"; };
 		770860FA23CE753200625183 /* StoryboardInstantiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardInstantiable.swift; sourceTree = "<group>"; };
+		77091F7524A0E967002486DD /* Loadable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loadable.swift; sourceTree = "<group>"; };
+		77091F7724A0E995002486DD /* LoadableButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadableButton.swift; sourceTree = "<group>"; };
 		770A117C23D2250D00B57A6F /* ResultListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultListView.swift; sourceTree = "<group>"; };
 		770A4543242D8DC6005DF8AA /* SectionAiringToday.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionAiringToday.swift; sourceTree = "<group>"; };
 		770B5C34230E06B2002019E6 /* TVShowDetailResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowDetailResult.swift; sourceTree = "<group>"; };
@@ -394,6 +398,7 @@
 				770860FA23CE753200625183 /* StoryboardInstantiable.swift */,
 				7755D6DD23CCCD860083CB53 /* SimpleViewState.swift */,
 				7788BFDC2440007E00D98CD3 /* BaseViewModel.swift */,
+				77091F7524A0E967002486DD /* Loadable.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -762,6 +767,7 @@
 				77F784B0242DAACF0053806C /* LoadingView.swift */,
 				7716DD32242E3FEB009A0EDC /* MessageView.swift */,
 				775927A02434FA1C004BB04E /* MessageImageView.swift */,
+				77091F7724A0E995002486DD /* LoadableButton.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -1052,6 +1058,7 @@
 				77193F42232FF168007FA822 /* ResultsSearchViewModel.swift in Sources */,
 				777B177E243CE1DA002D5DCF /* AiringTodayFlow.swift in Sources */,
 				779ABBB7249DAF4C0095EA3F /* CreateSessionResult+Decodable.swift in Sources */,
+				77091F7824A0E995002486DD /* LoadableButton.swift in Sources */,
 				772244B72358B1B000AB67DA /* FooterReusableView.swift in Sources */,
 				77E119E2232DE39900A01ACF /* AiringTodayViewModel.swift in Sources */,
 				7703738B234517B000775698 /* AiringTodayCollectionViewModel.swift in Sources */,
@@ -1077,6 +1084,7 @@
 				77054AAA233999440026B868 /* EpisodeItemViewModel.swift in Sources */,
 				7701B33A23D0C3E3003DA227 /* Episode+Decodable.swift in Sources */,
 				7762A948249DB5A200E00CDD /* AuthPermissionViewController.swift in Sources */,
+				77091F7624A0E967002486DD /* Loadable.swift in Sources */,
 				775927A12434FA1C004BB04E /* MessageImageView.swift in Sources */,
 				778C1623249F4D3A006BBD76 /* AccountResult.swift in Sources */,
 				778C1625249F4DBA006BBD76 /* AccountResult+Decodable.swift in Sources */,

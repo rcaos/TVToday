@@ -75,28 +75,35 @@ final class AccountViewModel {
       .subscribe(onNext: { [weak self] url in
         guard let strongSelf = self else { return }
         strongSelf.steps.accept( AccountStep.signInIsPicked(url: url, delegate: strongSelf) )
-        }, onError: { error in
-          // TODO, handle process error, viewState
+        }, onError: { [weak self] error in
           print("error to request token: \(error)")
+          self?.viewStateSubject.onNext(.login)
+          self?.signInViewModel.changeState(with: .initial)
       })
       .disposed(by: disposeBag)
   }
   
   fileprivate func createSession() {
     createNewSession.execute()
-      .subscribe(onNext: { [weak self] in
-        self?.getAccountDetails()
-      })
+      .flatMap { [weak self] () -> Observable<AccountResult> in
+        guard let strongSelf = self else { return Observable.error(CustomError.genericError) }
+        return strongSelf.fetchDetailsAccount()
+    }
+    .subscribe(onNext: { [weak self] result in
+      print("Details Okey: [\(result)]")
+      self?.viewStateSubject.onNext(.profile)
+      self?.signInViewModel.changeState(with: .initial)
+      
+      }, onError: { [weak self] error in
+        print("Error to Create Session or Fetch Details: \(error)")
+        self?.viewStateSubject.onNext(.login)
+        self?.signInViewModel.changeState(with: .initial)
+    })
       .disposed(by: disposeBag)
   }
   
-  fileprivate func getAccountDetails() {
-    fetchAccountDetails.execute()
-      .subscribe(onNext: { [weak self] result in
-        self?.viewStateSubject.onNext(.profile)
-        print("Details Okey: [\(result)]")
-      })
-      .disposed(by: disposeBag)
+  fileprivate func fetchDetailsAccount() -> Observable<AccountResult> {
+    return fetchAccountDetails.execute()
   }
   
   fileprivate func logoutUser() {

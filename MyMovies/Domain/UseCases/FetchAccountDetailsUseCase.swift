@@ -9,19 +9,32 @@
 import RxSwift
 
 protocol FetchAccountDetailsUseCase {
-  // TODO don't drive struct to View Model
-  func execute(session: String) -> Observable<Account>
+  func execute() -> Observable<AccountResult>
 }
 
 final class DefaultFetchAccountDetailsUseCase: FetchAccountDetailsUseCase {
   
   private let accountRepository: AccountRepository
   
-  init(accountRepository: AccountRepository) {
+  private let keychainRepository: KeychainRepository
+  
+  init(accountRepository: AccountRepository,
+       keychainRepository: KeychainRepository) {
     self.accountRepository = accountRepository
+    self.keychainRepository = keychainRepository
   }
   
-  func execute(session: String) -> Observable<Account> {
-    return accountRepository.getAccountDetails(session: session)
+  func execute() -> Observable<AccountResult> {
+    
+    guard let sessionId = keychainRepository.fetchAccessToken() else {
+      return Observable.error(CustomError.genericError)
+    }
+    
+    return accountRepository.getAccountDetails(session: sessionId)
+      .flatMap { [weak self] accountResult -> Observable<AccountResult> in
+        guard let fetchedAccount = accountResult.id else { throw CustomError.genericError }
+        self?.keychainRepository.saveLoguedUser(fetchedAccount, sessionId)
+        return Observable.just(accountResult)
+    }
   }
 }

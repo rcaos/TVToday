@@ -10,6 +10,5 @@ import RxSwift
 
 protocol AccountRepository {
   
-  // TODO, session should dont be here
-  func getAccountDetails(session: String) -> Observable<Account>
+  func getAccountDetails(session: String) -> Observable<AccountResult>
 }

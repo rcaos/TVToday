@@ -9,27 +9,33 @@
 import RxSwift
 
 protocol CreateTokenUseCase {
-  func execute() -> Observable<(URL, String)>
+  func execute() -> Observable<URL>
 }
 
 final class DefaultCreateTokenUseCase: CreateTokenUseCase {
   
   private let authRepository: AuthRepository
   
-  init(authRepository: AuthRepository) {
+  private let keyChainRepository: KeychainRepository
+  
+  init(authRepository: AuthRepository, keyChainRepository: KeychainRepository) {
     self.authRepository = authRepository
+    self.keyChainRepository = keyChainRepository
   }
   
-  func execute() -> Observable<(URL, String)> {
+  func execute() -> Observable<URL> {
     return
       authRepository.requestToken()
-        .map {
+        .map { [weak self] in
           guard let token = $0.token else { throw CustomError.genericError }
           guard let url = URL(string: "https://www.themoviedb.org/authenticate/\(token)") else { throw CustomError.genericError }
-          return (url, token)
+          self?.keyChainRepository.saveRequestToken(token)
+          return url
     }
   }
 }
+
+// MARK: - TODO, Move error
 
 enum CustomError: Error {
   case genericError

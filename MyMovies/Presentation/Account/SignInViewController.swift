@@ -32,6 +32,11 @@ class SignInViewController: UIViewController, StoryboardInstantiable {
     setupButton()
   }
   
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    print("viewDidAppear SignInViewController")
+  }
+  
   fileprivate func setupButton() {
     signInButton.rx
       .tap

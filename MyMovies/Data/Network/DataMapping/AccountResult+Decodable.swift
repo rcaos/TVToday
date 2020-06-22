@@ -8,10 +8,11 @@
 
 import Foundation
 
-extension Account: Decodable {
+extension AccountResult: Decodable {
   
   enum CodingKeys: String, CodingKey {
     case avatar
+    case id
     case userName = "username"
   }
   
@@ -19,6 +20,7 @@ extension Account: Decodable {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     
     self.avatar = try container.decodeIfPresent(Avatar.self, forKey: .avatar)
+    self.id = try container.decodeIfPresent(Int.self, forKey: .id)
     self.userName = try container.decodeIfPresent(String.self, forKey: .userName)
   }
 }

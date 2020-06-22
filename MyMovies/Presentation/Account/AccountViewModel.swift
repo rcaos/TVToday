@@ -17,9 +17,13 @@ final class AccountViewModel {
   
   private let createNewSession: CreateSessionUseCase
   
+  private let fetchLoguedUser: FetchLoguedUser
+  
   private let fetchAccountDetails: FetchAccountDetailsUseCase
   
-  private let behaviorSubjectViewState: BehaviorSubject<ViewState> = .init(value: .login)
+  private let deleteLoguedUser: DeleteLoguedUserUseCase
+  
+  private let viewStateSubject: BehaviorSubject<ViewState> = .init(value: .login)
   
   var steps = PublishRelay<Step>()
   
@@ -33,57 +37,71 @@ final class AccountViewModel {
   
   private let disposeBag = DisposeBag()
   
-  // TODO, delete this
-  private var tempToken: String = ""
-  
   // MARK: - Initializers
   
   init(requestToken: CreateTokenUseCase,
        createNewSession: CreateSessionUseCase,
        fetchAccountDetails: FetchAccountDetailsUseCase,
-       signInViewModel: SignInViewModel, profileViewMoel: ProfileViewModel) {
+       fetchLoguedUser: FetchLoguedUser,
+       deleteLoguedUser: DeleteLoguedUserUseCase,
+       signInViewModel: SignInViewModel,
+       profileViewMoel: ProfileViewModel) {
     self.requestToken = requestToken
     self.createNewSession = createNewSession
     self.fetchAccountDetails = fetchAccountDetails
+    self.fetchLoguedUser = fetchLoguedUser
+    self.deleteLoguedUser = deleteLoguedUser
     self.signInViewModel = signInViewModel
     self.profileViewMoel = profileViewMoel
     
     input = Input()
-    output = Output(viewState: behaviorSubjectViewState.asObservable())
+    output = Output(viewState: viewStateSubject.asObservable())
+    
+    checkIsLogued()
+  }
+  
+  fileprivate func checkIsLogued() {
+    if let loguedUser = fetchLoguedUser.execute() {
+      print("loguedUser: [\(loguedUser)]")
+      viewStateSubject.onNext(.profile)
+    } else {
+      print("loguedUser: [not found]")
+      viewStateSubject.onNext(.login)
+    }
   }
   
   fileprivate func requestCreateToken() {
     requestToken.execute()
-      .subscribe(onNext: { [weak self] (url, token) in
+      .subscribe(onNext: { [weak self] url in
         guard let strongSelf = self else { return }
-        strongSelf.tempToken = token
         strongSelf.steps.accept( AccountStep.signInIsPicked(url: url, delegate: strongSelf) )
         }, onError: { error in
-          //process error, viewState
+          // TODO, handle process error, viewState
           print("error to request token: \(error)")
       })
       .disposed(by: disposeBag)
   }
   
   fileprivate func createSession() {
-    createNewSession.execute(requestToken: tempToken)
-      .debug()
-      .subscribe(onNext: { [weak self] result in
-        print("Session Creada Ok: [\(result)]")
-        self?.behaviorSubjectViewState.onNext(.profile)
-        
-        guard let session = result.sessionId else { return }
-        self?.getDetails(session: session)
+    createNewSession.execute()
+      .subscribe(onNext: { [weak self] in
+        self?.getAccountDetails()
       })
       .disposed(by: disposeBag)
   }
   
-  fileprivate func getDetails(session: String) {
-    fetchAccountDetails.execute(session: session)
+  fileprivate func getAccountDetails() {
+    fetchAccountDetails.execute()
       .subscribe(onNext: { [weak self] result in
+        self?.viewStateSubject.onNext(.profile)
         print("Details Okey: [\(result)]")
       })
       .disposed(by: disposeBag)
+  }
+  
+  fileprivate func logoutUser() {
+    deleteLoguedUser.execute()
+    viewStateSubject.onNext(.login)
   }
 }
 
@@ -101,6 +119,14 @@ extension AccountViewModel: AuthPermissionViewModelDelegate {
   func authPermissionViewModel(didSignedIn signedIn: Bool) {
     createSession()
     steps.accept(AccountStep.authorizationIsComplete)
+  }
+}
+
+// MARK: - ProfileViewModelDelegate
+
+extension AccountViewModel: ProfileViewModelDelegate {
+  func profileViewModel(_ profileViewModel: ProfileViewModel, didTapLogoutButton tapped: Bool) {
+    logoutUser()
   }
 }
 

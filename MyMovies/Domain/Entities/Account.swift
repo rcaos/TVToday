@@ -10,18 +10,7 @@ import Foundation
 
 struct Account {
   
-  let avatar: Avatar?
+  let id: Int
   
-  let userName: String?
-}
-
-struct Avatar {
-  
-  let gravatar: Gravatar?
-}
-
-struct Gravatar {
-  
-  let hash: String?
-  
+  let sessionId: String
 }

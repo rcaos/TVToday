@@ -8,8 +8,6 @@
 
 import Foundation
 import RxSwift
-import RxFlow
-import RxRelay
 
 protocol SignInViewModelDelegate: class {
   
@@ -43,7 +41,6 @@ class SignInViewModel {
       })
       .disposed(by: disposeBag)
   }
-  
 }
 
 extension SignInViewModel {

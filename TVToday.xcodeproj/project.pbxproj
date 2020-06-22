@@ -82,8 +82,8 @@
 		778B47F323CE1778009AE084 /* DefaultTVShowsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778B47F223CE1778009AE084 /* DefaultTVShowsRepository.swift */; };
 		778C161F249F4BFA006BBD76 /* AccountProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778C161E249F4BFA006BBD76 /* AccountProvider.swift */; };
 		778C1621249F4CC2006BBD76 /* AccountRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778C1620249F4CC2006BBD76 /* AccountRepository.swift */; };
-		778C1623249F4D3A006BBD76 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778C1622249F4D3A006BBD76 /* Account.swift */; };
-		778C1625249F4DBA006BBD76 /* Account+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778C1624249F4DBA006BBD76 /* Account+Decodable.swift */; };
+		778C1623249F4D3A006BBD76 /* AccountResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778C1622249F4D3A006BBD76 /* AccountResult.swift */; };
+		778C1625249F4DBA006BBD76 /* AccountResult+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778C1624249F4DBA006BBD76 /* AccountResult+Decodable.swift */; };
 		778C1627249F4F74006BBD76 /* FetchAccountDetailsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778C1626249F4F74006BBD76 /* FetchAccountDetailsUseCase.swift */; };
 		778C1629249F5180006BBD76 /* DefaultAccountRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778C1628249F5180006BBD76 /* DefaultAccountRepository.swift */; };
 		779ABBAD249DA9A40095EA3F /* AuthRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779ABBAC249DA9A40095EA3F /* AuthRepository.swift */; };
@@ -93,6 +93,9 @@
 		779ABBB5249DAEBC0095EA3F /* CreateTokenResult+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779ABBB4249DAEBC0095EA3F /* CreateTokenResult+Decodable.swift */; };
 		779ABBB7249DAF4C0095EA3F /* CreateSessionResult+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779ABBB6249DAF4C0095EA3F /* CreateSessionResult+Decodable.swift */; };
 		779ABBB9249DAF9E0095EA3F /* DefaultAuthRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779ABBB8249DAF9E0095EA3F /* DefaultAuthRepository.swift */; };
+		77ACD2F424A051A80092EC73 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77ACD2F324A051A80092EC73 /* Account.swift */; };
+		77ACD2F624A0537E0092EC73 /* FetchLoguedUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77ACD2F524A0537E0092EC73 /* FetchLoguedUser.swift */; };
+		77ACD2F824A06A490092EC73 /* DeleteLoguedUserUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77ACD2F724A06A490092EC73 /* DeleteLoguedUserUseCase.swift */; };
 		77B3CCD4232D7CC100921D23 /* TVShowViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B3CCD2232D7CC100921D23 /* TVShowViewCell.swift */; };
 		77B3CCD5232D7CC100921D23 /* TVShowViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77B3CCD3232D7CC100921D23 /* TVShowViewCell.xib */; };
 		77B8E03823D60B8400DBFD00 /* TVEpisodesRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B8E03723D60B8400DBFD00 /* TVEpisodesRepository.swift */; };
@@ -115,6 +118,11 @@
 		77E26213230D7C490066B1CB /* AiringTodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E26212230D7C490066B1CB /* AiringTodayViewController.swift */; };
 		77E37AAA2314270700C692DA /* TVShowDetailViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77E37AA92314270700C692DA /* TVShowDetailViewController.storyboard */; };
 		77E37AAE23142CAC00C692DA /* ResultsSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E37AAD23142CAC00C692DA /* ResultsSearchViewController.swift */; };
+		77ECB4A0249FE663007F93F9 /* KeychainStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77ECB49F249FE663007F93F9 /* KeychainStorage.swift */; };
+		77ECB4A2249FE778007F93F9 /* KeychainItemStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77ECB4A1249FE778007F93F9 /* KeychainItemStorage.swift */; };
+		77ECB4A4249FE81A007F93F9 /* DefaultKeychainStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77ECB4A3249FE81A007F93F9 /* DefaultKeychainStorage.swift */; };
+		77ECB4A6249FEAC6007F93F9 /* KeychainRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77ECB4A5249FEAC6007F93F9 /* KeychainRepository.swift */; };
+		77ECB4A8249FEB3E007F93F9 /* DefaultKeychainRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77ECB4A7249FEB3E007F93F9 /* DefaultKeychainRepository.swift */; };
 		77EEF7FF233AA6C40054A499 /* SeasonEpisodeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EEF7FD233AA6C40054A499 /* SeasonEpisodeCollectionViewCell.swift */; };
 		77EEF800233AA6C40054A499 /* SeasonEpisodeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77EEF7FE233AA6C40054A499 /* SeasonEpisodeCollectionViewCell.xib */; };
 		77EEF804233AA70A0054A499 /* SeasonListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77EEF802233AA70A0054A499 /* SeasonListTableViewCell.swift */; };
@@ -210,8 +218,8 @@
 		778B47F223CE1778009AE084 /* DefaultTVShowsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTVShowsRepository.swift; sourceTree = "<group>"; };
 		778C161E249F4BFA006BBD76 /* AccountProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountProvider.swift; sourceTree = "<group>"; };
 		778C1620249F4CC2006BBD76 /* AccountRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountRepository.swift; sourceTree = "<group>"; };
-		778C1622249F4D3A006BBD76 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
-		778C1624249F4DBA006BBD76 /* Account+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Account+Decodable.swift"; sourceTree = "<group>"; };
+		778C1622249F4D3A006BBD76 /* AccountResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountResult.swift; sourceTree = "<group>"; };
+		778C1624249F4DBA006BBD76 /* AccountResult+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AccountResult+Decodable.swift"; sourceTree = "<group>"; };
 		778C1626249F4F74006BBD76 /* FetchAccountDetailsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchAccountDetailsUseCase.swift; sourceTree = "<group>"; };
 		778C1628249F5180006BBD76 /* DefaultAccountRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAccountRepository.swift; sourceTree = "<group>"; };
 		779ABBAC249DA9A40095EA3F /* AuthRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRepository.swift; sourceTree = "<group>"; };
@@ -221,6 +229,9 @@
 		779ABBB4249DAEBC0095EA3F /* CreateTokenResult+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CreateTokenResult+Decodable.swift"; sourceTree = "<group>"; };
 		779ABBB6249DAF4C0095EA3F /* CreateSessionResult+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CreateSessionResult+Decodable.swift"; sourceTree = "<group>"; };
 		779ABBB8249DAF9E0095EA3F /* DefaultAuthRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAuthRepository.swift; sourceTree = "<group>"; };
+		77ACD2F324A051A80092EC73 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
+		77ACD2F524A0537E0092EC73 /* FetchLoguedUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchLoguedUser.swift; sourceTree = "<group>"; };
+		77ACD2F724A06A490092EC73 /* DeleteLoguedUserUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteLoguedUserUseCase.swift; sourceTree = "<group>"; };
 		77B3CCD2232D7CC100921D23 /* TVShowViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowViewCell.swift; sourceTree = "<group>"; };
 		77B3CCD3232D7CC100921D23 /* TVShowViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TVShowViewCell.xib; sourceTree = "<group>"; };
 		77B8E03723D60B8400DBFD00 /* TVEpisodesRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVEpisodesRepository.swift; sourceTree = "<group>"; };
@@ -243,6 +254,11 @@
 		77E26212230D7C490066B1CB /* AiringTodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AiringTodayViewController.swift; sourceTree = "<group>"; };
 		77E37AA92314270700C692DA /* TVShowDetailViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TVShowDetailViewController.storyboard; sourceTree = "<group>"; };
 		77E37AAD23142CAC00C692DA /* ResultsSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsSearchViewController.swift; sourceTree = "<group>"; };
+		77ECB49F249FE663007F93F9 /* KeychainStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStorage.swift; sourceTree = "<group>"; };
+		77ECB4A1249FE778007F93F9 /* KeychainItemStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainItemStorage.swift; sourceTree = "<group>"; };
+		77ECB4A3249FE81A007F93F9 /* DefaultKeychainStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultKeychainStorage.swift; sourceTree = "<group>"; };
+		77ECB4A5249FEAC6007F93F9 /* KeychainRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainRepository.swift; sourceTree = "<group>"; };
+		77ECB4A7249FEB3E007F93F9 /* DefaultKeychainRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultKeychainRepository.swift; sourceTree = "<group>"; };
 		77EEF7FD233AA6C40054A499 /* SeasonEpisodeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonEpisodeCollectionViewCell.swift; sourceTree = "<group>"; };
 		77EEF7FE233AA6C40054A499 /* SeasonEpisodeCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SeasonEpisodeCollectionViewCell.xib; sourceTree = "<group>"; };
 		77EEF802233AA70A0054A499 /* SeasonListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonListTableViewCell.swift; sourceTree = "<group>"; };
@@ -323,7 +339,7 @@
 				7701B33D23D0C49D003DA227 /* SeasonResult+Decodable.swift */,
 				779ABBB4249DAEBC0095EA3F /* CreateTokenResult+Decodable.swift */,
 				779ABBB6249DAF4C0095EA3F /* CreateSessionResult+Decodable.swift */,
-				778C1624249F4DBA006BBD76 /* Account+Decodable.swift */,
+				778C1624249F4DBA006BBD76 /* AccountResult+Decodable.swift */,
 			);
 			path = DataMapping;
 			sourceTree = "<group>";
@@ -519,6 +535,8 @@
 				779ABBB2249DADD10095EA3F /* CreateTokenUseCase.swift */,
 				77443BAB249F403300703EA9 /* CreateSession.swift */,
 				778C1626249F4F74006BBD76 /* FetchAccountDetailsUseCase.swift */,
+				77ACD2F524A0537E0092EC73 /* FetchLoguedUser.swift */,
+				77ACD2F724A06A490092EC73 /* DeleteLoguedUserUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -532,6 +550,7 @@
 				77B8E03723D60B8400DBFD00 /* TVEpisodesRepository.swift */,
 				779ABBAC249DA9A40095EA3F /* AuthRepository.swift */,
 				778C1620249F4CC2006BBD76 /* AccountRepository.swift */,
+				77ECB4A5249FEAC6007F93F9 /* KeychainRepository.swift */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -553,6 +572,7 @@
 				77B8E03B23D60E2C00DBFD00 /* DefaultTVEpisodesRepository.swift */,
 				779ABBB8249DAF9E0095EA3F /* DefaultAuthRepository.swift */,
 				778C1628249F5180006BBD76 /* DefaultAccountRepository.swift */,
+				77ECB4A7249FEB3E007F93F9 /* DefaultKeychainRepository.swift */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -562,6 +582,7 @@
 			children = (
 				778B47F423CE1790009AE084 /* Repositories */,
 				770860F023CE6C5800625183 /* Network */,
+				77ACD2F924A06F420092EC73 /* KeyChainStorage */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -573,6 +594,16 @@
 				7733F14624323EE700B41031 /* Episode+SectionModelType.swift */,
 			);
 			path = SectionModel;
+			sourceTree = "<group>";
+		};
+		77ACD2F924A06F420092EC73 /* KeyChainStorage */ = {
+			isa = PBXGroup;
+			children = (
+				77ECB49F249FE663007F93F9 /* KeychainStorage.swift */,
+				77ECB4A3249FE81A007F93F9 /* DefaultKeychainStorage.swift */,
+				77ECB4A1249FE778007F93F9 /* KeychainItemStorage.swift */,
+			);
+			path = KeyChainStorage;
 			sourceTree = "<group>";
 		};
 		77C8165E232BFB1200752B06 /* Infraestructure */ = {
@@ -685,7 +716,8 @@
 				770D5B2D233584F000438937 /* SeasonResult.swift */,
 				779ABBAE249DAA880095EA3F /* CreateTokenResult.swift */,
 				779ABBB0249DAAD90095EA3F /* CreateSessionResult.swift */,
-				778C1622249F4D3A006BBD76 /* Account.swift */,
+				778C1622249F4D3A006BBD76 /* AccountResult.swift */,
+				77ACD2F324A051A80092EC73 /* Account.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -1038,6 +1070,7 @@
 				7777E6E8243D3CCE00058686 /* TVShowDetailFlow.swift in Sources */,
 				7726FE54249D8CD000D83C35 /* URLRequest+Extensions.swift in Sources */,
 				779ABBB5249DAEBC0095EA3F /* CreateTokenResult+Decodable.swift in Sources */,
+				77ECB4A6249FEAC6007F93F9 /* KeychainRepository.swift in Sources */,
 				778B47F323CE1778009AE084 /* DefaultTVShowsRepository.swift in Sources */,
 				7726FE52249D882700D83C35 /* AuthProvider.swift in Sources */,
 				7726FE4A249D72DA00D83C35 /* ProfileViewController.swift in Sources */,
@@ -1045,8 +1078,8 @@
 				7701B33A23D0C3E3003DA227 /* Episode+Decodable.swift in Sources */,
 				7762A948249DB5A200E00CDD /* AuthPermissionViewController.swift in Sources */,
 				775927A12434FA1C004BB04E /* MessageImageView.swift in Sources */,
-				778C1623249F4D3A006BBD76 /* Account.swift in Sources */,
-				778C1625249F4DBA006BBD76 /* Account+Decodable.swift in Sources */,
+				778C1623249F4D3A006BBD76 /* AccountResult.swift in Sources */,
+				778C1625249F4DBA006BBD76 /* AccountResult+Decodable.swift in Sources */,
 				778C161F249F4BFA006BBD76 /* AccountProvider.swift in Sources */,
 				77EEF804233AA70A0054A499 /* SeasonListTableViewCell.swift in Sources */,
 				778B47EF23CE0C65009AE084 /* TVShowsRepository.swift in Sources */,
@@ -1059,17 +1092,20 @@
 				77E37AAE23142CAC00C692DA /* ResultsSearchViewController.swift in Sources */,
 				779ABBAF249DAA880095EA3F /* CreateTokenResult.swift in Sources */,
 				777B1776243CD3CD002D5DCF /* AppDIContainer.swift in Sources */,
+				77ECB4A4249FE81A007F93F9 /* DefaultKeychainStorage.swift in Sources */,
 				7726FE4C249D743900D83C35 /* SignInViewModel.swift in Sources */,
 				7722CE60230DA1C3003DC4C5 /* TVShowDetailViewController.swift in Sources */,
 				779ABBAD249DA9A40095EA3F /* AuthRepository.swift in Sources */,
 				77FFDE32233BB5FE00C4096F /* SeasonHeaderViewModel.swift in Sources */,
 				77F4633D230CA864008FB9D6 /* TVShow.swift in Sources */,
 				770A117D23D2250D00B57A6F /* ResultListView.swift in Sources */,
+				77ECB4A8249FEB3E007F93F9 /* DefaultKeychainRepository.swift in Sources */,
 				77B8E03A23D60C0500DBFD00 /* FetchEpisodesUseCase.swift in Sources */,
 				77FFB0932339556B00D17CF0 /* EpisodesListViewModel.swift in Sources */,
 				7726FE48249D72CA00D83C35 /* SignInViewController.swift in Sources */,
 				7716DD33242E3FEB009A0EDC /* MessageView.swift in Sources */,
 				7726FE4E249D793900D83C35 /* ProfileViewModel.swift in Sources */,
+				77ACD2F624A0537E0092EC73 /* FetchLoguedUser.swift in Sources */,
 				77B3CCD4232D7CC100921D23 /* TVShowViewCell.swift in Sources */,
 				77C1AFC823D11A0E00E4A965 /* DefaultTVShowDetailsRepository.swift in Sources */,
 				77193F44232FF8F5007FA822 /* TVShowDetailViewModel.swift in Sources */,
@@ -1081,10 +1117,14 @@
 				7701B33C23D0C44D003DA227 /* GenreListResult+Decodable.swift in Sources */,
 				7701B33623D0C08B003DA227 /* Genre+Decodable.swift in Sources */,
 				7701B33423D0BDBD003DA227 /* TVShow+Decodable.swift in Sources */,
+				77ECB4A0249FE663007F93F9 /* KeychainStorage.swift in Sources */,
 				7755D6DE23CCCD860083CB53 /* SimpleViewState.swift in Sources */,
 				7726FE50249D82C500D83C35 /* UIViewController+Extensions.swift in Sources */,
 				7722CE58230D90AF003DC4C5 /* Genre.swift in Sources */,
+				77ACD2F424A051A80092EC73 /* Account.swift in Sources */,
+				77ACD2F824A06A490092EC73 /* DeleteLoguedUserUseCase.swift in Sources */,
 				779ABBB9249DAF9E0095EA3F /* DefaultAuthRepository.swift in Sources */,
+				77ECB4A2249FE778007F93F9 /* KeychainItemStorage.swift in Sources */,
 				77EEF809233AA8330054A499 /* SeasonEpisodeViewModel.swift in Sources */,
 				77544E672433FBBD00F02F9D /* SeasonsSectionModel.swift in Sources */,
 				770D5B2E233584F000438937 /* SeasonResult.swift in Sources */,

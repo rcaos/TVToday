@@ -35,6 +35,10 @@ public class AccountFlow: Flow {
     return DefaultAccountRepository(dataTransferService: dependencies.apiDataTransferService)
   }()
   
+  private lazy var keychainRepository: KeychainRepository = {
+    return DefaultKeychainRepository()
+  }()
+  
   // MARK: - Life Cycle
   
   public init(dependencies: Dependencies) {
@@ -71,9 +75,12 @@ public class AccountFlow: Flow {
     let accountViewModel = AccountViewModel(requestToken: makeCreateTokenUseCase(),
                                             createNewSession: makeCreateSessionUseCase(),
                                             fetchAccountDetails: makeFetchAccountDetailsUseCase(),
+                                            fetchLoguedUser: makeFetchLoguedUserUseCase(),
+                                            deleteLoguedUser: makeDeleteLoguedUserUseCase(),
                                             signInViewModel: signViewModel,
                                             profileViewMoel: profileViewModel)
     signViewModel.delegate = accountViewModel
+    profileViewModel.delegate = accountViewModel
     let accountViewController = AccountViewController.create(with: accountViewModel,
                                                              signInViewController: signInViewController,
                                                              profileViewController: profileViewController)
@@ -99,15 +106,23 @@ public class AccountFlow: Flow {
   // MARK: - Uses Cases
   
   private func makeCreateTokenUseCase() -> CreateTokenUseCase {
-    return DefaultCreateTokenUseCase(authRepository: authRepository)
+    return DefaultCreateTokenUseCase(authRepository: authRepository, keyChainRepository: keychainRepository)
   }
   
   private func makeCreateSessionUseCase() -> CreateSessionUseCase {
-    return DefaultCreateSessionUseCase(authRepository: authRepository)
+    return DefaultCreateSessionUseCase(authRepository: authRepository, keyChainRepository: keychainRepository)
   }
   
   private func makeFetchAccountDetailsUseCase() -> FetchAccountDetailsUseCase {
-    return DefaultFetchAccountDetailsUseCase(accountRepository: accountRepository)
+    return DefaultFetchAccountDetailsUseCase(accountRepository: accountRepository, keychainRepository: keychainRepository)
+  }
+  
+  private func makeFetchLoguedUserUseCase() -> FetchLoguedUser {
+    return DefaultFetchLoguedUser(keychainRepository: keychainRepository)
+  }
+  
+  private func makeDeleteLoguedUserUseCase() -> DeleteLoguedUserUseCase {
+    return DefaultDeleteLoguedUserUseCase(keychainRepository: keychainRepository)
   }
   
 }

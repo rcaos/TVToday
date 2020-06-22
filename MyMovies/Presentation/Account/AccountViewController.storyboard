@@ -62,6 +62,12 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="P4W-NN-6Ho">
+                                <rect key="frame" x="179" y="548" width="60" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                <state key="normal" title="Logout"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
@@ -72,6 +78,7 @@
                         <viewLayoutGuide key="safeArea" id="pD6-oY-3VE"/>
                     </view>
                     <connections>
+                        <outlet property="logoutButton" destination="P4W-NN-6Ho" id="F33-Ky-0jP"/>
                         <outlet property="mainLabel" destination="WeX-nX-0zh" id="rxE-M7-VRr"/>
                     </connections>
                 </viewController>

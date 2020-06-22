@@ -20,8 +20,8 @@ final class DefaultAccountRepository {
 // MARK: - AuthRepository
 
 extension DefaultAccountRepository: AccountRepository {
-  func getAccountDetails(session: String) -> Observable<Account> {
+  func getAccountDetails(session: String) -> Observable<AccountResult> {
     let endPoint = AccountProvider.accountDetails(sessionId: session)
-    return dataTransferService.request(endPoint, Account.self)
+    return dataTransferService.request(endPoint, AccountResult.self)
   }
 }

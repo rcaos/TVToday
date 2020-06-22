@@ -38,11 +38,15 @@ class AccountViewController: UIViewController, StoryboardInstantiable {
     subscribe()
   }
   
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    print("viewDidAppear AccountViewController")
+  }
+  
   // MARK: - Setup UI
   
   fileprivate func subscribe() {
     viewModel.output.viewState
-      .debug()
       .subscribe(onNext: { [weak self] viewState in
         self?.setupUI(with: viewState)
       })

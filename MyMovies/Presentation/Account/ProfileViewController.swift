@@ -45,8 +45,8 @@ class ProfileViewController: UIViewController, StoryboardInstantiable {
     let profileNib = UINib(nibName: ProfileTableViewCell.identifier, bundle: nil)
     tableView.register(profileNib, forCellReuseIdentifier: ProfileTableViewCell.identifier)
     
-    let genericNib = UINib(nibName: GenreViewCell.identifier, bundle: nil)
-    tableView.register(genericNib, forCellReuseIdentifier: GenreViewCell.identifier)
+    let genericNib = UINib(nibName: GenericViewCell.identifier, bundle: nil)
+    tableView.register(genericNib, forCellReuseIdentifier: GenericViewCell.identifier)
     
     tableView.register(LogoutTableViewCell.self, forCellReuseIdentifier: LogoutTableViewCell.identifier)
     
@@ -130,9 +130,8 @@ extension ProfileViewController {
   }
   
   fileprivate func buildCellForUserLists(at indexPath: IndexPath, element: UserListType) -> UITableViewCell {
-    // TODO Rename Genre Cell
-    let cell = tableView.dequeueReusableCell(withIdentifier: GenreViewCell.identifier, for: indexPath) as! GenreViewCell
-    cell.genre = Genre(id: 0, name: element.rawValue)
+    let cell = tableView.dequeueReusableCell(withIdentifier: GenericViewCell.identifier, for: indexPath) as! GenericViewCell
+    cell.title = element.rawValue
     return cell
   }
   

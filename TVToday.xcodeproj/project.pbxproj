@@ -68,6 +68,7 @@
 		7762A948249DB5A200E00CDD /* AuthPermissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7762A947249DB5A200E00CDD /* AuthPermissionViewController.swift */; };
 		7762A94A249DB63B00E00CDD /* AuthPermissionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7762A949249DB63B00E00CDD /* AuthPermissionViewModel.swift */; };
 		7762A94C249DC78300E00CDD /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7762A94B249DC78300E00CDD /* WebKit.framework */; };
+		7768F3BF24A19D4900E13EA8 /* FetchShowsUserUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7768F3BE24A19D4900E13EA8 /* FetchShowsUserUseCase.swift */; };
 		7777E6E8243D3CCE00058686 /* TVShowDetailFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7777E6E7243D3CCE00058686 /* TVShowDetailFlow.swift */; };
 		777B1776243CD3CD002D5DCF /* AppDIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777B1775243CD3CD002D5DCF /* AppDIContainer.swift */; };
 		777B1778243CD676002D5DCF /* AppFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777B1777243CD676002D5DCF /* AppFlow.swift */; };
@@ -210,6 +211,7 @@
 		7762A947249DB5A200E00CDD /* AuthPermissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPermissionViewController.swift; sourceTree = "<group>"; };
 		7762A949249DB63B00E00CDD /* AuthPermissionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthPermissionViewModel.swift; sourceTree = "<group>"; };
 		7762A94B249DC78300E00CDD /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		7768F3BE24A19D4900E13EA8 /* FetchShowsUserUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchShowsUserUseCase.swift; sourceTree = "<group>"; };
 		7777E6E7243D3CCE00058686 /* TVShowDetailFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowDetailFlow.swift; sourceTree = "<group>"; };
 		777B1775243CD3CD002D5DCF /* AppDIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDIContainer.swift; sourceTree = "<group>"; };
 		777B1777243CD676002D5DCF /* AppFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFlow.swift; sourceTree = "<group>"; };
@@ -554,6 +556,7 @@
 				778C1626249F4F74006BBD76 /* FetchAccountDetailsUseCase.swift */,
 				77ACD2F524A0537E0092EC73 /* FetchLoguedUser.swift */,
 				77ACD2F724A06A490092EC73 /* DeleteLoguedUserUseCase.swift */,
+				7768F3BE24A19D4900E13EA8 /* FetchShowsUserUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -1108,6 +1111,7 @@
 				778B47EF23CE0C65009AE084 /* TVShowsRepository.swift in Sources */,
 				7787CFD123553EC1007DA54E /* EndPoint.swift in Sources */,
 				770D5B302335858800438937 /* Episode.swift in Sources */,
+				7768F3BF24A19D4900E13EA8 /* FetchShowsUserUseCase.swift in Sources */,
 				7762A94A249DB63B00E00CDD /* AuthPermissionViewModel.swift in Sources */,
 				7733F14724323EE700B41031 /* Episode+SectionModelType.swift in Sources */,
 				774688BD243D132700822598 /* SearchFlow.swift in Sources */,

@@ -24,8 +24,6 @@ final class TVShowListViewModel: ShowsViewModel {
   
   var disposeBag = DisposeBag()
   
-  var genreId: Int
-  
   var input: Input
   
   var output: Output
@@ -34,11 +32,10 @@ final class TVShowListViewModel: ShowsViewModel {
   
   // MARK: - Initializers
   
-  init(genreId: Int, fetchTVShowsUseCase: FetchTVShowsUseCase) {
+  init(filter: TVShowsListFilter, fetchTVShowsUseCase: FetchTVShowsUseCase) {
     self.fetchTVShowsUseCase = fetchTVShowsUseCase
-    self.genreId = genreId
-    shows = []
-    filter = .byGenre(genreId: genreId)
+    self.shows = []
+    self.filter = filter
     
     self.input = Input()
     self.output = Output(viewState: viewStateObservableSubject.asObservable())

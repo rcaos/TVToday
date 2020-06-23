@@ -23,4 +23,8 @@ enum TVShowsListFilter {
   case byGenre(genreId: Int)
   
   case search(query: String)
+  
+  case favorites(userId: Int, sessionId: String)
+  
+  case watchList(userId: Int, sessionId: String)
 }

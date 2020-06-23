@@ -34,7 +34,7 @@ extension DefaultTVShowsRepository: TVShowsRepository {
     }
   }
   
-  private func getProvider(with filter: TVShowsListFilter, page: Int) -> TVShowsProvider {
+  private func getProvider(with filter: TVShowsListFilter, page: Int) -> EndPoint {
     switch filter {
     case .today:
       return TVShowsProvider.getAiringTodayShows(page)
@@ -44,6 +44,10 @@ extension DefaultTVShowsRepository: TVShowsRepository {
       return TVShowsProvider.listTVShowsBy(genreId, page)
     case .search(let query):
       return TVShowsProvider.searchTVShow(query, page)
+    case .favorites(let userId, let sessionId):
+      return AccountProvider.favorites(page: page, userId: String(userId), sessionId: sessionId)
+    case .watchList(let userId, let sessionId):
+      return AccountProvider.watchList(page: page, userId: String(userId), sessionId: sessionId)
     }
   }
   

@@ -150,8 +150,12 @@ extension AccountViewModel: ProfileViewModelDelegate {
   }
   
   func profileViewModel(didUserList tapped: UserListType) {
-    // MARK: - TODO
-    print("Go to User List: \(tapped)")
+    switch tapped {
+    case .favorites:
+      steps.accept(AccountStep.favoritesIsPicked)
+    case .watchList:
+      steps.accept(AccountStep.watchListIsPicked)
+    }
   }
 }
 

@@ -27,6 +27,14 @@ public class AccountFlow: Flow {
     return navigationController
   }()
   
+  // MARK: - Repositories
+  
+  private lazy var showsRepository: TVShowsRepository = {
+    return DefaultTVShowsRepository(
+      dataTransferService: dependencies.apiDataTransferService,
+      basePath: dependencies.appConfigurations.imagesBaseURL)
+  }()
+  
   private lazy var authRepository: AuthRepository = {
     return DefaultAuthRepository(dataTransferService: dependencies.apiDataTransferService)
   }()
@@ -58,6 +66,15 @@ public class AccountFlow: Flow {
     case AccountStep.authorizationIsComplete:
       self.rootViewController.presentedViewController?.dismiss(animated: true)
       return .none
+      
+    case AccountStep.favoritesIsPicked:
+      return navigateToFavorites()
+      
+    case AccountStep.watchListIsPicked:
+      return navigateToWatchList()
+      
+    case SearchStep.showIsPicked(let id):
+    return navigateToShowDetailScreen(with: id)
       
     default:
       return .none
@@ -103,6 +120,47 @@ public class AccountFlow: Flow {
     return .none
   }
   
+  // MARK: - Navigate to Favorites User
+  
+  fileprivate func navigateToFavorites() -> FlowContributors {
+    let viewModel = TVShowListViewModel(filter: .favorites(userId: 0, sessionId: ""),
+                                        fetchTVShowsUseCase: makeShowListUseCase())
+    let showList = TVShowListViewController.create(with: viewModel)
+    
+    rootViewController.pushViewController(showList, animated: true)
+    
+    return .one(flowContributor: .contribute(
+      withNextPresentable: showList, withNextStepper: viewModel))
+  }
+  
+  // MARK: - Navigate to WatchList User
+  
+  fileprivate func navigateToWatchList() -> FlowContributors {
+    let viewModel = TVShowListViewModel(filter: .watchList(userId: 0, sessionId: ""),
+                                        fetchTVShowsUseCase: makeShowListUseCase())
+    let showList = TVShowListViewController.create(with: viewModel)
+    
+    rootViewController.pushViewController(showList, animated: true)
+    
+    return .one(flowContributor: .contribute(
+      withNextPresentable: showList, withNextStepper: viewModel))
+  }
+  
+  // MARK: - Navigate to Detail TVShow
+  
+  fileprivate func navigateToShowDetailScreen(with id: Int) -> FlowContributors {
+    let detailShowFlow = TVShowDetailFlow(rootViewController: rootViewController,
+                                          dependencies: TVShowDetailFlow.Dependencies(
+                                            apiDataTransferService: dependencies.apiDataTransferService,
+                                            appConfigurations: dependencies.appConfigurations))
+    
+    return .one(flowContributor: .contribute(
+      withNextPresentable: detailShowFlow,
+      withNextStepper:
+      OneStepper(withSingleStep:
+        ShowDetailsStep.showDetailsIsRequired(withId: id))))
+  }
+  
   // MARK: - Uses Cases
   
   private func makeCreateTokenUseCase() -> CreateTokenUseCase {
@@ -125,6 +183,11 @@ public class AccountFlow: Flow {
     return DefaultDeleteLoguedUserUseCase(keychainRepository: keychainRepository)
   }
   
+  fileprivate func makeShowListUseCase() -> FetchTVShowsUseCase {
+    return DefaultUserFetchShowsUserUseCase(tvShowsRepository: showsRepository,
+                                            keychainRepository: keychainRepository)
+  }
+  
 }
 
 // MARK: - Steps
@@ -141,5 +204,9 @@ enum AccountStep: Step {
   
   signInIsPicked(url: URL, delegate: AuthPermissionViewModelDelegate?),
   
-  authorizationIsComplete
+  authorizationIsComplete,
+  
+  favoritesIsPicked,
+    
+  watchListIsPicked
 }

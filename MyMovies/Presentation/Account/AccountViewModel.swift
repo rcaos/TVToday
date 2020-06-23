@@ -33,7 +33,7 @@ final class AccountViewModel {
   
   private var signInViewModel: SignInViewModel
   
-  private var profileViewMoel: ProfileViewModel
+  private var profileViewModel: ProfileViewModel
   
   private let disposeBag = DisposeBag()
   
@@ -52,7 +52,7 @@ final class AccountViewModel {
     self.fetchLoguedUser = fetchLoguedUser
     self.deleteLoguedUser = deleteLoguedUser
     self.signInViewModel = signInViewModel
-    self.profileViewMoel = profileViewMoel
+    self.profileViewModel = profileViewMoel
     
     input = Input()
     output = Output(viewState: viewStateSubject.asObservable())
@@ -63,11 +63,22 @@ final class AccountViewModel {
   fileprivate func checkIsLogued() {
     if let loguedUser = fetchLoguedUser.execute() {
       print("loguedUser: [\(loguedUser)]")
-      viewStateSubject.onNext(.profile)
+      fetchUserDetails()
     } else {
       print("loguedUser: [not found]")
       viewStateSubject.onNext(.login)
     }
+  }
+  
+  fileprivate func fetchUserDetails() {
+    fetchDetailsAccount()
+      .subscribe(onNext: { [weak self] accountDetails in
+        self?.viewStateSubject.onNext(.profile)
+        self?.profileViewModel.createSectionModel(account: accountDetails)
+        }, onError: { [weak self] _ in
+          self?.viewStateSubject.onNext(.login)
+      })
+      .disposed(by: disposeBag)
   }
   
   fileprivate func requestCreateToken() {
@@ -89,10 +100,11 @@ final class AccountViewModel {
         guard let strongSelf = self else { return Observable.error(CustomError.genericError) }
         return strongSelf.fetchDetailsAccount()
     }
-    .subscribe(onNext: { [weak self] result in
-      print("Details Okey: [\(result)]")
+    .subscribe(onNext: { [weak self] accountDetails in
+      print("Details Okey: [\(accountDetails)]")
       self?.viewStateSubject.onNext(.profile)
       self?.signInViewModel.changeState(with: .initial)
+      self?.profileViewModel.createSectionModel(account: accountDetails)
       
       }, onError: { [weak self] error in
         print("Error to Create Session or Fetch Details: \(error)")
@@ -132,8 +144,14 @@ extension AccountViewModel: AuthPermissionViewModelDelegate {
 // MARK: - ProfileViewModelDelegate
 
 extension AccountViewModel: ProfileViewModelDelegate {
-  func profileViewModel(_ profileViewModel: ProfileViewModel, didTapLogoutButton tapped: Bool) {
+  
+  func profileViewModel(didTapLogoutButton tapped: Bool) {
     logoutUser()
+  }
+  
+  func profileViewModel(didUserList tapped: UserListType) {
+    // MARK: - TODO
+    print("Go to User List: \(tapped)")
   }
 }
 

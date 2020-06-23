@@ -10,6 +10,8 @@ import UIKit
 
 class GenreViewCell: UITableViewCell {
   
+  public static let identifier = "GenreViewCell"
+  
   var genre: Genre? {
     didSet {
       setupUI()

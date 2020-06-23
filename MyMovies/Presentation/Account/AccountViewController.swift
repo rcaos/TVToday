@@ -38,11 +38,6 @@ class AccountViewController: UIViewController, StoryboardInstantiable {
     subscribe()
   }
   
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-    print("viewDidAppear AccountViewController")
-  }
-  
   // MARK: - Setup UI
   
   fileprivate func subscribe() {
@@ -58,10 +53,11 @@ class AccountViewController: UIViewController, StoryboardInstantiable {
     case .login:
       remove(asChildViewController: profileViewController)
       add(asChildViewController: signInViewController)
-      
+      title = "Login"
     case .profile:
       remove(asChildViewController: signInViewController)
       add(asChildViewController: profileViewController)
+      title = "Account"
     }
   }
 }

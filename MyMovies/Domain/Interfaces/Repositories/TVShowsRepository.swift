@@ -12,6 +12,8 @@ protocol TVShowsRepository {
   
   func fetchTVShowsList(with filter: TVShowsListFilter,
                         page: Int) -> Observable<TVShowResult>
+  
+  func fetchTVAccountStates(tvShowId: Int, sessionId: String) -> Observable<TVShowAccountStateResult>
 }
 
 // MARK: - TVShowsListFilter

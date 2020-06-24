@@ -65,4 +65,10 @@ extension DefaultTVShowsRepository: TVShowsRepository {
     
     return newResponse
   }
+  
+  func fetchTVAccountStates(tvShowId: Int, sessionId: String) -> Observable<TVShowAccountStateResult> {
+    let endPoint = TVShowsProvider.getAccountStates(tvShowId: tvShowId,
+                                                    sessionId: sessionId)
+    return dataTransferService.request(endPoint, TVShowAccountStateResult.self)
+  }
 }

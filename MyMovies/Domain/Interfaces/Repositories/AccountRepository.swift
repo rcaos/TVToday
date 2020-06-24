@@ -11,4 +11,8 @@ import RxSwift
 protocol AccountRepository {
   
   func getAccountDetails(session: String) -> Observable<AccountResult>
+  
+  func markAsFavorite(session: String, userId: String, tvShowId: Int, favorite: Bool) -> Observable<StatusResult>
+  
+  func saveToWatchList(session: String, userId: String, tvShowId: Int, watchedList: Bool) -> Observable<StatusResult>
 }

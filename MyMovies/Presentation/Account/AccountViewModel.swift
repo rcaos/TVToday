@@ -17,7 +17,7 @@ final class AccountViewModel {
   
   private let createNewSession: CreateSessionUseCase
   
-  private let fetchLoguedUser: FetchLoguedUser
+  private let fetchLoggedUser: FetchLoggedUser
   
   private let fetchAccountDetails: FetchAccountDetailsUseCase
   
@@ -42,14 +42,14 @@ final class AccountViewModel {
   init(requestToken: CreateTokenUseCase,
        createNewSession: CreateSessionUseCase,
        fetchAccountDetails: FetchAccountDetailsUseCase,
-       fetchLoguedUser: FetchLoguedUser,
+       fetchLoggedUser: FetchLoggedUser,
        deleteLoguedUser: DeleteLoguedUserUseCase,
        signInViewModel: SignInViewModel,
        profileViewMoel: ProfileViewModel) {
     self.requestToken = requestToken
     self.createNewSession = createNewSession
     self.fetchAccountDetails = fetchAccountDetails
-    self.fetchLoguedUser = fetchLoguedUser
+    self.fetchLoggedUser = fetchLoggedUser
     self.deleteLoguedUser = deleteLoguedUser
     self.signInViewModel = signInViewModel
     self.profileViewModel = profileViewMoel
@@ -61,8 +61,8 @@ final class AccountViewModel {
   }
   
   fileprivate func checkIsLogued() {
-    if let loguedUser = fetchLoguedUser.execute() {
-      print("loguedUser: [\(loguedUser)]")
+    if let loggedUser = fetchLoggedUser.execute() {
+      print("loguedUser: [\(loggedUser)]")
       fetchUserDetails()
     } else {
       print("loguedUser: [not found]")
@@ -82,6 +82,8 @@ final class AccountViewModel {
   }
   
   fileprivate func requestCreateToken() {
+    // TODO, test Error from Network
+    
     requestToken.execute()
       .subscribe(onNext: { [weak self] url in
         guard let strongSelf = self else { return }
@@ -101,13 +103,11 @@ final class AccountViewModel {
         return strongSelf.fetchDetailsAccount()
     }
     .subscribe(onNext: { [weak self] accountDetails in
-      print("Details Okey: [\(accountDetails)]")
       self?.viewStateSubject.onNext(.profile)
       self?.signInViewModel.changeState(with: .initial)
       self?.profileViewModel.createSectionModel(account: accountDetails)
       
       }, onError: { [weak self] error in
-        print("Error to Create Session or Fetch Details: \(error)")
         self?.viewStateSubject.onNext(.login)
         self?.signInViewModel.changeState(with: .initial)
     })

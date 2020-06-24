@@ -92,7 +92,7 @@ public class AccountFlow: Flow {
     let accountViewModel = AccountViewModel(requestToken: makeCreateTokenUseCase(),
                                             createNewSession: makeCreateSessionUseCase(),
                                             fetchAccountDetails: makeFetchAccountDetailsUseCase(),
-                                            fetchLoguedUser: makeFetchLoguedUserUseCase(),
+                                            fetchLoggedUser: makeFetchLoggedUserUseCase(),
                                             deleteLoguedUser: makeDeleteLoguedUserUseCase(),
                                             signInViewModel: signViewModel,
                                             profileViewMoel: profileViewModel)
@@ -175,8 +175,8 @@ public class AccountFlow: Flow {
     return DefaultFetchAccountDetailsUseCase(accountRepository: accountRepository, keychainRepository: keychainRepository)
   }
   
-  private func makeFetchLoguedUserUseCase() -> FetchLoguedUser {
-    return DefaultFetchLoguedUser(keychainRepository: keychainRepository)
+  private func makeFetchLoggedUserUseCase() -> FetchLoggedUser {
+    return DefaultFetchLoggedUser(keychainRepository: keychainRepository)
   }
   
   private func makeDeleteLoguedUserUseCase() -> DeleteLoguedUserUseCase {

@@ -15,6 +15,8 @@ public protocol EndPoint {
   var method: ServiceMethod { get }
   
   var queryParameters: [String: Any]? { get }
+  
+  var parameterEncoding: ParameterEnconding { get }
 }
 
 extension EndPoint {
@@ -34,9 +36,23 @@ extension EndPoint {
   
   private func buildRequest(_ request: URLRequest, with params: [String: Any]) -> URLRequest {
     var postRequest = request
-    postRequest.setJSONContentType()
-    let jsonData = try? JSONSerialization.data(withJSONObject: params)
-    postRequest.httpBody = jsonData
+    
+    switch parameterEncoding {
+    case .defaultEncoding:
+      break
+      
+    case .jsonEncoding:
+      postRequest.setJSONContentType()
+      let jsonData = try? JSONSerialization.data(withJSONObject: params)
+      postRequest.httpBody = jsonData
+      
+    case .compositeEncoding:
+      if let bodyParams = params["body"] as? [String: Any] {
+        postRequest.setJSONContentType()
+        let jsonData = try? JSONSerialization.data(withJSONObject: bodyParams)
+        postRequest.httpBody = jsonData
+      }
+    }
     return postRequest
   }
   
@@ -50,10 +66,21 @@ extension EndPoint {
     queryItems.append(contentsOf:
       mapToQueryItems(parameters: config.queryParameters))
     
-    if method == .get {
-      // Specifically for each Request
-      queryItems.append(contentsOf:
-        mapToQueryItems(parameters: queryParameters))
+    // Specifically for each Request
+    switch parameterEncoding {
+    case .defaultEncoding:
+      if method == .get {
+        queryItems.append(contentsOf:
+          mapToQueryItems(parameters: queryParameters) )
+      }
+    case .compositeEncoding:
+      if let params = queryParameters,
+        let queryParams = params["query"] as? [String: Any] {
+        queryItems.append(contentsOf:
+          mapToQueryItems(parameters: queryParams))
+      }
+    default:
+      break
     }
     
     urlComponents?.queryItems = queryItems
@@ -70,6 +97,10 @@ extension EndPoint {
 public enum ServiceMethod: String {
   case get = "GET"
   case post = "POST"
-  
-  // implement more when needed: post, put, delete, patch, etc.
+}
+
+public enum ParameterEnconding {
+  case defaultEncoding
+  case jsonEncoding
+  case compositeEncoding
 }

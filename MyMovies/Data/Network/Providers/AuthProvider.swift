@@ -42,4 +42,13 @@ extension AuthProvider: EndPoint {
       return .post
     }
   }
+  
+  var parameterEncoding: ParameterEnconding {
+    switch self {
+    case .createRequestToken:
+      return .defaultEncoding
+    case .createSession:
+      return .jsonEncoding
+    }
+  }
 }

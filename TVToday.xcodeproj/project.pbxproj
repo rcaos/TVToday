@@ -31,6 +31,7 @@
 		770D5B2E233584F000438937 /* SeasonResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770D5B2D233584F000438937 /* SeasonResult.swift */; };
 		770D5B302335858800438937 /* Episode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770D5B2F2335858800438937 /* Episode.swift */; };
 		7716DD33242E3FEB009A0EDC /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7716DD32242E3FEB009A0EDC /* MessageView.swift */; };
+		77184E8624A1DC8100C7F5CC /* MarkAsFavoriteUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77184E8524A1DC8100C7F5CC /* MarkAsFavoriteUseCase.swift */; };
 		77193F37232FE0CB007FA822 /* ShowsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77193F36232FE0CB007FA822 /* ShowsViewModel.swift */; };
 		77193F3B232FE2D9007FA822 /* PopularsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77193F3A232FE2D9007FA822 /* PopularsViewModel.swift */; };
 		77193F3D232FE57F007FA822 /* TVShowListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77193F3C232FE57F007FA822 /* TVShowListViewModel.swift */; };
@@ -80,6 +81,11 @@
 		7787CFD723554208007DA54E /* TVShowsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7787CFD623554208007DA54E /* TVShowsProvider.swift */; };
 		7787CFDA23554290007DA54E /* GenreProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7787CFD923554290007DA54E /* GenreProvider.swift */; };
 		7788BFDD2440007E00D98CD3 /* BaseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7788BFDC2440007E00D98CD3 /* BaseViewModel.swift */; };
+		778A2A2B24A23849001611DB /* FetchTVAccountStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778A2A2A24A23849001611DB /* FetchTVAccountStates.swift */; };
+		778A2A2D24A238C9001611DB /* TVShowAccountStateResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778A2A2C24A238C9001611DB /* TVShowAccountStateResult.swift */; };
+		778A2A2F24A23919001611DB /* TVShowAccountStateResult+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778A2A2E24A23919001611DB /* TVShowAccountStateResult+Decodable.swift */; };
+		778A2A3124A26AD5001611DB /* StatusResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778A2A3024A26AD5001611DB /* StatusResult.swift */; };
+		778A2A3324A26EA0001611DB /* SaveToWatchListUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778A2A3224A26EA0001611DB /* SaveToWatchListUseCase.swift */; };
 		778B47E823CE0BE1009AE084 /* FetchShowsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778B47E723CE0BE1009AE084 /* FetchShowsUseCase.swift */; };
 		778B47EC23CE0C0C009AE084 /* FetchGenresUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778B47EB23CE0C0C009AE084 /* FetchGenresUseCase.swift */; };
 		778B47EF23CE0C65009AE084 /* TVShowsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778B47EE23CE0C65009AE084 /* TVShowsRepository.swift */; };
@@ -98,7 +104,7 @@
 		779ABBB7249DAF4C0095EA3F /* CreateSessionResult+Decodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779ABBB6249DAF4C0095EA3F /* CreateSessionResult+Decodable.swift */; };
 		779ABBB9249DAF9E0095EA3F /* DefaultAuthRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779ABBB8249DAF9E0095EA3F /* DefaultAuthRepository.swift */; };
 		77ACD2F424A051A80092EC73 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77ACD2F324A051A80092EC73 /* Account.swift */; };
-		77ACD2F624A0537E0092EC73 /* FetchLoguedUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77ACD2F524A0537E0092EC73 /* FetchLoguedUser.swift */; };
+		77ACD2F624A0537E0092EC73 /* FetchLoggedUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77ACD2F524A0537E0092EC73 /* FetchLoggedUser.swift */; };
 		77ACD2F824A06A490092EC73 /* DeleteLoguedUserUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77ACD2F724A06A490092EC73 /* DeleteLoguedUserUseCase.swift */; };
 		77B3CCD4232D7CC100921D23 /* TVShowViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B3CCD2232D7CC100921D23 /* TVShowViewCell.swift */; };
 		77B3CCD5232D7CC100921D23 /* TVShowViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 77B3CCD3232D7CC100921D23 /* TVShowViewCell.xib */; };
@@ -174,6 +180,7 @@
 		770D5B2D233584F000438937 /* SeasonResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonResult.swift; sourceTree = "<group>"; };
 		770D5B2F2335858800438937 /* Episode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Episode.swift; sourceTree = "<group>"; };
 		7716DD32242E3FEB009A0EDC /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
+		77184E8524A1DC8100C7F5CC /* MarkAsFavoriteUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkAsFavoriteUseCase.swift; sourceTree = "<group>"; };
 		77193F36232FE0CB007FA822 /* ShowsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowsViewModel.swift; sourceTree = "<group>"; };
 		77193F3A232FE2D9007FA822 /* PopularsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularsViewModel.swift; sourceTree = "<group>"; };
 		77193F3C232FE57F007FA822 /* TVShowListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowListViewModel.swift; sourceTree = "<group>"; };
@@ -223,6 +230,11 @@
 		7787CFD623554208007DA54E /* TVShowsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowsProvider.swift; sourceTree = "<group>"; };
 		7787CFD923554290007DA54E /* GenreProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreProvider.swift; sourceTree = "<group>"; };
 		7788BFDC2440007E00D98CD3 /* BaseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewModel.swift; sourceTree = "<group>"; };
+		778A2A2A24A23849001611DB /* FetchTVAccountStates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchTVAccountStates.swift; sourceTree = "<group>"; };
+		778A2A2C24A238C9001611DB /* TVShowAccountStateResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowAccountStateResult.swift; sourceTree = "<group>"; };
+		778A2A2E24A23919001611DB /* TVShowAccountStateResult+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TVShowAccountStateResult+Decodable.swift"; sourceTree = "<group>"; };
+		778A2A3024A26AD5001611DB /* StatusResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusResult.swift; sourceTree = "<group>"; };
+		778A2A3224A26EA0001611DB /* SaveToWatchListUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveToWatchListUseCase.swift; sourceTree = "<group>"; };
 		778B47E723CE0BE1009AE084 /* FetchShowsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchShowsUseCase.swift; sourceTree = "<group>"; };
 		778B47EB23CE0C0C009AE084 /* FetchGenresUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchGenresUseCase.swift; sourceTree = "<group>"; };
 		778B47EE23CE0C65009AE084 /* TVShowsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowsRepository.swift; sourceTree = "<group>"; };
@@ -241,7 +253,7 @@
 		779ABBB6249DAF4C0095EA3F /* CreateSessionResult+Decodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CreateSessionResult+Decodable.swift"; sourceTree = "<group>"; };
 		779ABBB8249DAF9E0095EA3F /* DefaultAuthRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAuthRepository.swift; sourceTree = "<group>"; };
 		77ACD2F324A051A80092EC73 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
-		77ACD2F524A0537E0092EC73 /* FetchLoguedUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchLoguedUser.swift; sourceTree = "<group>"; };
+		77ACD2F524A0537E0092EC73 /* FetchLoggedUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchLoggedUser.swift; sourceTree = "<group>"; };
 		77ACD2F724A06A490092EC73 /* DeleteLoguedUserUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteLoguedUserUseCase.swift; sourceTree = "<group>"; };
 		77B3CCD2232D7CC100921D23 /* TVShowViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowViewCell.swift; sourceTree = "<group>"; };
 		77B3CCD3232D7CC100921D23 /* TVShowViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TVShowViewCell.xib; sourceTree = "<group>"; };
@@ -354,6 +366,7 @@
 				779ABBB4249DAEBC0095EA3F /* CreateTokenResult+Decodable.swift */,
 				779ABBB6249DAF4C0095EA3F /* CreateSessionResult+Decodable.swift */,
 				778C1624249F4DBA006BBD76 /* AccountResult+Decodable.swift */,
+				778A2A2E24A23919001611DB /* TVShowAccountStateResult+Decodable.swift */,
 			);
 			path = DataMapping;
 			sourceTree = "<group>";
@@ -554,9 +567,12 @@
 				779ABBB2249DADD10095EA3F /* CreateTokenUseCase.swift */,
 				77443BAB249F403300703EA9 /* CreateSession.swift */,
 				778C1626249F4F74006BBD76 /* FetchAccountDetailsUseCase.swift */,
-				77ACD2F524A0537E0092EC73 /* FetchLoguedUser.swift */,
+				77ACD2F524A0537E0092EC73 /* FetchLoggedUser.swift */,
 				77ACD2F724A06A490092EC73 /* DeleteLoguedUserUseCase.swift */,
 				7768F3BE24A19D4900E13EA8 /* FetchShowsUserUseCase.swift */,
+				77184E8524A1DC8100C7F5CC /* MarkAsFavoriteUseCase.swift */,
+				778A2A3224A26EA0001611DB /* SaveToWatchListUseCase.swift */,
+				778A2A2A24A23849001611DB /* FetchTVAccountStates.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -738,6 +754,8 @@
 				779ABBB0249DAAD90095EA3F /* CreateSessionResult.swift */,
 				778C1622249F4D3A006BBD76 /* AccountResult.swift */,
 				77ACD2F324A051A80092EC73 /* Account.swift */,
+				778A2A2C24A238C9001611DB /* TVShowAccountStateResult.swift */,
+				778A2A3024A26AD5001611DB /* StatusResult.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -1076,6 +1094,7 @@
 				779ABBB7249DAF4C0095EA3F /* CreateSessionResult+Decodable.swift in Sources */,
 				77091F7824A0E995002486DD /* LoadableButton.swift in Sources */,
 				772244B72358B1B000AB67DA /* FooterReusableView.swift in Sources */,
+				77184E8624A1DC8100C7F5CC /* MarkAsFavoriteUseCase.swift in Sources */,
 				77E119E2232DE39900A01ACF /* AiringTodayViewModel.swift in Sources */,
 				7703738B234517B000775698 /* AiringTodayCollectionViewModel.swift in Sources */,
 				77E119DA232DD3C200A01ACF /* GenericViewCell.swift in Sources */,
@@ -1089,9 +1108,11 @@
 				7726FE46249D67CC00D83C35 /* AccountFlow.swift in Sources */,
 				770A4544242D8DC6005DF8AA /* SectionAiringToday.swift in Sources */,
 				77F7317724A1193600E508B0 /* ProfileTableViewCell.swift in Sources */,
+				778A2A2F24A23919001611DB /* TVShowAccountStateResult+Decodable.swift in Sources */,
 				770860EE23CE6C4900625183 /* TVShowResult+Decodable.swift in Sources */,
 				77E00DBC23CFB70A00B62B15 /* NetworkConfigurable.swift in Sources */,
 				77EEF7FF233AA6C40054A499 /* SeasonEpisodeCollectionViewCell.swift in Sources */,
+				778A2A3124A26AD5001611DB /* StatusResult.swift in Sources */,
 				7777E6E8243D3CCE00058686 /* TVShowDetailFlow.swift in Sources */,
 				7726FE54249D8CD000D83C35 /* URLRequest+Extensions.swift in Sources */,
 				779ABBB5249DAEBC0095EA3F /* CreateTokenResult+Decodable.swift in Sources */,
@@ -1116,6 +1137,7 @@
 				7733F14724323EE700B41031 /* Episode+SectionModelType.swift in Sources */,
 				774688BD243D132700822598 /* SearchFlow.swift in Sources */,
 				772C5104242C0B020014F96D /* UIImageView+Kingfisher.swift in Sources */,
+				778A2A3324A26EA0001611DB /* SaveToWatchListUseCase.swift in Sources */,
 				77E37AAE23142CAC00C692DA /* ResultsSearchViewController.swift in Sources */,
 				779ABBAF249DAA880095EA3F /* CreateTokenResult.swift in Sources */,
 				777B1776243CD3CD002D5DCF /* AppDIContainer.swift in Sources */,
@@ -1130,9 +1152,10 @@
 				77B8E03A23D60C0500DBFD00 /* FetchEpisodesUseCase.swift in Sources */,
 				77FFB0932339556B00D17CF0 /* EpisodesListViewModel.swift in Sources */,
 				7726FE48249D72CA00D83C35 /* SignInViewController.swift in Sources */,
+				778A2A2D24A238C9001611DB /* TVShowAccountStateResult.swift in Sources */,
 				7716DD33242E3FEB009A0EDC /* MessageView.swift in Sources */,
 				7726FE4E249D793900D83C35 /* ProfileViewModel.swift in Sources */,
-				77ACD2F624A0537E0092EC73 /* FetchLoguedUser.swift in Sources */,
+				77ACD2F624A0537E0092EC73 /* FetchLoggedUser.swift in Sources */,
 				77B3CCD4232D7CC100921D23 /* TVShowViewCell.swift in Sources */,
 				77C1AFC823D11A0E00E4A965 /* DefaultTVShowDetailsRepository.swift in Sources */,
 				77193F44232FF8F5007FA822 /* TVShowDetailViewModel.swift in Sources */,
@@ -1151,6 +1174,7 @@
 				77ACD2F424A051A80092EC73 /* Account.swift in Sources */,
 				77ACD2F824A06A490092EC73 /* DeleteLoguedUserUseCase.swift in Sources */,
 				779ABBB9249DAF9E0095EA3F /* DefaultAuthRepository.swift in Sources */,
+				778A2A2B24A23849001611DB /* FetchTVAccountStates.swift in Sources */,
 				77ECB4A2249FE778007F93F9 /* KeychainItemStorage.swift in Sources */,
 				77EEF809233AA8330054A499 /* SeasonEpisodeViewModel.swift in Sources */,
 				77544E672433FBBD00F02F9D /* SeasonsSectionModel.swift in Sources */,

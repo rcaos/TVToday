@@ -28,4 +28,8 @@ extension GenreProvider: EndPoint {
   var method: ServiceMethod {
     return .get
   }
+  
+  var parameterEncoding: ParameterEnconding {
+    return .defaultEncoding
+  }
 }

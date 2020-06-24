@@ -1,5 +1,5 @@
 //
-//  FetchLoguedUser.swift
+//  FetchLoggedUser.swift
 //  TVToday
 //
 //  Created by Jeans Ruiz on 6/21/20.
@@ -8,12 +8,12 @@
 
 import RxSwift
 
-protocol FetchLoguedUser {
+protocol FetchLoggedUser {
   
   func execute() -> Account?
 }
 
-final class DefaultFetchLoguedUser: FetchLoguedUser {
+final class DefaultFetchLoggedUser: FetchLoggedUser {
   
   private let keychainRepository: KeychainRepository
   

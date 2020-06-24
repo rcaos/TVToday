@@ -24,9 +24,10 @@ public class TVShowDetailFlow: Flow {
   
   private var rootViewController: UIViewController!
   
-  // Repositories
-  private lazy var showDetailsRepository: TVShowDetailsRepository = {
-    return DefaultTVShowDetailsRepository(
+  // MARK: - Repositories
+  
+  private lazy var tvShowsRepository: TVShowsRepository = {
+    return DefaultTVShowsRepository(
       dataTransferService: dependencies.apiDataTransferService,
       basePath: dependencies.appConfigurations.imagesBaseURL)
   }()
@@ -35,6 +36,14 @@ public class TVShowDetailFlow: Flow {
     return DefaultTVEpisodesRepository(
       dataTransferService: dependencies.apiDataTransferService,
       basePath: dependencies.appConfigurations.imagesBaseURL)
+  }()
+  
+  private lazy var accountRepository: AccountRepository = {
+    return DefaultAccountRepository(dataTransferService: dependencies.apiDataTransferService)
+  }()
+  
+  private lazy var keychainRepository: KeychainRepository = {
+    return DefaultKeychainRepository()
   }()
   
   // MARK: - Life Cycle
@@ -61,7 +70,12 @@ public class TVShowDetailFlow: Flow {
   }
   
   fileprivate func showDetailsFeature(with id: Int) -> FlowContributors {
-    let viewModel = TVShowDetailViewModel(id, fetchDetailShowUseCase: makeFetchShowDetailsUseCase())
+    let viewModel = TVShowDetailViewModel(id,
+                                          fetchLoggedUser: makeFetchLoggedUserUseCase(),
+                                          fetchDetailShowUseCase: makeFetchShowDetailsUseCase(),
+                                          fetchTvShowState: makeTVAccountStatesUseCase(),
+                                          markAsFavoriteUseCase: makeMarkAsFavoriteUseCase(),
+                                          saveToWatchListUseCase: makeSaveToWatchListUseCase())
     let detailVC = TVShowDetailViewController.create(with: viewModel)
     
     if let navigationVC = rootViewController as? UINavigationController {
@@ -94,11 +108,30 @@ public class TVShowDetailFlow: Flow {
   // MARK: - Uses Cases
   
   private func makeFetchShowDetailsUseCase() -> FetchTVShowDetailsUseCase {
-    return DefaultFetchTVShowDetailsUseCase(tvShowDetailsRepository: showDetailsRepository)
+    return DefaultFetchTVShowDetailsUseCase(tvShowsRepository: tvShowsRepository)
   }
   
   private func makeFetchEpisodesUseCase() -> FetchEpisodesUseCase {
     return DefaultFetchEpisodesUseCase(episodesRepository: episodesRepository)
+  }
+  
+  private func makeMarkAsFavoriteUseCase() -> MarkAsFavoriteUseCase {
+    return DefaultMarkAsFavoriteUseCase(accountRepository: accountRepository,
+                                        keychainRepository: keychainRepository)
+  }
+  
+  private func makeSaveToWatchListUseCase() -> SaveToWatchListUseCase {
+    return DefaultSaveToWatchListUseCase(accountRepository: accountRepository,
+                                        keychainRepository: keychainRepository)
+  }
+  
+  private func makeTVAccountStatesUseCase() -> FetchTVAccountStates {
+    return DefaultFetchTVAccountStates(tvShowsRepository: tvShowsRepository,
+                                       keychainRepository: keychainRepository)
+  }
+  
+  private func makeFetchLoggedUserUseCase() -> FetchLoggedUser {
+    return DefaultFetchLoggedUser(keychainRepository: keychainRepository)
   }
 }
 

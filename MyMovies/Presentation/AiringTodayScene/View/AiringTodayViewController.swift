@@ -92,7 +92,6 @@ extension AiringTodayViewController {
           withReuseIdentifier: "AiringTodayCollectionViewCell",
           for: indexPath) as! AiringTodayCollectionViewCell
         cell.viewModel = item
-        print("retornar cell: \(indexPath)")
         
         // MARK: - TODO viewState dont be here !!
         if case .paging(_, let nextPage) = try? strongSelf.viewModel.viewStateObservableSubject.value(),

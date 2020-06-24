@@ -8,9 +8,11 @@
 
 import UIKit
 
-class GenreViewCell: UITableViewCell {
+class GenericViewCell: UITableViewCell {
   
-  var genre: Genre? {
+  public static let identifier = "GenericViewCell"
+  
+  var title: String? {
     didSet {
       setupUI()
     }
@@ -21,7 +23,7 @@ class GenreViewCell: UITableViewCell {
   }
   
   func setupUI() {
-    textLabel?.text = genre?.name
+    textLabel?.text = title
   }
   
 }

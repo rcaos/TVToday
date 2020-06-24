@@ -12,6 +12,10 @@ protocol TVShowsRepository {
   
   func fetchTVShowsList(with filter: TVShowsListFilter,
                         page: Int) -> Observable<TVShowResult>
+  
+  func fetchTVAccountStates(tvShowId: Int, sessionId: String) -> Observable<TVShowAccountStateResult>
+  
+  func fetchTVShowDetails(with showId: Int) -> Observable<TVShowDetailResult>
 }
 
 // MARK: - TVShowsListFilter
@@ -23,4 +27,8 @@ enum TVShowsListFilter {
   case byGenre(genreId: Int)
   
   case search(query: String)
+  
+  case favorites(userId: Int, sessionId: String)
+  
+  case watchList(userId: Int, sessionId: String)
 }

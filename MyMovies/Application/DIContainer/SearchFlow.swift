@@ -27,7 +27,8 @@ public class SearchFlow: Flow {
     return navigationController
   }()
   
-  // Repositories
+  // MARK: - Repositories
+  
   private lazy var showsRepository: TVShowsRepository = {
     return DefaultTVShowsRepository(
       dataTransferService: dependencies.apiDataTransferService,
@@ -75,7 +76,8 @@ public class SearchFlow: Flow {
   }
   
   fileprivate func navigateToGenreListScreen(with id: Int) -> FlowContributors {
-    let viewModel = TVShowListViewModel(genreId: id, fetchTVShowsUseCase: makeShowListUseCase())
+    let viewModel = TVShowListViewModel(filter: .byGenre(genreId: id),
+                                        fetchTVShowsUseCase: makeShowListUseCase())
     let showList = TVShowListViewController.create(with: viewModel)
     
     rootViewController.pushViewController(showList, animated: true)

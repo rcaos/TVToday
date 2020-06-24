@@ -16,6 +16,7 @@ enum TVShowsProvider {
   case getEpisodesFor(Int, Int)
   case searchTVShow(String, Int)
   case listTVShowsBy(Int, Int)
+  case getAccountStates(tvShowId: Int, sessionId: String)
 }
 
 extension TVShowsProvider: EndPoint {
@@ -34,10 +35,13 @@ extension TVShowsProvider: EndPoint {
       return "/3/search/tv"
     case .listTVShowsBy:
       return "/3/discover/tv"
+    case .getAccountStates(let tvShowId, _):
+      return "/3/tv/\(String(tvShowId))/account_states"
+      
     }
   }
   
-  var queryParameters: [String: Any] {
+  var queryParameters: [String: Any]? {
     var parameters: [String: Any] = [:]
     
     switch self {
@@ -58,11 +62,17 @@ extension TVShowsProvider: EndPoint {
       parameters["sort_by"] = "popularity.desc"
       parameters["timezone"] = "America%2FNew_York"
       parameters["include_null_first_air_dates"] = "false"
+    case .getAccountStates(_, let sessionId):
+      parameters["session_id"] = sessionId
     }
     return parameters
   }
   
   var method: ServiceMethod {
     return .get
+  }
+  
+  var parameterEncoding: ParameterEnconding {
+    return .defaultEncoding
   }
 }

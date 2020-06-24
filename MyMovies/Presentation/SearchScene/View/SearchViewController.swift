@@ -59,8 +59,8 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
   }
   
   func setupTable() {
-    let nibName = UINib(nibName: "GenreViewCell", bundle: nil)
-    tableView.register(nibName, forCellReuseIdentifier: "GenreViewCell")
+    let nibName = UINib(nibName: GenericViewCell.identifier, bundle: nil)
+    tableView.register(nibName, forCellReuseIdentifier: GenericViewCell.identifier)
   }
   
   func setupSearchBar() {
@@ -92,8 +92,8 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
     
     viewModel.output.viewState
       .map { $0.currentEntities }
-      .bind(to: tableView.rx.items(cellIdentifier: "GenreViewCell", cellType: GenreViewCell.self)) { (_, element, cell) in
-        cell.genre = element
+      .bind(to: tableView.rx.items(cellIdentifier: GenericViewCell.identifier, cellType: GenericViewCell.self)) { (_, element, cell) in
+        cell.title = element.name
     }
     .disposed(by: disposeBag)
     

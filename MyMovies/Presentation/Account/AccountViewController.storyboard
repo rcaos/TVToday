@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="qWO-kO-FZY">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Sign In View Controller-->
+        <scene sceneID="ijw-Hi-WD9">
+            <objects>
+                <viewController storyboardIdentifier="SignInViewController" id="lTR-e6-oJn" customClass="SignInViewController" customModule="TVToday" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Mat-8W-g0y">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="bRu-19-IPL">
+                                <rect key="frame" x="62" y="229" width="290" height="358"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="newTV" translatesAutoresizingMaskIntoConstraints="NO" id="56s-fr-8IK">
+                                        <rect key="frame" x="0.0" y="0.0" width="290" height="263"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="opf-FX-R8Y" customClass="LoadableButton" customModule="TVToday" customModuleProvider="target">
+                                        <rect key="frame" x="1" y="293" width="288" height="65"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="65" id="Bsc-lU-y6x"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                        <inset key="contentEdgeInsets" minX="30" minY="0.0" maxX="30" maxY="0.0"/>
+                                        <state key="normal" title="Sign in with TheMovieDB" backgroundImage="loginbackground">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="bRu-19-IPL" firstAttribute="width" secondItem="Mat-8W-g0y" secondAttribute="width" multiplier="0.7" id="dmM-AX-MMB"/>
+                            <constraint firstItem="bRu-19-IPL" firstAttribute="centerY" secondItem="Mat-8W-g0y" secondAttribute="centerY" constant="-40" id="eam-yE-bGF"/>
+                            <constraint firstItem="bRu-19-IPL" firstAttribute="height" secondItem="Mat-8W-g0y" secondAttribute="height" multiplier="0.4" id="gYu-M6-ng2"/>
+                            <constraint firstItem="bRu-19-IPL" firstAttribute="centerX" secondItem="Mat-8W-g0y" secondAttribute="centerX" id="oI5-km-rIE"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="zbW-yg-XW1"/>
+                    </view>
+                    <connections>
+                        <outlet property="signInButton" destination="opf-FX-R8Y" id="uC8-aT-awd"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2MH-sh-fAo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="550.72463768115949" y="-728.57142857142856"/>
+        </scene>
+        <!--Profile View Controller-->
+        <scene sceneID="EOn-zO-EtL">
+            <objects>
+                <viewController storyboardIdentifier="ProfileViewController" id="XJm-Lb-yok" customClass="ProfileViewController" customModule="TVToday" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="znq-J1-jlq">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="qoF-cC-Jep">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="qoF-cC-Jep" firstAttribute="leading" secondItem="pD6-oY-3VE" secondAttribute="leading" id="4Qb-4i-KW4"/>
+                            <constraint firstItem="qoF-cC-Jep" firstAttribute="top" secondItem="pD6-oY-3VE" secondAttribute="top" id="I0R-DX-EAM"/>
+                            <constraint firstItem="pD6-oY-3VE" firstAttribute="bottom" secondItem="qoF-cC-Jep" secondAttribute="bottom" id="ftd-EC-QeF"/>
+                            <constraint firstItem="pD6-oY-3VE" firstAttribute="trailing" secondItem="qoF-cC-Jep" secondAttribute="trailing" id="wNE-Vi-Q1e"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="pD6-oY-3VE"/>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="qoF-cC-Jep" id="4a6-rb-eos"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DXC-GH-2lp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1345" y="-729"/>
+        </scene>
+        <!--Account View Controller-->
+        <scene sceneID="hk1-8P-ZaY">
+            <objects>
+                <viewController id="qWO-kO-FZY" customClass="AccountViewController" customModule="TVToday" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="BxQ-vx-bxX">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="YkM-wf-E83"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="c07-uG-kOP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-509" y="-471"/>
+        </scene>
+        <!--Auth Permission View Controller-->
+        <scene sceneID="1Yp-xU-4kw">
+            <objects>
+                <viewController storyboardIdentifier="AuthPermissionViewController" id="rTE-vL-Tcl" customClass="AuthPermissionViewController" customModule="TVToday" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="4Bg-Y6-c5w">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vis-Hj-ZD3">
+                                <rect key="frame" x="0.0" y="44" width="414" height="769"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Pn-tq-NFw">
+                                <rect key="frame" x="0.0" y="813" width="414" height="49"/>
+                                <items>
+                                    <barButtonItem title="Item" id="T7L-Jf-FvY"/>
+                                </items>
+                            </toolbar>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="1Pn-tq-NFw" firstAttribute="top" secondItem="Vis-Hj-ZD3" secondAttribute="bottom" id="3au-Eq-K3J"/>
+                            <constraint firstItem="Vis-Hj-ZD3" firstAttribute="leading" secondItem="siL-6d-JPz" secondAttribute="leading" id="4Ur-Jm-zkR"/>
+                            <constraint firstItem="siL-6d-JPz" firstAttribute="bottom" secondItem="1Pn-tq-NFw" secondAttribute="bottom" id="776-dm-PYl"/>
+                            <constraint firstItem="Vis-Hj-ZD3" firstAttribute="top" secondItem="siL-6d-JPz" secondAttribute="top" id="J22-qL-RSK"/>
+                            <constraint firstItem="siL-6d-JPz" firstAttribute="trailing" secondItem="Vis-Hj-ZD3" secondAttribute="trailing" id="RKv-ZO-5rS"/>
+                            <constraint firstItem="1Pn-tq-NFw" firstAttribute="leading" secondItem="siL-6d-JPz" secondAttribute="leading" id="aoT-hc-T6N"/>
+                            <constraint firstItem="1Pn-tq-NFw" firstAttribute="trailing" secondItem="siL-6d-JPz" secondAttribute="trailing" id="ilf-e4-EXB"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="siL-6d-JPz"/>
+                    </view>
+                    <connections>
+                        <outlet property="webView" destination="Vis-Hj-ZD3" id="XVM-bb-mRS"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aLX-ny-aYH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="551" y="7"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="loginbackground" width="153" height="44"/>
+        <image name="newTV" width="4000" height="3000"/>
+    </resources>
+</document>

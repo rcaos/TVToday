@@ -60,21 +60,29 @@ public class SignedFlow: Flow {
         apiDataTransferService: dependencies.apiDataTransferService,
         appConfigurations: dependencies.appConfigurations) )
     
+    let accountFlow = AccountFlow(dependencies:
+      AccountFlow.Dependencies(apiDataTransferService: dependencies.apiDataTransferService,
+                               appConfigurations: dependencies.appConfigurations))
+    
     Flows.whenReady(
       flow1: airingTodayFlow,
       flow2: popularFlow,
-      flow3: searchFlow) { (airingTodayRoot: UINavigationController, popularRoot: UINavigationController, searchRoot: UINavigationController) in
-      
-      let airingTodayTabBarItem = UITabBarItem(title: "Today", image: UIImage(named: "calendar"), tag: 0)
-      airingTodayRoot.tabBarItem = airingTodayTabBarItem
-      
-      let popularTabBarItem = UITabBarItem(title: "Popular", image: UIImage(named: "popular"), tag: 1)
-      popularRoot.tabBarItem = popularTabBarItem
-      
-      let searchTabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 2)
-      searchRoot.tabBarItem = searchTabBarItem
-      
-      self.rootViewController.setViewControllers([airingTodayRoot, popularRoot, searchRoot], animated: true)
+      flow3: searchFlow,
+      flow4: accountFlow) { (airingTodayRoot: UINavigationController, popularRoot: UINavigationController, searchRoot: UINavigationController, accountRoot: UINavigationController) in
+        
+        let airingTodayTabBarItem = UITabBarItem(title: "Today", image: UIImage(named: "calendar"), tag: 0)
+        airingTodayRoot.tabBarItem = airingTodayTabBarItem
+        
+        let popularTabBarItem = UITabBarItem(title: "Popular", image: UIImage(named: "popular"), tag: 1)
+        popularRoot.tabBarItem = popularTabBarItem
+        
+        let searchTabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 2)
+        searchRoot.tabBarItem = searchTabBarItem
+        
+        let accountTabBarItem = UITabBarItem(title: "Account", image: UIImage(named: "accountTab"), tag: 3)
+        accountRoot.tabBarItem = accountTabBarItem
+        
+        self.rootViewController.setViewControllers([airingTodayRoot, popularRoot, searchRoot, accountRoot], animated: true)
     }
     
     return .multiple(flowContributors: [
@@ -83,7 +91,9 @@ public class SignedFlow: Flow {
       .contribute(withNextPresentable: popularFlow, withNextStepper:
         OneStepper(withSingleStep: PopularStep.popularFeatureInit)),
       .contribute(withNextPresentable: searchFlow, withNextStepper:
-        OneStepper(withSingleStep: SearchStep.searchFeatureInit))
+        OneStepper(withSingleStep: SearchStep.searchFeatureInit)),
+      .contribute(withNextPresentable: accountFlow, withNextStepper:
+        OneStepper(withSingleStep: AccountStep.accountFeatureInit))
     ])
     
   }

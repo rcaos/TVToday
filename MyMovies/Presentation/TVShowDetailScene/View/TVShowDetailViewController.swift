@@ -36,6 +36,24 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
     return controller
   }
   
+  lazy var favoriteButton: UIBarButtonItem = {
+    let barButtonItem = UIBarButtonItem(image: UIImage(named: "favorite"),
+                                        style: .plain, target: nil, action: nil)
+    barButtonItem.tintColor = .gray
+    return barButtonItem
+  }()
+  
+  lazy var watchListButton: UIBarButtonItem = {
+    let bookmarkButton = UIBarButtonItem(image: UIImage(named: "bookmark"),
+                                         style: .plain, target: nil, action: nil)
+    bookmarkButton.tintColor = .gray
+    return bookmarkButton
+  }()
+  
+  // MARK: - TODO, Use Color Palette instead
+  
+  private let greenColor = UIColor.init(red: 69.0/255.0, green: 132.0/255.0, blue: 1.0/255.0, alpha: 1)
+  
   // MARK: - Life Cycle
   
   override func loadView() {
@@ -47,7 +65,7 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
   override func viewDidLoad() {
     super.viewDidLoad()
     navigationController?.navigationBar.prefersLargeTitles = false
-    
+    setupNavigationBar()
     setupViewModel()
   }
   
@@ -55,12 +73,23 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
     print("deinit TVShowDetailViewController")
   }
   
+  private func setupNavigationBar() {
+    if viewModel.isUserLogged() {
+      navigationItem.rightBarButtonItems = [favoriteButton, watchListButton]
+    } else {
+      navigationItem.rightBarButtonItems = []
+    }
+  }
+  
   private func setupViewModel() {
     setupBindables()
-    viewModel?.getShowDetails()
+    viewModel.input.didLoadView.onNext(true)
   }
   
   private func setupBindables() {
+    if viewModel.isUserLogged() {
+      setupBindablesForUserLogged()
+    }
     
     viewModel?.output.viewState
       .subscribe(onNext: { [weak self] state in
@@ -70,16 +99,42 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
       .disposed(by: disposeBag)
   }
   
+  private func setupBindablesForUserLogged() {
+    favoriteButton.rx
+      .tap
+      .bind(to: viewModel.input.tapFavoriteButton)
+      .disposed(by: disposeBag)
+    
+    watchListButton.rx
+      .tap
+      .bind(to: viewModel.input.tapWatchedButton)
+      .disposed(by: disposeBag)
+    
+    viewModel.output
+      .isFavorite
+      .subscribe(onNext: { [weak self] isFavorite in
+        self?.favoriteButton.tintColor = isFavorite ? .red : .gray
+      })
+      .disposed(by: disposeBag)
+    
+    viewModel.output
+      .isWatchList
+      .subscribe(onNext: { [weak self] isWatchList in
+        self?.watchListButton.tintColor = isWatchList ? self?.greenColor : .gray
+      })
+      .disposed(by: disposeBag)
+  }
+  
   func configView(with state: TVShowDetailViewModel.ViewState) {
     loadingView.removeFromSuperview()
     messageView.removeFromSuperview()
     
     switch state {
-    case .populated(let tvShowDetail) :
+    case .populated(let tvShowDetail):
       setupUI(with: tvShowDetail)
-    case .loading :
+    case .loading:
       view.addSubview(loadingView)
-    case .error(let message) :
+    case .error(let message):
       messageView.messageLabel.text = message
       view.addSubview(messageView)
     default:

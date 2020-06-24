@@ -115,8 +115,6 @@
 		77C1AFBE23D1072E00E4A965 /* GenresRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C1AFBD23D1072E00E4A965 /* GenresRepository.swift */; };
 		77C1AFC023D1077D00E4A965 /* DefaultGenresRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C1AFBF23D1077D00E4A965 /* DefaultGenresRepository.swift */; };
 		77C1AFC423D118AC00E4A965 /* FetchTVShowDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C1AFC323D118AC00E4A965 /* FetchTVShowDetails.swift */; };
-		77C1AFC623D119AD00E4A965 /* TVShowDetailsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C1AFC523D119AD00E4A965 /* TVShowDetailsRepository.swift */; };
-		77C1AFC823D11A0E00E4A965 /* DefaultTVShowDetailsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C1AFC723D11A0E00E4A965 /* DefaultTVShowDetailsRepository.swift */; };
 		77D6BF3823CF7AF60045CAB5 /* ApiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D6BF3723CF7AF60045CAB5 /* ApiClient.swift */; };
 		77DB76EA231487BE00A1DE77 /* TVShowListViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77DB76E9231487BE00A1DE77 /* TVShowListViewController.storyboard */; };
 		77DB76EC2314890A00A1DE77 /* TVShowListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DB76EB2314890A00A1DE77 /* TVShowListViewController.swift */; };
@@ -264,8 +262,6 @@
 		77C1AFBD23D1072E00E4A965 /* GenresRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenresRepository.swift; sourceTree = "<group>"; };
 		77C1AFBF23D1077D00E4A965 /* DefaultGenresRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultGenresRepository.swift; sourceTree = "<group>"; };
 		77C1AFC323D118AC00E4A965 /* FetchTVShowDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchTVShowDetails.swift; sourceTree = "<group>"; };
-		77C1AFC523D119AD00E4A965 /* TVShowDetailsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowDetailsRepository.swift; sourceTree = "<group>"; };
-		77C1AFC723D11A0E00E4A965 /* DefaultTVShowDetailsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTVShowDetailsRepository.swift; sourceTree = "<group>"; };
 		77D6BF3723CF7AF60045CAB5 /* ApiClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiClient.swift; sourceTree = "<group>"; };
 		77DB76E9231487BE00A1DE77 /* TVShowListViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TVShowListViewController.storyboard; sourceTree = "<group>"; };
 		77DB76EB2314890A00A1DE77 /* TVShowListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVShowListViewController.swift; sourceTree = "<group>"; };
@@ -582,7 +578,6 @@
 			children = (
 				778B47EE23CE0C65009AE084 /* TVShowsRepository.swift */,
 				77C1AFBD23D1072E00E4A965 /* GenresRepository.swift */,
-				77C1AFC523D119AD00E4A965 /* TVShowDetailsRepository.swift */,
 				77B8E03723D60B8400DBFD00 /* TVEpisodesRepository.swift */,
 				779ABBAC249DA9A40095EA3F /* AuthRepository.swift */,
 				778C1620249F4CC2006BBD76 /* AccountRepository.swift */,
@@ -604,7 +599,6 @@
 			children = (
 				778B47F223CE1778009AE084 /* DefaultTVShowsRepository.swift */,
 				77C1AFBF23D1077D00E4A965 /* DefaultGenresRepository.swift */,
-				77C1AFC723D11A0E00E4A965 /* DefaultTVShowDetailsRepository.swift */,
 				77B8E03B23D60E2C00DBFD00 /* DefaultTVEpisodesRepository.swift */,
 				779ABBB8249DAF9E0095EA3F /* DefaultAuthRepository.swift */,
 				778C1628249F5180006BBD76 /* DefaultAccountRepository.swift */,
@@ -1077,7 +1071,6 @@
 				774688BB243D0EEA00822598 /* PopularFlow.swift in Sources */,
 				77EEF807233AA73A0054A499 /* SeasonListViewModel.swift in Sources */,
 				77F46327230C9F5A008FB9D6 /* AppDelegate.swift in Sources */,
-				77C1AFC623D119AD00E4A965 /* TVShowDetailsRepository.swift in Sources */,
 				77E26213230D7C490066B1CB /* AiringTodayViewController.swift in Sources */,
 				779ABBB3249DADD10095EA3F /* CreateTokenUseCase.swift in Sources */,
 				777B177A243CD9AC002D5DCF /* SignedFlow.swift in Sources */,
@@ -1157,7 +1150,6 @@
 				7726FE4E249D793900D83C35 /* ProfileViewModel.swift in Sources */,
 				77ACD2F624A0537E0092EC73 /* FetchLoggedUser.swift in Sources */,
 				77B3CCD4232D7CC100921D23 /* TVShowViewCell.swift in Sources */,
-				77C1AFC823D11A0E00E4A965 /* DefaultTVShowDetailsRepository.swift in Sources */,
 				77193F44232FF8F5007FA822 /* TVShowDetailViewModel.swift in Sources */,
 				77D6BF3823CF7AF60045CAB5 /* ApiClient.swift in Sources */,
 				77C1AFBE23D1072E00E4A965 /* GenresRepository.swift in Sources */,

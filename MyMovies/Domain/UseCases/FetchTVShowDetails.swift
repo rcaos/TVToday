@@ -21,14 +21,14 @@ struct FetchTVShowDetailsUseCaseRequestValue {
 
 final class DefaultFetchTVShowDetailsUseCase: FetchTVShowDetailsUseCase {
   
-  private let tvShowDetailsRepository: TVShowDetailsRepository
+  private let tvShowsRepository: TVShowsRepository
   
-  init(tvShowDetailsRepository: TVShowDetailsRepository) {
-    self.tvShowDetailsRepository = tvShowDetailsRepository
+  init(tvShowsRepository: TVShowsRepository) {
+    self.tvShowsRepository = tvShowsRepository
   }
   
   func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> Observable<TVShowDetailResult> {
     
-    return tvShowDetailsRepository.fetchTVShowDetails(with: requestValue.identifier)
+    return tvShowsRepository.fetchTVShowDetails(with: requestValue.identifier)
   }
 }

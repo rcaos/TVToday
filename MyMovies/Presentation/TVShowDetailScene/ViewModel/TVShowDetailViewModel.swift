@@ -110,7 +110,6 @@ final class TVShowDetailViewModel {
     .share()
     
     requestFavorite
-      .debug()
       .subscribe(onNext: { [weak self] (response) in
         switch response {
         case .success(let newState):
@@ -144,7 +143,6 @@ final class TVShowDetailViewModel {
     .share()
     
     requestFavorite
-      .debug()
       .subscribe(onNext: { [weak self] (response) in
         switch response {
         case .success(let newState):

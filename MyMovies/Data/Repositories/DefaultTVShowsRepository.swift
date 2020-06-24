@@ -25,6 +25,8 @@ final class DefaultTVShowsRepository {
 
 extension DefaultTVShowsRepository: TVShowsRepository {
   
+  // MARK: - Support Generic Fetch TVShows
+  
   func fetchTVShowsList(with filter: TVShowsListFilter, page: Int) -> Observable<TVShowResult> {
     let endPoint = getProvider(with: filter, page: page)
     
@@ -66,9 +68,32 @@ extension DefaultTVShowsRepository: TVShowsRepository {
     return newResponse
   }
   
+  // MARK: - Fetch TVShow Account State
+  
   func fetchTVAccountStates(tvShowId: Int, sessionId: String) -> Observable<TVShowAccountStateResult> {
     let endPoint = TVShowsProvider.getAccountStates(tvShowId: tvShowId,
                                                     sessionId: sessionId)
     return dataTransferService.request(endPoint, TVShowAccountStateResult.self)
+  }
+  
+  // MARK: - Fetch TVShow Details
+  
+  func fetchTVShowDetails(with showId: Int) -> Observable<TVShowDetailResult> {
+    
+    let endPoint = TVShowsProvider.getTVShowDetail(showId)
+    
+    return dataTransferService.request(endPoint, TVShowDetailResult.self)
+      .flatMap { response -> Observable<TVShowDetailResult> in
+        Observable.just( self.mapShowDetailsWithBasePath(response: response))
+      }
+  }
+  
+  fileprivate func mapShowDetailsWithBasePath(response: TVShowDetailResult) -> TVShowDetailResult {
+    guard let basePath = basePath else { return response }
+    
+    var newResponse = response
+    newResponse.backDropPath = basePath + "/t/p/w780" + ( response.backDropPath ?? "" )
+    newResponse.posterPath = basePath + "/t/p/w780" + ( response.posterPath ?? "" )
+    return newResponse
   }
 }

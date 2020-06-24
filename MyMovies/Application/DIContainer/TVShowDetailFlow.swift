@@ -24,14 +24,7 @@ public class TVShowDetailFlow: Flow {
   
   private var rootViewController: UIViewController!
   
-  // Repositories
-  
-  // TODO unify Repositories
-  private lazy var showDetailsRepository: TVShowDetailsRepository = {
-    return DefaultTVShowDetailsRepository(
-      dataTransferService: dependencies.apiDataTransferService,
-      basePath: dependencies.appConfigurations.imagesBaseURL)
-  }()
+  // MARK: - Repositories
   
   private lazy var tvShowsRepository: TVShowsRepository = {
     return DefaultTVShowsRepository(
@@ -115,7 +108,7 @@ public class TVShowDetailFlow: Flow {
   // MARK: - Uses Cases
   
   private func makeFetchShowDetailsUseCase() -> FetchTVShowDetailsUseCase {
-    return DefaultFetchTVShowDetailsUseCase(tvShowDetailsRepository: showDetailsRepository)
+    return DefaultFetchTVShowDetailsUseCase(tvShowsRepository: tvShowsRepository)
   }
   
   private func makeFetchEpisodesUseCase() -> FetchEpisodesUseCase {

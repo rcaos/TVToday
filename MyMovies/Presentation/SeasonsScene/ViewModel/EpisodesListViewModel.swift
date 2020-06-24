@@ -86,10 +86,8 @@ final class EpisodesListViewModel {
         guard let strongSelf = self else { return }
         
         if let episodes = allEpisodes[season] as? [Episode], episodes.count > 1 {
-          print("--Return episodes Not reload")
           strongSelf.changeToSeason(number: season, episodes: episodes)
         } else {
-          print("--Fetch for Season: \(season)")
           strongSelf.fetchEpisodesFor(season: season)
         }
         
@@ -131,7 +129,6 @@ final class EpisodesListViewModel {
   }
   
   fileprivate func fetchEpisodesFor(season seasonNumber: Int) {
-    print("Se consulta Episodes para Season: \(seasonNumber)")
     createSectionModel(state: .loading, with: totalSeasons, seasonSelected: seasonNumber, and: [])
     
     let request = FetchEpisodesUseCaseRequestValue(showIdentifier: tvShowId, seasonNumber: seasonNumber)
@@ -142,7 +139,6 @@ final class EpisodesListViewModel {
         strongSelf.processFetched(with: result)
         }, onError: { [weak self] error in
           guard let strongSelf = self else { return }
-          print("error: [\(error)]")
           strongSelf.createSectionModel(state: .error(error), with: strongSelf.totalSeasons, seasonSelected: seasonNumber, and: [])
           strongSelf.viewStateObservableSubject.onNext( .error(error) )
       })
@@ -153,13 +149,12 @@ final class EpisodesListViewModel {
     var fetchedEpisodes = response.episodes ?? []
     let seasonFetched = response.seasonNumber
     
-    // Test for empty View
+    // This behavior is purposely For Test for Empty View
     if seasonFetched == totalSeasons {
       fetchedEpisodes.removeAll()
     }
-    // Remove Test, last Season
+    // Comment this lines
     
-    print("Se recibieron: \(fetchedEpisodes.count) episodios para Season: \(seasonFetched)")
     if fetchedEpisodes.isEmpty {
       createSectionModel(state: .empty, with: totalSeasons, seasonSelected: seasonFetched, and: [])
       return

@@ -16,27 +16,32 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="18" translatesAutoresizingMaskIntoConstraints="NO" id="bRu-19-IPL">
-                                <rect key="frame" x="20" y="273.5" width="374" height="269"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="bRu-19-IPL">
+                                <rect key="frame" x="62" y="229" width="290" height="358"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="flatTV" translatesAutoresizingMaskIntoConstraints="NO" id="56s-fr-8IK">
-                                        <rect key="frame" x="0.0" y="0.0" width="374" height="217"/>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="newTV" translatesAutoresizingMaskIntoConstraints="NO" id="56s-fr-8IK">
+                                        <rect key="frame" x="0.0" y="0.0" width="290" height="263"/>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="opf-FX-R8Y" customClass="LoadableButton" customModule="TVToday" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="235" width="374" height="34"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                        <state key="normal" title="Sign in with TheMovieDB"/>
+                                        <rect key="frame" x="1" y="293" width="288" height="65"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="65" id="Bsc-lU-y6x"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                        <inset key="contentEdgeInsets" minX="30" minY="0.0" maxX="30" maxY="0.0"/>
+                                        <state key="normal" title="Sign in with TheMovieDB" backgroundImage="loginbackground">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
                                     </button>
                                 </subviews>
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="bRu-19-IPL" firstAttribute="leading" secondItem="zbW-yg-XW1" secondAttribute="leading" constant="20" id="N5q-b1-ZFX"/>
+                            <constraint firstItem="bRu-19-IPL" firstAttribute="width" secondItem="Mat-8W-g0y" secondAttribute="width" multiplier="0.7" id="dmM-AX-MMB"/>
                             <constraint firstItem="bRu-19-IPL" firstAttribute="centerY" secondItem="Mat-8W-g0y" secondAttribute="centerY" constant="-40" id="eam-yE-bGF"/>
-                            <constraint firstItem="bRu-19-IPL" firstAttribute="height" secondItem="Mat-8W-g0y" secondAttribute="height" multiplier="0.3" id="gYu-M6-ng2"/>
+                            <constraint firstItem="bRu-19-IPL" firstAttribute="height" secondItem="Mat-8W-g0y" secondAttribute="height" multiplier="0.4" id="gYu-M6-ng2"/>
                             <constraint firstItem="bRu-19-IPL" firstAttribute="centerX" secondItem="Mat-8W-g0y" secondAttribute="centerX" id="oI5-km-rIE"/>
-                            <constraint firstAttribute="trailing" secondItem="bRu-19-IPL" secondAttribute="trailing" constant="20" id="qc4-bD-8Td"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="zbW-yg-XW1"/>
                     </view>
@@ -91,7 +96,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c07-uG-kOP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-410" y="-421"/>
+            <point key="canvasLocation" x="-509" y="-471"/>
         </scene>
         <!--Auth Permission View Controller-->
         <scene sceneID="1Yp-xU-4kw">
@@ -134,10 +139,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aLX-ny-aYH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="551" y="-28"/>
+            <point key="canvasLocation" x="551" y="7"/>
         </scene>
     </scenes>
     <resources>
-        <image name="flatTV" width="512" height="512"/>
+        <image name="loginbackground" width="153" height="44"/>
+        <image name="newTV" width="4000" height="3000"/>
     </resources>
 </document>

@@ -17,11 +17,11 @@ public protocol NetworkCancellable {
   func cancel()
 }
 
-class ApiClient {
+public class ApiClient {
   
   private let configuration: NetworkConfigurable
   
-  init(with configuration: NetworkConfigurable) {
+  public init(with configuration: NetworkConfigurable) {
     self.configuration = configuration
   }
 }
@@ -30,7 +30,7 @@ class ApiClient {
 
 extension ApiClient: DataTransferService {
   
-  func request<Element>(_ router: EndPoint, _ decodingType: Element.Type) -> Observable<Element> where Element: Decodable {
+  public func request<Element>(_ router: EndPoint, _ decodingType: Element.Type) -> Observable<Element> where Element: Decodable {
     return Observable<Element>.create { [unowned self] (event) -> Disposable in
       
       let task = self.request( router.getUrlRequest(with: self.configuration)) { result in

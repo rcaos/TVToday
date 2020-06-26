@@ -8,6 +8,7 @@
 
 import Foundation
 import RxFlow
+import Networking
 
 public class PopularFlow: Flow {
   

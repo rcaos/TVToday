@@ -7,6 +7,7 @@
 //
 
 import RxSwift
+import Networking
 
 final class DefaultTVEpisodesRepository {
   

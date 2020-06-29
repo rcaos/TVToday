@@ -1,0 +1,16 @@
+PODS:
+  - KeyChainStorage (0.1.0)
+
+DEPENDENCIES:
+  - KeyChainStorage (from `../`)
+
+EXTERNAL SOURCES:
+  KeyChainStorage:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  KeyChainStorage: d9820bbdd4504bdd38111feaf4fc2f57d9a67e4d
+
+PODFILE CHECKSUM: 28e63bae4d7841f98655de494ec735c7c284cc4f
+
+COCOAPODS: 1.9.1

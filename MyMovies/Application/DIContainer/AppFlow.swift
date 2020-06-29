@@ -41,9 +41,6 @@ class AppFlow: Flow {
     case AppStep.applicationAuthorized :
       return nagivateToSignedFlow()
       
-      //case AppStep.applicationFirstLaunch
-      // todo, splitVC
-      
     default:
       return .none
     }

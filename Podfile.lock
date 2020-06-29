@@ -1,0 +1,144 @@
+PODS:
+  - Account (0.1.0):
+    - Networking
+    - RxCocoa (~> 5.0.0)
+    - RxDataSources (~> 4.0.0)
+    - RxFlow (~> 2.7.0)
+    - RxSwift (~> 5.0.0)
+    - Shared
+    - TVShowsList
+  - AiringToday (0.1.0):
+    - Networking
+    - RxCocoa (~> 5.0.0)
+    - RxDataSources (~> 4.0.0)
+    - RxFlow (~> 2.7.0)
+    - RxSwift (~> 5.0.0)
+    - Shared
+    - ShowDetails
+  - Differentiator (4.0.1)
+  - KeyChainStorage (0.1.0):
+    - KeychainSwift (~> 14.0)
+  - KeychainSwift (14.0.2)
+  - Kingfisher (5.13.4):
+    - Kingfisher/Core (= 5.13.4)
+  - Kingfisher/Core (5.13.4)
+  - Networking (0.1.0):
+    - RxSwift (~> 5.0.0)
+  - PopularShows (0.1.0):
+    - Networking
+    - RxCocoa (~> 5.0.0)
+    - RxDataSources (~> 4.0.0)
+    - RxFlow (~> 2.7.0)
+    - RxSwift (~> 5.0.0)
+    - Shared
+    - ShowDetails
+  - RxCocoa (5.0.0):
+    - RxRelay (~> 5)
+    - RxSwift (~> 5)
+  - RxDataSources (4.0.0):
+    - Differentiator (~> 4.0)
+    - RxCocoa (~> 5.0)
+    - RxSwift (~> 5.0)
+  - RxFlow (2.7.0):
+    - RxCocoa (>= 5.0.0)
+    - RxSwift (>= 5.0.0)
+  - RxRelay (5.1.1):
+    - RxSwift (~> 5)
+  - RxSwift (5.0.0)
+  - SearchShows (0.1.0):
+    - Networking
+    - RxCocoa (~> 5.0.0)
+    - RxDataSources (~> 4.0.0)
+    - RxFlow (~> 2.7.0)
+    - RxSwift (~> 5.0.0)
+    - Shared
+    - TVShowsList
+  - Shared (0.1.0):
+    - KeyChainStorage
+    - Kingfisher (~> 5.13.0)
+    - Networking
+    - RxFlow (~> 2.7.0)
+  - ShowDetails (0.1.0):
+    - Networking
+    - RxCocoa (~> 5.0.0)
+    - RxDataSources (~> 4.0.0)
+    - RxFlow (~> 2.7.0)
+    - RxSwift (~> 5.0.0)
+    - Shared
+  - TVShowsList (0.1.0):
+    - Networking
+    - RxCocoa (~> 5.0.0)
+    - RxDataSources (~> 4.0.0)
+    - RxFlow (~> 2.7.0)
+    - RxSwift (~> 5.0.0)
+    - Shared
+    - ShowDetails
+
+DEPENDENCIES:
+  - Account (from `DevPods/Account`)
+  - AiringToday (from `DevPods/AiringToday`)
+  - KeyChainStorage (from `DevPods/KeyChainStorage`)
+  - Networking (from `DevPods/Networking`)
+  - PopularShows (from `DevPods/PopularShows`)
+  - RxCocoa (= 5.0.0)
+  - RxDataSources (= 4.0.0)
+  - RxFlow (= 2.7.0)
+  - RxSwift (= 5.0.0)
+  - SearchShows (from `DevPods/SearchShows`)
+  - Shared (from `DevPods/Shared`)
+  - ShowDetails (from `DevPods/ShowDetails`)
+  - TVShowsList (from `DevPods/TVShowsList`)
+
+SPEC REPOS:
+  trunk:
+    - Differentiator
+    - KeychainSwift
+    - Kingfisher
+    - RxCocoa
+    - RxDataSources
+    - RxFlow
+    - RxRelay
+    - RxSwift
+
+EXTERNAL SOURCES:
+  Account:
+    :path: DevPods/Account
+  AiringToday:
+    :path: DevPods/AiringToday
+  KeyChainStorage:
+    :path: DevPods/KeyChainStorage
+  Networking:
+    :path: DevPods/Networking
+  PopularShows:
+    :path: DevPods/PopularShows
+  SearchShows:
+    :path: DevPods/SearchShows
+  Shared:
+    :path: DevPods/Shared
+  ShowDetails:
+    :path: DevPods/ShowDetails
+  TVShowsList:
+    :path: DevPods/TVShowsList
+
+SPEC CHECKSUMS:
+  Account: 3145fdb23377c8e3bae824cedd31d7762100e2bf
+  AiringToday: 4583886e82caeb0a1a9d83c63853535fa7e7c80d
+  Differentiator: 886080237d9f87f322641dedbc5be257061b0602
+  KeyChainStorage: 641120d8b3d3cbdf9605c21a6daa7d327fafb262
+  KeychainSwift: b90e7ed24e6ec9f98c304b580c86a3ada081a3e5
+  Kingfisher: d2279a7abece3c7f25a80cd2b7f363ca5cf3f44c
+  Networking: ac58503fe5f1b6d04d6414932d398eb0b2c9f746
+  PopularShows: ecdfe462adbe8ac3153e48eb90053ed9758edac7
+  RxCocoa: fcf32050ac00d801f34a7f71d5e8e7f23026dcd8
+  RxDataSources: 38b21b38b9fe646d3bf2641f1720efa05ef1add5
+  RxFlow: 605ef6364d7e937bea8f9507a1e99a431cdc2493
+  RxRelay: d77f7d771495f43c556cbc43eebd1bb54d01e8e9
+  RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
+  SearchShows: b21fab355c73d4b80cdd54077150026e95903479
+  Shared: 07fb407132d1ef0989e9f205e2a6fea0dcc0766f
+  ShowDetails: 4ca2e9e6c780bad4ae7b7edfa542fd1155deada7
+  TVShowsList: de4df48fe50d7fd762e177ade548ceb844af49f5
+
+PODFILE CHECKSUM: 5abb51ee76e970adcb3f43077be17a94826dbad5
+
+COCOAPODS: 1.9.1

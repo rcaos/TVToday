@@ -10,4 +10,28 @@
    <FileRef
       location = "group:DevPods/Networking/Example/Networking.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:DevPods/Account/Example/Account.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:DevPods/Shared/Example/Shared.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:DevPods/KeyChainStorage/Example/KeyChainStorage.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:DevPods/TVShowsList/Example/TVShowsList.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:DevPods/ShowDetails/Example/ShowDetails.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:DevPods/AiringToday/Example/AiringToday.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:DevPods/PopularShows/Example/PopularShows.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:DevPods/SearchShows/Example/SearchShows.xcodeproj">
+   </FileRef>
 </Workspace>

@@ -82,4 +82,3 @@ extension DefaultAccountTVShowsRepository: AccountTVShowsRepository {
     return dataTransferService.request(endPoint, StatusResult.self)
   }
 }
-

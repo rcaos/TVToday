@@ -15,8 +15,6 @@ public protocol AccountTVShowsRepository {
   
   func fetchTVAccountStates(tvShowId: Int, sessionId: String) -> Observable<TVShowAccountStateResult>
   
-//  func fetchTVShowDetails(with showId: Int) -> Observable<TVShowDetailResult>
-  
   func markAsFavorite(session: String, userId: String, tvShowId: Int, favorite: Bool) -> Observable<StatusResult>
   
   func saveToWatchList(session: String, userId: String, tvShowId: Int, watchedList: Bool) -> Observable<StatusResult>

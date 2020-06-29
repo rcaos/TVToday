@@ -108,7 +108,7 @@ final class AccountViewModel {
       self?.signInViewModel.changeState(with: .initial)
       self?.profileViewModel.createSectionModel(account: accountDetails)
       
-      }, onError: { [weak self] error in
+      }, onError: { [weak self] _ in
         self?.viewStateSubject.onNext(.login)
         self?.signInViewModel.changeState(with: .initial)
     })

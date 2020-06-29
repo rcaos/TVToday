@@ -1,14 +1,14 @@
 //
-//  Module.swift
-//  AiringToday
+//  ShowListDependencies.swift
+//  TVShowsList
 //
-//  Created by Jeans Ruiz on 6/28/20.
+//  Created by Jeans Ruiz on 6/27/20.
 //
 
 import Foundation
 import Networking
 
-public struct AiringTodayDependencies {
+public struct ShowListDependencies {
   
   let apiDataTransferService: DataTransferService
   let imagesBaseURL: String

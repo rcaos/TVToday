@@ -1,15 +1,14 @@
 //
-//  SearchFlow.swift
-//  TVToday
+//  ShowDetailsDependencies.swift
+//  ShowDetails
 //
-//  Created by Jeans Ruiz on 4/7/20.
-//  Copyright © 2020 Jeans. All rights reserved.
+//  Created by Jeans Ruiz on 6/28/20.
 //
 
 import Foundation
 import Networking
 
-public struct SearchShowDependencies {
+public struct ShowDetailsDependencies {
   
   let apiDataTransferService: DataTransferService
   let imagesBaseURL: String

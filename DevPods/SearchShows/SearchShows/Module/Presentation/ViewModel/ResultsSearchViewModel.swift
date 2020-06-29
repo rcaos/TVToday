@@ -38,7 +38,7 @@ final class ResultsSearchViewModel {
     self.output = Output(viewState: viewStateObservableSubject.asObservable())
   }
   
-  // MARK: - TODO, refator this 2 methods
+  // MARK: - TODO, refator the next 2 methods
   
   func searchShows(for query: String, page: Int) {
     guard !query.isEmpty else { return }
@@ -49,9 +49,6 @@ final class ResultsSearchViewModel {
   
   func searchShows(for page: Int) {
     guard !currentSearch.isEmpty else { return }
-    
-//    filter = .search(query: currentSearch)
-    
     getShows(query: currentSearch, for: page)
   }
   

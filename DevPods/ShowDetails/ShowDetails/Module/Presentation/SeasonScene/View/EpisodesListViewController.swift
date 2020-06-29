@@ -11,9 +11,6 @@ import RxSwift
 import RxDataSources
 import Shared
 
-private let reuseIdentifierForEpisode = "identifierForEpisodeSeason"
-private let reuseIdentifierForSeasons = "identifierForSeason"
-
 class EpisodesListViewController: UIViewController, StoryboardInstantiable {
   
   @IBOutlet weak var tableView: UITableView!

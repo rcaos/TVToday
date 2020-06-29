@@ -1,5 +1,5 @@
 //
-//  Module.swift
+//  AccountDependencies.swift
 //  Account
 //
 //  Created by Jeans Ruiz on 6/26/20.
@@ -18,17 +18,3 @@ public struct AccountDependencies {
     self.imagesBaseURL = imagesBaseURL
   }
 }
-
-//public struct Module {
-//
-//  private let diContainer: DIContainer
-//
-//  public init(dependencies: ModuleDependencies) {
-//    self.diContainer = DIContainer(dependencies: dependencies)
-//  }
-//
-//  public func startAccountFlow() {
-//
-//  }
-//
-//}

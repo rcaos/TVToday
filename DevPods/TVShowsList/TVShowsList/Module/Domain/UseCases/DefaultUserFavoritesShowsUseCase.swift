@@ -21,7 +21,7 @@ public final class DefaultUserFavoritesShowsUseCase: FetchTVShowsUseCase {
   
   public func execute(requestValue: FetchTVShowsUseCaseRequestValue) -> Observable<TVShowResult> {
     guard let userLogged = keychainRepository.fetchLoguedUser() else {
-        return Observable.error(CustomError.genericError)
+      return Observable.error(CustomError.genericError)
     }
     
     return accountShowsRepository.fetchFavoritesShows(page: requestValue.page,

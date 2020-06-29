@@ -34,11 +34,7 @@ extension ShowsViewModel {
       viewStateObservableSubject.onNext(.loading)
     }
     
-    // TODO: New Use Cases..
-    //let request = FetchTVShowsUseCaseRequestValue(filter: filter, page: page)
-    
     let request = FetchTVShowsUseCaseRequestValue(page: page)
-    
     
     fetchTVShowsUseCase.execute(requestValue: request)
       .subscribe(onNext: { [weak self] result in

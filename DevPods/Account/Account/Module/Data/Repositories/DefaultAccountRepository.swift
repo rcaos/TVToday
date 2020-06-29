@@ -27,22 +27,4 @@ extension DefaultAccountRepository: AccountRepository {
     let endPoint = AccountProvider.accountDetails(sessionId: session)
     return dataTransferService.request(endPoint, AccountResult.self)
   }
-  
-//  public func markAsFavorite(session: String, userId: String, tvShowId: Int, favorite: Bool) -> Observable<StatusResult> {
-//    let endPoint = AccountProvider.markAsFavorite(
-//      userId: userId,
-//      tvShowId: tvShowId,
-//      sessionId: session,
-//      favorite: favorite)
-//    return dataTransferService.request(endPoint, StatusResult.self)
-//  }
-//
-//  public func saveToWatchList(session: String, userId: String, tvShowId: Int, watchedList: Bool) -> Observable<StatusResult> {
-//    let endPoint = AccountProvider.savetoWatchList(
-//      userId: userId,
-//      tvShowId: tvShowId,
-//      sessionId: session,
-//      watchList: watchedList)
-//    return dataTransferService.request(endPoint, StatusResult.self)
-//  }
 }

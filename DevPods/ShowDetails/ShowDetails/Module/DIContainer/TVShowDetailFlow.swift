@@ -35,10 +35,6 @@ public class TVShowDetailFlow: Flow {
       basePath: dependencies.imagesBaseURL)
   }()
   
-//  private lazy var accountRepository: AccountRepository = {
-//    return DefaultAccountRepository(dataTransferService: dependencies.apiDataTransferService)
-//  }()
-  
   private lazy var accountShowsRepository: AccountTVShowsRepository = {
     return DefaultAccountTVShowsRepository(dataTransferService: dependencies.apiDataTransferService,
                                            basePath: dependencies.imagesBaseURL)

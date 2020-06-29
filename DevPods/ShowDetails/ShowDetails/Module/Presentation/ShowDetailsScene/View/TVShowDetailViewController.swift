@@ -85,7 +85,7 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
   }
   
   private func setupUIElements() {
-    starButton.setImage(UIImage(name: "star") , for: .normal)
+    starButton.setImage(UIImage(name: "star"), for: .normal)
   }
   
   private func setupViewModel() {

@@ -5,15 +5,23 @@
 
 ## Desarrollo en iOS
 - Swift 5
+- RxSwift, RxDataSources
+- RxFlow como coordinator entre pantallas
 - MVVM
 - Clean Architecture
+- Kingfisher para caché de imágenes
+- KeychainSwift guardar la session en el KeyChain
 
 ## Screenshots
 <p>
-<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen1.png" width="215" height="466">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen10.png" width="215" height="466">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen08.png" width="215" height="466">
 <img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen2.png" width="215" height="466">
 <img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen3.png" width="215" height="466">
 <img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen4.png" width="215" height="466">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen07.png" width="215" height="466">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen05.png" width="215" height="466">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen06.png" width="215" height="466">
 </p>
 
 ## Clean Architecture

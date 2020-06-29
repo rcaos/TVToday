@@ -1,0 +1,16 @@
+PODS:
+  - PopularShows (0.1.0)
+
+DEPENDENCIES:
+  - PopularShows (from `../`)
+
+EXTERNAL SOURCES:
+  PopularShows:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  PopularShows: 67eae82f10355f01aa975a3cf986f098c937362d
+
+PODFILE CHECKSUM: 6a06d140499397059a46f36e8310b2ec2c296253
+
+COCOAPODS: 1.9.1

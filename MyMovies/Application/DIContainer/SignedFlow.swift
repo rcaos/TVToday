@@ -9,6 +9,13 @@
 import UIKit
 import RxFlow
 
+import Networking
+import AiringToday
+import PopularShows
+import SearchShows
+import Account
+import Shared
+
 public class SignedFlow: Flow {
   
   public struct Dependencies {
@@ -46,23 +53,23 @@ public class SignedFlow: Flow {
   
   fileprivate func showMainFeatures() -> FlowContributors {
     let airingTodayFlow = AiringTodayFlow(dependencies:
-      AiringTodayFlow.Dependencies(
+      AiringTodayDependencies(
         apiDataTransferService: dependencies.apiDataTransferService,
-        appConfigurations: dependencies.appConfigurations) )
+        imagesBaseURL: dependencies.appConfigurations.imagesBaseURL) )
     
     let popularFlow = PopularFlow(dependencies:
-      PopularFlow.Dependencies(
+      PopularShowsDependencies(
         apiDataTransferService: dependencies.apiDataTransferService,
-        appConfigurations: dependencies.appConfigurations) )
+        imagesBaseURL: dependencies.appConfigurations.imagesBaseURL) )
     
     let searchFlow = SearchFlow(dependencies:
-      SearchFlow.Dependencies(
+      SearchShowDependencies(
         apiDataTransferService: dependencies.apiDataTransferService,
-        appConfigurations: dependencies.appConfigurations) )
+        imagesBaseURL: dependencies.appConfigurations.imagesBaseURL) )
     
     let accountFlow = AccountFlow(dependencies:
-      AccountFlow.Dependencies(apiDataTransferService: dependencies.apiDataTransferService,
-                               appConfigurations: dependencies.appConfigurations))
+      AccountDependencies(apiDataTransferService: dependencies.apiDataTransferService,
+                         imagesBaseURL: dependencies.appConfigurations.imagesBaseURL))
     
     Flows.whenReady(
       flow1: airingTodayFlow,
@@ -70,16 +77,19 @@ public class SignedFlow: Flow {
       flow3: searchFlow,
       flow4: accountFlow) { (airingTodayRoot: UINavigationController, popularRoot: UINavigationController, searchRoot: UINavigationController, accountRoot: UINavigationController) in
         
-        let airingTodayTabBarItem = UITabBarItem(title: "Today", image: UIImage(named: "calendar"), tag: 0)
+        let airingTodayTabBarItem = UITabBarItem(title: "Today",
+                                                 image: UIImage(name: "calendar"), tag: 0)
         airingTodayRoot.tabBarItem = airingTodayTabBarItem
         
-        let popularTabBarItem = UITabBarItem(title: "Popular", image: UIImage(named: "popular"), tag: 1)
+        let popularTabBarItem = UITabBarItem(title: "Popular",
+                                             image: UIImage(name: "popular"), tag: 1)
         popularRoot.tabBarItem = popularTabBarItem
         
         let searchTabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 2)
         searchRoot.tabBarItem = searchTabBarItem
         
-        let accountTabBarItem = UITabBarItem(title: "Account", image: UIImage(named: "accountTab"), tag: 3)
+        let accountTabBarItem = UITabBarItem(title: "Account",
+                                             image: UIImage(name: "accountTab"), tag: 3)
         accountRoot.tabBarItem = accountTabBarItem
         
         self.rootViewController.setViewControllers([airingTodayRoot, popularRoot, searchRoot, accountRoot], animated: true)

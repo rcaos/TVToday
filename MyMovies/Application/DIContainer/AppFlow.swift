@@ -8,6 +8,7 @@
 
 import Foundation
 import RxFlow
+import Networking
 
 class AppFlow: Flow {
   
@@ -39,9 +40,6 @@ class AppFlow: Flow {
     switch step {
     case AppStep.applicationAuthorized :
       return nagivateToSignedFlow()
-      
-      //case AppStep.applicationFirstLaunch
-      // todo, splitVC
       
     default:
       return .none

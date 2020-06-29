@@ -1,0 +1,16 @@
+PODS:
+  - SearchShows (0.1.0)
+
+DEPENDENCIES:
+  - SearchShows (from `../`)
+
+EXTERNAL SOURCES:
+  SearchShows:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  SearchShows: 785ba0e1ef80cbc03bd7bc57589b21b422781fbd
+
+PODFILE CHECKSUM: 54e0dbc941ed289667b50d32dd1b6d691ef31a23
+
+COCOAPODS: 1.9.1

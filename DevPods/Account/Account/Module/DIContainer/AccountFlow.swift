@@ -49,7 +49,8 @@ public class AccountFlow: Flow {
   
   private lazy var showListDependencies: ShowListDependencies = {
     return ShowListDependencies(apiDataTransferService: dependencies.apiDataTransferService,
-                                imagesBaseURL: dependencies.imagesBaseURL)
+                                imagesBaseURL: dependencies.imagesBaseURL,
+                                showsPersistence: dependencies.showsPersistence)
   }()
   
   // MARK: - Life Cycle

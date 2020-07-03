@@ -40,6 +40,14 @@ def keychain_pod
   pod 'KeyChainStorage', :path =>  'DevPods/KeyChainStorage'
 end
 
+def persistence_pod
+  pod 'Persistence', :path =>  'DevPods/Persistence'
+end
+
+def realmPersistence_pod
+  pod 'RealmPersistence', :path =>  'DevPods/RealmPersistence'
+end
+
 
 def development_pods
   networking_pod
@@ -51,21 +59,17 @@ def development_pods
   showsList_pod
   showDetails_pod
   keychain_pod
+  persistence_pod
+  realmPersistence_pod
 end
 
 target 'TVToday' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
-
-  # Pods for TVToday
-  # pod 'Kingfisher',      '5.13.0'
   
-  pod 'RxSwift',         '5.0.0'
-  pod 'RxCocoa',         '5.0.0'
-  pod 'RxDataSources',   '4.0.0'
-  
+  # Third Party Pods.
+  # The main App only know about Navigation
   pod 'RxFlow',          '2.7.0'
-  #pod 'KeychainSwift', 	 '14.0'
   
    # Dev Pods
    development_pods
@@ -132,5 +136,19 @@ target 'KeyChainStorage_Example' do
   project 'DevPods/KeyChainStorage/Example/KeyChainStorage.xcodeproj'
   
   keychain_pod
+end
+
+target 'Persistence_Example' do
+  use_frameworks!
+  project 'DevPods/Persistence/Example/Persistence.xcodeproj'
+  
+  persistence_pod
+end
+
+target 'RealmPersistence_Example' do
+  use_frameworks!
+  project 'DevPods/RealmPersistence/Example/RealmPersistence.xcodeproj'
+  
+  realmPersistence_pod
 end
 

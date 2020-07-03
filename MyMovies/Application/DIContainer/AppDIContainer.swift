@@ -9,6 +9,8 @@
 import UIKit
 import RxFlow
 import Networking
+import Persistence
+import RealmPersistence
 
 public class AppDIContainer {
   
@@ -26,6 +28,12 @@ public class AppDIContainer {
     return ApiClient(with: configuration)
   }()
   
+  lazy var showsPersistence: ShowsVisitedLocalRepository = {
+    let realmDataStorage = RealmDataStorage(maxStorageLimit: 5)
+    let localStorage = DefaultShowsVisitedLocalStorage(realmDataStack: realmDataStorage)
+    return DefaultShowsVisitedLocalRepository(showsVisitedLocalStorage: localStorage)
+  }()
+  
   public let coordinator: FlowCoordinator!
   
   private var appFlow: AppFlow!
@@ -40,7 +48,8 @@ public class AppDIContainer {
       window: window,
       dependencies: AppFlow.Dependencies(
         apiDataTransferService: apiDataTransferService,
-        appConfigurations: appConfigurations))
+        appConfigurations: appConfigurations,
+        showsPersistence: showsPersistence))
     
     // Base on some Conditions, guest, logged, etc, launch "appFlow" with "First Step"
     // AppFlow handle "Flows.whenReady"

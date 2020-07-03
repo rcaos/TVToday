@@ -41,12 +41,14 @@ public class SearchFlow: Flow {
   // MARK: - Dependencies
   private lazy var showListDependencies: ShowListDependencies = {
     return ShowListDependencies(apiDataTransferService: dependencies.apiDataTransferService,
-                                imagesBaseURL: dependencies.imagesBaseURL)
+                                imagesBaseURL: dependencies.imagesBaseURL,
+                                showsPersistence: dependencies.showsPersistence)
   }()
   
   private lazy var showDetailsDependencies: ShowDetailsDependencies = {
     return ShowDetailsDependencies(apiDataTransferService: dependencies.apiDataTransferService,
-                                   imagesBaseURL: dependencies.imagesBaseURL)
+                                   imagesBaseURL: dependencies.imagesBaseURL,
+                                   showsPersistenceRepository: dependencies.showsPersistence)
   }()
   
   // MARK: - Life Cycle
@@ -88,7 +90,6 @@ public class SearchFlow: Flow {
   fileprivate func navigateToGenreListScreen(with id: Int) -> FlowContributors {
     let listFlow = TVShowsListFlow(rootViewController: rootViewController,
                                    dependencies: showListDependencies)
-    
     return .one(flowContributor: .contribute(
       withNextPresentable: listFlow,
       withNextStepper:

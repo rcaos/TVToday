@@ -36,7 +36,8 @@ public class AiringTodayFlow: Flow {
   
   private lazy var showDetailsDependencies: ShowDetailsDependencies = {
     return ShowDetailsDependencies(apiDataTransferService: dependencies.apiDataTransferService,
-                                   imagesBaseURL: dependencies.imagesBaseURL)
+                                   imagesBaseURL: dependencies.imagesBaseURL,
+                                   showsPersistenceRepository: dependencies.showsPersistence)
   }()
   
   // MARK: - Life Cycle

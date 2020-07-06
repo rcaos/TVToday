@@ -28,8 +28,11 @@ public class AppDIContainer {
     return ApiClient(with: configuration)
   }()
   
+  lazy var realmDataStorage: RealmDataStorage = {
+    return RealmDataStorage(maxStorageLimit: 10)
+  }()
+  
   lazy var showsPersistence: ShowsVisitedLocalRepository = {
-    let realmDataStorage = RealmDataStorage(maxStorageLimit: 5)
     let localStorage = DefaultShowsVisitedLocalStorage(realmDataStack: realmDataStorage)
     return DefaultShowsVisitedLocalRepository(showsVisitedLocalStorage: localStorage)
   }()

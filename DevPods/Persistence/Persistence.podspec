@@ -34,6 +34,9 @@ TODO: Add long description of the pod here.
   
   s.resource = 'Persistence/Module/**/*.{xcassets,json,storyboard,xib,xcdatamodeld}'
   
+  # Development pods dependencies
+  s.dependency 'Shared'
+  
   # Third Party Frameworks
   s.dependency 'RxSwift', '~> 5.0.0'
 end

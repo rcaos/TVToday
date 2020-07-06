@@ -21,6 +21,7 @@ public final class DefaultSearchLocalStorage {
 }
 
 extension DefaultSearchLocalStorage: SearchLocalStorage {
+  
   public func saveSearch(query: String, userId: Int) -> Observable<Void> {
     // Implementacion here
     return Observable.just(())

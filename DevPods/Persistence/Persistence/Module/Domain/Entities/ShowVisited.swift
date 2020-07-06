@@ -10,9 +10,9 @@ import Foundation
 
 public struct ShowVisited {
   
-  let id: Int
+  public let id: Int
   
-  let pathImage: String
+  public let pathImage: String
   
   public init(id: Int, pathImage: String) {
     self.id = id

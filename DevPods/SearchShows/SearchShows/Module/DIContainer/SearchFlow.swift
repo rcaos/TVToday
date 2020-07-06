@@ -11,6 +11,7 @@ import RxFlow
 import Networking
 import ShowDetails
 import TVShowsList
+import Persistence
 import Shared
 
 public class SearchFlow: Flow {
@@ -36,6 +37,10 @@ public class SearchFlow: Flow {
   
   private lazy var genresRepository: GenresRepository = {
     return DefaultGenreRepository(dataTransferService: dependencies.apiDataTransferService)
+  }()
+  
+  private lazy var keychainRepository: KeychainRepository = {
+    return DefaultKeychainRepository()
   }()
   
   // MARK: - Dependencies
@@ -78,7 +83,8 @@ public class SearchFlow: Flow {
     fileprivate func navigateToSearchFeature() -> FlowContributors {
       let viewModel = SearchViewModel(
         fetchGenresUseCase: makeFetchGenresUseCase(),
-        fetchTVShowsUseCase: makeSearchShowsUseCase())
+        fetchTVShowsUseCase: makeSearchShowsUseCase(),
+        fetchVisitedShowsUseCase: makeFetchVisitedShowsUseCase())
       let searchVC = SearchViewController.create(with: viewModel)
   
       rootViewController.pushViewController(searchVC, animated: true)
@@ -117,6 +123,12 @@ public class SearchFlow: Flow {
   
   private func makeSearchShowsUseCase() -> SearchTVShowsUseCase {
     return DefaultSearchTVShowsUseCase(tvShowsRepository: showsRepository)
+  }
+  
+  private func makeFetchVisitedShowsUseCase() -> FetchVisitedShowsUseCase {
+    return DefaultFetchVisitedShowsUseCase(
+      showsVisitedLocalRepository: dependencies.showsPersistence,
+      keychainRepository: keychainRepository)
   }
 }
 

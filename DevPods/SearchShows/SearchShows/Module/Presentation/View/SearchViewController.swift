@@ -11,6 +11,7 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 import Shared
+import Persistence
 
 // MARK: - TODO, handle searchUIBar reactive too
 
@@ -60,7 +61,9 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
   }
   
   func setupTable() {
+    tableView.registerNib(cellType: VisitedShowTableViewCell.self)
     tableView.registerNib(cellType: GenericViewCell.self)
+    tableView.rowHeight = UITableView.automaticDimension
   }
   
   func setupSearchBar() {
@@ -90,21 +93,31 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
       })
       .disposed(by: disposeBag)
     
-    viewModel.output.viewState
-      .map { $0.currentEntities }
-      .bind(to: tableView.rx.items(
-        cellIdentifier: GenericViewCell.dequeuIdentifier,
-        cellType: GenericViewCell.self)) { (_, element, cell) in
-        cell.title = element.name
-    }
+    let dataSource = RxTableViewSectionedReloadDataSource<SearchSectionModel>(configureCell: { [weak self] (_, _, indexPath, element) -> UITableViewCell in
+      guard let strongSelf = self else { fatalError() }
+      switch element {
+      case .showsVisited(items: let shows):
+        return strongSelf.makeCellForShowVisited(at: indexPath, element: shows)
+      case .genres(items: let genre):
+        return strongSelf.makeCellForGenre(at: indexPath, element: genre)
+      }
+    })
+    
+    viewModel.output
+      .dataSource
+      .bind(to: tableView.rx.items(dataSource: dataSource))
+      .disposed(by: disposeBag)
+    
+    tableView.rx
+    .setDelegate(self)
     .disposed(by: disposeBag)
     
     Observable
-      .zip( tableView.rx.itemSelected, tableView.rx.modelSelected(Genre.self) )
+      .zip( tableView.rx.itemSelected, tableView.rx.modelSelected(SearchSectionModel.Item.self) )
       .bind { [weak self] (indexPath, item) in
         guard let strongSelf = self else { return }
         strongSelf.tableView.deselectRow(at: indexPath, animated: true)
-        strongSelf.viewModel.navigateTo(step: SearchStep.genreIsPicked(withId: item.id) )
+        strongSelf.viewModel.modelIsPicked(with: item)
     }
     .disposed(by: disposeBag)
   }
@@ -137,6 +150,32 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
     controller.viewModel.searchShows(for: query, page: 1)
   }
   
+}
+
+// MARK: - Build Cells
+
+extension SearchViewController {
+  
+  private func makeCellForShowVisited(at indexPath: IndexPath, element: [ShowVisited]) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCell(with: VisitedShowTableViewCell.self, for: indexPath)
+    let cellViewModel = VisitedShowViewModel(shows: element)
+    cellViewModel.delegate = viewModel
+    cell.setupCell(with: cellViewModel)
+    return cell
+  }
+  
+  private func makeCellForGenre(at indexPath: IndexPath, element: Genre) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCell(with: GenericViewCell.self, for: indexPath)
+    cell.title = element.name
+    return cell
+  }
+}
+
+extension SearchViewController: UITableViewDelegate {
+  
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return indexPath.section == 0 ? 200 : UITableView.automaticDimension
+  }
 }
 
 // MARK: - UISearchResultsUpdating
@@ -174,6 +213,6 @@ extension SearchViewController: UISearchBarDelegate {
 extension SearchViewController: ResultsSearchViewControllerDelegate {
   
   func resultsSearchViewController(_ resultsSearchViewController: ResultsSearchViewController, didSelectedMovie movie: Int) {
-    viewModel.navigateTo(step: SearchStep.showIsPicked(withId: movie) )
+    viewModel.showIsPicked(with: movie)
   }
 }

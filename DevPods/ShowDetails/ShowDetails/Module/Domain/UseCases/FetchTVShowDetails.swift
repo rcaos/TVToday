@@ -46,7 +46,7 @@ public final class DefaultFetchTVShowDetailsUseCase: FetchTVShowDetailsUseCase {
       .fetchTVShowDetails(with: requestValue.identifier)
       .flatMap { details -> Observable<TVShowDetailResult>  in
         self.tvShowsVisitedRepository.saveShow(id: details.id ?? 0,
-                                               pathImage: details.backDropPath ?? "",
+                                               pathImage: details.posterPath ?? "",
                                                userId: idLogged)
           .flatMap { _ -> Observable<TVShowDetailResult> in
             return Observable.just(details)

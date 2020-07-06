@@ -60,7 +60,7 @@ final class SearchViewModel {
   }
   
   func getGenres() {
-    Observable.zip(getVisitedShows(), fetchGenres())
+    Observable.combineLatest(getVisitedShows(), fetchGenres())
       .subscribe(onNext: { [weak self] (visited, resultGenre) in
         guard let strongSelf = self else { return }
         strongSelf.processFetched(for: resultGenre)
@@ -84,7 +84,6 @@ final class SearchViewModel {
       return
     }
     viewStateObservableSubject.onNext( .populated(fetchedGenres) )
-    createSectionModel(showsVisited: [], genres: fetchedGenres)
   }
   
   fileprivate func createSectionModel(showsVisited: [ShowVisited], genres: [Genre]) {
@@ -138,7 +137,6 @@ extension SearchViewModel {
 extension SearchViewModel: VisitedShowViewModelDelegate {
   
   func visitedShowViewModel(_ visitedShowViewModel: VisitedShowViewModel, didSelectRecentlyVisitedMovie id: Int) {
-    print("Navigate to show con id: \(id)")
     showIsPicked(with: id)
   }
 }
@@ -177,3 +175,10 @@ extension SearchSectionModel: SectionModelType {
   }
 }
 
+//extension ShowVisited: IdentifiableType {
+//  public typealias Identity = Int
+//  
+//  public var identity: Int {
+//    return id
+//  }
+//}

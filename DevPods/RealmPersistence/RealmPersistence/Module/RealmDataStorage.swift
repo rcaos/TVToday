@@ -9,6 +9,10 @@
 import Foundation
 import RealmSwift
 
+protocol RealmDataStorageDelegate: class {
+  func persistenceStore(didUpdateEntity update: Bool)
+}
+
 public final class RealmDataStorage {
   
   private let maxStorageLimit: Int
@@ -22,9 +26,14 @@ public final class RealmDataStorage {
     }
   }()
   
+  private var notificationToken: NotificationToken? = nil
+  
+  weak var delegate: RealmDataStorageDelegate?
+  
   public init(maxStorageLimit: Int) {
     self.maxStorageLimit = maxStorageLimit
     print(Realm.Configuration.defaultConfiguration.fileURL!)
+    objectsDidChange()
   }
   
   // La propia entity debe asignarse sus variables
@@ -61,5 +70,17 @@ public final class RealmDataStorage {
     let allElements = fetchAllOrdered()
     let firstElements = fetchAllOrdered().prefix(keepElements)
     return allElements.filter { !firstElements.contains($0) }
+  }
+  
+  public func objectsDidChange() {
+    let results = realm?.objects(RealmShowVisited.self)
+    notificationToken = results?.observe { [weak self] (changes: RealmCollectionChange) in
+      switch changes {
+      case .update:
+        self?.delegate?.persistenceStore(didUpdateEntity: true)
+      default:
+        break
+      }
+    }
   }
 }

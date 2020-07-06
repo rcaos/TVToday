@@ -14,8 +14,11 @@ public final class DefaultShowsVisitedLocalStorage {
   
   private let realmDataStack: RealmDataStorage
   
+  private let showsVisitedSubject = BehaviorSubject<[ShowVisited]>(value: [])
+  
   public init(realmDataStack: RealmDataStorage) {
     self.realmDataStack = realmDataStack
+    self.realmDataStack.delegate = self
   }
 }
 
@@ -40,7 +43,20 @@ extension DefaultShowsVisitedLocalStorage: ShowsVisitedLocalStorage {
   }
   
   public func fetchVisitedShows() -> Observable<[ShowVisited]> {
-    return Observable.just(
-      realmDataStack.fetchAllOrdered().map { $0.asDomain() })
+    showsVisitedSubject.onNext( fetchVisitedShowList() )
+    return showsVisitedSubject.asObservable()
+  }
+  
+  fileprivate func fetchVisitedShowList() -> [ShowVisited] {
+    return realmDataStack.fetchAllOrdered().map { $0.asDomain() }
+  }
+}
+
+// MARK: - RealmDataStorageDelegate
+
+extension DefaultShowsVisitedLocalStorage: RealmDataStorageDelegate {
+  
+  func persistenceStore(didUpdateEntity update: Bool) {
+    showsVisitedSubject.onNext( fetchVisitedShowList() )
   }
 }

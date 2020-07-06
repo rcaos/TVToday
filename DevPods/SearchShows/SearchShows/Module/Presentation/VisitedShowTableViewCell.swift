@@ -31,22 +31,21 @@ class VisitedShowTableViewCell: UITableViewCell {
     if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
       layout.scrollDirection = .horizontal
     }
+  }
+  
+  func setupCell(with viewModel: VisitedShowViewModel) {
+    self.viewModel = viewModel
+    disposeBag = DisposeBag()
     
     collectionView.rx
       .setDelegate(self)
       .disposed(by: disposeBag)
-  }
-  
-  func setupCell(with viewModel: VisitedShowViewModel) {
-    guard self.viewModel == nil else { return }
-    self.viewModel = viewModel
     
     let dataSource = RxCollectionViewSectionedReloadDataSource<VisitedShowSection>(configureCell: configureCollectionViewCell())
     
     viewModel.output
       .shows
       .map { [VisitedShowSection(header: "Visited", items: $0)] }
-    .debug()
       .bind(to: collectionView.rx.items(dataSource: dataSource))
       .disposed(by: disposeBag)
     

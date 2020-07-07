@@ -1,17 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="qSm-WJ-1ps">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Search View Controller-->
+        <scene sceneID="Bik-Zj-clO">
+            <objects>
+                <viewController storyboardIdentifier="SearchViewController" id="HbM-nj-p4M" customClass="SearchViewController" customModule="SearchShows" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="KDt-0B-Laf">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nEz-1a-27i">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </containerView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="bN7-P2-GLX" firstAttribute="bottom" secondItem="nEz-1a-27i" secondAttribute="bottom" id="8AC-Ag-Itn"/>
+                            <constraint firstItem="nEz-1a-27i" firstAttribute="top" secondItem="bN7-P2-GLX" secondAttribute="top" id="HyS-x6-duQ"/>
+                            <constraint firstAttribute="trailing" secondItem="nEz-1a-27i" secondAttribute="trailing" id="iGC-yG-bHX"/>
+                            <constraint firstItem="nEz-1a-27i" firstAttribute="leading" secondItem="KDt-0B-Laf" secondAttribute="leading" id="zz7-W5-i7L"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="bN7-P2-GLX"/>
+                    </view>
+                    <connections>
+                        <outlet property="containerView" destination="nEz-1a-27i" id="Z1a-3Y-DyB"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jUW-zW-cwV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="655" y="1158"/>
+        </scene>
+        <!--Search Options View Controller-->
         <scene sceneID="VhX-1X-ADN">
             <objects>
-                <viewController id="qSm-WJ-1ps" customClass="SearchViewController" customModule="TVToday" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SearchOptionsViewController" id="qSm-WJ-1ps" customClass="SearchOptionsViewController" customModule="SearchShows" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wGz-nn-QVY">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -32,12 +61,12 @@
                     </view>
                     <navigationItem key="navigationItem" id="c7e-po-gtA"/>
                     <connections>
-                        <outlet property="tableView" destination="vr5-wd-zC4" id="Ni3-jc-1xe"/>
+                        <outlet property="tableView" destination="vr5-wd-zC4" id="pVG-uT-bMV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dnq-NN-9dn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1846" y="1173"/>
+            <point key="canvasLocation" x="1530" y="1158"/>
         </scene>
     </scenes>
 </document>

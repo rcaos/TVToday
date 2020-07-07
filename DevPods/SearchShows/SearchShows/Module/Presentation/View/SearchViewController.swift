@@ -11,27 +11,26 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 import Shared
-import Persistence
 
 // MARK: - TODO, handle searchUIBar reactive too
 
 class SearchViewController: UIViewController, StoryboardInstantiable {
   
-  @IBOutlet var tableView: UITableView!
-  var searchController: UISearchController!
+  @IBOutlet weak var containerView: UIView!
   
   private var viewModel: SearchViewModel!
-  
-  var lastSearch = ""
-  
-  var loadingView = LoadingView(frame: .zero)
-  var messageView = MessageView(frame: .zero)
+  private var searchController: UISearchController!
+  private var searchOptionsViewController: UIViewController!
   
   let disposeBag = DisposeBag()
   
-  static func create(with viewModel: SearchViewModel) -> SearchViewController {
-    let controller = SearchViewController.instantiateViewController()
+  static func create(with viewModel: SearchViewModel,
+                     searchController: UISearchController,
+                     searchOptionsViewController: UIViewController) -> SearchViewController {
+    let controller = SearchViewController.instantiateViewController(fromStoryBoard: "SearchViewController")
     controller.viewModel = viewModel
+    controller.searchController = searchController
+    controller.searchOptionsViewController = searchOptionsViewController
     return controller
   }
   
@@ -44,137 +43,31 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
   
   // MARK: - SetupView
   
-  func setupUI() {
+  private func setupUI() {
     navigationController?.navigationBar.prefersLargeTitles = false
     navigationItem.title = "Search TV Shows"
     
-    setupViews()
-    setupTable()
+    setupContainerView()
     setupSearchBar()
-    bind(to: viewModel)
-    viewModel.getGenres()
   }
   
-  func setupViews() {
-    loadingView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
-    messageView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
+  private func setupContainerView() {
+    add(asChildViewController: searchOptionsViewController,
+        containerView: containerView)
   }
   
-  func setupTable() {
-    tableView.registerNib(cellType: VisitedShowTableViewCell.self)
-    tableView.registerNib(cellType: GenericViewCell.self)
-    tableView.rowHeight = UITableView.automaticDimension
-  }
-  
-  func setupSearchBar() {
-    let resultViewModel = viewModel.buildResultsSearchViewModel()
-    let resultsController = ResultsSearchViewController(viewModel: resultViewModel)
-    
-    resultsController.delegate = self
-    
-    searchController = UISearchController(searchResultsController: resultsController)
-    searchController.searchResultsUpdater = self
+  private func setupSearchBar() {
     searchController.obscuresBackgroundDuringPresentation = false
     searchController.hidesNavigationBarDuringPresentation = false
+    
     searchController.searchBar.placeholder = "Search TV Show"
+    searchController.searchResultsUpdater = self
     searchController.searchBar.delegate = self
     
     navigationItem.searchController = searchController
     navigationItem.hidesSearchBarWhenScrolling = false
     
     definesPresentationContext = true
-  }
-  
-  func bind(to viewModel: SearchViewModel) {
-    viewModel.output.viewState
-      .subscribe(onNext: { [weak self] state in
-        guard let strongSelf = self else { return }
-        strongSelf.handleTableState(with: state)
-      })
-      .disposed(by: disposeBag)
-    
-    let dataSource = RxTableViewSectionedReloadDataSource<SearchSectionModel>(configureCell: { [weak self] (_, _, indexPath, element) -> UITableViewCell in
-      guard let strongSelf = self else { fatalError() }
-      switch element {
-      case .showsVisited(items: let shows):
-        return strongSelf.makeCellForShowVisited(at: indexPath, element: shows)
-      case .genres(items: let genre):
-        return strongSelf.makeCellForGenre(at: indexPath, element: genre)
-      }
-    })
-    
-    viewModel.output
-      .dataSource
-      .bind(to: tableView.rx.items(dataSource: dataSource))
-      .disposed(by: disposeBag)
-    
-    tableView.rx
-    .setDelegate(self)
-    .disposed(by: disposeBag)
-    
-    Observable
-      .zip( tableView.rx.itemSelected, tableView.rx.modelSelected(SearchSectionModel.Item.self) )
-      .bind { [weak self] (indexPath, item) in
-        guard let strongSelf = self else { return }
-        strongSelf.tableView.deselectRow(at: indexPath, animated: true)
-        strongSelf.viewModel.modelIsPicked(with: item)
-    }
-    .disposed(by: disposeBag)
-  }
-  
-  func handleTableState(with state: SimpleViewState<Genre>) {
-    switch state {
-    case .populated:
-      tableView.tableFooterView = nil
-      
-    case .loading, .paging:
-      tableView.tableFooterView = loadingView
-      
-    case .empty:
-      messageView.messageLabel.text = "No genres to Show"
-      tableView.tableFooterView = messageView
-      
-    case .error(let message):
-      messageView.messageLabel.text = message
-      tableView.tableFooterView = messageView
-    }
-  }
-  
-  func clearResults() {
-    guard let controller = searchController.searchResultsController as? ResultsSearchViewController else { return }
-    controller.viewModel.clearShows()
-  }
-  
-  func search(for query: String) {
-    guard let controller = searchController.searchResultsController as? ResultsSearchViewController else { return }
-    controller.viewModel.searchShows(for: query, page: 1)
-  }
-  
-}
-
-// MARK: - Build Cells
-
-extension SearchViewController {
-  
-  private func makeCellForShowVisited(at indexPath: IndexPath, element: [ShowVisited]) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(with: VisitedShowTableViewCell.self, for: indexPath)
-    let cellViewModel = VisitedShowViewModel(shows: element)
-    cellViewModel.delegate = viewModel
-    cell.setupCell(with: cellViewModel)
-    return cell
-  }
-  
-  private func makeCellForGenre(at indexPath: IndexPath, element: Genre) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(with: GenericViewCell.self, for: indexPath)
-    cell.title = element.name
-    return cell
-  }
-}
-
-extension SearchViewController: UITableViewDelegate {
-  
-  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return indexPath.section == 0 ? 200 : UITableView.automaticDimension
   }
 }
 
@@ -184,7 +77,10 @@ extension SearchViewController: UISearchResultsUpdating {
   
   func updateSearchResults(for searchController: UISearchController) {
     searchController.searchResultsController?.view.isHidden = false
-    print("mostrar las busquedas?")
+    
+    if let isEmpty = searchController.searchBar.text?.isEmpty, isEmpty {
+      viewModel.resetSearch()
+    }
   }
 }
 
@@ -194,26 +90,11 @@ extension SearchViewController: UISearchBarDelegate {
   
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
     if let query = searchBar.text {
-      
-      if query.lowercased() != lastSearch.lowercased() {
-        clearResults()
-        lastSearch = query
-        search(for: query)
-      }
+      viewModel.startSearch(with: query)
     }
   }
   
   func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-    lastSearch = ""
-    clearResults()
-  }
-}
-
-// MARK: - ResultsSearchViewControllerDelegate
-
-extension SearchViewController: ResultsSearchViewControllerDelegate {
-  
-  func resultsSearchViewController(_ resultsSearchViewController: ResultsSearchViewController, didSelectedMovie movie: Int) {
-    viewModel.showIsPicked(with: movie)
+    viewModel.resetSearch()
   }
 }

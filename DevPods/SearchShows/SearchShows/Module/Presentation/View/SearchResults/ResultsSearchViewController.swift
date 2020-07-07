@@ -12,17 +12,11 @@ import RxCocoa
 import RxDataSources
 import Shared
 
-protocol ResultsSearchViewControllerDelegate: class {
-  func resultsSearchViewController(_ resultsSearchViewController: ResultsSearchViewController, didSelectedMovie movie: Int )
-}
-
 class ResultsSearchViewController: UIViewController {
   
   let disposeBag = DisposeBag()
   
   var resultView: ResultListView = ResultListView()
-  
-  weak var delegate: ResultsSearchViewControllerDelegate?
   
   var viewModel: ResultsSearchViewModel
   
@@ -78,11 +72,6 @@ class ResultsSearchViewController: UIViewController {
     let dataSource = RxTableViewSectionedReloadDataSource<ResultSearchSectionModel>(configureCell: { [weak self] (_, tableView, indexPath, element) -> UITableViewCell in
       guard let strongSelf = self else { fatalError() }
       
-      // MARK: - TODO, call "showsObservableSubject" dont be stay here
-      //      if case .paging(let entities, let nextPage) = try? strongSelf.viewModel.viewStateObservableSubject.value(),
-      //      indexPath.row == entities.count - 1 {
-      //        strongSelf.viewModel.searchShows(for: nextPage)
-      //      }
       switch element {
       case .recentSearchs(items: let recentQuery):
         return strongSelf.makeCellForRecentSearch(tableView, at: indexPath, element: recentQuery)
@@ -116,34 +105,34 @@ class ResultsSearchViewController: UIViewController {
         guard let strongSelf = self else { return }
         
         switch element {
+          
+          // TODO, Navigate to reload Search
         case .recentSearchs :
           break
           
         case .results(let viewModel):
           strongSelf.resultView.tableView.deselectRow(at: index, animated: true)
-          strongSelf.delegate?.resultsSearchViewController(strongSelf, didSelectedMovie: viewModel.entity.id)
+          strongSelf.viewModel.showIsPicked(idShow: viewModel.entity.id)
+          
         }
       })
       .disposed(by: disposeBag)
   }
   
-  func configView(with state: SimpleViewState<TVShowCellViewModel>) {
+  func configView(with state: ResultsSearchViewModel.ViewState) {
     
     let tableView = resultView.tableView
     
     switch state {
+    case .initial :
+      tableView.tableFooterView = nil
+      tableView.separatorStyle = .singleLine
     case .populated :
       tableView.tableFooterView = nil
       tableView.separatorStyle = .singleLine
-    //tableView.reloadData()
     case .empty :
       tableView.tableFooterView = emptyView
       tableView.separatorStyle = .none
-    //tableView.reloadData()
-    case .paging :
-      tableView.tableFooterView = loadingView
-      tableView.separatorStyle = .singleLine
-    //tableView.reloadData()
     default:
       tableView.tableFooterView = loadingView
     }

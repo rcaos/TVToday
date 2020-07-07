@@ -11,18 +11,19 @@ import RxDataSources
 import Persistence
 
 protocol VisitedShowViewModelDelegate: class {
-  func visitedShowViewModel(_ visitedShowViewModel: VisitedShowViewModel, didSelectRecentlyVisitedMovie id: Int)
+  
+  func visitedShowViewModel(_ visitedShowViewModel: VisitedShowViewModel, didSelectRecentlyVisitedShow id: Int)
 }
 
 final class VisitedShowViewModel {
+  
+  weak var delegate: VisitedShowViewModelDelegate?
   
   private var showsObservableSubject: BehaviorSubject<[ShowVisited]>
   
   var input: Input
   
   var output: Output
-  
-  weak var delegate: VisitedShowViewModelDelegate?
   
   private var disposeBag = DisposeBag()
   
@@ -42,7 +43,7 @@ final class VisitedShowViewModel {
       .filter { $0 != 0 }
       .subscribe(onNext: { [weak self] showId in
         guard let strongSelf = self else { return }
-        strongSelf.delegate?.visitedShowViewModel(strongSelf, didSelectRecentlyVisitedMovie: showId)
+        strongSelf.delegate?.visitedShowViewModel(strongSelf, didSelectRecentlyVisitedShow: showId)
       })
       .disposed(by: disposeBag)
   }

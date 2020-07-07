@@ -12,34 +12,41 @@ import RxDataSources
 import Shared
 import Persistence
 
+protocol ResultsSearchViewModelDelegate: class {
+  
+  func resultsSearchViewModel(_ resultsSearchViewModel: ResultsSearchViewModel, didSelectShow idShow: Int)
+}
+
 final class ResultsSearchViewModel {
   
-  var fetchTVShowsUseCase: SearchTVShowsUseCase
+  weak var delegate: ResultsSearchViewModelDelegate?
   
-  private let fetchSearchsUseCase: FetchSearchsUseCase
+  private let fetchTVShowsUseCase: SearchTVShowsUseCase
+  
+  private let fetchRecentSearchsUseCase: FetchSearchsUseCase
   
   private let dataSourceObservableSubject = BehaviorSubject<[ResultSearchSectionModel]>(value: [])
   
-  var shows: [TVShow]
+  private var viewStateObservableSubject: BehaviorSubject<ViewState> = .init(value: .initial)
   
-  var showsCells: [TVShowCellViewModel] = []
+  private var shows: [TVShow]
   
-  var currentSearch = ""
+  private var showsCells: [TVShowCellViewModel] = []
   
-  var disposeBag = DisposeBag()
+  private var currentSearch = ""
+  
+  private var disposeBag = DisposeBag()
   
   var input: Input
   
   var output: Output
   
-  var viewStateObservableSubject: BehaviorSubject<SimpleViewState<TVShowCellViewModel>> = .init(value: .populated([]))
-  
   // MARK: - Init
   
   init(fetchTVShowsUseCase: SearchTVShowsUseCase,
-       fetchSearchsUseCase: FetchSearchsUseCase) {
+       fetchRecentSearchsUseCase: FetchSearchsUseCase) {
     self.fetchTVShowsUseCase = fetchTVShowsUseCase
-    self.fetchSearchsUseCase = fetchSearchsUseCase
+    self.fetchRecentSearchsUseCase = fetchRecentSearchsUseCase
     shows = []
     
     self.input = Input()
@@ -49,15 +56,42 @@ final class ResultsSearchViewModel {
     subscribeToSearchs()
   }
   
-  deinit {
-    print("deinit ResultsSearchViewModel")
+  // MARK: - Public
+  
+  func showIsPicked(idShow: Int) {
+    delegate?.resultsSearchViewModel(self, didSelectShow: idShow)
+  }
+  
+  // 1
+  func clearShows() {
+    shows.removeAll()
+  }
+  
+  // 2
+  func searchShows(with query: String) {
+    guard !query.isEmpty else { return }
+    
+    currentSearch = query
+    searchShows()
+  }
+  
+  // 3
+  func resetSearch() {
+    clearShows()
+    viewStateObservableSubject.onNext(.initial)
+  }
+  
+  // MARK: - Private
+  
+  private func fetchRecentsShows() -> Observable<[Search]> {
+    return fetchRecentSearchsUseCase.execute(requestValue: FetchSearchsUseCaseRequestValue())
   }
   
   private func subscribeToSearchs() {
-    fetchSearchsUseCase.execute(requestValue: FetchSearchsUseCaseRequestValue())
-      .debug()
+    viewStateObservableSubject
+      .filter { $0 == .initial }
+      .withLatestFrom(fetchRecentsShows())
       .subscribe(onNext: { [weak self] results in
-        self?.viewStateObservableSubject.onNext( .populated([]) )
         self?.createSectionModel(recentSearchs: results.map { $0.query }, resultShows: [])
       })
       .disposed(by: disposeBag)
@@ -65,36 +99,16 @@ final class ResultsSearchViewModel {
   
   // MARK: - TODO, refator the next 2 methods
   
-  func searchShows(for query: String, page: Int) {
-    guard !query.isEmpty else { return }
-    
-    currentSearch = query
-    searchShows(for: page)
-  }
-  
-  func searchShows(for page: Int) {
+  func searchShows() {
     guard !currentSearch.isEmpty else { return }
-    getShows(query: currentSearch, for: page)
+    getShows(query: currentSearch )
   }
   
-  func clearShows() {
-    viewStateObservableSubject.onNext(.populated([]))
-    shows.removeAll()
-  }
-  
-  func mapToCell(entites: [TVShow]) -> [TVShowCellViewModel] {
-    return entites.map { TVShowCellViewModel(show: $0) }
-  }
-  
-  // MARK: - Private
-  
-  private func getShows(query: String, for page: Int) {
+  private func getShows(query: String) {
     
-    if let state = try? viewStateObservableSubject.value(), state.isInitialPage {
-      viewStateObservableSubject.onNext(.loading)
-    }
+    viewStateObservableSubject.onNext(.loading)
     
-    let request = SearchTVShowsUseCaseRequestValue(query: query, page: page)
+    let request = SearchTVShowsUseCaseRequestValue(query: query, page: 1)
     
     fetchTVShowsUseCase.execute(requestValue: request)
       .subscribe(onNext: { [weak self] result in
@@ -111,25 +125,19 @@ final class ResultsSearchViewModel {
     let fetchedShows = response.results ?? []
     
     self.shows.append(contentsOf: fetchedShows)
-    
-    if self.shows.isEmpty ||
-      (fetchedShows.isEmpty && response.page == 1) {
-      viewStateObservableSubject.onNext(.empty)
-      return
-    }
-    
     let cellsShows = mapToCell(entites: shows)
     
-    // MARK: For test only, 3 pages, simulated Ended List.
-    let isEnded = response.nextPage < 4
-    
-    if response.hasMorePages && isEnded {
-      viewStateObservableSubject.onNext( .paging(cellsShows, next: response.nextPage) )
+    if self.shows.isEmpty {
+      viewStateObservableSubject.onNext(.empty)
     } else {
       viewStateObservableSubject.onNext( .populated(cellsShows) )
     }
     
     createSectionModel(recentSearchs: [], resultShows: cellsShows)
+  }
+  
+  func mapToCell(entites: [TVShow]) -> [TVShowCellViewModel] {
+    return entites.map { TVShowCellViewModel(show: $0) }
   }
   
   fileprivate func createSectionModel(recentSearchs: [String], resultShows: [TVShowCellViewModel]) {
@@ -146,13 +154,52 @@ final class ResultsSearchViewModel {
 
 extension ResultsSearchViewModel {
   
-  public struct Input {
-  }
+  public struct Input { }
   
   public struct Output {
-    let viewState: Observable<SimpleViewState<TVShowCellViewModel>>
+    let viewState: Observable<ViewState>
     let dataSource: Observable<[ResultSearchSectionModel]>
   }
+}
+
+extension ResultsSearchViewModel {
+  
+  enum ViewState: Equatable {
+    case
+    initial,
+    
+    empty,
+    
+    loading,
+    
+    populated([TVShowCellViewModel]),
+    
+    error(String)
+    
+    static func == (lhs: ResultsSearchViewModel.ViewState, rhs: ResultsSearchViewModel.ViewState) -> Bool {
+      switch (lhs, rhs) {
+        
+      case (.initial, .initial):
+        return true
+        
+      case (.empty, .empty):
+        return true
+        
+      case (.loading, .loading):
+        return true
+        
+      case (let .populated(lhsShows), let .populated(rhsShows)):
+        return lhsShows.map { $0.entity.id } == rhsShows.map { $0.entity.id }
+        
+      case (.error, .error):
+        return true
+        
+      default:
+        return false
+      }
+    }
+  }
+  
 }
 
 // MARK: - Refactor this

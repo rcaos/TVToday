@@ -9,175 +9,50 @@
 import RxSwift
 import RxFlow
 import RxRelay
-import Shared
-import Persistence
-
 import RxDataSources
 
-final class SearchViewModel {
+final class SearchViewModel: Stepper {
+  
+  var resultsViewModel: ResultsSearchViewModel
   
   var steps = PublishRelay<Step>()
   
-  private let fetchGenresUseCase: FetchGenresUseCase
-  
-  private let fetchTVShowsUseCase: SearchTVShowsUseCase
-  
-  private let fetchVisitedShowsUseCase: FetchVisitedShowsUseCase
-  
-  private let fetchSearchsUseCase: FetchSearchsUseCase
-  
-  private let viewStateObservableSubject = BehaviorSubject<SimpleViewState<Genre>>(value: .loading)
-  
-  private let dataSourceObservableSubject = BehaviorSubject<[SearchSectionModel]>(value: [])
-  
-  private let genres: [Genre] = []
-  
-  private let visitedShows: [ShowVisited] = []
-  
-  private let disposeBag = DisposeBag()
-  
-  var input: Input
-  var output: Output
-  
   // MARK: - Initializer
   
-  init(fetchGenresUseCase: FetchGenresUseCase,
-       fetchTVShowsUseCase: SearchTVShowsUseCase,
-       fetchVisitedShowsUseCase: FetchVisitedShowsUseCase,
-       fetchSearchsUseCase: FetchSearchsUseCase) {
-    self.fetchGenresUseCase = fetchGenresUseCase
-    self.fetchTVShowsUseCase = fetchTVShowsUseCase
-    self.fetchVisitedShowsUseCase = fetchVisitedShowsUseCase
-    self.fetchSearchsUseCase = fetchSearchsUseCase
-    
-    self.input = Input()
-    self.output = Output(viewState: viewStateObservableSubject.asObservable(),
-                         dataSource: dataSourceObservableSubject.asObservable())
+  init(resultsViewModel: ResultsSearchViewModel) {
+    self.resultsViewModel = resultsViewModel
   }
   
-  func getVisitedShows() -> Observable<[ShowVisited]> {
-    return fetchVisitedShowsUseCase.execute(requestValue: FetchVisitedShowsUseCaseRequestValue())
+  // MARK: - Public
+  
+  func startSearch(with text: String) {
+    guard !text.isEmpty else { return }
+    resultsViewModel.clearShows()
+    resultsViewModel.searchShows(with: text)
   }
   
-  func fetchGenres() -> Observable<GenreListResult> {
-    return fetchGenresUseCase.execute(requestValue: FetchGenresUseCaseRequestValue())
+  func resetSearch() {
+    resultsViewModel.resetSearch()
   }
   
-  func getGenres() {
-    Observable.combineLatest(getVisitedShows(), fetchGenres())
-      .subscribe(onNext: { [weak self] (visited, resultGenre) in
-        guard let strongSelf = self else { return }
-        strongSelf.processFetched(for: resultGenre)
-        strongSelf.createSectionModel(showsVisited: visited, genres: resultGenre.genres ?? [])
-        
-        }, onError: { [weak self] error in
-          guard let strongSelf = self else { return }
-          print("Error to fetch Case use \(error)")
-          strongSelf.viewStateObservableSubject.onNext( .error(error.localizedDescription) )
-      })
-      .disposed(by: disposeBag)
-  }
-  
-  // MARK: - Private
-  
-  private func processFetched(for response: GenreListResult) {
-    let fetchedGenres = response.genres ?? []
-    
-    if fetchedGenres.isEmpty {
-      viewStateObservableSubject.onNext(.empty)
-      return
-    }
-    viewStateObservableSubject.onNext( .populated(fetchedGenres) )
-  }
-  
-  fileprivate func createSectionModel(showsVisited: [ShowVisited], genres: [Genre]) {
-    let showsItems = [SearchSectionItem.showsVisited(items: showsVisited)]
-    let genresItems = genres.map { SearchSectionItem.genres(items: $0) }
-    
-    let dataSource: [SearchSectionModel] = [
-      .showsVisited(header: "Shows Visited", items: showsItems),
-      .genres(header: "Genres", items: genresItems)
-    ]
-    dataSourceObservableSubject.onNext(dataSource)
-  }
-  
-  // MARK: - Build Models
-  
-  public func buildResultsSearchViewModel() -> ResultsSearchViewModel {
-    return ResultsSearchViewModel(fetchTVShowsUseCase: fetchTVShowsUseCase,
-                                  fetchSearchsUseCase: fetchSearchsUseCase)
-  }
-}
-
-// MARK: - BaseViewModel
-
-extension SearchViewModel: BaseViewModel {
-  
-  public struct Input { }
-  
-  public struct Output {
-    let viewState: Observable<SimpleViewState<Genre>>
-    let dataSource: Observable<[SearchSectionModel]>
-  }
 }
 
 // MARK: - Stepper
 
-extension SearchViewModel {
+extension SearchViewModel: SearchOptionsViewModelDelegate {
   
-  public func modelIsPicked(with item: SearchSectionModel.Item) {
-    switch item {
-    case .genres(items: let genre):
-      steps.accept(SearchStep.genreIsPicked(withId: genre.id))
-    default:
-      break
-    }
+  func searchOptionsViewModel(_ searchOptionsViewModel: SearchOptionsViewModel, didGenrePicked idGenre: Int) {
+    steps.accept(SearchStep.genreIsPicked(withId: idGenre))
   }
   
-  public func showIsPicked(with showId: Int) {
-    steps.accept(SearchStep.showIsPicked(withId: showId))
+  func searchOptionsViewModel(_ searchOptionsViewModel: SearchOptionsViewModel, didRecentShowPicked idShow: Int) {
+    steps.accept(SearchStep.showIsPicked(withId: idShow))
   }
 }
 
-extension SearchViewModel: VisitedShowViewModelDelegate {
+extension SearchViewModel: ResultsSearchViewModelDelegate {
   
-  func visitedShowViewModel(_ visitedShowViewModel: VisitedShowViewModel, didSelectRecentlyVisitedMovie id: Int) {
-    showIsPicked(with: id)
-  }
-}
-
-// MARK: - Refactor this, move to another file
-
-enum SearchSectionModel {
-  case
-  showsVisited(header: String, items: [SearchSectionItem]),
-  genres(header: String, items: [SearchSectionItem])
-}
-
-enum SearchSectionItem {
-  case
-  showsVisited(items: [ShowVisited]),
-  genres(items: Genre)
-}
-
-extension SearchSectionModel: SectionModelType {
-  typealias Item = SearchSectionItem
-  
-  var items: [SearchSectionItem] {
-    switch self {
-    case .showsVisited(_, items: let items):
-      return items
-    case .genres(_, items: let items):
-      return items
-    }
-  }
-  
-  init(original: Self, items: [Self.Item]) {
-    switch original {
-    case .showsVisited(header: let header, items: _):
-      self = .showsVisited(header: header, items: items)
-    case .genres(header: let header, items: _):
-      self = .genres(header: header, items: items)
-    }
+  func resultsSearchViewModel(_ resultsSearchViewModel: ResultsSearchViewModel, didSelectShow idShow: Int) {
+    steps.accept(SearchStep.showIsPicked(withId: idShow))
   }
 }

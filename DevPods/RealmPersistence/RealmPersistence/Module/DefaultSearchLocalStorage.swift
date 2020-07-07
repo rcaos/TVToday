@@ -7,15 +7,14 @@
 //
 
 import RxSwift
-// import RealmSwift
-
+import RealmSwift
 import Persistence
 
 public final class DefaultSearchLocalStorage {
   
   private let realmDataStack: RealmDataStorage
   
-  init(realmDataStack: RealmDataStorage) {
+  public init(realmDataStack: RealmDataStorage) {
     self.realmDataStack = realmDataStack
   }
 }
@@ -23,11 +22,22 @@ public final class DefaultSearchLocalStorage {
 extension DefaultSearchLocalStorage: SearchLocalStorage {
   
   public func saveSearch(query: String, userId: Int) -> Observable<Void> {
-    // Implementacion here
-    return Observable.just(())
+    return Observable<()>.create { [weak self] (event) -> Disposable in
+      let disposable = Disposables.create()
+      
+      let persistEntitie = RealmSearchShow()
+      persistEntitie.query = query
+      persistEntitie.userId = userId
+      
+      self?.realmDataStack.saveQuery(entitie: persistEntitie) {
+        event.onNext(())
+        event.onCompleted()
+      }
+      return disposable
+    }
   }
   
   public func fetchSearchs() -> Observable<[Search]> {
-    return Observable.just([])
+    return Observable.just( realmDataStack.fetchAllSearchs().map { $0.asDomain() })
   }
 }

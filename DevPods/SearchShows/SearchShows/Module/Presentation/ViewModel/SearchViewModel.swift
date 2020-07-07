@@ -174,11 +174,3 @@ extension SearchSectionModel: SectionModelType {
     }
   }
 }
-
-//extension ShowVisited: IdentifiableType {
-//  public typealias Identity = Int
-//  
-//  public var identity: Int {
-//    return id
-//  }
-//}

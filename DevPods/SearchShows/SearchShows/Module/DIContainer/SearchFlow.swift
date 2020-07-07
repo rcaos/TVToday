@@ -20,8 +20,7 @@ public class SearchFlow: Flow {
   
   public var root: Presentable {
     return self.rootViewController
-  }
-  
+  }  
   private lazy var rootViewController: UINavigationController = {
     let navigationController = UINavigationController()
     return navigationController
@@ -122,7 +121,9 @@ public class SearchFlow: Flow {
   }
   
   private func makeSearchShowsUseCase() -> SearchTVShowsUseCase {
-    return DefaultSearchTVShowsUseCase(tvShowsRepository: showsRepository)
+    return DefaultSearchTVShowsUseCase(tvShowsRepository: showsRepository,
+    keychainRepository: keychainRepository,
+    searchsLocalRepository: dependencies.searchsPersistence)
   }
   
   private func makeFetchVisitedShowsUseCase() -> FetchVisitedShowsUseCase {

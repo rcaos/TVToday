@@ -17,6 +17,7 @@ class AppFlow: Flow {
     let apiDataTransferService: DataTransferService
     let appConfigurations: AppConfigurations
     let showsPersistence: ShowsVisitedLocalRepository
+    let searchsPersistence: SearchLocalRepository
   }
   
   private let dependencies: Dependencies
@@ -53,7 +54,8 @@ class AppFlow: Flow {
       SignedFlow.Dependencies(
         apiDataTransferService: dependencies.apiDataTransferService,
         appConfigurations: dependencies.appConfigurations,
-        showsPersistence: dependencies.showsPersistence))
+        showsPersistence: dependencies.showsPersistence,
+        searchsPersistence: dependencies.searchsPersistence))
     Flows.whenReady(flow1: signedFlow) { root in
       DispatchQueue.main.async {
         self.rootWindow.rootViewController = root

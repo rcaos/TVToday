@@ -39,7 +39,6 @@ final class VisitedShowViewModel {
   
   private func subscribe() {
     input.selectedShow
-    .debug()
       .filter { $0 != 0 }
       .subscribe(onNext: { [weak self] showId in
         guard let strongSelf = self else { return }

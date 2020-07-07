@@ -26,7 +26,7 @@ public final class RealmDataStorage {
     }
   }()
   
-  private var notificationToken: NotificationToken? = nil
+  private var notificationToken: NotificationToken?
   
   weak var delegate: RealmDataStorageDelegate?
   
@@ -82,5 +82,29 @@ public final class RealmDataStorage {
         break
       }
     }
+  }
+  
+  // For Searchs.
+  public func saveQuery(entitie: RealmSearchShow, completion: @escaping (() -> Void)) {
+    guard let realm = realm else {
+      completion()
+      return
+    }
+    do {
+      try realm.write {
+        realm.add(entitie, update: .modified)
+        print("Save Search: \(entitie) OK")
+        completion()
+      }
+      
+    } catch _ {
+      completion()
+    }
+  }
+  
+  public func fetchAllSearchs() -> [RealmSearchShow] {
+    guard let realm = realm else { return [] }
+    return realm.objects(RealmSearchShow.self)
+      .sorted(byKeyPath: "date", ascending: false).map { $0 }
   }
 }

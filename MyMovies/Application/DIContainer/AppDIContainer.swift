@@ -37,6 +37,11 @@ public class AppDIContainer {
     return DefaultShowsVisitedLocalRepository(showsVisitedLocalStorage: localStorage)
   }()
   
+  lazy var searchPersistence: SearchLocalRepository = {
+    let localStorage = DefaultSearchLocalStorage(realmDataStack: realmDataStorage)
+    return DefaultSearchLocalRepository(searchLocalStorage: localStorage)
+  }()
+  
   public let coordinator: FlowCoordinator!
   
   private var appFlow: AppFlow!
@@ -52,7 +57,8 @@ public class AppDIContainer {
       dependencies: AppFlow.Dependencies(
         apiDataTransferService: apiDataTransferService,
         appConfigurations: appConfigurations,
-        showsPersistence: showsPersistence))
+        showsPersistence: showsPersistence,
+        searchsPersistence: searchPersistence))
     
     // Base on some Conditions, guest, logged, etc, launch "appFlow" with "First Step"
     // AppFlow handle "Flows.whenReady"

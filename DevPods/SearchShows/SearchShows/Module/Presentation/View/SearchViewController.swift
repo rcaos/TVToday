@@ -105,7 +105,6 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
     
     viewModel.output
       .dataSource
-    .debug()
       .bind(to: tableView.rx.items(dataSource: dataSource))
       .disposed(by: disposeBag)
     

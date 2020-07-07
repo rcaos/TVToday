@@ -7,3 +7,23 @@
 
 import RxSwift
 import Persistence
+
+public final class DefaultSearchLocalRepository {
+  
+  private var searchLocalStorage: SearchLocalStorage
+  
+  public init(searchLocalStorage: SearchLocalStorage) {
+    self.searchLocalStorage = searchLocalStorage
+  }
+}
+
+extension DefaultSearchLocalRepository: SearchLocalRepository {
+  
+  public func saveSearch(query: String, userId: Int) -> Observable<Void> {
+    return searchLocalStorage.saveSearch(query: query, userId: userId)
+  }
+  
+  public func fetchSearchs() -> Observable<[Search]> {
+    return searchLocalStorage.fetchSearchs()
+  }
+}

@@ -51,7 +51,6 @@ class VisitedShowTableViewCell: UITableViewCell {
     
     collectionView.rx.modelSelected(ShowVisited.self)
       .map { $0.id }
-      .debug()
       .bind(to: viewModel.input.selectedShow)
       .disposed(by: disposeBag)
   }

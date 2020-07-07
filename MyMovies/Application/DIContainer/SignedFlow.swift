@@ -23,6 +23,7 @@ public class SignedFlow: Flow {
     let apiDataTransferService: DataTransferService
     let appConfigurations: AppConfigurations
     let showsPersistence: ShowsVisitedLocalRepository
+    let searchsPersistence: SearchLocalRepository
   }
   
   private let dependencies: Dependencies
@@ -70,7 +71,8 @@ public class SignedFlow: Flow {
       SearchShowDependencies(
         apiDataTransferService: dependencies.apiDataTransferService,
         imagesBaseURL: dependencies.appConfigurations.imagesBaseURL,
-        showsPersistence: dependencies.showsPersistence) )
+        showsPersistence: dependencies.showsPersistence,
+        searchsPersistence: dependencies.searchsPersistence) )
     
     let accountFlow = AccountFlow(dependencies:
       AccountDependencies(apiDataTransferService: dependencies.apiDataTransferService,

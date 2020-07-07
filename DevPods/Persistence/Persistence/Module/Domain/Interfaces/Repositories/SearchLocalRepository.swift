@@ -12,5 +12,5 @@ public protocol SearchLocalRepository {
   
   func saveSearch(query: String, userId: Int) -> Observable<Void>
   
-  func fetchSearchs() -> Observable<[Search]>
+  func fetchSearchs(userId: Int) -> Observable<[Search]>
 }

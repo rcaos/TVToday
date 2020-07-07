@@ -8,12 +8,18 @@
 
 import Foundation
 import RxSwift
+import RxDataSources
 import Shared
+import Persistence
 
 final class ResultsSearchViewModel {
   
   var fetchTVShowsUseCase: SearchTVShowsUseCase
-    
+  
+  private let fetchSearchsUseCase: FetchSearchsUseCase
+  
+  private let dataSourceObservableSubject = BehaviorSubject<[ResultSearchSectionModel]>(value: [])
+  
   var shows: [TVShow]
   
   var showsCells: [TVShowCellViewModel] = []
@@ -30,12 +36,31 @@ final class ResultsSearchViewModel {
   
   // MARK: - Init
   
-  init(fetchTVShowsUseCase: SearchTVShowsUseCase) {
+  init(fetchTVShowsUseCase: SearchTVShowsUseCase,
+       fetchSearchsUseCase: FetchSearchsUseCase) {
     self.fetchTVShowsUseCase = fetchTVShowsUseCase
+    self.fetchSearchsUseCase = fetchSearchsUseCase
     shows = []
     
     self.input = Input()
-    self.output = Output(viewState: viewStateObservableSubject.asObservable())
+    self.output = Output(viewState: viewStateObservableSubject.asObservable(),
+                         dataSource: dataSourceObservableSubject.asObservable())
+    
+    subscribeToSearchs()
+  }
+  
+  deinit {
+    print("deinit ResultsSearchViewModel")
+  }
+  
+  private func subscribeToSearchs() {
+    fetchSearchsUseCase.execute(requestValue: FetchSearchsUseCaseRequestValue())
+      .debug()
+      .subscribe(onNext: { [weak self] results in
+        self?.viewStateObservableSubject.onNext( .populated([]) )
+        self?.createSectionModel(recentSearchs: results.map { $0.query }, resultShows: [])
+      })
+      .disposed(by: disposeBag)
   }
   
   // MARK: - TODO, refator the next 2 methods
@@ -103,14 +128,67 @@ final class ResultsSearchViewModel {
     } else {
       viewStateObservableSubject.onNext( .populated(cellsShows) )
     }
+    
+    createSectionModel(recentSearchs: [], resultShows: cellsShows)
+  }
+  
+  fileprivate func createSectionModel(recentSearchs: [String], resultShows: [TVShowCellViewModel]) {
+    let recentSearchsItem = recentSearchs.map { ResultSearchSectionItem.recentSearchs(items: $0) }
+    let resultsShowsItem = resultShows.map { ResultSearchSectionItem.results(items: $0) }
+    
+    let dataSource: [ResultSearchSectionModel] = [
+      .recentSearchs(header: "Recent Searchs", items: recentSearchsItem),
+      .results(header: "Results Shows", items: resultsShowsItem)
+    ]
+    dataSourceObservableSubject.onNext(dataSource)
   }
 }
 
 extension ResultsSearchViewModel {
   
-  public struct Input { }
+  public struct Input {
+  }
   
   public struct Output {
     let viewState: Observable<SimpleViewState<TVShowCellViewModel>>
+    let dataSource: Observable<[ResultSearchSectionModel]>
   }
+}
+
+// MARK: - Refactor this
+
+enum ResultSearchSectionModel {
+  case
+  recentSearchs(header: String, items: [ResultSearchSectionItem]),
+  results(header: String, items: [ResultSearchSectionItem])
+}
+
+enum ResultSearchSectionItem {
+  case
+  recentSearchs(items: String),
+  results(items: TVShowCellViewModel)
+}
+
+extension ResultSearchSectionModel: SectionModelType {
+  
+  typealias Item =  ResultSearchSectionItem
+  
+  var items: [ResultSearchSectionItem] {
+    switch self {
+    case .recentSearchs(_, items: let items):
+      return items
+    case .results(_, items: let items):
+      return items
+    }
+  }
+  
+  init(original: Self, items: [Self.Item]) {
+    switch original {
+    case .recentSearchs(header: let header, items: _):
+      self = .recentSearchs(header: header, items: items)
+    case .results(header: let header, items: _):
+      self = .results(header: header, items: items)
+    }
+  }
+  
 }

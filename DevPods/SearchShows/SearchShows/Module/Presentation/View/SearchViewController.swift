@@ -184,6 +184,7 @@ extension SearchViewController: UISearchResultsUpdating {
   
   func updateSearchResults(for searchController: UISearchController) {
     searchController.searchResultsController?.view.isHidden = false
+    print("mostrar las busquedas?")
   }
 }
 

@@ -42,6 +42,8 @@ extension DefaultShowsVisitedLocalStorage: ShowsVisitedLocalStorage {
     }
   }
   
+  // MARK: - TODO, filter with userId
+  
   public func fetchVisitedShows() -> Observable<[ShowVisited]> {
     showsVisitedSubject.onNext( fetchVisitedShowList() )
     return showsVisitedSubject.asObservable()

@@ -23,7 +23,7 @@ extension DefaultSearchLocalRepository: SearchLocalRepository {
     return searchLocalStorage.saveSearch(query: query, userId: userId)
   }
   
-  public func fetchSearchs() -> Observable<[Search]> {
-    return searchLocalStorage.fetchSearchs()
+  public func fetchSearchs(userId: Int) -> Observable<[Search]> {
+    return searchLocalStorage.fetchSearchs(userId: userId)
   }
 }

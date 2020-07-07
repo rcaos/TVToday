@@ -14,8 +14,11 @@ public final class DefaultSearchLocalStorage {
   
   private let realmDataStack: RealmDataStorage
   
+  private let searchsSubject = BehaviorSubject<[Search]>(value: [])
+  
   public init(realmDataStack: RealmDataStorage) {
     self.realmDataStack = realmDataStack
+    self.realmDataStack.delegateSearchs = self
   }
 }
 
@@ -37,7 +40,21 @@ extension DefaultSearchLocalStorage: SearchLocalStorage {
     }
   }
   
-  public func fetchSearchs() -> Observable<[Search]> {
-    return Observable.just( realmDataStack.fetchAllSearchs().map { $0.asDomain() })
+  // MARK: - TODO, filter with userId
+  
+  public func fetchSearchs(userId: Int) -> Observable<[Search]> {
+    searchsSubject.onNext( fetchSearchsList() )
+    return searchsSubject.asObservable()
+  }
+  
+  fileprivate func fetchSearchsList() -> [Search] {
+    return realmDataStack.fetchAllSearchs().map { $0.asDomain() }
+  }
+}
+
+extension DefaultSearchLocalStorage: RealmDataStorageSearchsDelegate {
+  
+  func persistenceStore(didUpdateEntity update: Bool) {
+    searchsSubject.onNext( fetchSearchsList() )
   }
 }

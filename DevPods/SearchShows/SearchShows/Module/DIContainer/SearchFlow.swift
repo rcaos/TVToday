@@ -83,7 +83,8 @@ public class SearchFlow: Flow {
       let viewModel = SearchViewModel(
         fetchGenresUseCase: makeFetchGenresUseCase(),
         fetchTVShowsUseCase: makeSearchShowsUseCase(),
-        fetchVisitedShowsUseCase: makeFetchVisitedShowsUseCase())
+        fetchVisitedShowsUseCase: makeFetchVisitedShowsUseCase(),
+        fetchSearchsUseCase: makeFetchSearchsUseCase())
       let searchVC = SearchViewController.create(with: viewModel)
   
       rootViewController.pushViewController(searchVC, animated: true)
@@ -130,6 +131,11 @@ public class SearchFlow: Flow {
     return DefaultFetchVisitedShowsUseCase(
       showsVisitedLocalRepository: dependencies.showsPersistence,
       keychainRepository: keychainRepository)
+  }
+  
+  private func makeFetchSearchsUseCase() -> FetchSearchsUseCase {
+    return DefaultFetchSearchsUseCase(searchLocalRepository: dependencies.searchsPersistence,
+                                      keychainRepository: keychainRepository)
   }
 }
 

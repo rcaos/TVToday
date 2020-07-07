@@ -24,6 +24,8 @@ final class SearchViewModel {
   
   private let fetchVisitedShowsUseCase: FetchVisitedShowsUseCase
   
+  private let fetchSearchsUseCase: FetchSearchsUseCase
+  
   private let viewStateObservableSubject = BehaviorSubject<SimpleViewState<Genre>>(value: .loading)
   
   private let dataSourceObservableSubject = BehaviorSubject<[SearchSectionModel]>(value: [])
@@ -41,10 +43,12 @@ final class SearchViewModel {
   
   init(fetchGenresUseCase: FetchGenresUseCase,
        fetchTVShowsUseCase: SearchTVShowsUseCase,
-       fetchVisitedShowsUseCase: FetchVisitedShowsUseCase) {
+       fetchVisitedShowsUseCase: FetchVisitedShowsUseCase,
+       fetchSearchsUseCase: FetchSearchsUseCase) {
     self.fetchGenresUseCase = fetchGenresUseCase
     self.fetchTVShowsUseCase = fetchTVShowsUseCase
     self.fetchVisitedShowsUseCase = fetchVisitedShowsUseCase
+    self.fetchSearchsUseCase = fetchSearchsUseCase
     
     self.input = Input()
     self.output = Output(viewState: viewStateObservableSubject.asObservable(),
@@ -100,7 +104,8 @@ final class SearchViewModel {
   // MARK: - Build Models
   
   public func buildResultsSearchViewModel() -> ResultsSearchViewModel {
-    return ResultsSearchViewModel(fetchTVShowsUseCase: fetchTVShowsUseCase)
+    return ResultsSearchViewModel(fetchTVShowsUseCase: fetchTVShowsUseCase,
+                                  fetchSearchsUseCase: fetchSearchsUseCase)
   }
 }
 
@@ -140,6 +145,8 @@ extension SearchViewModel: VisitedShowViewModelDelegate {
     showIsPicked(with: id)
   }
 }
+
+// MARK: - Refactor this, move to another file
 
 enum SearchSectionModel {
   case

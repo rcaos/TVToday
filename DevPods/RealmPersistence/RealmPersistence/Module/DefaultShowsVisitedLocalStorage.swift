@@ -12,13 +12,14 @@ import Persistence
 
 public final class DefaultShowsVisitedLocalStorage {
   
-  private let realmDataStack: RealmDataStorage
+  private let store: PersistenceStore<RealmShowVisited>
   
   private let recentsShowsSubject = BehaviorSubject<Bool>(value: true)
   
   public init(realmDataStack: RealmDataStorage) {
-    self.realmDataStack = realmDataStack
-    self.realmDataStack.delegate = self
+    self.store = PersistenceStore(realmDataStack.realm)
+    self.store.subscribeToChanges()
+    self.store.delegate = self
   }
 }
 
@@ -34,17 +35,19 @@ extension DefaultShowsVisitedLocalStorage: ShowsVisitedLocalStorage {
       persistEntitie.userId = userId
       persistEntitie.pathImage = pathImage
       
-      self?.realmDataStack.saveEntitie(entitie: persistEntitie) {
+      self?.store.saveVisit(entitie: persistEntitie) {
         event.onNext(())
         event.onCompleted()
       }
+      
       return disposable
     }
   }
   
   public func fetchVisitedShows(userId: Int) -> Observable<[ShowVisited]> {
     return Observable.just(
-      realmDataStack.fetchAllOrdered(userId: userId).map { $0.asDomain() })
+      store.find(for: userId).map { $0.asDomain() }
+    )
   }
   
   public func recentVisitedShowsDidChange() -> Observable<Bool> {
@@ -54,7 +57,7 @@ extension DefaultShowsVisitedLocalStorage: ShowsVisitedLocalStorage {
 
 // MARK: - RealmDataStorageDelegate
 
-extension DefaultShowsVisitedLocalStorage: RealmDataStorageDelegate {
+extension DefaultShowsVisitedLocalStorage: PersistenceStoreDelegate {
   
   func persistenceStore(didUpdateEntity update: Bool) {
     recentsShowsSubject.onNext(update)

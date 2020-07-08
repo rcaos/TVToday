@@ -29,7 +29,7 @@ public class AppDIContainer {
   }()
   
   lazy var realmDataStorage: RealmDataStorage = {
-    return RealmDataStorage(maxStorageLimit: 10)
+    return RealmDataStorage()
   }()
   
   lazy var showsPersistence: ShowsVisitedLocalRepository = {

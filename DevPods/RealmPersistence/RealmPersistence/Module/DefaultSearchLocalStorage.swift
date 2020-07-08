@@ -12,10 +12,10 @@ import Persistence
 
 public final class DefaultSearchLocalStorage {
   
-  private let realmDataStack: RealmDataStorage
+  private let store: PersistenceStore<RealmSearchShow>
   
   public init(realmDataStack: RealmDataStorage) {
-    self.realmDataStack = realmDataStack
+    self.store = PersistenceStore(realmDataStack.realm)
   }
 }
 
@@ -29,7 +29,7 @@ extension DefaultSearchLocalStorage: SearchLocalStorage {
       persistEntitie.query = query
       persistEntitie.userId = userId
       
-      self?.realmDataStack.saveQuery(entitie: persistEntitie) {
+      self?.store.saveSearch(entitie: persistEntitie) {
         event.onNext(())
         event.onCompleted()
       }
@@ -39,6 +39,6 @@ extension DefaultSearchLocalStorage: SearchLocalStorage {
   
   public func fetchSearchs(userId: Int) -> Observable<[Search]> {
     return Observable.just(
-      realmDataStack.fetchAllSearchs(for: userId).map { $0.asDomain() })
+      store.find(for: userId).map { $0.asDomain() })
   }
 }

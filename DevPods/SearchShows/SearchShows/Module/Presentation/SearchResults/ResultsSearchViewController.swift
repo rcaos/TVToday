@@ -14,14 +14,14 @@ import Shared
 
 class ResultsSearchViewController: UIViewController {
   
-  let disposeBag = DisposeBag()
+  private let disposeBag = DisposeBag()
   
-  var resultView: ResultListView = ResultListView()
+  private var resultView: ResultListView = ResultListView()
   
-  var viewModel: ResultsSearchViewModel
+  private var viewModel: ResultsSearchViewModel
   
-  var emptyView = MessageView(message: "No results to Show")
-  var loadingView = LoadingView(frame: .zero)
+  private var emptyView = MessageView(message: "No results to Show")
+  private var loadingView = LoadingView(frame: .zero)
   
   // MARK: - Life Cycle
   
@@ -37,38 +37,49 @@ class ResultsSearchViewController: UIViewController {
   override func loadView() {
     super.loadView()
     view = resultView
-    print("loadView???")
   }
-  
-  // MARK: - Life Cycle
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
     setupViews()
-    setupTable()
+    registerCells()
     setupViewModel()
-    print("viewDidLoad???")
+    setupTable()
   }
   
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-    print("viewDidAppear")
-  }
-  
-  func setupViews() {
+  private func setupViews() {
     emptyView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
     loadingView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
   }
   
-  func setupTable() {
+  private func registerCells() {
     resultView.tableView.registerNib(cellType: TVShowViewCell.self)
     resultView.tableView.registerNib(cellType: RecentSearchTableViewCell.self)
   }
   
   // MARK: - SetupViewModel
   
-  func setupDataSource() {
+  private func setupViewModel() {
+    
+    viewModel.output
+      .viewState
+    .debug()
+      .subscribe(onNext: { [weak self] state in
+        guard let strongSelf = self else { return }
+        strongSelf.configView(with: state)
+      })
+      .disposed(by: disposeBag)
+  }
+  
+  // MARK: - Setup Table View
+  
+  private func setupTable() {
+    setupDataSource()
+    handleSelection()
+  }
+  
+  private func setupDataSource() {
     let dataSource = RxTableViewSectionedReloadDataSource<ResultSearchSectionModel>(configureCell: { [weak self] (_, tableView, indexPath, element) -> UITableViewCell in
       guard let strongSelf = self else { fatalError() }
       
@@ -86,18 +97,7 @@ class ResultsSearchViewController: UIViewController {
       .disposed(by: disposeBag)
   }
   
-  func setupViewModel() {
-    
-    viewModel.output
-      .viewState
-      .subscribe(onNext: { [weak self] state in
-        guard let strongSelf = self else { return }
-        strongSelf.configView(with: state)
-      })
-      .disposed(by: disposeBag)
-    
-    setupDataSource()
-    
+  private  func handleSelection() {
     Observable
       .zip(resultView.tableView.rx.itemSelected,
            resultView.tableView.rx.modelSelected(ResultSearchSectionItem.self))
@@ -106,9 +106,9 @@ class ResultsSearchViewController: UIViewController {
         
         switch element {
           
-          // TODO, Navigate to reload Search
-        case .recentSearchs :
-          break
+        case .recentSearchs(let query) :
+          strongSelf.resultView.tableView.deselectRow(at: index, animated: true)
+          strongSelf.viewModel.recentSearchIsPicked(query: query)
           
         case .results(let viewModel):
           strongSelf.resultView.tableView.deselectRow(at: index, animated: true)
@@ -119,8 +119,9 @@ class ResultsSearchViewController: UIViewController {
       .disposed(by: disposeBag)
   }
   
-  func configView(with state: ResultsSearchViewModel.ViewState) {
-    
+  // MARK: - Handle View State
+  
+  private func configView(with state: ResultsSearchViewModel.ViewState) {
     let tableView = resultView.tableView
     
     switch state {

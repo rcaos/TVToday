@@ -41,11 +41,11 @@ class VisitedShowTableViewCell: UITableViewCell {
       .setDelegate(self)
       .disposed(by: disposeBag)
     
-    let dataSource = RxCollectionViewSectionedReloadDataSource<VisitedShowSection>(configureCell: configureCollectionViewCell())
+    let dataSource = RxCollectionViewSectionedReloadDataSource<VisitedShowSectionModel>(configureCell: configureCollectionViewCell())
     
     viewModel.output
       .shows
-      .map { [VisitedShowSection(header: "Visited", items: $0)] }
+      .map { [VisitedShowSectionModel(header: "Visited", items: $0)] }
       .bind(to: collectionView.rx.items(dataSource: dataSource))
       .disposed(by: disposeBag)
     
@@ -55,9 +55,9 @@ class VisitedShowTableViewCell: UITableViewCell {
       .disposed(by: disposeBag)
   }
   
-  fileprivate func configureCollectionViewCell() -> CollectionViewSectionedDataSource<VisitedShowSection>.ConfigureCell {
+  fileprivate func configureCollectionViewCell() -> CollectionViewSectionedDataSource<VisitedShowSectionModel>.ConfigureCell {
     
-    let configureCell: CollectionViewSectionedDataSource<VisitedShowSection>.ConfigureCell = { dataSource, collectionView, indexPath, item in
+    let configureCell: CollectionViewSectionedDataSource<VisitedShowSectionModel>.ConfigureCell = { dataSource, collectionView, indexPath, item in
       let cell = collectionView.dequeueReusableCell(with: VisitedShowCollectionViewCell.self, for: indexPath)
       cell.setupCell(with: item.pathImage)
       return cell

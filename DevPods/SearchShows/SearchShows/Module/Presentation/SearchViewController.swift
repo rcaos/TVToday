@@ -12,8 +12,6 @@ import RxCocoa
 import RxDataSources
 import Shared
 
-// MARK: - TODO, handle searchUIBar reactive too
-
 class SearchViewController: UIViewController, StoryboardInstantiable {
   
   @IBOutlet weak var containerView: UIView!
@@ -22,7 +20,7 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
   private var searchController: UISearchController!
   private var searchOptionsViewController: UIViewController!
   
-  let disposeBag = DisposeBag()
+  private let disposeBag = DisposeBag()
   
   static func create(with viewModel: SearchViewModel,
                      searchController: UISearchController,
@@ -49,6 +47,7 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
     
     setupContainerView()
     setupSearchBar()
+    bindSearchBarText()
   }
   
   private func setupContainerView() {
@@ -68,6 +67,12 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
     navigationItem.hidesSearchBarWhenScrolling = false
     
     definesPresentationContext = true
+  }
+  
+  private func bindSearchBarText() {
+    viewModel.output.searchBarText
+      .bind(to: searchController.searchBar.rx.text)
+      .disposed(by: disposeBag)
   }
 }
 

@@ -20,10 +20,10 @@ class SearchOptionsViewController: UIViewController, StoryboardInstantiable {
   
   private var viewModel: SearchOptionsViewModel!
   
-  var loadingView = LoadingView(frame: .zero)
-  var messageView = MessageView(frame: .zero)
+  private var loadingView = LoadingView(frame: .zero)
+  private var messageView = MessageView(frame: .zero)
   
-  let disposeBag = DisposeBag()
+  private let disposeBag = DisposeBag()
   
   static func create(with viewModel: SearchOptionsViewModel) -> SearchOptionsViewController {
     let controller = SearchOptionsViewController.instantiateViewController(fromStoryBoard: "SearchViewController")
@@ -40,10 +40,10 @@ class SearchOptionsViewController: UIViewController, StoryboardInstantiable {
   }
   
   private func setupUI() {
-    
     setupViews()
+    registerCells()
+    bindViewState()
     setupTable()
-    bind(to: viewModel)
   }
   
   private func setupViews() {
@@ -51,42 +51,51 @@ class SearchOptionsViewController: UIViewController, StoryboardInstantiable {
     messageView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
   }
   
-  func setupTable() {
+  private func registerCells() {
     tableView.registerNib(cellType: VisitedShowTableViewCell.self)
     tableView.registerNib(cellType: GenericViewCell.self)
     tableView.rowHeight = UITableView.automaticDimension
   }
   
-  func bind(to viewModel: SearchOptionsViewModel) {
+  private func bindViewState() {
     viewModel.output.viewState
       .subscribe(onNext: { [weak self] state in
         guard let strongSelf = self else { return }
         strongSelf.handleTableState(with: state)
       })
       .disposed(by: disposeBag)
-    
-    let dataSource = RxTableViewSectionedReloadDataSource<SearchSectionModel>(
+  }
+  
+  private func setupTable() {
+    setupDataSource()
+    handleSelection()
+  }
+  
+  private func setupDataSource() {
+    let dataSource = RxTableViewSectionedReloadDataSource<SearchOptionsSectionModel>(
       configureCell: { [weak self] (_, _, indexPath, element) -> UITableViewCell in
-      guard let strongSelf = self else { fatalError() }
-      switch element {
-      case .showsVisited(items: let shows):
-        return strongSelf.makeCellForShowVisited(at: indexPath, element: shows)
-      case .genres(items: let genre):
-        return strongSelf.makeCellForGenre(at: indexPath, element: genre)
-      }
+        guard let strongSelf = self else { fatalError() }
+        switch element {
+        case .showsVisited(items: let shows):
+          return strongSelf.makeCellForShowVisited(at: indexPath, element: shows)
+        case .genres(items: let genre):
+          return strongSelf.makeCellForGenre(at: indexPath, element: genre)
+        }
     })
     
     viewModel.output
       .dataSource
       .bind(to: tableView.rx.items(dataSource: dataSource))
       .disposed(by: disposeBag)
-    
+  }
+  
+  private func handleSelection() {
     tableView.rx
       .setDelegate(self)
       .disposed(by: disposeBag)
     
     Observable
-      .zip( tableView.rx.itemSelected, tableView.rx.modelSelected(SearchSectionModel.Item.self) )
+      .zip( tableView.rx.itemSelected, tableView.rx.modelSelected(SearchOptionsSectionModel.Item.self) )
       .bind { [weak self] (indexPath, item) in
         guard let strongSelf = self else { return }
         strongSelf.tableView.deselectRow(at: indexPath, animated: true)
@@ -96,7 +105,8 @@ class SearchOptionsViewController: UIViewController, StoryboardInstantiable {
   }
   
   // TODO, View State, change genre
-  func handleTableState(with state: SimpleViewState<Genre>) {
+  
+  private func handleTableState(with state: SimpleViewState<Genre>) {
     switch state {
     case .populated:
       tableView.tableFooterView = nil
@@ -138,6 +148,8 @@ extension SearchOptionsViewController {
     return cell
   }
 }
+
+// MARK: - UITableViewDelegate
 
 extension SearchOptionsViewController: UITableViewDelegate {
   

@@ -6,15 +6,15 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
-import Foundation
 import RxSwift
-import RxDataSources
 import Shared
 import Persistence
 
 protocol ResultsSearchViewModelDelegate: class {
   
   func resultsSearchViewModel(_ resultsSearchViewModel: ResultsSearchViewModel, didSelectShow idShow: Int)
+  
+  func resultsSearchViewModel(_ resultsSearchViewModel: ResultsSearchViewModel, didSelectRecentSearch query: String)
 }
 
 final class ResultsSearchViewModel {
@@ -58,6 +58,10 @@ final class ResultsSearchViewModel {
   
   // MARK: - Public
   
+  func recentSearchIsPicked(query: String) {
+    delegate?.resultsSearchViewModel(self, didSelectRecentSearch: query)
+  }
+  
   func showIsPicked(idShow: Int) {
     delegate?.resultsSearchViewModel(self, didSelectShow: idShow)
   }
@@ -78,8 +82,16 @@ final class ResultsSearchViewModel {
   // 3
   func resetSearch() {
     clearShows()
+    print("reset Search")
     viewStateObservableSubject.onNext(.initial)
   }
+  
+  // MARK: - TODO, refator
+   
+   func searchShows() {
+     guard !currentSearch.isEmpty else { return }
+     getShows(query: currentSearch )
+   }
   
   // MARK: - Private
   
@@ -101,16 +113,10 @@ final class ResultsSearchViewModel {
       .disposed(by: disposeBag)
   }
   
-  // MARK: - TODO, refator the next 2 methods
-  
-  func searchShows() {
-    guard !currentSearch.isEmpty else { return }
-    getShows(query: currentSearch )
-  }
-  
   private func getShows(query: String) {
     
     viewStateObservableSubject.onNext(.loading)
+    createSectionModel(recentSearchs: [], resultShows: [])
     
     let request = SearchTVShowsUseCaseRequestValue(query: query, page: 1)
     
@@ -140,11 +146,11 @@ final class ResultsSearchViewModel {
     createSectionModel(recentSearchs: [], resultShows: cellsShows)
   }
   
-  func mapToCell(entites: [TVShow]) -> [TVShowCellViewModel] {
+  private func mapToCell(entites: [TVShow]) -> [TVShowCellViewModel] {
     return entites.map { TVShowCellViewModel(show: $0) }
   }
   
-  fileprivate func createSectionModel(recentSearchs: [String], resultShows: [TVShowCellViewModel]) {
+  private func createSectionModel(recentSearchs: [String], resultShows: [TVShowCellViewModel]) {
     let recentSearchsItem = recentSearchs.map { ResultSearchSectionItem.recentSearchs(items: $0) }
     let resultsShowsItem = resultShows.map { ResultSearchSectionItem.results(items: $0) }
     
@@ -203,43 +209,4 @@ extension ResultsSearchViewModel {
       }
     }
   }
-  
-}
-
-// MARK: - Refactor this
-
-enum ResultSearchSectionModel {
-  case
-  recentSearchs(header: String, items: [ResultSearchSectionItem]),
-  results(header: String, items: [ResultSearchSectionItem])
-}
-
-enum ResultSearchSectionItem {
-  case
-  recentSearchs(items: String),
-  results(items: TVShowCellViewModel)
-}
-
-extension ResultSearchSectionModel: SectionModelType {
-  
-  typealias Item =  ResultSearchSectionItem
-  
-  var items: [ResultSearchSectionItem] {
-    switch self {
-    case .recentSearchs(_, items: let items):
-      return items
-    case .results(_, items: let items):
-      return items
-    }
-  }
-  
-  init(original: Self, items: [Self.Item]) {
-    switch original {
-    case .recentSearchs(header: let header, items: _):
-      self = .recentSearchs(header: header, items: items)
-    case .results(header: let header, items: _):
-      self = .results(header: header, items: items)
-    }
-  }
-  
 }

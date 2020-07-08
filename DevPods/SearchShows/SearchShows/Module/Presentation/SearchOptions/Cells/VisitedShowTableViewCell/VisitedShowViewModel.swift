@@ -7,7 +7,6 @@
 
 import Foundation
 import RxSwift
-import RxDataSources
 import Persistence
 
 protocol VisitedShowViewModelDelegate: class {
@@ -56,22 +55,5 @@ extension VisitedShowViewModel {
   
   public struct Output {
     let shows: Observable<[ShowVisited]>
-  }
-}
-
-// MARK: - TODO, move
-
-struct VisitedShowSection {
-  var header: String
-  var items: [Item]
-}
-
-extension VisitedShowSection: SectionModelType {
-  
-  typealias Item = ShowVisited
-  
-  init(original: VisitedShowSection, items: [Item]) {
-    self = original
-    self.items = items
   }
 }

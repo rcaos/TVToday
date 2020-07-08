@@ -30,7 +30,7 @@ final class SearchOptionsViewModel {
   
   private let viewStateObservableSubject = BehaviorSubject<SimpleViewState<Genre>>(value: .loading)
   
-  private let dataSourceObservableSubject = BehaviorSubject<[SearchSectionModel]>(value: [])
+  private let dataSourceObservableSubject = BehaviorSubject<[SearchOptionsSectionModel]>(value: [])
   
   private let genres: [Genre] = []
   
@@ -62,7 +62,7 @@ final class SearchOptionsViewModel {
     fetchGenresAndRecentShows()
   }
   
-  public func modelIsPicked(with item: SearchSectionModel.Item) {
+  public func modelIsPicked(with item: SearchOptionsSectionModel.Item) {
     switch item {
     case .genres(items: let genreId):
       delegate?.searchOptionsViewModel(self, didGenrePicked: genreId.id)
@@ -110,16 +110,16 @@ final class SearchOptionsViewModel {
     
     if fetchedGenres.isEmpty {
       viewStateObservableSubject.onNext(.empty)
-      return
+    } else {
+      viewStateObservableSubject.onNext( .populated(fetchedGenres) )
     }
-    viewStateObservableSubject.onNext( .populated(fetchedGenres) )
   }
   
   private func createSectionModel(showsVisited: [ShowVisited], genres: [Genre]) {
     let showsItems = [SearchSectionItem.showsVisited(items: showsVisited)]
     let genresItems = genres.map { SearchSectionItem.genres(items: $0) }
     
-    let dataSource: [SearchSectionModel] = [
+    let dataSource: [SearchOptionsSectionModel] = [
       .showsVisited(header: "Shows Visited", items: showsItems),
       .genres(header: "Genres", items: genresItems)
     ]
@@ -135,7 +135,7 @@ extension SearchOptionsViewModel {
   
   public struct Output {
     let viewState: Observable<SimpleViewState<Genre>>
-    let dataSource: Observable<[SearchSectionModel]>
+    let dataSource: Observable<[SearchOptionsSectionModel]>
   }
 }
 
@@ -145,41 +145,5 @@ extension SearchOptionsViewModel: VisitedShowViewModelDelegate {
   
   func visitedShowViewModel(_ visitedShowViewModel: VisitedShowViewModel, didSelectRecentlyVisitedShow id: Int) {
     delegate?.searchOptionsViewModel(self, didRecentShowPicked: id)
-  }
-}
-
-// MARK: - Refactor this, move to another file
-
-enum SearchSectionModel {
-  case
-  showsVisited(header: String, items: [SearchSectionItem]),
-  genres(header: String, items: [SearchSectionItem])
-}
-
-enum SearchSectionItem {
-  case
-  showsVisited(items: [ShowVisited]),
-  genres(items: Genre)
-}
-
-extension SearchSectionModel: SectionModelType {
-  typealias Item = SearchSectionItem
-  
-  var items: [SearchSectionItem] {
-    switch self {
-    case .showsVisited(_, items: let items):
-      return items
-    case .genres(_, items: let items):
-      return items
-    }
-  }
-  
-  init(original: Self, items: [Self.Item]) {
-    switch original {
-    case .showsVisited(header: let header, items: _):
-      self = .showsVisited(header: header, items: items)
-    case .genres(header: let header, items: _):
-      self = .genres(header: header, items: items)
-    }
   }
 }

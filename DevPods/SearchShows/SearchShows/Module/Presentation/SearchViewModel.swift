@@ -13,14 +13,22 @@ import RxDataSources
 
 final class SearchViewModel: Stepper {
   
-  var resultsViewModel: ResultsSearchViewModel
+  private var resultsViewModel: ResultsSearchViewModel
   
   var steps = PublishRelay<Step>()
+  
+  private var searchBarTextSubject: BehaviorSubject<String> = .init(value: "")
+  
+  var input: Input
+  
+  var output: Output
   
   // MARK: - Initializer
   
   init(resultsViewModel: ResultsSearchViewModel) {
     self.resultsViewModel = resultsViewModel
+    self.input = Input()
+    self.output = Output(searchBarText: searchBarTextSubject.asObservable())
   }
   
   // MARK: - Public
@@ -34,7 +42,15 @@ final class SearchViewModel: Stepper {
   func resetSearch() {
     resultsViewModel.resetSearch()
   }
+}
+
+extension SearchViewModel {
   
+  public struct Input { }
+  
+  public struct Output {
+    let searchBarText: Observable<String>
+  }
 }
 
 // MARK: - Stepper
@@ -54,5 +70,10 @@ extension SearchViewModel: ResultsSearchViewModelDelegate {
   
   func resultsSearchViewModel(_ resultsSearchViewModel: ResultsSearchViewModel, didSelectShow idShow: Int) {
     steps.accept(SearchStep.showIsPicked(withId: idShow))
+  }
+  
+  func resultsSearchViewModel(_ resultsSearchViewModel: ResultsSearchViewModel, didSelectRecentSearch query: String) {
+    searchBarTextSubject.onNext(query)
+    startSearch(with: query)
   }
 }

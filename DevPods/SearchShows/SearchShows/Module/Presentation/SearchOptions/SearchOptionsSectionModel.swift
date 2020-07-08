@@ -6,7 +6,6 @@
 //
 
 import RxDataSources
-import Persistence
 import Shared
 
 enum SearchOptionsSectionModel {
@@ -26,7 +25,7 @@ enum SearchOptionsSectionModel {
 
 enum SearchSectionItem {
   case
-  showsVisited(items: [ShowVisited]),
+  showsVisited(items: VisitedShowViewModel),
   genres(items: Genre)
 }
 

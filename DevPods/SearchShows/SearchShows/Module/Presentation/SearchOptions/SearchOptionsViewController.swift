@@ -11,9 +11,6 @@ import RxCocoa
 import RxDataSources
 import Shared
 
-// TODO, al eliminar entidad, elimino este Module
-import Persistence
-
 class SearchOptionsViewController: UIViewController, StoryboardInstantiable {
   
   @IBOutlet var tableView: UITableView!
@@ -76,8 +73,8 @@ class SearchOptionsViewController: UIViewController, StoryboardInstantiable {
       configureCell: { [weak self] (_, _, indexPath, element) -> UITableViewCell in
         guard let strongSelf = self else { fatalError() }
         switch element {
-        case .showsVisited(items: let shows):
-          return strongSelf.makeCellForShowVisited(at: indexPath, element: shows)
+        case .showsVisited(items: let viewModel):
+          return strongSelf.makeCellForShowVisited(at: indexPath, cellViewModel: viewModel)
         case .genres(items: let genre):
           return strongSelf.makeCellForGenre(at: indexPath, element: genre)
         }
@@ -103,8 +100,6 @@ class SearchOptionsViewController: UIViewController, StoryboardInstantiable {
     }
     .disposed(by: disposeBag)
   }
-  
-  // TODO, View State, change genre
   
   private func handleTableState(with state: SimpleViewState<Genre>) {
     switch state {
@@ -132,11 +127,8 @@ extension SearchOptionsViewController {
   
   // TODO, no debería pasar una Entidad, si no un ViewModel
   
-  private func makeCellForShowVisited(at indexPath: IndexPath, element: [ShowVisited]) -> UITableViewCell {
+  private func makeCellForShowVisited(at indexPath: IndexPath, cellViewModel: VisitedShowViewModel) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: VisitedShowTableViewCell.self, for: indexPath)
-    let cellViewModel = VisitedShowViewModel(shows: element)
-    
-    // MARK: - TODO
     cellViewModel.delegate = viewModel
     cell.setupCell(with: cellViewModel)
     return cell

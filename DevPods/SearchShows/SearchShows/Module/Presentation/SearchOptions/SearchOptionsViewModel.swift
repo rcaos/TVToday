@@ -122,8 +122,8 @@ final class SearchOptionsViewModel {
     
     var dataSource: [SearchOptionsSectionModel] = []
     
-    if !showsSectionItem.isEmpty {
-      dataSource.append(.showsVisited(items: showsSectionItem))
+    if let recentShowsSection = showsSectionItem {
+      dataSource.append(.showsVisited(items: [recentShowsSection]))
     }
     if !genresSectionItem.isEmpty {
       dataSource.append(.genres(items: genresSectionItem))
@@ -132,10 +132,10 @@ final class SearchOptionsViewModel {
     dataSourceObservableSubject.onNext(dataSource)
   }
   
-  private func mapRecentShowsToSectionItem(recentsShows: [ShowVisited]) -> [SearchSectionItem] {
+  private func mapRecentShowsToSectionItem(recentsShows: [ShowVisited]) -> SearchSectionItem? {
     return recentsShows.isEmpty ?
-      [] :
-      [.showsVisited(items: recentsShows)]
+      nil :
+      .showsVisited(items: VisitedShowViewModel(shows: recentsShows))
   }
 }
 

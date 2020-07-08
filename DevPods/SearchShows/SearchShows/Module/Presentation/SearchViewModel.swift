@@ -34,8 +34,6 @@ final class SearchViewModel: Stepper {
   // MARK: - Public
   
   func startSearch(with text: String) {
-    guard !text.isEmpty else { return }
-    resultsViewModel.clearShows()
     resultsViewModel.searchShows(with: text)
   }
   

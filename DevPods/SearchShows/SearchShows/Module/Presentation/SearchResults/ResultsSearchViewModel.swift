@@ -27,13 +27,9 @@ final class ResultsSearchViewModel {
   
   private let dataSourceObservableSubject = BehaviorSubject<[ResultSearchSectionModel]>(value: [])
   
+  private var currentSearchSubject = BehaviorSubject<String>(value: "")
+  
   private var viewStateObservableSubject: BehaviorSubject<ViewState> = .init(value: .initial)
-  
-  private var shows: [TVShow]
-  
-  private var showsCells: [TVShowCellViewModel] = []
-  
-  private var currentSearch = ""
   
   private var disposeBag = DisposeBag()
   
@@ -47,16 +43,24 @@ final class ResultsSearchViewModel {
        fetchRecentSearchsUseCase: FetchSearchsUseCase) {
     self.fetchTVShowsUseCase = fetchTVShowsUseCase
     self.fetchRecentSearchsUseCase = fetchRecentSearchsUseCase
-    shows = []
     
     self.input = Input()
     self.output = Output(viewState: viewStateObservableSubject.asObservable(),
                          dataSource: dataSourceObservableSubject.asObservable())
     
-    subscribeToSearchs()
+    subscribeToRecentsShowsChange()
+    subscribeToSearchInput()
   }
   
   // MARK: - Public
+  
+  func searchShows(with query: String) {
+    currentSearchSubject.onNext(query)
+  }
+  
+  func resetSearch() {
+    viewStateObservableSubject.onNext(.initial)
+  }
   
   func recentSearchIsPicked(query: String) {
     delegate?.resultsSearchViewModel(self, didSelectRecentSearch: query)
@@ -66,39 +70,23 @@ final class ResultsSearchViewModel {
     delegate?.resultsSearchViewModel(self, didSelectShow: idShow)
   }
   
-  // 1
-  func clearShows() {
-    shows.removeAll()
-  }
-  
-  // 2
-  func searchShows(with query: String) {
-    guard !query.isEmpty else { return }
-    
-    currentSearch = query
-    searchShows()
-  }
-  
-  // 3
-  func resetSearch() {
-    clearShows()
-    viewStateObservableSubject.onNext(.initial)
-  }
-  
-  // MARK: - TODO, refator
-   
-   func searchShows() {
-     guard !currentSearch.isEmpty else { return }
-     getShows(query: currentSearch )
-   }
-  
   // MARK: - Private
+  
+  private func subscribeToSearchInput() {
+    currentSearchSubject
+      .filter { !$0.isEmpty }
+      .subscribe(onNext: { [weak self] query in
+        guard let strongSelf = self else { return }
+        strongSelf.fetchShows(with: query)
+      })
+      .disposed(by: disposeBag)
+  }
   
   private func fetchRecentsShows() -> Observable<[Search]> {
     return fetchRecentSearchsUseCase.execute(requestValue: FetchSearchsUseCaseRequestValue())
   }
   
-  private func subscribeToSearchs() {
+  private func subscribeToRecentsShowsChange() {
     viewStateObservableSubject
       .distinctUntilChanged()
       .filter { $0 == .initial }
@@ -112,7 +100,7 @@ final class ResultsSearchViewModel {
       .disposed(by: disposeBag)
   }
   
-  private func getShows(query: String) {
+  private func fetchShows(with query: String) {
     
     viewStateObservableSubject.onNext(.loading)
     createSectionModel(recentSearchs: [], resultShows: [])
@@ -133,20 +121,15 @@ final class ResultsSearchViewModel {
   private func processFetched(for response: TVShowResult) {
     let fetchedShows = response.results ?? []
     
-    self.shows.append(contentsOf: fetchedShows)
-    let cellsShows = mapToCell(entites: shows)
+    let cellShows = fetchedShows.map { TVShowCellViewModel(show: $0) }
     
-    if self.shows.isEmpty {
-      viewStateObservableSubject.onNext(.empty)
+    if cellShows.isEmpty {
+      viewStateObservableSubject.onNext( .empty )
     } else {
-      viewStateObservableSubject.onNext( .populated(cellsShows) )
+      viewStateObservableSubject.onNext( .populated(cellShows) )
     }
     
-    createSectionModel(recentSearchs: [], resultShows: cellsShows)
-  }
-  
-  private func mapToCell(entites: [TVShow]) -> [TVShowCellViewModel] {
-    return entites.map { TVShowCellViewModel(show: $0) }
+    createSectionModel(recentSearchs: [], resultShows: cellShows)
   }
   
   private func createSectionModel(recentSearchs: [String], resultShows: [TVShowCellViewModel]) {

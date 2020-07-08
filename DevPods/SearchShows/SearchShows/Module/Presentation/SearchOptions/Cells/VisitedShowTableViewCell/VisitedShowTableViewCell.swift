@@ -18,11 +18,22 @@ class VisitedShowTableViewCell: UITableViewCell {
   
   private var disposeBag = DisposeBag()
   
+  private var preferredWidth: CGFloat = 100.0
+  private var preferredHeight: CGFloat = 170.0
+  
   // MARK: - Life Cycle
   
   override func awakeFromNib() {
     super.awakeFromNib()
     setupUI()
+  }
+  
+  override func systemLayoutSizeFitting(_ targetSize: CGSize,
+                                        withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority,
+                                        verticalFittingPriority: UILayoutPriority) -> CGSize {
+    collectionView.layoutIfNeeded()
+    collectionView.frame = CGRect(x: 0, y: 0, width: targetSize.width, height: preferredHeight)
+    return collectionView.collectionViewLayout.collectionViewContentSize
   }
   
   private func setupUI() {
@@ -73,15 +84,12 @@ extension VisitedShowTableViewCell: UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView,
                       layout collectionViewLayout: UICollectionViewLayout,
                       sizeForItemAt indexPath: IndexPath) -> CGSize {
-    return CGSize(width: 100, height: 200)
+    return CGSize(width: preferredWidth, height: preferredHeight)
   }
   
   func collectionView(_ collectionView: UICollectionView,
                       layout collectionViewLayout: UICollectionViewLayout,
                       insetForSectionAt section: Int) -> UIEdgeInsets {
-    let height = collectionView.layer.frame.height
-    let insetTop = (height - 50) / 2
-    
-    return UIEdgeInsets(top: insetTop, left: 8, bottom: insetTop, right: 0)
+    return UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 0)
   }
 }

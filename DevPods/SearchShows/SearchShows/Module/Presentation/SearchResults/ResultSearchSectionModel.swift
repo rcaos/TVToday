@@ -10,8 +10,17 @@ import Shared
 
 enum ResultSearchSectionModel {
   case
-  recentSearchs(header: String, items: [ResultSearchSectionItem]),
-  results(header: String, items: [ResultSearchSectionItem])
+  recentSearchs(items: [ResultSearchSectionItem]),
+  results(items: [ResultSearchSectionItem])
+  
+  func getHeader() -> String? {
+    switch self {
+    case .recentSearchs:
+      return "Recent Searchs"
+    case .results:
+      return nil
+    }
+  }
 }
 
 enum ResultSearchSectionItem {
@@ -26,20 +35,19 @@ extension ResultSearchSectionModel: SectionModelType {
   
   var items: [ResultSearchSectionItem] {
     switch self {
-    case .recentSearchs(_, items: let items):
+    case .recentSearchs(items: let items):
       return items
-    case .results(_, items: let items):
+    case .results(items: let items):
       return items
     }
   }
   
   init(original: Self, items: [Self.Item]) {
     switch original {
-    case .recentSearchs(header: let header, items: _):
-      self = .recentSearchs(header: header, items: items)
-    case .results(header: let header, items: _):
-      self = .results(header: header, items: items)
+    case .recentSearchs:
+      self = .recentSearchs(items: items)
+    case .results:
+      self = .results(items: items)
     }
   }
-  
 }

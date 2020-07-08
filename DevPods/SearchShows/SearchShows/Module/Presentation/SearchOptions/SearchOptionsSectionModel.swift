@@ -11,8 +11,17 @@ import Shared
 
 enum SearchOptionsSectionModel {
   case
-  showsVisited(header: String, items: [SearchSectionItem]),
-  genres(header: String, items: [SearchSectionItem])
+  showsVisited(items: [SearchSectionItem]),
+  genres(items: [SearchSectionItem])
+  
+  func getHeader() -> String? {
+    switch self {
+    case .showsVisited:
+      return "Recently TVShows Visited"
+    case .genres:
+      return "TVShows Genres"
+    }
+  }
 }
 
 enum SearchSectionItem {
@@ -26,19 +35,19 @@ extension SearchOptionsSectionModel: SectionModelType {
   
   var items: [SearchSectionItem] {
     switch self {
-    case .showsVisited(_, items: let items):
+    case .showsVisited(let items):
       return items
-    case .genres(_, items: let items):
+    case .genres(let items):
       return items
     }
   }
   
   init(original: Self, items: [Self.Item]) {
     switch original {
-    case .showsVisited(header: let header, items: _):
-      self = .showsVisited(header: header, items: items)
-    case .genres(header: let header, items: _):
-      self = .genres(header: header, items: items)
+    case .showsVisited:
+      self = .showsVisited(items: items)
+    case .genres:
+      self = .genres(items: items)
     }
   }
 }

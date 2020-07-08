@@ -82,7 +82,6 @@ final class ResultsSearchViewModel {
   // 3
   func resetSearch() {
     clearShows()
-    print("reset Search")
     viewStateObservableSubject.onNext(.initial)
   }
   
@@ -154,10 +153,16 @@ final class ResultsSearchViewModel {
     let recentSearchsItem = recentSearchs.map { ResultSearchSectionItem.recentSearchs(items: $0) }
     let resultsShowsItem = resultShows.map { ResultSearchSectionItem.results(items: $0) }
     
-    let dataSource: [ResultSearchSectionModel] = [
-      .recentSearchs(header: "Recent Searchs", items: recentSearchsItem),
-      .results(header: "Results Shows", items: resultsShowsItem)
-    ]
+    var dataSource: [ResultSearchSectionModel] = []
+    
+    if !recentSearchsItem.isEmpty {
+      dataSource.append(.recentSearchs(items: recentSearchsItem))
+    }
+    
+    if !resultsShowsItem.isEmpty {
+      dataSource.append(.results(items: resultsShowsItem))
+    }
+    
     dataSourceObservableSubject.onNext(dataSource)
   }
 }

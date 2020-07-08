@@ -64,7 +64,6 @@ class ResultsSearchViewController: UIViewController {
     
     viewModel.output
       .viewState
-    .debug()
       .subscribe(onNext: { [weak self] state in
         guard let strongSelf = self else { return }
         strongSelf.configView(with: state)
@@ -90,6 +89,10 @@ class ResultsSearchViewController: UIViewController {
         return strongSelf.makeCellForResultSearch(tableView, at: indexPath, element: showViewModel)
       }
     })
+    
+    dataSource.titleForHeaderInSection = { dataSource, section in
+      return dataSource.sectionModels[section].getHeader()
+    }
     
     viewModel.output
       .dataSource
@@ -129,6 +132,7 @@ class ResultsSearchViewController: UIViewController {
       tableView.tableFooterView = nil
       tableView.separatorStyle = .singleLine
     case .populated :
+      tableView.tableHeaderView = nil
       tableView.tableFooterView = nil
       tableView.separatorStyle = .singleLine
     case .empty :

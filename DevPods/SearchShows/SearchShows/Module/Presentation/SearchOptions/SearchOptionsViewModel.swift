@@ -116,14 +116,26 @@ final class SearchOptionsViewModel {
   }
   
   private func createSectionModel(showsVisited: [ShowVisited], genres: [Genre]) {
-    let showsItems = [SearchSectionItem.showsVisited(items: showsVisited)]
-    let genresItems = genres.map { SearchSectionItem.genres(items: $0) }
     
-    let dataSource: [SearchOptionsSectionModel] = [
-      .showsVisited(header: "Shows Visited", items: showsItems),
-      .genres(header: "Genres", items: genresItems)
-    ]
+    let showsSectionItem = mapRecentShowsToSectionItem(recentsShows: showsVisited)
+    let genresSectionItem = genres.map { SearchSectionItem.genres(items: $0) }
+    
+    var dataSource: [SearchOptionsSectionModel] = []
+    
+    if !showsSectionItem.isEmpty {
+      dataSource.append(.showsVisited(items: showsSectionItem))
+    }
+    if !genresSectionItem.isEmpty {
+      dataSource.append(.genres(items: genresSectionItem))
+    }
+    
     dataSourceObservableSubject.onNext(dataSource)
+  }
+  
+  private func mapRecentShowsToSectionItem(recentsShows: [ShowVisited]) -> [SearchSectionItem] {
+    return recentsShows.isEmpty ?
+      [] :
+      [.showsVisited(items: recentsShows)]
   }
 }
 

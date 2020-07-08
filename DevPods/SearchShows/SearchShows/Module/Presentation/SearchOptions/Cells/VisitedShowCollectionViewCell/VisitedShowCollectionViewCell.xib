@@ -11,29 +11,29 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="VisitedShowCollectionViewCell" customModule="SearchShows" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="209" height="250"/>
+            <rect key="frame" x="0.0" y="0.0" width="209" height="235"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="209" height="250"/>
+                <rect key="frame" x="0.0" y="0.0" width="209" height="235"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1rr-hN-yR4">
-                        <rect key="frame" x="0.0" y="0.0" width="209" height="250"/>
+                        <rect key="frame" x="0.0" y="0.0" width="209" height="235"/>
                     </imageView>
                 </subviews>
             </view>
             <constraints>
                 <constraint firstItem="1rr-hN-yR4" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="9Xf-6o-lah"/>
                 <constraint firstAttribute="trailing" secondItem="1rr-hN-yR4" secondAttribute="trailing" id="CDp-Bm-FOO"/>
-                <constraint firstAttribute="bottom" secondItem="1rr-hN-yR4" secondAttribute="bottom" id="bkT-hl-oKj"/>
-                <constraint firstItem="1rr-hN-yR4" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="mq8-2H-01z"/>
+                <constraint firstItem="1rr-hN-yR4" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="Kpk-Ew-npt"/>
+                <constraint firstAttribute="bottom" secondItem="1rr-hN-yR4" secondAttribute="bottom" id="a2i-oU-f3G"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
-            <size key="customSize" width="209" height="250"/>
+            <size key="customSize" width="209" height="235"/>
             <connections>
                 <outlet property="visitedImageView" destination="1rr-hN-yR4" id="mFa-Ey-WfB"/>
             </connections>
-            <point key="canvasLocation" x="-158.69565217391306" y="113.16964285714285"/>
+            <point key="canvasLocation" x="-158.69565217391306" y="108.14732142857143"/>
         </collectionViewCell>
     </objects>
 </document>

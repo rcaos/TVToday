@@ -83,6 +83,10 @@ class SearchOptionsViewController: UIViewController, StoryboardInstantiable {
         }
     })
     
+    dataSource.titleForHeaderInSection = { dataSource, section in
+      return dataSource.sectionModels[section].getHeader()
+    }
+    
     viewModel.output
       .dataSource
       .bind(to: tableView.rx.items(dataSource: dataSource))
@@ -90,10 +94,6 @@ class SearchOptionsViewController: UIViewController, StoryboardInstantiable {
   }
   
   private func handleSelection() {
-    tableView.rx
-      .setDelegate(self)
-      .disposed(by: disposeBag)
-    
     Observable
       .zip( tableView.rx.itemSelected, tableView.rx.modelSelected(SearchOptionsSectionModel.Item.self) )
       .bind { [weak self] (indexPath, item) in
@@ -146,14 +146,5 @@ extension SearchOptionsViewController {
     let cell = tableView.dequeueReusableCell(with: GenericViewCell.self, for: indexPath)
     cell.title = element.name
     return cell
-  }
-}
-
-// MARK: - UITableViewDelegate
-
-extension SearchOptionsViewController: UITableViewDelegate {
-  
-  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return indexPath.section == 0 ? 200 : UITableView.automaticDimension
   }
 }

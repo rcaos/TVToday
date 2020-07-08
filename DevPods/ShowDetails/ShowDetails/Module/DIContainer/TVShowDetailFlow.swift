@@ -10,6 +10,7 @@ import Foundation
 import RxFlow
 import Networking
 import Shared
+import Persistence
 
 public class TVShowDetailFlow: Flow {
   
@@ -106,7 +107,9 @@ public class TVShowDetailFlow: Flow {
   // MARK: - Uses Cases
   
   private func makeFetchShowDetailsUseCase() -> FetchTVShowDetailsUseCase {
-    return DefaultFetchTVShowDetailsUseCase(tvShowsRepository: tvShowsRepository)
+    return DefaultFetchTVShowDetailsUseCase(tvShowsRepository: tvShowsRepository,
+                                            keychainRepository: keychainRepository,
+                                            tvShowsVisitedRepository: dependencies.showsPersistenceRepository)
   }
   
   private func makeFetchEpisodesUseCase() -> FetchEpisodesUseCase {

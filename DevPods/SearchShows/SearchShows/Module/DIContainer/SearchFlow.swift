@@ -11,6 +11,7 @@ import RxFlow
 import Networking
 import ShowDetails
 import TVShowsList
+import Persistence
 import Shared
 
 public class SearchFlow: Flow {
@@ -19,8 +20,7 @@ public class SearchFlow: Flow {
   
   public var root: Presentable {
     return self.rootViewController
-  }
-  
+  }  
   private lazy var rootViewController: UINavigationController = {
     let navigationController = UINavigationController()
     return navigationController
@@ -38,15 +38,21 @@ public class SearchFlow: Flow {
     return DefaultGenreRepository(dataTransferService: dependencies.apiDataTransferService)
   }()
   
+  private lazy var keychainRepository: KeychainRepository = {
+    return DefaultKeychainRepository()
+  }()
+  
   // MARK: - Dependencies
   private lazy var showListDependencies: ShowListDependencies = {
     return ShowListDependencies(apiDataTransferService: dependencies.apiDataTransferService,
-                                imagesBaseURL: dependencies.imagesBaseURL)
+                                imagesBaseURL: dependencies.imagesBaseURL,
+                                showsPersistence: dependencies.showsPersistence)
   }()
   
   private lazy var showDetailsDependencies: ShowDetailsDependencies = {
     return ShowDetailsDependencies(apiDataTransferService: dependencies.apiDataTransferService,
-                                   imagesBaseURL: dependencies.imagesBaseURL)
+                                   imagesBaseURL: dependencies.imagesBaseURL,
+                                   showsPersistenceRepository: dependencies.showsPersistence)
   }()
   
   // MARK: - Life Cycle
@@ -73,22 +79,49 @@ public class SearchFlow: Flow {
     }
   }
   
-    fileprivate func navigateToSearchFeature() -> FlowContributors {
-      let viewModel = SearchViewModel(
-        fetchGenresUseCase: makeFetchGenresUseCase(),
-        fetchTVShowsUseCase: makeSearchShowsUseCase())
-      let searchVC = SearchViewController.create(with: viewModel)
+  // MARK: - Main Search Screen
   
-      rootViewController.pushViewController(searchVC, animated: true)
+  fileprivate func navigateToSearchFeature() -> FlowContributors {
+    let resultsSearchViewModel = buildResultsViewModel()
+    
+    let viewModel = SearchViewModel(resultsViewModel: resultsSearchViewModel)
+    resultsSearchViewModel.delegate = viewModel
+    
+    let searchVC = SearchViewController.create(with: viewModel,
+                                               searchController: buildSearchController(with: resultsSearchViewModel),
+                                               searchOptionsViewController: buildSearchOptionsController(with: viewModel))
+    
+    rootViewController.pushViewController(searchVC, animated: true)
+    
+    return .one(flowContributor: .contribute(
+      withNextPresentable: searchVC, withNextStepper: viewModel))
+  }
   
-      return .one(flowContributor: .contribute(
-        withNextPresentable: searchVC, withNextStepper: viewModel))
-    }
+  fileprivate func buildResultsViewModel() -> ResultsSearchViewModel {
+    return ResultsSearchViewModel(fetchTVShowsUseCase: makeSearchShowsUseCase(),
+                                  fetchRecentSearchsUseCase: makeFetchSearchsUseCase())
+  }
+  
+  fileprivate func buildSearchController(with viewModel: ResultsSearchViewModel) -> UISearchController {
+    let resultsController = ResultsSearchViewController(viewModel: viewModel)
+    let searchController = UISearchController(searchResultsController: resultsController)
+    return searchController
+  }
+  
+  fileprivate func buildSearchOptionsController(with delegate: SearchOptionsViewModelDelegate) -> UIViewController {
+    let viewModel = SearchOptionsViewModel(fetchGenresUseCase: makeFetchGenresUseCase(),
+                                           fetchVisitedShowsUseCase: makeFetchVisitedShowsUseCase(),
+                                           recentVisitedShowsDidChange: makeRecentShowsDidChangedUseCase())
+    viewModel.delegate = delegate
+    let viewController = SearchOptionsViewController.create(with: viewModel)
+    return viewController
+  }
+  
+  // MARK: - Navigate to List by Genre
   
   fileprivate func navigateToGenreListScreen(with id: Int) -> FlowContributors {
     let listFlow = TVShowsListFlow(rootViewController: rootViewController,
                                    dependencies: showListDependencies)
-    
     return .one(flowContributor: .contribute(
       withNextPresentable: listFlow,
       withNextStepper:
@@ -115,7 +148,24 @@ public class SearchFlow: Flow {
   }
   
   private func makeSearchShowsUseCase() -> SearchTVShowsUseCase {
-    return DefaultSearchTVShowsUseCase(tvShowsRepository: showsRepository)
+    return DefaultSearchTVShowsUseCase(tvShowsRepository: showsRepository,
+                                       keychainRepository: keychainRepository,
+                                       searchsLocalRepository: dependencies.searchsPersistence)
+  }
+  
+  private func makeFetchVisitedShowsUseCase() -> FetchVisitedShowsUseCase {
+    return DefaultFetchVisitedShowsUseCase(
+      showsVisitedLocalRepository: dependencies.showsPersistence,
+      keychainRepository: keychainRepository)
+  }
+  
+  private func makeFetchSearchsUseCase() -> FetchSearchsUseCase {
+    return DefaultFetchSearchsUseCase(searchLocalRepository: dependencies.searchsPersistence,
+                                      keychainRepository: keychainRepository)
+  }
+  
+  private func makeRecentShowsDidChangedUseCase() -> RecentVisitedShowDidChangeUseCase {
+    return DefaultRecentVisitedShowDidChangeUseCase(showsVisitedLocalRepository: dependencies.showsPersistence)
   }
 }
 

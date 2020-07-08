@@ -37,7 +37,7 @@ TODO: Add long description of the pod here.
   # Development pods dependencies
   s.dependency 'Shared'
   s.dependency 'Networking'
-  #s.dependency 'Account'
+  s.dependency 'Persistence'
 
   # Third Party Frameworks
   s.dependency 'RxSwift', '~> 5.0.0'

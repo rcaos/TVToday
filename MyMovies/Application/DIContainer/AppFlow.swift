@@ -9,12 +9,15 @@
 import Foundation
 import RxFlow
 import Networking
+import Persistence
 
 class AppFlow: Flow {
   
   public struct Dependencies {
     let apiDataTransferService: DataTransferService
     let appConfigurations: AppConfigurations
+    let showsPersistence: ShowsVisitedLocalRepository
+    let searchsPersistence: SearchLocalRepository
   }
   
   private let dependencies: Dependencies
@@ -50,7 +53,9 @@ class AppFlow: Flow {
     let signedFlow = SignedFlow(dependencies:
       SignedFlow.Dependencies(
         apiDataTransferService: dependencies.apiDataTransferService,
-        appConfigurations: dependencies.appConfigurations))
+        appConfigurations: dependencies.appConfigurations,
+        showsPersistence: dependencies.showsPersistence,
+        searchsPersistence: dependencies.searchsPersistence))
     Flows.whenReady(flow1: signedFlow) { root in
       DispatchQueue.main.async {
         self.rootWindow.rootViewController = root

@@ -15,12 +15,15 @@ import PopularShows
 import SearchShows
 import Account
 import Shared
+import Persistence
 
 public class SignedFlow: Flow {
   
   public struct Dependencies {
     let apiDataTransferService: DataTransferService
     let appConfigurations: AppConfigurations
+    let showsPersistence: ShowsVisitedLocalRepository
+    let searchsPersistence: SearchLocalRepository
   }
   
   private let dependencies: Dependencies
@@ -55,21 +58,26 @@ public class SignedFlow: Flow {
     let airingTodayFlow = AiringTodayFlow(dependencies:
       AiringTodayDependencies(
         apiDataTransferService: dependencies.apiDataTransferService,
-        imagesBaseURL: dependencies.appConfigurations.imagesBaseURL) )
+        imagesBaseURL: dependencies.appConfigurations.imagesBaseURL,
+        showsPersistence: dependencies.showsPersistence) )
     
     let popularFlow = PopularFlow(dependencies:
       PopularShowsDependencies(
         apiDataTransferService: dependencies.apiDataTransferService,
-        imagesBaseURL: dependencies.appConfigurations.imagesBaseURL) )
+        imagesBaseURL: dependencies.appConfigurations.imagesBaseURL,
+        showsPersistence: dependencies.showsPersistence) )
     
     let searchFlow = SearchFlow(dependencies:
       SearchShowDependencies(
         apiDataTransferService: dependencies.apiDataTransferService,
-        imagesBaseURL: dependencies.appConfigurations.imagesBaseURL) )
+        imagesBaseURL: dependencies.appConfigurations.imagesBaseURL,
+        showsPersistence: dependencies.showsPersistence,
+        searchsPersistence: dependencies.searchsPersistence) )
     
     let accountFlow = AccountFlow(dependencies:
       AccountDependencies(apiDataTransferService: dependencies.apiDataTransferService,
-                         imagesBaseURL: dependencies.appConfigurations.imagesBaseURL))
+                         imagesBaseURL: dependencies.appConfigurations.imagesBaseURL,
+                         showsPersistence: dependencies.showsPersistence))
     
     Flows.whenReady(
       flow1: airingTodayFlow,

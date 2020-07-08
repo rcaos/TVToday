@@ -110,7 +110,8 @@ public class SearchFlow: Flow {
   
   fileprivate func buildSearchOptionsController(with delegate: SearchOptionsViewModelDelegate) -> UIViewController {
     let viewModel = SearchOptionsViewModel(fetchGenresUseCase: makeFetchGenresUseCase(),
-                                           fetchVisitedShowsUseCase: makeFetchVisitedShowsUseCase())
+                                           fetchVisitedShowsUseCase: makeFetchVisitedShowsUseCase(),
+                                           recentVisitedShowsDidChange: makeRecentShowsDidChangedUseCase())
     viewModel.delegate = delegate
     let viewController = SearchOptionsViewController.create(with: viewModel)
     return viewController
@@ -161,6 +162,10 @@ public class SearchFlow: Flow {
   private func makeFetchSearchsUseCase() -> FetchSearchsUseCase {
     return DefaultFetchSearchsUseCase(searchLocalRepository: dependencies.searchsPersistence,
                                       keychainRepository: keychainRepository)
+  }
+  
+  private func makeRecentShowsDidChangedUseCase() -> RecentVisitedShowDidChangeUseCase {
+    return DefaultRecentVisitedShowDidChangeUseCase(showsVisitedLocalRepository: dependencies.showsPersistence)
   }
 }
 

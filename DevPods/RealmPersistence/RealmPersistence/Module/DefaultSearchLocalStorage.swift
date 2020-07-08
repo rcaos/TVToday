@@ -41,3 +41,4 @@ extension DefaultSearchLocalStorage: SearchLocalStorage {
     return Observable.just(
       realmDataStack.fetchAllSearchs(for: userId).map { $0.asDomain() })
   }
+}

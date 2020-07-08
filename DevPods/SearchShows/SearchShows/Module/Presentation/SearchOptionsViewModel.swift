@@ -26,6 +26,8 @@ final class SearchOptionsViewModel {
   
   private let fetchVisitedShowsUseCase: FetchVisitedShowsUseCase
   
+  private let recentVisitedShowsDidChange: RecentVisitedShowDidChangeUseCase
+  
   private let viewStateObservableSubject = BehaviorSubject<SimpleViewState<Genre>>(value: .loading)
   
   private let dataSourceObservableSubject = BehaviorSubject<[SearchSectionModel]>(value: [])
@@ -43,9 +45,11 @@ final class SearchOptionsViewModel {
   // MARK: - Initializer
   
   init(fetchGenresUseCase: FetchGenresUseCase,
-       fetchVisitedShowsUseCase: FetchVisitedShowsUseCase) {
+       fetchVisitedShowsUseCase: FetchVisitedShowsUseCase,
+       recentVisitedShowsDidChange: RecentVisitedShowDidChangeUseCase) {
     self.fetchGenresUseCase = fetchGenresUseCase
     self.fetchVisitedShowsUseCase = fetchVisitedShowsUseCase
+    self.recentVisitedShowsDidChange = recentVisitedShowsDidChange
     
     self.input = Input()
     self.output = Output(viewState: viewStateObservableSubject.asObservable(),
@@ -77,8 +81,17 @@ final class SearchOptionsViewModel {
     return fetchGenresUseCase.execute(requestValue: FetchGenresUseCaseRequestValue())
   }
   
+  private func recentShowsDidChanged() -> Observable<[ShowVisited]> {
+    recentVisitedShowsDidChange.execute()
+      .filter { $0 }
+      .flatMap { [weak self] _ -> Observable<[ShowVisited]> in
+        guard let strongSelf = self else { return Observable.just([]) }
+        return strongSelf.fetchRecentShows()
+    }
+  }
+  
   private func fetchGenresAndRecentShows() {
-    Observable.combineLatest(fetchRecentShows(), fetchGenres())
+    Observable.combineLatest(recentShowsDidChanged(), fetchGenres())
       .subscribe(onNext: { [weak self] (visited, resultGenre) in
         guard let strongSelf = self else { return }
         strongSelf.processFetched(for: resultGenre)

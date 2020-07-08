@@ -13,4 +13,6 @@ public protocol ShowsVisitedLocalRepository {
   func saveShow(id: Int, pathImage: String, userId: Int) -> Observable<Void>
   
   func fetchVisitedShows(userId: Int) -> Observable<[ShowVisited]>
+  
+  func recentVisitedShowsDidChange() -> Observable<Bool>
 }

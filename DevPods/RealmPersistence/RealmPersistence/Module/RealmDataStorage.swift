@@ -49,7 +49,7 @@ public final class RealmDataStorage {
     do {
       try realm.write {
         realm.add(entitie, update: .modified)
-        toDeleted(retain: maxStorageLimit).forEach {
+        toDeleted(entitie.userId, retain: maxStorageLimit).forEach {
           print("Delete: \($0) OK")
           realm.delete($0)
         }
@@ -63,16 +63,20 @@ public final class RealmDataStorage {
     }
   }
   
-  public func fetchAllOrdered(ascending: Bool = false) -> [RealmShowVisited] {
-    guard let realm = realm else { return [] }
-    return realm.objects(RealmShowVisited.self)
-      .sorted(byKeyPath: "date", ascending: ascending).map { $0 }
+  private func toDeleted(_ userId: Int, retain keepElements: Int) -> [RealmShowVisited] {
+    let allElements = fetchAllOrdered(userId: userId)
+    let firstElements = allElements.prefix(keepElements)
+    return allElements.filter { !firstElements.contains($0) }
   }
   
-  private func toDeleted(retain keepElements: Int) -> [RealmShowVisited] {
-    let allElements = fetchAllOrdered()
-    let firstElements = fetchAllOrdered().prefix(keepElements)
-    return allElements.filter { !firstElements.contains($0) }
+  public func fetchAllOrdered(userId: Int, ascending: Bool = false) -> [RealmShowVisited] {
+    guard let realm = realm else { return [] }
+    
+    let predicate = NSPredicate(format: "userId = %d", userId)
+    return
+      realm.objects(RealmShowVisited.self)
+    .filter(predicate)
+      .sorted(byKeyPath: "date", ascending: ascending).map { $0 }
   }
   
   private func objectsDidChange() {

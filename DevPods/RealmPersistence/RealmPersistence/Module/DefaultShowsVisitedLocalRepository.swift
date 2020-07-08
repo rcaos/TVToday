@@ -24,6 +24,10 @@ extension DefaultShowsVisitedLocalRepository: ShowsVisitedLocalRepository {
   }
   
   public func fetchVisitedShows(userId: Int) -> Observable<[ShowVisited]> {
-    return showsVisitedLocalStorage.fetchVisitedShows()
+    return showsVisitedLocalStorage.fetchVisitedShows(userId: userId)
+  }
+  
+  public func recentVisitedShowsDidChange() -> Observable<Bool> {
+    return showsVisitedLocalStorage.recentVisitedShowsDidChange()
   }
 }

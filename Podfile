@@ -68,7 +68,7 @@ target 'TVToday' do
   use_frameworks!
   
   # Third Party Pods.
-  # The main App only know about Navigation
+  # The main App only knows about Navigation
   pod 'RxFlow',          '2.7.0'
   
    # Dev Pods

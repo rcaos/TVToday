@@ -13,10 +13,6 @@ protocol RealmDataStorageDelegate: class {
   func persistenceStore(didUpdateEntity update: Bool)
 }
 
-protocol RealmDataStorageSearchsDelegate: class {
-  func persistenceStore(didUpdateEntity update: Bool)
-}
-
 public final class RealmDataStorage {
   
   private let maxStorageLimit: Int
@@ -35,16 +31,12 @@ public final class RealmDataStorage {
   private var notificationToken: NotificationToken?
   weak var delegate: RealmDataStorageDelegate?
   
-  private var notificationTokenSearchs: NotificationToken?
-  weak var delegateSearchs: RealmDataStorageSearchsDelegate?
-  
   // MARK: - Initializer
   
   public init(maxStorageLimit: Int) {
     self.maxStorageLimit = maxStorageLimit
     print(Realm.Configuration.defaultConfiguration.fileURL!)
     objectsDidChange()
-    searchsDidChange()
   }
   
   // La propia entity debe asignarse sus variables
@@ -113,21 +105,12 @@ public final class RealmDataStorage {
     }
   }
   
-  public func fetchAllSearchs() -> [RealmSearchShow] {
+  public func fetchAllSearchs(for userId: Int) -> [RealmSearchShow] {
     guard let realm = realm else { return [] }
+    let predicate = NSPredicate(format: "userId = %d", userId)
+    
     return realm.objects(RealmSearchShow.self)
+      .filter(predicate)
       .sorted(byKeyPath: "date", ascending: false).map { $0 }
-  }
-  
-  private func searchsDidChange() {
-    let results = realm?.objects(RealmSearchShow.self)
-    notificationTokenSearchs = results?.observe { [weak self] (changes: RealmCollectionChange) in
-      switch changes {
-      case .update:
-        self?.delegateSearchs?.persistenceStore(didUpdateEntity: true)
-      default:
-        break
-      }
-    }
   }
 }

@@ -89,11 +89,15 @@ final class ResultsSearchViewModel {
   
   private func subscribeToSearchs() {
     viewStateObservableSubject
+      .distinctUntilChanged()
       .filter { $0 == .initial }
-      .withLatestFrom(fetchRecentsShows())
-      .subscribe(onNext: { [weak self] results in
-        self?.createSectionModel(recentSearchs: results.map { $0.query }, resultShows: [])
-      })
+      .flatMap { [weak self] _ -> Observable<[Search]> in
+        guard let strongSelf = self else { return Observable.just([])}
+        return strongSelf.fetchRecentsShows()
+    }
+    .subscribe(onNext: { [weak self] results in
+      self?.createSectionModel(recentSearchs: results.map { $0.query }, resultShows: [])
+    })
       .disposed(by: disposeBag)
   }
   

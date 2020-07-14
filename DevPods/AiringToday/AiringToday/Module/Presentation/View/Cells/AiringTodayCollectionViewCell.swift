@@ -8,15 +8,16 @@
 
 import UIKit
 import Shared
+import UI
 
 class AiringTodayCollectionViewCell: UICollectionViewCell {
   
   @IBOutlet weak var containerView: UIView!
   
   @IBOutlet weak var backImageView: UIImageView!
-  @IBOutlet weak var showNameLabel: UILabel!
+  @IBOutlet weak var showNameLabel: TVBoldLabel!
   @IBOutlet weak var starImageView: UIImageView!
-  @IBOutlet weak var averageLabel: UILabel!
+  @IBOutlet weak var averageLabel: TVRegularLabel!
   
   var viewModel: AiringTodayCollectionViewModel? {
     didSet {
@@ -31,6 +32,7 @@ class AiringTodayCollectionViewCell: UICollectionViewCell {
   
   private func setupUIElements() {
     starImageView.image = UIImage(name: "star")
+    showNameLabel.tvSize = .custom(22)
   }
   
   func setupUI() {

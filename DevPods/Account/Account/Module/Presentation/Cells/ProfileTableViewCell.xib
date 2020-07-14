@@ -10,14 +10,14 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="171" id="KGk-i7-Jjw" customClass="ProfileTableViewCell" customModule="TVToday" customModuleProvider="target">
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="171" id="KGk-i7-Jjw" customClass="ProfileTableViewCell" customModule="Account" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="351" height="171"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
                 <rect key="frame" x="0.0" y="0.0" width="351" height="171"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hi rcaos!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TeL-sf-CrR">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hi rcaos!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TeL-sf-CrR" customClass="TVRegularLabel" customModule="UI">
                         <rect key="frame" x="8" y="5" width="335" height="38"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                         <nil key="textColor"/>
@@ -43,7 +43,7 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="avatarImageView" destination="Zfq-dd-gus" id="4r5-aB-QOa"/>
-                <outlet property="nameLabel" destination="TeL-sf-CrR" id="tXF-iZ-xtS"/>
+                <outlet property="nameLabel" destination="TeL-sf-CrR" id="O5e-4R-tyj"/>
             </connections>
             <point key="canvasLocation" x="154.34782608695653" y="164.39732142857142"/>
         </tableViewCell>

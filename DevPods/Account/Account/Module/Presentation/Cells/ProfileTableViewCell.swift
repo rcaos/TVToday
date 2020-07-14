@@ -8,16 +8,18 @@
 
 import UIKit
 import Shared
+import UI
 
 class ProfileTableViewCell: UITableViewCell {
   
-  @IBOutlet weak var nameLabel: UILabel!
+  @IBOutlet weak var nameLabel: TVRegularLabel!
   @IBOutlet weak var avatarImageView: UIImageView!
   
   public static let identifier = "ProfileTableViewCell"
   
   override func awakeFromNib() {
     super.awakeFromNib()
+    nameLabel.tvSize = .custom(25)
   }
   
   func configCell(with entity: AccountResult) {

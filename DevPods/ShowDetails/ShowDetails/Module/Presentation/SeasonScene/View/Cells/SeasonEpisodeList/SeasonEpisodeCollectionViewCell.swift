@@ -7,13 +7,13 @@
 //
 
 import UIKit
+import UI
 
 class SeasonEpisodeCollectionViewCell: UICollectionViewCell {
   
-  @IBOutlet weak var seasonNumber: UILabel! {
+  @IBOutlet weak var seasonNumber: TVRegularLabel! {
     didSet {
-      self.seasonNumber.backgroundColor = ColorsForCell.normal.rawValue
-      self.seasonNumber.textColor = .black
+      self.seasonNumber.backgroundColor = Colors.clear.color
       self.seasonNumber.clipsToBounds = true
       self.seasonNumber.layer.masksToBounds = true
       self.seasonNumber.layer.cornerRadius = self.seasonNumber.frame.width / 2
@@ -33,30 +33,11 @@ class SeasonEpisodeCollectionViewCell: UICollectionViewCell {
   
   override var isSelected: Bool {
     didSet {
-      if isSelected {
-        seasonNumber.backgroundColor = ColorsForCell.selected.rawValue
-      } else {
-        seasonNumber.backgroundColor = ColorsForCell.normal.rawValue
-      }
+      seasonNumber.backgroundColor = isSelected ? Colors.customYellow.color : Colors.clear.color
     }
   }
   
   func setupUI() {
     seasonNumber.text = viewModel?.seasonNumber
-  }
-}
-
-enum ColorsForCell {
-  
-  case selected
-  case normal
-  
-  var rawValue: UIColor {
-    switch self {
-    case .selected:
-      return UIColor(red: 255.0/255.0, green: 202.0/255.0, blue: 40.0/255.0, alpha: 0.8)
-    case .normal:
-      return UIColor.clear
-    }
   }
 }

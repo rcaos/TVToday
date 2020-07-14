@@ -28,76 +28,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CE6BBD82D04BB9979981548F9F4AC932"
-               BuildableName = "Account.framework"
-               BlueprintName = "Account"
-               ReferencedContainer = "container:Pods/Pods.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "94CAB0A56C8C9176AF6205EA2B2F6858"
-               BuildableName = "AiringToday.framework"
-               BlueprintName = "AiringToday"
-               ReferencedContainer = "container:Pods/Pods.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AE330AD735EEDF742B1B4EE5EE1C961D"
-               BuildableName = "KeyChainStorage.framework"
-               BlueprintName = "KeyChainStorage"
-               ReferencedContainer = "container:Pods/Pods.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B2267C2D9D018961E49AA58CF3DC094C"
-               BuildableName = "Networking.framework"
-               BlueprintName = "Networking"
-               ReferencedContainer = "container:Pods/Pods.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CB022A974D6493D4EA789ED49CE8AA57"
-               BuildableName = "Persistence.framework"
-               BlueprintName = "Persistence"
-               ReferencedContainer = "container:Pods/Pods.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "85FF8F3864594A1E016F8098423D813D"
                BuildableName = "PopularShows.framework"
                BlueprintName = "PopularShows"
@@ -112,9 +42,23 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DA15FACF97496F6E579ED390132D9342"
-               BuildableName = "RealmPersistence.framework"
-               BlueprintName = "RealmPersistence"
+               BlueprintIdentifier = "54EFF2706384E11EF1FD86BED5575579"
+               BuildableName = "UI.framework"
+               BlueprintName = "UI"
+               ReferencedContainer = "container:Pods/Pods.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "BEE42ABF215DD362BC110D392D85CA75"
+               BuildableName = "Shared.framework"
+               BlueprintName = "Shared"
                ReferencedContainer = "container:Pods/Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -140,9 +84,23 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "BEE42ABF215DD362BC110D392D85CA75"
-               BuildableName = "Shared.framework"
-               BlueprintName = "Shared"
+               BlueprintIdentifier = "CE6BBD82D04BB9979981548F9F4AC932"
+               BuildableName = "Account.framework"
+               BlueprintName = "Account"
+               ReferencedContainer = "container:Pods/Pods.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "94CAB0A56C8C9176AF6205EA2B2F6858"
+               BuildableName = "AiringToday.framework"
+               BlueprintName = "AiringToday"
                ReferencedContainer = "container:Pods/Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

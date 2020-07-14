@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UI
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +17,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   private var appDIContainer: AppDIContainer?
   
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    
+    UIFont.loadFonts()
+    UINavigationController.replaceAppearance()
     
     window = UIWindow(frame: UIScreen.main.bounds)
     

@@ -232,6 +232,7 @@
 				"${BUILT_PRODUCTS_DIR}/Shared/Shared.framework",
 				"${BUILT_PRODUCTS_DIR}/ShowDetails/ShowDetails.framework",
 				"${BUILT_PRODUCTS_DIR}/TVShowsList/TVShowsList.framework",
+				"${BUILT_PRODUCTS_DIR}/UI/UI.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -250,6 +251,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Shared.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ShowDetails.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TVShowsList.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UI.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

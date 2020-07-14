@@ -6,6 +6,7 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
+import UIKit
 import RxSwift
 import RxDataSources
 import Shared
@@ -44,10 +45,11 @@ class ProfileViewController: UIViewController, StoryboardInstantiable {
   
   fileprivate func registerCells() {
     tableView.registerNib(cellType: ProfileTableViewCell.self)
-    tableView.registerCell(cellType: GenericViewCell.self)
+    tableView.registerNib(cellType: GenericViewCell.self)
     tableView.registerCell(cellType: LogoutTableViewCell.self)
-    
+  
     tableView.tableFooterView = UIView()
+    tableView.rowHeight = UITableView.automaticDimension
   }
   
   fileprivate func setupDataSource() {

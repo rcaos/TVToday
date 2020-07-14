@@ -7,10 +7,13 @@
 //
 
 import UIKit
+import UI
 
 class SeasonHeaderView: UIView {
   
+  @IBOutlet weak var allEpisodesLabel: UILabel!
   @IBOutlet weak var showNameLabel: UILabel!
+  @IBOutlet weak var seasonsLabel: UILabel!
   
   var viewModel: SeasonHeaderViewModel? {
     didSet {
@@ -20,9 +23,20 @@ class SeasonHeaderView: UIView {
   
   override func awakeFromNib() {
     super.awakeFromNib()
+    setupUIElements()
   }
   
-  func setupUI() {
+  private func setupUIElements() {
+    allEpisodesLabel.font = Font.sanFrancisco.of(type: .regular, with: .custom(20))
+    allEpisodesLabel.textColor = Colors.electricBlue.color
+    
+    showNameLabel.font = Font.sanFrancisco.of(type: .bold, with: .custom(22))
+    showNameLabel.textColor = Colors.electricBlue.color
+    
+    seasonsLabel.textColor = Colors.davyGrey.color
+  }
+  
+  private func setupUI() {
     showNameLabel.text = viewModel?.showName
   }
 }

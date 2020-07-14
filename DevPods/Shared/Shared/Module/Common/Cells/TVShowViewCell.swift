@@ -7,11 +7,12 @@
 //
 
 import UIKit
+import UI
 
 public class TVShowViewCell: UITableViewCell {
   
-  @IBOutlet weak private var nameLabel: UILabel!
-  @IBOutlet weak private var averageLabel: UILabel!
+  @IBOutlet weak private var nameLabel: TVRegularLabel!
+  @IBOutlet weak private var averageLabel: TVRegularLabel!
   
   public var viewModel: TVShowCellViewModel? {
     didSet {

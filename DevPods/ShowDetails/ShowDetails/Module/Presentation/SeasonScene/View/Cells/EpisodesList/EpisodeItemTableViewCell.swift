@@ -8,16 +8,17 @@
 
 import UIKit
 import Shared
+import UI
 
 class EpisodeItemTableViewCell: UITableViewCell {
   
   @IBOutlet private weak var episodeImage: UIImageView!
-  @IBOutlet private weak var episodeNumberLabel: UILabel!
-  @IBOutlet private weak var episodeNameLabel: UILabel!
-  @IBOutlet private weak var releaseLabel: UILabel!
-  @IBOutlet private weak var durationLabel: UILabel!
+  @IBOutlet private weak var episodeNumberLabel: TVRegularLabel!
+  @IBOutlet private weak var episodeNameLabel: TVRegularLabel!
+  @IBOutlet private weak var releaseLabel: TVRegularLabel!
+  @IBOutlet private weak var durationLabel: TVRegularLabel!
   @IBOutlet private weak var starImageView: UIImageView!
-  @IBOutlet private weak var averageLabel: UILabel!
+  @IBOutlet private weak var averageLabel: TVRegularLabel!
   
   var viewModel: EpisodeItemViewModel? {
     didSet {

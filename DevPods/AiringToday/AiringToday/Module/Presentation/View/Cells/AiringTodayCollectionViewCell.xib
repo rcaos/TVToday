@@ -10,7 +10,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="AiringTodayCollectionViewCell" customModule="TVToday" customModuleProvider="target">
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="AiringTodayCollectionViewCell" customModule="AiringToday" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="743" height="482"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -29,7 +29,7 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aNb-JN-KhY">
                                         <rect key="frame" x="0.0" y="379" width="727" height="95"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v0x-PM-che" userLabel="Name Label">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v0x-PM-che" userLabel="Name Label" customClass="TVBoldLabel" customModule="UI">
                                                 <rect key="frame" x="8" y="33" width="60" height="29"/>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="24"/>
                                                 <nil key="textColor"/>
@@ -42,7 +42,7 @@
                                                     <constraint firstAttribute="width" constant="35" id="WyD-Rm-271"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zXp-Yr-6gJ" userLabel="Average Label">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zXp-Yr-6gJ" userLabel="Average Label" customClass="TVRegularLabel" customModule="UI">
                                                 <rect key="frame" x="677" y="37.5" width="42" height="20.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
@@ -85,10 +85,10 @@
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <size key="customSize" width="743" height="482"/>
             <connections>
-                <outlet property="averageLabel" destination="zXp-Yr-6gJ" id="x9X-ye-cod"/>
+                <outlet property="averageLabel" destination="zXp-Yr-6gJ" id="JiI-K6-wIS"/>
                 <outlet property="backImageView" destination="Feu-UB-Gxh" id="ozX-ge-yXX"/>
                 <outlet property="containerView" destination="b8p-21-odD" id="pvG-fd-fz0"/>
-                <outlet property="showNameLabel" destination="v0x-PM-che" id="3kY-O0-maL"/>
+                <outlet property="showNameLabel" destination="v0x-PM-che" id="to0-Lu-1wI"/>
                 <outlet property="starImageView" destination="APB-dW-Nxu" id="C98-Fd-lcJ"/>
             </connections>
             <point key="canvasLocation" x="277.536231884058" y="202.23214285714286"/>

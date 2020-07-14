@@ -11,7 +11,7 @@
         <!--Show Detail View Controller-->
         <scene sceneID="zWb-CO-SHr">
             <objects>
-                <tableViewController storyboardIdentifier="TVShowDetailViewController" hidesBottomBarWhenPushed="YES" id="CBS-d1-3tf" customClass="TVShowDetailViewController" customModule="TVToday" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="TVShowDetailViewController" hidesBottomBarWhenPushed="YES" id="CBS-d1-3tf" customClass="TVShowDetailViewController" customModule="ShowDetails" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="yRG-PH-ap9">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="1000"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -40,7 +40,7 @@
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="VeH-jy-ieC">
                                                             <rect key="frame" x="0.0" y="243.5" width="375" height="41"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="TV Show Name" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tNe-vN-cJp">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="TV Show Name" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tNe-vN-cJp" customClass="TVBoldLabel" customModule="UI">
                                                                     <rect key="frame" x="16" y="0.0" width="359" height="41"/>
                                                                     <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
                                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
@@ -56,13 +56,13 @@
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dWA-U2-CeV">
                                                                     <rect key="frame" x="16" y="0.0" width="359" height="36"/>
                                                                     <subviews>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2008 - 2013" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mpO-ud-9OW">
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2008 - 2013" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mpO-ud-9OW" customClass="TVRegularLabel" customModule="UI">
                                                                             <rect key="frame" x="0.0" y="0.0" width="95.5" height="36"/>
                                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                             <nil key="textColor"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="49 min" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CGT-Mz-OTX">
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="49 min" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CGT-Mz-OTX" customClass="TVRegularLabel" customModule="UI">
                                                                             <rect key="frame" x="135.5" y="0.0" width="53.5" height="36"/>
                                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                             <nil key="textColor"/>
@@ -91,7 +91,7 @@
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="2Xs-DG-d54">
                                                             <rect key="frame" x="0.0" y="324.5" width="375" height="20.5"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Crime, Drama, Thriller" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7tB-tD-LsM">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Crime, Drama, Thriller" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7tB-tD-LsM" customClass="TVRegularLabel" customModule="UI">
                                                                     <rect key="frame" x="16" y="0.0" width="359" height="20.5"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                     <nil key="textColor"/>
@@ -121,14 +121,14 @@
                                             <rect key="frame" x="0.0" y="0.0" width="344" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Episode Guide" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ZaT-Ze-zys">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Episode Guide" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ZaT-Ze-zys" customClass="TVRegularLabel" customModule="UI">
                                                     <rect key="frame" x="20" y="12" width="110.5" height="20.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="62 episodes" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="6zZ-J1-4qW">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="62 episodes" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="6zZ-J1-4qW" customClass="TVRegularLabel" customModule="UI">
                                                     <rect key="frame" x="242" y="12" width="94" height="20.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -138,18 +138,18 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="250" id="k78-zq-TbR">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="250" id="k78-zq-TbR">
                                         <rect key="frame" x="0.0" y="422" width="375" height="250"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="k78-zq-TbR" id="ezW-of-qZN">
-                                            <rect key="frame" x="0.0" y="0.0" width="344" height="250"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="250"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="sua-o6-8DS">
-                                                    <rect key="frame" x="0.0" y="0.0" width="344" height="250"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="250"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zAw-vx-YNK">
-                                                            <rect key="frame" x="16" y="0.0" width="134" height="250"/>
+                                                            <rect key="frame" x="16" y="0.0" width="148" height="250"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="color" keyPath="textColor">
                                                                     <color key="value" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -157,7 +157,7 @@
                                                             </userDefinedRuntimeAttributes>
                                                         </imageView>
                                                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="egY-YG-Evc">
-                                                            <rect key="frame" x="155" y="0.0" width="189" height="250"/>
+                                                            <rect key="frame" x="169" y="0.0" width="206" height="250"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <string key="text">When Walter White, a New Mexico chemistry teacher, is diagnosed with Stage III cancer and given a prognosis of only two years left to live. He becomes filled with a sense of fearlessness and an unrelenting desire to secure his family's financial future at any cost as he enters the dangerous world of drugs and crime.</string>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
@@ -179,32 +179,32 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="110" id="Muu-IA-Cjq">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="110" id="Muu-IA-Cjq">
                                         <rect key="frame" x="0.0" y="672" width="375" height="110"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Muu-IA-Cjq" id="AR2-00-SlC">
-                                            <rect key="frame" x="0.0" y="0.0" width="344" height="110"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="110"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="Dis-eC-YcU">
-                                                    <rect key="frame" x="5" y="0.0" width="334" height="110"/>
+                                                    <rect key="frame" x="5" y="0.0" width="365" height="110"/>
                                                     <subviews>
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="wte-Qe-Lqj">
-                                                            <rect key="frame" x="0.0" y="11" width="163" height="88"/>
+                                                            <rect key="frame" x="0.0" y="11" width="178.5" height="88"/>
                                                             <subviews>
                                                                 <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wm4-1C-zkK">
-                                                                    <rect key="frame" x="66.5" y="0.0" width="30" height="34"/>
+                                                                    <rect key="frame" x="74.5" y="0.0" width="30" height="34"/>
                                                                 </button>
                                                                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="BS6-sK-6MF">
-                                                                    <rect key="frame" x="40" y="34" width="83" height="33.5"/>
+                                                                    <rect key="frame" x="48" y="34" width="83" height="33.5"/>
                                                                     <subviews>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="9.5" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H8e-Ze-8eF">
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="9.5" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H8e-Ze-8eF" customClass="TVBoldLabel" customModule="UI">
                                                                             <rect key="frame" x="0.0" y="0.0" width="41.5" height="33.5"/>
                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                                                             <nil key="textColor"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="/10" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ucf-rY-gtt">
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="/10" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ucf-rY-gtt" customClass="TVRegularLabel" customModule="UI">
                                                                             <rect key="frame" x="41.5" y="0.0" width="41.5" height="33.5"/>
                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
                                                                             <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -212,16 +212,16 @@
                                                                         </label>
                                                                     </subviews>
                                                                 </stackView>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="1,245,942" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F3p-Bu-tZk">
-                                                                    <rect key="frame" x="43.5" y="67.5" width="76.5" height="20.5"/>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="1,245,942" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F3p-Bu-tZk" customClass="TVRegularLabel" customModule="UI">
+                                                                    <rect key="frame" x="51" y="67.5" width="76.5" height="20.5"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                             </subviews>
                                                         </stackView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Critic Reviews" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dfv-wN-QQF">
-                                                            <rect key="frame" x="171" y="45" width="163" height="20.5"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Critic Reviews" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dfv-wN-QQF" customClass="TVRegularLabel" customModule="UI">
+                                                            <rect key="frame" x="186.5" y="45" width="178.5" height="20.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -249,16 +249,19 @@
                     <size key="freeformSize" width="375" height="1000"/>
                     <connections>
                         <outlet property="backDropImage" destination="nmv-aJ-PIm" id="5zr-rQ-0f4"/>
-                        <outlet property="countVoteLabel" destination="F3p-Bu-tZk" id="OXs-U2-8FU"/>
-                        <outlet property="durationLabel" destination="CGT-Mz-OTX" id="369-j0-Ye7"/>
-                        <outlet property="genreLabel" destination="7tB-tD-LsM" id="5dh-3f-7rv"/>
-                        <outlet property="nameLabel" destination="tNe-vN-cJp" id="Opw-QW-tBi"/>
-                        <outlet property="numberOfEpisodes" destination="6zZ-J1-4qW" id="9gT-z9-6Ak"/>
+                        <outlet property="countVoteLabel" destination="F3p-Bu-tZk" id="JFB-D6-6rE"/>
+                        <outlet property="criticReviews" destination="dfv-wN-QQF" id="xbx-Pw-tfr"/>
+                        <outlet property="durationLabel" destination="CGT-Mz-OTX" id="a29-LJ-Yy7"/>
+                        <outlet property="episodeGuide" destination="ZaT-Ze-zys" id="2f9-r5-rUa"/>
+                        <outlet property="genreLabel" destination="7tB-tD-LsM" id="G2j-4F-7Ga"/>
+                        <outlet property="maxScoreLabel" destination="ucf-rY-gtt" id="wNU-Kc-QxR"/>
+                        <outlet property="nameLabel" destination="tNe-vN-cJp" id="NiM-zy-B4L"/>
+                        <outlet property="numberOfEpisodes" destination="6zZ-J1-4qW" id="4Rs-09-txO"/>
                         <outlet property="overViewLabel" destination="egY-YG-Evc" id="Z5t-VX-zhF"/>
                         <outlet property="posterImage" destination="zAw-vx-YNK" id="BHC-NL-PrG"/>
-                        <outlet property="scoreLabel" destination="H8e-Ze-8eF" id="gaP-VN-Ngj"/>
+                        <outlet property="scoreLabel" destination="H8e-Ze-8eF" id="7GE-qM-8P0"/>
                         <outlet property="starButton" destination="wm4-1C-zkK" id="mqQ-sS-kQj"/>
-                        <outlet property="yearsRelease" destination="mpO-ud-9OW" id="jHG-8q-O8b"/>
+                        <outlet property="yearsRelease" destination="mpO-ud-9OW" id="xWB-gO-4Ee"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aWq-H5-tbd" userLabel="First Responder" sceneMemberID="firstResponder"/>

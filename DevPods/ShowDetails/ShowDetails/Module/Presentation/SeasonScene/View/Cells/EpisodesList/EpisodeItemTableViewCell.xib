@@ -11,7 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="277" id="KGk-i7-Jjw" customClass="EpisodeItemTableViewCell" customModule="TVToday" customModuleProvider="target">
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="277" id="KGk-i7-Jjw" customClass="EpisodeItemTableViewCell" customModule="ShowDetails" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="606" height="277"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
@@ -30,13 +30,13 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="CZt-Ak-nq5">
                                         <rect key="frame" x="0.0" y="0.0" width="139.5" height="20.5"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="99" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EMb-p9-CBR">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="99" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EMb-p9-CBR" customClass="TVRegularLabel" customModule="UI">
                                                 <rect key="frame" x="0.0" y="0.0" width="21" height="20.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Episode Name" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lev-ec-qNp">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Episode Name" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lev-ec-qNp" customClass="TVRegularLabel" customModule="UI">
                                                 <rect key="frame" x="29" y="0.0" width="110.5" height="20.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
@@ -47,13 +47,13 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="AeL-Rx-V92">
                                         <rect key="frame" x="0.0" y="28.5" width="161.5" height="20.5"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Oct 4, 1996" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d3P-xs-UFs">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Oct 4, 1996" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d3P-xs-UFs" customClass="TVRegularLabel" customModule="UI">
                                                 <rect key="frame" x="0.0" y="0.0" width="90.5" height="20.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="| 44 min" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VX1-32-j2u">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="| 44 min" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VX1-32-j2u" customClass="TVRegularLabel" customModule="UI">
                                                 <rect key="frame" x="98.5" y="0.0" width="63" height="20.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
@@ -71,7 +71,7 @@
                                                     <constraint firstAttribute="width" secondItem="8Cd-0S-Dtm" secondAttribute="height" multiplier="1:1" id="Msb-6d-ZPm"/>
                                                 </constraints>
                                             </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="8.6" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fca-Gr-zXC">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="8.6" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fca-Gr-zXC" customClass="TVRegularLabel" customModule="UI">
                                                 <rect key="frame" x="29" y="0.0" width="24.5" height="25"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
@@ -98,12 +98,12 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
-                <outlet property="averageLabel" destination="fca-Gr-zXC" id="BY9-Gv-aTl"/>
-                <outlet property="durationLabel" destination="VX1-32-j2u" id="NOC-CK-A4g"/>
+                <outlet property="averageLabel" destination="fca-Gr-zXC" id="zCx-GH-mJU"/>
+                <outlet property="durationLabel" destination="VX1-32-j2u" id="KxT-lH-Wlp"/>
                 <outlet property="episodeImage" destination="vzc-rs-kyS" id="7dY-Qh-qv5"/>
-                <outlet property="episodeNameLabel" destination="Lev-ec-qNp" id="5Bc-Ai-isN"/>
-                <outlet property="episodeNumberLabel" destination="EMb-p9-CBR" id="hcc-uX-ntB"/>
-                <outlet property="releaseLabel" destination="d3P-xs-UFs" id="uVT-RY-O8S"/>
+                <outlet property="episodeNameLabel" destination="Lev-ec-qNp" id="Wyw-YK-SpI"/>
+                <outlet property="episodeNumberLabel" destination="EMb-p9-CBR" id="QxL-SM-nH5"/>
+                <outlet property="releaseLabel" destination="d3P-xs-UFs" id="46u-Qq-h2e"/>
                 <outlet property="starImageView" destination="8Cd-0S-Dtm" id="fJu-oZ-hcl"/>
             </connections>
             <point key="canvasLocation" x="391" y="231"/>

@@ -37,6 +37,7 @@ TODO: Add long description of the pod here.
   # Development pods dependencies
   s.dependency 'Networking'
   s.dependency 'KeyChainStorage'
+  s.dependency 'UI'
 
   # Third Party Frameworks
   s.dependency 'Kingfisher', '~> 5.13.0'

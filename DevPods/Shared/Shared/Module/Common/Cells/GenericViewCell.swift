@@ -7,8 +7,11 @@
 //
 
 import UIKit
+import UI
 
 public class GenericViewCell: UITableViewCell {
+  
+  @IBOutlet weak public var regularTextLabel: TVRegularLabel!
   
   public var title: String? {
     didSet {
@@ -21,7 +24,10 @@ public class GenericViewCell: UITableViewCell {
   }
   
   func setupUI() {
-    textLabel?.text = title
+    regularTextLabel?.text = title
   }
   
+  deinit {
+    print("deinit GenericViewCell")
+  }
 }

@@ -36,6 +36,7 @@ TODO: Add long description of the pod here.
   
   # Development pods dependencies
   s.dependency 'Shared'
+  s.dependency 'UI'
   s.dependency 'Networking'
   s.dependency 'Persistence'
 

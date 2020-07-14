@@ -40,4 +40,7 @@
    <FileRef
       location = "group:DevPods/RealmPersistence/Example/RealmPersistence.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:DevPods/UI/Example/UI.xcodeproj">
+   </FileRef>
 </Workspace>

@@ -10,22 +10,26 @@ import UIKit
 import RxSwift
 import RxDataSources
 import Shared
+import UI
 
 class TVShowDetailViewController: UITableViewController, StoryboardInstantiable {
   
   var viewModel: TVShowDetailViewModel!
   
   @IBOutlet weak private var backDropImage: UIImageView!
-  @IBOutlet weak private var nameLabel: UILabel!
-  @IBOutlet weak private var yearsRelease: UILabel!
-  @IBOutlet weak private var durationLabel: UILabel!
-  @IBOutlet weak private var genreLabel: UILabel!
-  @IBOutlet weak private var numberOfEpisodes: UILabel!
+  @IBOutlet weak private var nameLabel: TVBoldLabel!
+  @IBOutlet weak private var yearsRelease: TVRegularLabel!
+  @IBOutlet weak private var durationLabel: TVRegularLabel!
+  @IBOutlet weak private var genreLabel: TVRegularLabel!
+  @IBOutlet weak private var episodeGuide: TVRegularLabel!
+  @IBOutlet weak private var numberOfEpisodes: TVRegularLabel!
   @IBOutlet weak private var posterImage: UIImageView!
   @IBOutlet weak private var overViewLabel: UITextView!
   @IBOutlet weak private var starButton: UIButton!
-  @IBOutlet weak private var scoreLabel: UILabel!
-  @IBOutlet weak private var countVoteLabel: UILabel!
+  @IBOutlet weak private var scoreLabel: TVBoldLabel!
+  @IBOutlet weak private var maxScoreLabel: TVRegularLabel!
+  @IBOutlet weak private var countVoteLabel: TVRegularLabel!
+  @IBOutlet weak private var criticReviews: TVRegularLabel!
   
   private let loadingView = LoadingView(frame: .zero)
   private let messageView = MessageView(frame: .zero)
@@ -51,10 +55,6 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
     bookmarkButton.tintColor = .gray
     return bookmarkButton
   }()
-  
-  // MARK: - TODO, Use Color Palette instead
-  
-  private let greenColor = UIColor.init(red: 69.0/255.0, green: 132.0/255.0, blue: 1.0/255.0, alpha: 1)
   
   // MARK: - Life Cycle
   
@@ -86,6 +86,14 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
   
   private func setupUIElements() {
     starButton.setImage(UIImage(name: "star"), for: .normal)
+    setupUIAttributes()
+  }
+  
+  private func setupUIAttributes() {
+    nameLabel.tvSize = .custom(24)
+    scoreLabel.tvSize = .custom(20)
+    maxScoreLabel.tvSize = .custom(22)
+    overViewLabel.textColor = Colors.electricBlue.color
   }
   
   private func setupViewModel() {
@@ -127,7 +135,7 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
     viewModel.output
       .isWatchList
       .subscribe(onNext: { [weak self] isWatchList in
-        self?.watchListButton.tintColor = isWatchList ? self?.greenColor : .gray
+        self?.watchListButton.tintColor = isWatchList ? Colors.customGreen.color : .gray
       })
       .disposed(by: disposeBag)
   }

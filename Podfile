@@ -48,6 +48,10 @@ def realmPersistence_pod
   pod 'RealmPersistence', :path =>  'DevPods/RealmPersistence'
 end
 
+def ui_pod
+  pod 'UI', :path =>  'DevPods/UI'
+end
+
 
 def development_pods
   networking_pod
@@ -61,6 +65,7 @@ def development_pods
   keychain_pod
   persistence_pod
   realmPersistence_pod
+  ui_pod
 end
 
 target 'TVToday' do
@@ -150,5 +155,12 @@ target 'RealmPersistence_Example' do
   project 'DevPods/RealmPersistence/Example/RealmPersistence.xcodeproj'
   
   realmPersistence_pod
+end
+
+target 'UI_Example' do
+  use_frameworks!
+  project 'DevPods/UI/Example/UI.xcodeproj'
+  
+  ui_pod
 end
 

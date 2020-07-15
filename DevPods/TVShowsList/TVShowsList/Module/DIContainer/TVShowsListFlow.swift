@@ -57,12 +57,12 @@ public class TVShowsListFlow: Flow {
   
   public func navigate(to step: Step) -> FlowContributors {
     switch step {
-    case TVShowListStep.genreList(let genreId):
-      return navigateToGenreList(with: genreId)
+    case TVShowListStep.genreList(let genreId, let title):
+      return navigateToGenreList(with: genreId, title: title)
       
     case TVShowListStep.watchList:
       return navigateToWatchList()
-    
+      
     case TVShowListStep.favoriteList:
       return navigateToFavorites()
       
@@ -76,27 +76,27 @@ public class TVShowsListFlow: Flow {
   
   // MARK: - Navigate to Genre List
   
-    fileprivate func navigateToGenreList(with id: Int) -> FlowContributors {
-      let viewModel = TVShowListViewModel(fetchTVShowsUseCase: makeShowListByGenreUseCase(genreId: id))
-      let showList = TVShowListViewController.create(with: viewModel)
-  
-      rootViewController.pushViewController(showList, animated: true)
-  
-      return .one(flowContributor: .contribute(
-        withNextPresentable: showList, withNextStepper: viewModel))
-    }
+  fileprivate func navigateToGenreList(with id: Int, title: String?) -> FlowContributors {
+    let viewModel = TVShowListViewModel(fetchTVShowsUseCase: makeShowListByGenreUseCase(genreId: id))
+    let showList = TVShowListViewController.create(with: viewModel)
+    showList.title = title
+    rootViewController.pushViewController(showList, animated: true)
+    
+    return .one(flowContributor: .contribute(
+      withNextPresentable: showList, withNextStepper: viewModel))
+  }
   
   // MARK: - Navigate to Favorites User
   
   fileprivate func navigateToFavorites() -> FlowContributors {
     let viewModel = TVShowListViewModel(fetchTVShowsUseCase: makeFavoriteListUseCase())
     let showList = TVShowListViewController.create(with: viewModel)
+    showList.title = "Favorites"
     
     rootViewController.pushViewController(showList, animated: true)
     
     return .one(flowContributor: .contribute(
       withNextPresentable: showList, withNextStepper: viewModel))
-    //    return .none
   }
   
   // MARK: - Navigate to WatchList User
@@ -104,12 +104,12 @@ public class TVShowsListFlow: Flow {
   fileprivate func navigateToWatchList() -> FlowContributors {
     let viewModel = TVShowListViewModel(fetchTVShowsUseCase: makeWatchListUseCase())
     let showList = TVShowListViewController.create(with: viewModel)
+    showList.title = "Watch List"
     
     rootViewController.pushViewController(showList, animated: true)
     
     return .one(flowContributor: .contribute(
       withNextPresentable: showList, withNextStepper: viewModel))
-    //    return .none
   }
   
   // MARK: - Navigate to Detail TVShow
@@ -150,7 +150,7 @@ public enum TVShowListStep: Step {
   
   case
   
-  genreList(genreId: Int),
+  genreList(genreId: Int, title: String?),
   
   favoriteList,
   

@@ -32,11 +32,6 @@ class ProfileViewController: UIViewController, StoryboardInstantiable {
     setupUI()
   }
   
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-    print("viewDidAppear ProfileViewController")
-  }
-  
   private func setupUI() {
     registerCells()
     setupDataSource()

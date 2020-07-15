@@ -55,22 +55,27 @@ extension SearchViewModel {
 
 extension SearchViewModel: SearchOptionsViewModelDelegate {
   
-  func searchOptionsViewModel(_ searchOptionsViewModel: SearchOptionsViewModel, didGenrePicked idGenre: Int) {
-    steps.accept(SearchStep.genreIsPicked(withId: idGenre))
+  func searchOptionsViewModel(_ searchOptionsViewModel: SearchOptionsViewModel,
+                              didGenrePicked idGenre: Int,
+                              title: String?) {
+    steps.accept(SearchStep.genreIsPicked(withId: idGenre, title: title))
   }
   
-  func searchOptionsViewModel(_ searchOptionsViewModel: SearchOptionsViewModel, didRecentShowPicked idShow: Int) {
+  func searchOptionsViewModel(_ searchOptionsViewModel: SearchOptionsViewModel,
+                              didRecentShowPicked idShow: Int) {
     steps.accept(SearchStep.showIsPicked(withId: idShow))
   }
 }
 
 extension SearchViewModel: ResultsSearchViewModelDelegate {
   
-  func resultsSearchViewModel(_ resultsSearchViewModel: ResultsSearchViewModel, didSelectShow idShow: Int) {
+  func resultsSearchViewModel(_ resultsSearchViewModel: ResultsSearchViewModel,
+                              didSelectShow idShow: Int) {
     steps.accept(SearchStep.showIsPicked(withId: idShow))
   }
   
-  func resultsSearchViewModel(_ resultsSearchViewModel: ResultsSearchViewModel, didSelectRecentSearch query: String) {
+  func resultsSearchViewModel(_ resultsSearchViewModel: ResultsSearchViewModel,
+                              didSelectRecentSearch query: String) {
     searchBarTextSubject.onNext(query)
     startSearch(with: query)
   }

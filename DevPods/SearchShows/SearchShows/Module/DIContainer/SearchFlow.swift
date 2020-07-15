@@ -68,8 +68,8 @@ public class SearchFlow: Flow {
     case SearchStep.searchFeatureInit:
       return navigateToSearchFeature()
       
-    case SearchStep.genreIsPicked(let id):
-      return navigateToGenreListScreen(with: id)
+    case SearchStep.genreIsPicked(let id, let title):
+      return navigateToGenreListScreen(with: id, title: title)
       
     case SearchStep.showIsPicked(let showId):
       return navigateToShowDetailScreen(with: showId)
@@ -119,13 +119,13 @@ public class SearchFlow: Flow {
   
   // MARK: - Navigate to List by Genre
   
-  fileprivate func navigateToGenreListScreen(with id: Int) -> FlowContributors {
+  fileprivate func navigateToGenreListScreen(with id: Int, title: String?) -> FlowContributors {
     let listFlow = TVShowsListFlow(rootViewController: rootViewController,
                                    dependencies: showListDependencies)
     return .one(flowContributor: .contribute(
       withNextPresentable: listFlow,
       withNextStepper:
-      OneStepper(withSingleStep: TVShowListStep.genreList(genreId: id) )))
+      OneStepper(withSingleStep: TVShowListStep.genreList(genreId: id, title: title) )))
   }
   
   // MARK: - Navigate to Detail TVShow
@@ -177,7 +177,7 @@ public enum SearchStep: Step {
   
   searchFeatureInit,
   
-  genreIsPicked(withId: Int),
+  genreIsPicked(withId: Int, title: String?),
   
   showIsPicked(withId: Int)
 }

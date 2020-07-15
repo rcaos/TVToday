@@ -13,9 +13,12 @@ import RxDataSources
 
 protocol SearchOptionsViewModelDelegate: class {
   
-  func searchOptionsViewModel(_ searchOptionsViewModel: SearchOptionsViewModel, didGenrePicked idGenre: Int)
+  func searchOptionsViewModel(_ searchOptionsViewModel: SearchOptionsViewModel,
+                              didGenrePicked idGenre: Int,
+                              title: String?)
   
-  func searchOptionsViewModel(_ searchOptionsViewModel: SearchOptionsViewModel, didRecentShowPicked idShow: Int)
+  func searchOptionsViewModel(_ searchOptionsViewModel: SearchOptionsViewModel,
+                              didRecentShowPicked idShow: Int)
 }
 
 final class SearchOptionsViewModel {
@@ -64,8 +67,8 @@ final class SearchOptionsViewModel {
   
   public func modelIsPicked(with item: SearchOptionsSectionModel.Item) {
     switch item {
-    case .genres(items: let genreId):
-      delegate?.searchOptionsViewModel(self, didGenrePicked: genreId.id)
+    case .genres(items: let genre):
+      delegate?.searchOptionsViewModel(self, didGenrePicked: genre.id, title: genre.name)
     default:
       break
     }

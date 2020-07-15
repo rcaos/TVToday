@@ -17,23 +17,17 @@
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="top" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="pSc-7x-tQ9">
                     <rect key="frame" x="8" y="8" width="728" height="168"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All Episodes" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ot7-ip-riI">
-                            <rect key="frame" x="0.0" y="0.0" width="146.5" height="66.5"/>
-                            <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
-                            <nil key="textColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TV Show Name (Years" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IK0-9C-tff">
-                            <rect key="frame" x="0.0" y="71.5" width="170.5" height="41"/>
+                            <rect key="frame" x="0.0" y="0.0" width="170.5" height="75"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <stackView opaque="NO" contentMode="scaleToFill" alignment="bottom" translatesAutoresizingMaskIntoConstraints="NO" id="6z3-Yy-icY">
-                            <rect key="frame" x="0.0" y="117.5" width="70" height="50.5"/>
+                            <rect key="frame" x="0.0" y="80" width="70" height="88"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Seasons:" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ieU-UD-xCg">
-                                    <rect key="frame" x="0.0" y="30" width="70" height="20.5"/>
+                                    <rect key="frame" x="0.0" y="67.5" width="70" height="20.5"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <color key="textColor" red="0.30980392156862746" green="0.32549019607843138" blue="0.40000000000000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
@@ -53,7 +47,6 @@
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>
-                <outlet property="allEpisodesLabel" destination="Ot7-ip-riI" id="56l-ds-dos"/>
                 <outlet property="seasonsLabel" destination="ieU-UD-xCg" id="hZC-mb-4Na"/>
                 <outlet property="showNameLabel" destination="IK0-9C-tff" id="hYS-fZ-Azr"/>
             </connections>

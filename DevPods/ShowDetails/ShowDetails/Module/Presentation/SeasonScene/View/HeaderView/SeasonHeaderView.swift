@@ -11,7 +11,6 @@ import UI
 
 class SeasonHeaderView: UIView {
   
-  @IBOutlet weak var allEpisodesLabel: UILabel!
   @IBOutlet weak var showNameLabel: UILabel!
   @IBOutlet weak var seasonsLabel: UILabel!
   
@@ -27,9 +26,6 @@ class SeasonHeaderView: UIView {
   }
   
   private func setupUIElements() {
-    allEpisodesLabel.font = Font.sanFrancisco.of(type: .regular, with: .custom(20))
-    allEpisodesLabel.textColor = Colors.electricBlue.color
-    
     showNameLabel.font = Font.sanFrancisco.of(type: .bold, with: .custom(22))
     showNameLabel.textColor = Colors.electricBlue.color
     

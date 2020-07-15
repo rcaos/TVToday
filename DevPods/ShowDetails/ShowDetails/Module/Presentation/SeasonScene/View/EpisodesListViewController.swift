@@ -43,10 +43,12 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable {
     configureTable()
     setupBindables()
     viewModel?.viewDidLoad()
+    
+    title = "All Episodes"
   }
   
   deinit {
-    print("deinit DefaultSeasonTableViewController")
+    print("deinit \(Self.self)")
   }
   
   private func configureTable() {
@@ -59,7 +61,8 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable {
     let nib = UINib(nibName: "SeasonHeaderView", bundle: Bundle(for: Self.self) )
     let headerView = nib.instantiate(withOwner: nil, options: nil).first as! SeasonHeaderView
     
-    headerView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 110)
+    // MARK: - TODO, Autolayout in HeaderTableView
+    headerView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
     headerView.viewModel = viewModel.buildHeaderViewModel()
 
     tableView.tableHeaderView = headerView

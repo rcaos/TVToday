@@ -7,9 +7,10 @@
 //
 
 import UIKit
+import Shared
 import UI
 
-class SeasonHeaderView: UIView {
+class SeasonHeaderView: UIView, NibLoadable {
   
   @IBOutlet weak var showNameLabel: UILabel!
   @IBOutlet weak var seasonsLabel: UILabel!

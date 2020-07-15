@@ -62,13 +62,8 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable {
   }
   
   private func setupTableHeaderView() {
-    // MARK: - TODO, handle with protocol instead NIbloadable or something
-    let nib = UINib(nibName: "SeasonHeaderView", bundle: Bundle(for: Self.self) )
-    let headerView = nib.instantiate(withOwner: nil, options: nil).first as! SeasonHeaderView
-    
-    headerView.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
+    let headerView = SeasonHeaderView.loadFromNib()
     headerView.viewModel = viewModel.buildHeaderViewModel()
-    
     tableView.tableHeaderView = headerView
   }
   

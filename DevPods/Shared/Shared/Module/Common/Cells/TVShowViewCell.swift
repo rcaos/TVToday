@@ -11,7 +11,10 @@ import UI
 
 public class TVShowViewCell: UITableViewCell {
   
-  @IBOutlet weak private var nameLabel: TVRegularLabel!
+  @IBOutlet weak private var posterImageView: UIImageView!
+  @IBOutlet weak private var nameLabel: TVBoldLabel!
+  @IBOutlet weak private var startYearLabel: TVRegularLabel!
+  @IBOutlet weak private var starImageView: UIImageView!
   @IBOutlet weak private var averageLabel: TVRegularLabel!
   
   public var viewModel: TVShowCellViewModel? {
@@ -22,12 +25,16 @@ public class TVShowViewCell: UITableViewCell {
   
   public override func awakeFromNib() {
     super.awakeFromNib()
+    
+    starImageView.image = UIImage(name: "star")
   }
   
   private func setupUI() {
     guard let viewModel = viewModel else { return }
     
+    posterImageView.setImage(with: viewModel.posterPathURL)
     nameLabel.text = viewModel.name
+    startYearLabel.text = viewModel.firstAirDate
     averageLabel.text = viewModel.average
   }
   

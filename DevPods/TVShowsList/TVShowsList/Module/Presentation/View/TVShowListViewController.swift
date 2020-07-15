@@ -55,6 +55,10 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
   
   func setupTable() {
     tableView.registerNib(cellType: TVShowViewCell.self)
+    
+    tableView.rx
+    .setDelegate(self)
+    .disposed(by: disposeBag)
   }
   
   // MARK: - SetupViewModel
@@ -112,5 +116,14 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
     default:
       tableView.tableFooterView = loadingView
     }
+  }
+}
+
+// MARK: - UITableViewDelegate
+
+extension TVShowListViewController: UITableViewDelegate {
+  
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return 175.0
   }
 }

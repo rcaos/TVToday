@@ -43,7 +43,7 @@ class ResultsSearchViewController: UIViewController {
     super.viewDidLoad()
     
     setupViews()
-    registerCells()
+    setupTableView()
     setupViewModel()
     setupTable()
   }
@@ -53,9 +53,13 @@ class ResultsSearchViewController: UIViewController {
     loadingView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
   }
   
-  private func registerCells() {
+  private func setupTableView() {
     resultView.tableView.registerNib(cellType: TVShowViewCell.self)
     resultView.tableView.registerNib(cellType: RecentSearchTableViewCell.self)
+    
+    resultView.tableView.rx
+      .setDelegate(self)
+      .disposed(by: disposeBag)
   }
   
   // MARK: - SetupViewModel
@@ -140,6 +144,25 @@ class ResultsSearchViewController: UIViewController {
       tableView.separatorStyle = .none
     default:
       tableView.tableFooterView = loadingView
+    }
+  }
+}
+
+// MARK: - UITableViewDelegate
+
+extension ResultsSearchViewController: UITableViewDelegate {
+  
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    
+    let viewState = viewModel.getViewState()
+    
+    switch viewState {
+    case .initial:
+      return UITableView.automaticDimension
+    case .populated:
+      return 175.0
+    default:
+      return 0
     }
   }
 }

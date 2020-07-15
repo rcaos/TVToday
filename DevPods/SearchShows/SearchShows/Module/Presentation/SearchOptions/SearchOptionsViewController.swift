@@ -125,8 +125,6 @@ class SearchOptionsViewController: UIViewController, StoryboardInstantiable {
 
 extension SearchOptionsViewController {
   
-  // TODO, no debería pasar una Entidad, si no un ViewModel
-  
   private func makeCellForShowVisited(at indexPath: IndexPath, cellViewModel: VisitedShowViewModel) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: VisitedShowTableViewCell.self, for: indexPath)
     cellViewModel.delegate = viewModel

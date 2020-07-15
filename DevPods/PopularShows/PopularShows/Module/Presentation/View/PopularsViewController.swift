@@ -62,6 +62,10 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
     
     tableView.tableFooterView = loadingView
     tableView.rowHeight = UITableView.automaticDimension
+    
+    tableView.rx
+      .setDelegate(self)
+      .disposed(by: disposeBag)
   }
   
   // MARK: - Setup ViewModel
@@ -73,14 +77,14 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
       .bind(to:
         tableView.rx.items( cellIdentifier: "TVShowViewCell",
                             cellType: TVShowViewCell.self)) { [weak self] (index, element, cell) in
-            guard let strongSelf = self else { return }
-            
-            cell.viewModel = element
-            
-            if case .paging(let entities, let nextPage) = try? strongSelf.viewModel.viewStateObservableSubject.value(),
-              index == entities.count - 1 {
-              strongSelf.viewModel.getShows(for: nextPage)
-            }
+                              guard let strongSelf = self else { return }
+                              
+                              cell.viewModel = element
+                              
+                              if case .paging(let entities, let nextPage) = try? strongSelf.viewModel.viewStateObservableSubject.value(),
+                                index == entities.count - 1 {
+                                strongSelf.viewModel.getShows(for: nextPage)
+                              }
     }
     .disposed(by: disposeBag)
     
@@ -114,5 +118,14 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
     default:
       tableView.tableFooterView = nil
     }
+  }
+}
+
+// MARK: - UITableViewDelegate
+
+extension PopularsViewController: UITableViewDelegate {
+  
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return 175.0
   }
 }

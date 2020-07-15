@@ -70,6 +70,14 @@ final class ResultsSearchViewModel {
     delegate?.resultsSearchViewModel(self, didSelectShow: idShow)
   }
   
+  func getViewState() -> ViewState {
+    if let viewState = try? viewStateObservableSubject.value() {
+      return viewState
+    } else {
+      return .empty
+    }
+  }
+  
   // MARK: - Private
   
   private func subscribeToSearchInput() {

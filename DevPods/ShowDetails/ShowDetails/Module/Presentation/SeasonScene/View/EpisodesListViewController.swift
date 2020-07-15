@@ -51,6 +51,11 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable {
     print("deinit \(Self.self)")
   }
   
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    updateHeaderViewLayout()
+  }
+  
   private func configureTable() {
     tableView.registerNib(cellType: EpisodeItemTableViewCell.self)
     tableView.registerNib(cellType: SeasonListTableViewCell.self)
@@ -61,10 +66,9 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable {
     let nib = UINib(nibName: "SeasonHeaderView", bundle: Bundle(for: Self.self) )
     let headerView = nib.instantiate(withOwner: nil, options: nil).first as! SeasonHeaderView
     
-    // MARK: - TODO, Autolayout in HeaderTableView
-    headerView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
+    headerView.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
     headerView.viewModel = viewModel.buildHeaderViewModel()
-
+    
     tableView.tableHeaderView = headerView
   }
   
@@ -113,6 +117,17 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable {
     default :
       tableView.tableFooterView = loadingView
       tableView.separatorStyle = .none
+    }
+  }
+  
+  private func updateHeaderViewLayout() {
+    guard let headerView = tableView.tableHeaderView else { return }
+    let size = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+    
+    if headerView.frame.size.height != size.height {
+      headerView.frame.size.height = size.height
+      tableView.tableHeaderView = headerView
+      tableView.layoutIfNeeded()
     }
   }
 }

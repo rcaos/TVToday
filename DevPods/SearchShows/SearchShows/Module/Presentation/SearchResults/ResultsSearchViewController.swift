@@ -20,8 +20,7 @@ class ResultsSearchViewController: UIViewController {
   
   private var viewModel: ResultsSearchViewModel
   
-  private var emptyView = MessageView(message: "No results to Show")
-  private var loadingView = LoadingView(frame: .zero)
+  private var messageView = MessageView()
   
   // MARK: - Life Cycle
   
@@ -49,8 +48,7 @@ class ResultsSearchViewController: UIViewController {
   }
   
   private func setupViews() {
-    emptyView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
-    loadingView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
+    messageView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
   }
   
   private func setupTableView() {
@@ -83,7 +81,8 @@ class ResultsSearchViewController: UIViewController {
   }
   
   private func setupDataSource() {
-    let dataSource = RxTableViewSectionedReloadDataSource<ResultSearchSectionModel>(configureCell: { [weak self] (_, tableView, indexPath, element) -> UITableViewCell in
+    let dataSource = RxTableViewSectionedReloadDataSource<ResultSearchSectionModel>(
+      configureCell: { [weak self] (_, tableView, indexPath, element) -> UITableViewCell in
       guard let strongSelf = self else { fatalError() }
       
       switch element {
@@ -135,15 +134,25 @@ class ResultsSearchViewController: UIViewController {
     case .initial :
       tableView.tableFooterView = nil
       tableView.separatorStyle = .singleLine
+    
+    case .loading:
+      tableView.tableFooterView = LoadingView.defaultView
+      tableView.separatorStyle = .none
+      
     case .populated :
       tableView.tableHeaderView = nil
       tableView.tableFooterView = nil
       tableView.separatorStyle = .singleLine
+      
     case .empty :
-      tableView.tableFooterView = emptyView
+      messageView.messageLabel.text = "No results to Show"
+      tableView.tableFooterView = messageView
       tableView.separatorStyle = .none
-    default:
-      tableView.tableFooterView = loadingView
+      
+    case .error(let message):
+      messageView.messageLabel.text = message
+      tableView.tableFooterView = messageView
+      tableView.separatorStyle = .none
     }
   }
 }

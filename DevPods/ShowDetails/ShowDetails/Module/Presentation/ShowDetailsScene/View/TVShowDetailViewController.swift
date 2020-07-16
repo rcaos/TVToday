@@ -12,7 +12,7 @@ import RxDataSources
 import Shared
 import UI
 
-class TVShowDetailViewController: UITableViewController, StoryboardInstantiable, Loadable {
+class TVShowDetailViewController: UITableViewController, StoryboardInstantiable, Loadable, PresentableView {
   
   var viewModel: TVShowDetailViewModel!
   
@@ -30,8 +30,6 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable,
   @IBOutlet weak private var maxScoreLabel: TVRegularLabel!
   @IBOutlet weak private var countVoteLabel: TVRegularLabel!
   @IBOutlet weak private var criticReviews: TVRegularLabel!
-  
-  private let messageView = MessageView(frame: .zero)
   
   private let disposeBag = DisposeBag()
   
@@ -59,7 +57,6 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable,
   
   override func loadView() {
     super.loadView()
-    messageView.frame = view.frame
   }
   
   override func viewDidLoad() {
@@ -139,20 +136,24 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable,
   }
   
   private func configView(with state: TVShowDetailViewModel.ViewState) {
-    messageView.removeFromSuperview()
-    hideLoadingView()
-    
     switch state {
     case .loading:
       showLoadingView()
+      hideMessageView()
+      
       tableView.separatorStyle = .none
+      
     case .populated(let tvShowDetail):
+      hideLoadingView()
+      hideMessageView()
+      
       setupUI(with: tvShowDetail)
       tableView.separatorStyle = .singleLine
+      
     case .error(let error):
-      messageView.messageLabel.text = error
-      view.addSubview(messageView)
+      hideLoadingView()
       tableView.separatorStyle = .none
+      showMessageView(with: error)
     }
   }
   

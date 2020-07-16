@@ -13,7 +13,7 @@ public extension UINavigationController {
     
     if #available(iOS 13.0, * ) {
       let standard = UINavigationBarAppearance()
-      standard.configureWithTransparentBackground()
+      standard.configureWithDefaultBackground()
       
       standard.titleTextAttributes = [
         .foregroundColor: Colors.electricBlue.color,

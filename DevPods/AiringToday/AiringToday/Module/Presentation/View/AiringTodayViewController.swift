@@ -11,7 +11,7 @@ import RxSwift
 import RxDataSources
 import Shared
 
-class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loadable {
+class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loadable, PresentableView {
   
   @IBOutlet weak var collectionView: UICollectionView!
   
@@ -22,8 +22,6 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loada
     controller.viewModel = viewModel
     return controller
   }
-  
-  lazy var messageView = MessageView(message: "")
   
   fileprivate let disposeBag = DisposeBag()
   
@@ -41,15 +39,10 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loada
   func setupUI() {
     navigationItem.title = "Today on TV"
     
-    setupViews()
     setupCollectionView()
     setupDataSource()
     handleSelectionItems()
     subscribeToViewState()
-  }
-  
-  fileprivate func setupViews() {
-    messageView.frame = CGRect(x: 0, y: 0, width: collectionView.frame.width, height: 100)
   }
   
   // MARK: - Setup CollectionView
@@ -102,14 +95,22 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loada
   
   fileprivate func handleViewState(with state: SimpleViewState<AiringTodayCollectionViewModel>) {
     
-    hideLoadingView()
-    
     switch state {
     case .loading:
       showLoadingView()
+      hideMessageView()
+    
+    case .empty:
+      hideLoadingView()
+      showMessageView(with: "No Show for Today")
+      
+    case .error(let message):
+      hideLoadingView()
+      showMessageView(with: message)
       
     default:
-      break
+      hideLoadingView()
+      hideMessageView()
     }
   }
 }

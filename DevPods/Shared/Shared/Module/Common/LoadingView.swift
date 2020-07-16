@@ -10,7 +10,17 @@ import UIKit
 
 public class LoadingView: UIView {
   
-  private let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
+  public static var defaultView: LoadingView = {
+    let recommendedFrame: CGRect = CGRect(x: 0, y: 0,
+                                          width: UIScreen.main.bounds.width,
+                                          height: 100)
+    let defaultLoadingView = LoadingView(frame: recommendedFrame)
+    return defaultLoadingView
+  }()
+  
+  private let activityIndicator = UIActivityIndicatorView(style: .gray)
+  
+  // MARK: - Initializers
   
   public override init(frame: CGRect) {
     super.init(frame: frame)

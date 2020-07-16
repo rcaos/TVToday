@@ -17,7 +17,6 @@ class SearchOptionsViewController: UIViewController, StoryboardInstantiable, Loa
   
   private var viewModel: SearchOptionsViewModel!
   
-  private var loadingView = LoadingView(frame: .zero)
   private var messageView = MessageView(frame: .zero)
   
   private let disposeBag = DisposeBag()
@@ -44,7 +43,6 @@ class SearchOptionsViewController: UIViewController, StoryboardInstantiable, Loa
   }
   
   private func setupViews() {
-    loadingView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
     messageView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
   }
   
@@ -111,7 +109,7 @@ class SearchOptionsViewController: UIViewController, StoryboardInstantiable, Loa
       tableView.separatorStyle = .none
       
     case .paging:
-      tableView.tableFooterView = loadingView
+      tableView.tableFooterView = LoadingView.defaultView
       tableView.separatorStyle = .singleLine
       
     case .populated:

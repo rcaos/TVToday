@@ -11,17 +11,13 @@ import RxSwift
 import RxCocoa
 import Shared
 
-class TVShowListViewController: UIViewController, StoryboardInstantiable, Loadable {
+class TVShowListViewController: UIViewController, StoryboardInstantiable, Loadable, PresentableView {
   
   @IBOutlet weak var tableView: UITableView!
   
   private var viewModel: TVShowListViewModel!
   
   private let disposeBag = DisposeBag()
-  
-  private var messageView = MessageView(message: "")
-  
-  private var loadingView = LoadingView(frame: .zero)
   
   static func create(with viewModel: TVShowListViewModel) -> TVShowListViewController {
     let controller = TVShowListViewController.instantiateViewController()
@@ -34,7 +30,6 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable, Loadab
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    setupViews()
     setupTable()
     setupViewModel()
     viewModel.getShows(for: 1)
@@ -42,13 +37,6 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable, Loadab
   
   deinit {
     print("deinit \(Self.self)")
-  }
-  
-  // MARK: - SetupView
-  
-  func setupViews() {
-    messageView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
-    loadingView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
   }
   
   // MARK: - SetupTable
@@ -109,31 +97,37 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable, Loadab
   }
   
   private func configView(with state: SimpleViewState<TVShowCellViewModel>) {
-    hideLoadingView()
     
     switch state {
     case .loading:
       showLoadingView()
       tableView.tableFooterView = nil
       tableView.separatorStyle = .none
+      hideMessageView()
       
     case .paging :
-      tableView.tableFooterView = loadingView
+      hideLoadingView()
+      tableView.tableFooterView = LoadingView.defaultView
       tableView.separatorStyle = .singleLine
+      hideMessageView()
       
     case .populated :
+      hideLoadingView()
       tableView.tableFooterView = nil
       tableView.separatorStyle = .singleLine
+      hideMessageView()
       
     case .empty:
-      messageView.messageLabel.text = "No TVShow to show"
-      tableView.tableFooterView = messageView
+      hideLoadingView()
+      tableView.tableFooterView = nil
       tableView.separatorStyle = .none
+      showMessageView(with: "No TvShows to show")
       
     case .error(let error):
-      messageView.messageLabel.text = error
-      tableView.tableFooterView = messageView
+      hideLoadingView()
+      tableView.tableFooterView = nil
       tableView.separatorStyle = .none
+      showMessageView(with: error)
     }
   }
 }

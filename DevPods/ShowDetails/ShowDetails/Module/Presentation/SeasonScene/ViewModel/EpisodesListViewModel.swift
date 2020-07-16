@@ -15,8 +15,8 @@ final class EpisodesListViewModel {
   
   var steps = PublishRelay<Step>()
   
-  private let fetchEpisodesUseCase: FetchEpisodesUseCase
   private let fetchDetailShowUseCase: FetchTVShowDetailsUseCase
+  private let fetchEpisodesUseCase: FetchEpisodesUseCase
   
   private var tvShowId: Int!
   private var showDetailResult: TVShowDetailResult?
@@ -126,7 +126,7 @@ final class EpisodesListViewModel {
         strongSelf.selectFirstSeason()
         }, onError: {[weak self] error in
           guard let strongSelf = self else { return }
-          strongSelf.viewStateObservableSubject.onNext( .error(error) )
+          strongSelf.viewStateObservableSubject.onNext( .error(error.localizedDescription) )
       })
       .disposed(by: disposeBag)
   }
@@ -140,10 +140,12 @@ final class EpisodesListViewModel {
       .subscribe(onNext: { [weak self] result in
         guard let strongSelf = self else { return }
         strongSelf.processFetched(with: result)
+        
         }, onError: { [weak self] error in
           guard let strongSelf = self else { return }
-          strongSelf.createSectionModel(state: .error(error), with: strongSelf.totalSeasons, seasonSelected: seasonNumber, and: [])
-          strongSelf.viewStateObservableSubject.onNext( .error(error) )
+          strongSelf.createSectionModel(state: .errorSeason(error.localizedDescription),
+                                        with: strongSelf.totalSeasons,
+                                        seasonSelected: seasonNumber, and: [])
       })
       .disposed(by: disposeBag)
   }
@@ -208,7 +210,8 @@ extension EpisodesListViewModel {
     case populated
     case loadingSeason
     case empty
-    case error(Error)
+    case error(String)
+    case errorSeason(String)
   }
 }
 

@@ -44,6 +44,12 @@ final class AiringTodayViewModel: ShowsViewModel {
     return entites.map { AiringTodayCollectionViewModel(show: $0) }
   }
   
+  // MARK: - Public
+  
+  func getCurrentViewState() -> SimpleViewState<AiringTodayCollectionViewModel> {
+    guard let currentState = try? viewStateObservableSubject.value() else { return .loading }
+    return currentState
+  }
 }
 
 // MARK: - BaseViewModel

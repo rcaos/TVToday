@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 import Shared
 
-class TVShowListViewController: UIViewController, StoryboardInstantiable {
+class TVShowListViewController: UIViewController, StoryboardInstantiable, Loadable {
   
   @IBOutlet weak var tableView: UITableView!
   
@@ -19,7 +19,7 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
   
   private let disposeBag = DisposeBag()
   
-  private var emptyView = MessageView(message: "No results to Show")
+  private var messageView = MessageView(message: "")
   
   private var loadingView = LoadingView(frame: .zero)
   
@@ -41,13 +41,13 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
   }
   
   deinit {
-    print("deinit TVShowListViewController")
+    print("deinit \(Self.self)")
   }
   
   // MARK: - SetupView
   
   func setupViews() {
-    emptyView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
+    messageView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
     loadingView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 100)
   }
   
@@ -57,13 +57,19 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
     tableView.registerNib(cellType: TVShowViewCell.self)
     
     tableView.rx
-    .setDelegate(self)
-    .disposed(by: disposeBag)
+      .setDelegate(self)
+      .disposed(by: disposeBag)
   }
   
   // MARK: - SetupViewModel
   
-  func setupViewModel() {
+  private func setupViewModel() {
+    subscribeToViewState()
+    subscribeToData()
+    handleSelectionItems()
+  }
+  
+  private func subscribeToViewState() {
     viewModel.output
       .viewState
       .subscribe(onNext: { [weak self] state in
@@ -71,7 +77,9 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
         strongSelf.configView(with: state)
       })
       .disposed(by: disposeBag)
-    
+  }
+  
+  private func subscribeToData() {
     viewModel.output
       .viewState
       .map { $0.currentEntities }
@@ -87,7 +95,9 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
         }
     }
     .disposed(by: disposeBag)
-    
+  }
+  
+  private func handleSelectionItems() {
     Observable
       .zip( tableView.rx.itemSelected, tableView.rx.modelSelected(TVShowCellViewModel.self) )
       .bind { [weak self] (indexPath, item) in
@@ -96,25 +106,34 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable {
         strongSelf.viewModel.navigateTo(step: TVShowListStep.showIsPicked(showId: item.entity.id) )
     }
     .disposed(by: disposeBag)
-    
   }
   
-  func configView(with state: SimpleViewState<TVShowCellViewModel>) {
+  private func configView(with state: SimpleViewState<TVShowCellViewModel>) {
+    hideLoadingView()
+    
     switch state {
-    case .populated :
+    case .loading:
+      showLoadingView()
       tableView.tableFooterView = nil
-      tableView.separatorStyle = .singleLine
-      tableView.reloadData()
-    case .empty:
-      tableView.tableFooterView = emptyView
       tableView.separatorStyle = .none
-      tableView.reloadData()
+      
     case .paging :
       tableView.tableFooterView = loadingView
       tableView.separatorStyle = .singleLine
-      tableView.reloadData()
-    default:
-      tableView.tableFooterView = loadingView
+      
+    case .populated :
+      tableView.tableFooterView = nil
+      tableView.separatorStyle = .singleLine
+      
+    case .empty:
+      messageView.messageLabel.text = "No TVShow to show"
+      tableView.tableFooterView = messageView
+      tableView.separatorStyle = .none
+      
+    case .error(let error):
+      messageView.messageLabel.text = error
+      tableView.tableFooterView = messageView
+      tableView.separatorStyle = .none
     }
   }
 }

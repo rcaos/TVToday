@@ -11,7 +11,7 @@ import RxCocoa
 import RxDataSources
 import Shared
 
-class SearchOptionsViewController: UIViewController, StoryboardInstantiable {
+class SearchOptionsViewController: UIViewController, StoryboardInstantiable, Loadable {
   
   @IBOutlet var tableView: UITableView!
   
@@ -102,23 +102,33 @@ class SearchOptionsViewController: UIViewController, StoryboardInstantiable {
   }
   
   private func handleTableState(with state: SimpleViewState<Genre>) {
+    hideLoadingView()
+    
     switch state {
+    case .loading:
+      showLoadingView()
+      tableView.tableFooterView = nil
+      tableView.separatorStyle = .none
+      
+    case .paging:
+      tableView.tableFooterView = loadingView
+      tableView.separatorStyle = .singleLine
+      
     case .populated:
       tableView.tableFooterView = nil
-      
-    case .loading, .paging:
-      tableView.tableFooterView = loadingView
+      tableView.separatorStyle = .singleLine
       
     case .empty:
       messageView.messageLabel.text = "No genres to Show"
       tableView.tableFooterView = messageView
+      tableView.separatorStyle = .none
       
     case .error(let message):
       messageView.messageLabel.text = message
       tableView.tableFooterView = messageView
+      tableView.separatorStyle = .none
     }
   }
-  
 }
 
 // MARK: - Build Cells

@@ -10,7 +10,7 @@ import UIKit
 
 public class LoadingView: UIView {
   
-  let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
+  private let activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
   
   public override init(frame: CGRect) {
     super.init(frame: frame)
@@ -20,6 +20,10 @@ public class LoadingView: UIView {
   public required init?(coder: NSCoder) {
     super.init(coder: coder)
     setupView()
+  }
+  
+  public override func layoutSubviews() {
+    super.layoutSubviews()
   }
   
   private func setupView() {

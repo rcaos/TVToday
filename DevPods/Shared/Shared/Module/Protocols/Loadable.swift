@@ -8,14 +8,14 @@
 
 import UIKit
 
-protocol Loadable {
+public protocol Loadable {
   func showLoadingView()
   func hideLoadingView()
 }
 
 // MARK: - UIButton
 
-extension Loadable where Self: UIButton {
+public extension Loadable where Self: UIView {
   
   func showLoadingView() {
     let activityIndicator = UIActivityIndicatorView(style: .gray)
@@ -24,17 +24,51 @@ extension Loadable where Self: UIButton {
     activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
     activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
     activityIndicator.startAnimating()
-    activityIndicator.tag = 1234
+    activityIndicator.tag = ConstantsLoadable.loadingViewTag
     
     isUserInteractionEnabled = false
   }
   
   func hideLoadingView() {
     subviews.forEach { subview in
-      if subview.tag == 1234 {
+      if subview.tag == ConstantsLoadable.loadingViewTag {
         subview.removeFromSuperview()
       }
     }
     isUserInteractionEnabled = true
   }
+}
+
+// MARK: - UIViewController
+
+public extension Loadable where Self: UIViewController {
+  
+  func showLoadingView() {
+    
+    let loadingView = LoadingView()
+    
+    loadingView.translatesAutoresizingMaskIntoConstraints = false
+    view.addSubview(loadingView)
+    
+    loadingView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+    loadingView.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
+    loadingView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+    loadingView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+    
+    loadingView.tag = ConstantsLoadable.loadingViewTag
+  }
+  
+  func hideLoadingView() {
+    view.subviews.forEach { subview in
+      if subview.tag == ConstantsLoadable.loadingViewTag {
+        subview.removeFromSuperview()
+      }
+    }
+  }
+}
+
+// MARK: - ConstantsLoadable
+
+private struct ConstantsLoadable {
+  fileprivate static let loadingViewTag = 12345
 }

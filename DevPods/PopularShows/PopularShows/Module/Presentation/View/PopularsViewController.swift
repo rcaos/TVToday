@@ -12,7 +12,7 @@ import RxCocoa
 import RxDataSources
 import Shared
 
-class PopularsViewController: UIViewController, StoryboardInstantiable {
+class PopularsViewController: UIViewController, StoryboardInstantiable, Loadable {
   
   @IBOutlet weak var tableView: UITableView!
   
@@ -25,7 +25,7 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
   }
   
   lazy var loadingView = LoadingView(frame: .zero)
-  lazy var emptyView = MessageView(message: "No TVShow to show")
+  lazy var messageView = MessageView(message: "")
   
   let disposeBag = DisposeBag()
   
@@ -54,7 +54,7 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
   
   func setupViews() {
     loadingView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
-    emptyView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
+    messageView.frame = CGRect(x: 0, y: 0, width: tableView.frame.width, height: 100)
   }
   
   func setupTable() {
@@ -107,16 +107,31 @@ class PopularsViewController: UIViewController, StoryboardInstantiable {
   }
   
   fileprivate func handleTableState(with state: SimpleViewState<TVShowCellViewModel>) {
+    hideLoadingView()
+    
     switch state {
-    case .loading, .paging :
-      tableView.tableFooterView = loadingView
-    case .empty:
-      tableView.tableFooterView = emptyView
-    case .error(let message):
-      emptyView.messageLabel.text = message
-      tableView.tableFooterView = emptyView
-    default:
+    case .loading:
+      showLoadingView()
       tableView.tableFooterView = nil
+      tableView.separatorStyle = .none
+      
+    case .paging:
+      tableView.tableFooterView = loadingView
+      tableView.separatorStyle = .singleLine
+      
+    case .populated:
+      tableView.tableFooterView = nil
+      tableView.separatorStyle = .singleLine
+      
+    case .empty:
+      messageView.messageLabel.text = "No TVShow to show"
+      tableView.tableFooterView = messageView
+      tableView.separatorStyle = .none
+      
+    case .error(let error):
+      messageView.messageLabel.text = error
+      tableView.tableFooterView = messageView
+      tableView.separatorStyle = .none
     }
   }
 }

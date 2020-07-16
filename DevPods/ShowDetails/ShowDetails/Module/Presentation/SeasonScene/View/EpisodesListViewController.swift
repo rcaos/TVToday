@@ -11,7 +11,7 @@ import RxSwift
 import RxDataSources
 import Shared
 
-class EpisodesListViewController: UIViewController, StoryboardInstantiable {
+class EpisodesListViewController: UIViewController, StoryboardInstantiable, Loadable {
   
   @IBOutlet weak var tableView: UITableView!
   
@@ -97,20 +97,26 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable {
   
   private func configureView(with state: EpisodesListViewModel.ViewState) {
     
+    hideLoadingView()
+    
     switch state {
+    case .loading :
+      showLoadingView()
+      tableView.tableFooterView = nil
+      tableView.separatorStyle = .none
     case .didLoadHeader :
       setupTableHeaderView()
     case .populated :
       tableView.tableFooterView = UIView()
       tableView.separatorStyle = .singleLine
+    case .loadingSeason:
+      tableView.tableFooterView = loadingView
+      tableView.separatorStyle = .none
     case .empty :
       tableView.tableFooterView = emptyView
       tableView.separatorStyle = .none
     case .error :
       tableView.tableFooterView = errorView
-      tableView.separatorStyle = .none
-    default :
-      tableView.tableFooterView = loadingView
       tableView.separatorStyle = .none
     }
   }

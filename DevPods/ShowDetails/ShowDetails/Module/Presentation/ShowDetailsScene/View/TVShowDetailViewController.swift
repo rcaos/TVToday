@@ -12,7 +12,7 @@ import RxDataSources
 import Shared
 import UI
 
-class TVShowDetailViewController: UITableViewController, StoryboardInstantiable {
+class TVShowDetailViewController: UITableViewController, StoryboardInstantiable, Loadable {
   
   var viewModel: TVShowDetailViewModel!
   
@@ -31,7 +31,6 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
   @IBOutlet weak private var countVoteLabel: TVRegularLabel!
   @IBOutlet weak private var criticReviews: TVRegularLabel!
   
-  private let loadingView = LoadingView(frame: .zero)
   private let messageView = MessageView(frame: .zero)
   
   private let disposeBag = DisposeBag()
@@ -60,7 +59,6 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
   
   override func loadView() {
     super.loadView()
-    loadingView.frame = view.frame
     messageView.frame = view.frame
   }
   
@@ -73,7 +71,7 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
   }
   
   deinit {
-    print("deinit TVShowDetailViewController")
+    print("deinit \(Self.self)")
   }
   
   private func setupNavigationBar() {
@@ -140,20 +138,21 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable 
       .disposed(by: disposeBag)
   }
   
-  func configView(with state: TVShowDetailViewModel.ViewState) {
-    loadingView.removeFromSuperview()
+  private func configView(with state: TVShowDetailViewModel.ViewState) {
     messageView.removeFromSuperview()
+    hideLoadingView()
     
     switch state {
+    case .loading:
+      showLoadingView()
+      tableView.separatorStyle = .none
     case .populated(let tvShowDetail):
       setupUI(with: tvShowDetail)
-    case .loading:
-      view.addSubview(loadingView)
-    case .error(let message):
-      messageView.messageLabel.text = message
+      tableView.separatorStyle = .singleLine
+    case .error(let error):
+      messageView.messageLabel.text = error
       view.addSubview(messageView)
-    default:
-      break
+      tableView.separatorStyle = .none
     }
   }
   

@@ -69,7 +69,7 @@ final class TVShowDetailViewModel {
   }
   
   deinit {
-    print("deinit TVShowDetailViewModel")
+    print("deinit \(Self.self)")
   }
   
   // MARK: - Private
@@ -80,8 +80,21 @@ final class TVShowDetailViewModel {
   
   fileprivate func subscribe() {
     subscribeToViewAppears()
-    subscribeFavoriteTap()
-    subscribeWatchListTap()
+    subscribeButtonsWhenPopulated()
+  }
+  
+  fileprivate func subscribeButtonsWhenPopulated() {
+    viewStateObservableSubject
+      .subscribe(onNext: { [weak self] viewState in
+        switch viewState {
+        case .populated:
+          self?.subscribeFavoriteTap()
+          self?.subscribeWatchListTap()
+        default:
+          break
+        }
+      })
+      .disposed(by: disposeBag)
   }
   
   // MARK: - Subscriptions
@@ -263,10 +276,8 @@ final class TVShowDetailViewModel {
 extension TVShowDetailViewModel {
   
   enum ViewState {
-    
     case loading
     case populated(TVShowDetailInfo)
-    case empty
     case error(String)
   }
 }

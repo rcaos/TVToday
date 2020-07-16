@@ -11,7 +11,7 @@ import RxSwift
 import RxDataSources
 import Shared
 
-class AiringTodayViewController: UIViewController, StoryboardInstantiable {
+class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loadable {
   
   @IBOutlet weak var collectionView: UICollectionView!
   
@@ -22,6 +22,8 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable {
     controller.viewModel = viewModel
     return controller
   }
+  
+  lazy var messageView = MessageView(message: "")
   
   fileprivate let disposeBag = DisposeBag()
   
@@ -38,12 +40,21 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable {
   
   func setupUI() {
     navigationItem.title = "Today on TV"
+    
+    setupViews()
     setupCollectionView()
+    setupDataSource()
+    handleSelectionItems()
+    subscribeToViewState()
+  }
+  
+  fileprivate func setupViews() {
+    messageView.frame = CGRect(x: 0, y: 0, width: collectionView.frame.width, height: 100)
   }
   
   // MARK: - Setup CollectionView
   
-  func setupCollectionView() {
+  fileprivate func setupCollectionView() {
     collectionView.registerNib(cellType: AiringTodayCollectionViewCell.self)
     
     collectionView.register(FooterReusableView.self,
@@ -51,6 +62,12 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable {
                             withReuseIdentifier: "FooterReusableView")
     collectionView.backgroundColor = UIColor.groupTableViewBackground
     
+    collectionView.rx
+      .setDelegate(self)
+      .disposed(by: disposeBag)
+  }
+  
+  fileprivate func setupDataSource() {
     let (configureCollectionViewCell, configureSupplementaryView) = configureCollectionViewDataSource()
     
     let dataSource = RxCollectionViewSectionedReloadDataSource<SectionAiringToday>(
@@ -62,11 +79,9 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable {
       .map { [SectionAiringToday(header: "Shows Today", items: $0.currentEntities) ] }
       .bind(to: collectionView.rx.items(dataSource: dataSource))
       .disposed(by: disposeBag)
-    
-    collectionView.rx
-      .setDelegate(self)
-      .disposed(by: disposeBag)
-    
+  }
+  
+  fileprivate func handleSelectionItems() {
     collectionView.rx
       .modelSelected( AiringTodayCollectionViewModel.self)
       .subscribe(onNext: { [weak self] item in
@@ -74,6 +89,28 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable {
         strongSelf.viewModel.navigateTo(step: AiringTodayStep.showIsPicked(withId: item.show.id ) )
       })
       .disposed(by: disposeBag)
+  }
+  
+  fileprivate func subscribeToViewState() {
+    viewModel.output
+      .viewState
+      .subscribe(onNext: { [weak self] viewstate in
+        self?.handleViewState(with: viewstate)
+      })
+      .disposed(by: disposeBag)
+  }
+  
+  fileprivate func handleViewState(with state: SimpleViewState<AiringTodayCollectionViewModel>) {
+    
+    hideLoadingView()
+    
+    switch state {
+    case .loading:
+      showLoadingView()
+      
+    default:
+      break
+    }
   }
 }
 
@@ -92,8 +129,7 @@ extension AiringTodayViewController {
         let cell = collectionView.dequeueReusableCell(with: AiringTodayCollectionViewCell.self, for: indexPath)
         cell.viewModel = item
         
-        // MARK: - TODO viewState dont be here !!
-        if case .paging(_, let nextPage) = try? strongSelf.viewModel.viewStateObservableSubject.value(),
+        if case .paging(_, let nextPage) = strongSelf.viewModel.getCurrentViewState(),
           let totalItems = dataSource.sectionModels.first?.items.count, indexPath.row == totalItems - 1 {
           strongSelf.viewModel.getShows(for: nextPage)
         }
@@ -128,12 +164,10 @@ extension AiringTodayViewController: UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView,
                       layout collectionViewLayout: UICollectionViewLayout,
                       referenceSizeForFooterInSection section: Int) -> CGSize {
+    let viewState = viewModel.getCurrentViewState()
     
-    // MARK: - TODO  dont be here
-    guard let state = try? viewModel.viewStateObservableSubject.value() else { return .zero }
-    
-    switch state {
-    case .loading, .paging:
+    switch viewState {
+    case .paging:
       return CGSize(width: collectionView.frame.width, height: 100)
     default:
       return .zero

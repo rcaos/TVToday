@@ -31,7 +31,7 @@ final class EpisodesListViewModel {
   
   private let dataObservableSubject = BehaviorSubject<[SeasonsSectionModel]>(value: [])
   
-  private let viewStateObservableSubject = BehaviorSubject<ViewState>(value: .idle)
+  private let viewStateObservableSubject = BehaviorSubject<ViewState>(value: .loading)
   
   private let seasonSelectedSubject = BehaviorSubject<Int>(value: 0)
   
@@ -58,7 +58,7 @@ final class EpisodesListViewModel {
   }
   
   deinit {
-    print("deinit SeasonsListViewModel")
+    print("deinit \(Self.self)")
   }
   
   fileprivate func controlSeasonSelected(with viewModel: SeasonListViewModel) {
@@ -109,6 +109,8 @@ final class EpisodesListViewModel {
   // MARK: - Networking
   
   fileprivate func fetchShowDetailsAndFirstSeason() {
+    viewStateObservableSubject.onNext( .loading )
+    
     let requestDetailsShow = FetchTVShowDetailsUseCaseRequestValue(identifier: tvShowId)
     let requestFirstSeason = FetchEpisodesUseCaseRequestValue(showIdentifier: tvShowId, seasonNumber: 1)
     
@@ -130,7 +132,7 @@ final class EpisodesListViewModel {
   }
   
   fileprivate func fetchEpisodesFor(season seasonNumber: Int) {
-    createSectionModel(state: .loading, with: totalSeasons, seasonSelected: seasonNumber, and: [])
+    createSectionModel(state: .loadingSeason, with: totalSeasons, seasonSelected: seasonNumber, and: [])
     
     let request = FetchEpisodesUseCaseRequestValue(showIdentifier: tvShowId, seasonNumber: seasonNumber)
     
@@ -147,14 +149,8 @@ final class EpisodesListViewModel {
   }
   
   fileprivate func processFetched(with response: SeasonResult) {
-    var fetchedEpisodes = response.episodes ?? []
+    let fetchedEpisodes = response.episodes ?? []
     let seasonFetched = response.seasonNumber
-    
-    // This behavior is purposely For Test for Empty View
-    if seasonFetched == totalSeasons {
-      fetchedEpisodes.removeAll()
-    }
-    // Comment this lines
     
     if fetchedEpisodes.isEmpty {
       createSectionModel(state: .empty, with: totalSeasons, seasonSelected: seasonFetched, and: [])
@@ -207,10 +203,10 @@ extension EpisodesListViewModel {
   
   enum ViewState {
     
-    case idle
-    case didLoadHeader
     case loading
+    case didLoadHeader
     case populated
+    case loadingSeason
     case empty
     case error(Error)
   }

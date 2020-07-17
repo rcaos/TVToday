@@ -55,7 +55,6 @@ extension DefaultKeyChainStorage: KeychainStorage {
   }
   
   public func saveLoguedUser(_ accountId: Int, _ sessionId: String) {
-    print("Save in KeyChain User:: [\(accountId),\(sessionId)]")
     self.accountId = String(accountId)
     self.sessionId = sessionId
   }

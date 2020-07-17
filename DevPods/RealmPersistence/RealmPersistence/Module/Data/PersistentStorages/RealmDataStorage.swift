@@ -23,6 +23,6 @@ public final class RealmDataStorage {
   // MARK: - Initializer
   
   public init() {
-    print(Realm.Configuration.defaultConfiguration.fileURL!)
+    //print(Realm.Configuration.defaultConfiguration.fileURL!)
   }
 }

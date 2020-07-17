@@ -62,11 +62,9 @@ final class AccountViewModel {
   }
   
   fileprivate func checkIsLogued() {
-    if let loggedUser = fetchLoggedUser.execute() {
-      print("loguedUser: [\(loggedUser)]")
+    if fetchLoggedUser.execute() != nil {
       fetchUserDetails()
     } else {
-      print("loguedUser: [not found]")
       viewStateSubject.onNext(.login)
     }
   }

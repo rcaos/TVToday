@@ -20,7 +20,6 @@ public extension UIFont {
   }
   
   fileprivate static func loadFont(with name: String) {
-    print("Load font: [\(name)]")
     let bundle = UIModule.bundle
     let pathForResourceString = bundle.path(forResource: name, ofType: "otf")
     let fontData = NSData(contentsOfFile: pathForResourceString!)

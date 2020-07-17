@@ -41,6 +41,13 @@ final class TVShowListViewModel: ShowsViewModel {
   func mapToCell(entites: [TVShow]) -> [TVShowCellViewModel] {
     return entites.map { TVShowCellViewModel(show: $0) }
   }
+  
+  // MARK: - Navigation
+  
+  public func showIsPicked(with showId: Int) {
+    let step = TVShowListStep.showIsPicked(showId: showId)
+    steps.accept(step)
+  }
 
 }
 
@@ -52,14 +59,5 @@ extension TVShowListViewModel: BaseViewModel {
   
   public struct Output {
     let viewState: Observable<SimpleViewState<TVShowCellViewModel>>
-  }
-}
-
-// MARK: - Stepper
-
-extension TVShowListViewModel {
-  
-  public func navigateTo(step: Step) {
-    steps.accept(step)
   }
 }

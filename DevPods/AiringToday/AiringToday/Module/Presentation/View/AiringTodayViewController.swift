@@ -75,13 +75,16 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loada
   }
   
   fileprivate func handleSelectionItems() {
-    collectionView.rx
-      .modelSelected( AiringTodayCollectionViewModel.self)
-      .subscribe(onNext: { [weak self] item in
-        guard let strongSelf = self else { return }
-        strongSelf.viewModel.navigateTo(step: AiringTodayStep.showIsPicked(withId: item.show.id ) )
-      })
-      .disposed(by: disposeBag)
+    
+    // MARK: - TODO:
+    
+//    collectionView.rx
+//      .modelSelected( AiringTodayCollectionViewModel.self)
+//      .subscribe(onNext: { [weak self] item in
+//        guard let strongSelf = self else { return }
+//        strongSelf.viewModel.navigateTo(step: AiringTodayStep.showIsPicked(withId: item.show.id ) )
+//      })
+//      .disposed(by: disposeBag)
   }
   
   fileprivate func subscribeToViewState() {

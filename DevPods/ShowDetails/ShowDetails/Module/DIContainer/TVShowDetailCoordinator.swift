@@ -1,5 +1,5 @@
 //
-//  TVShowDetailFlow.swift
+//  TVShowDetailCoordinator.swift
 //  TVToday
 //
 //  Created by Jeans Ruiz on 4/7/20.
@@ -14,17 +14,6 @@ import Persistence
 public protocol TVShowDetailCoordinatorProtocol: class {
   
   func navigate(to step: ShowDetailsStep)
-}
-
-public enum ShowDetailsStep: MyStep {
-  
-  case
-  
-  showDetailsIsRequired(withId: Int),
-  
-  seasonsAreRequired(withId: Int),
-  
-  detailViewDidFinish
 }
 
 public protocol TVShowDetailCoordinatorDelegate: class {
@@ -154,4 +143,17 @@ public class TVShowDetailCoordinator: NavigationCoordinator, TVShowDetailCoordin
     return DefaultFetchEpisodesUseCase(episodesRepository: episodesRepository)
   }
   
+}
+
+// MARK: - Steps
+
+public enum ShowDetailsStep: Step {
+  
+  case
+  
+  showDetailsIsRequired(withId: Int),
+  
+  seasonsAreRequired(withId: Int),
+  
+  detailViewDidFinish
 }

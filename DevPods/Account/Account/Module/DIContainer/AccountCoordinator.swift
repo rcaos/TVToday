@@ -1,5 +1,5 @@
 //
-//  AccountFlow.swift
+//  AccountCoordinator.swift
 //  TVToday
 //
 //  Created by Jeans Ruiz on 6/19/20.
@@ -26,7 +26,7 @@ public class AccountCoordinator: NavigationCoordinator, AccountCoordinatorProtoc
   
   public var navigationController: UINavigationController
   
-  private var childCoordinators = [AccountChildCoordinator: NCoordinator]()
+  private var childCoordinators = [AccountChildCoordinator: Coordinator]()
   
   private let dependencies: AccountDependencies
   
@@ -182,7 +182,7 @@ extension AccountCoordinator: TVShowListCoordinatorDelegate {
 
 // MARK: - Steps
 
-public enum AccountStep: MyStep {
+public enum AccountStep: Step {
   
   case
   

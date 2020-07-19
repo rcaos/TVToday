@@ -1,5 +1,5 @@
 //
-//  PopularFlow.swift
+//  PopularCoordinator.swift
 //  TVToday
 //
 //  Created by Jeans Ruiz on 4/7/20.
@@ -16,22 +16,11 @@ public protocol PopularCoordinatorProtocol: class {
   func navigate(to step: PopularStep)
 }
 
-public enum PopularStep: MyStep {
-  
-  case popularFeatureInit,
-  
-  showIsPicked(Int)
-}
-
-public enum PopularChildCoordinator {
-  case detailShow
-}
-
 public class PopularCoordinator: NavigationCoordinator, PopularCoordinatorProtocol {
   
   public var navigationController: UINavigationController
   
-  private var childCoordinators = [PopularChildCoordinator: NCoordinator]()
+  private var childCoordinators = [PopularChildCoordinator: Coordinator]()
   
   // MARK: - Repositories
   
@@ -111,4 +100,19 @@ extension PopularCoordinator: TVShowDetailCoordinatorDelegate {
   public func tvShowDetailCoordinatorDidFinish() {
     childCoordinators[.detailShow] = nil
   }
+}
+
+// MARK: - Steps
+
+public enum PopularStep: Step {
+  
+  case popularFeatureInit,
+  
+  showIsPicked(Int)
+}
+
+// MARK: - ChildCoordinators
+
+public enum PopularChildCoordinator {
+  case detailShow
 }

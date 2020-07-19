@@ -7,30 +7,30 @@
 
 import UIKit
 
-// MARK: - Rename
-
-public protocol NCoordinator: class {
+public protocol Coordinator: class {
   
-  func start(with step: MyStep)
+  func start(with step: Step)
 }
 
-public extension NCoordinator {
+public extension Coordinator {
 
-  func start(with step: MyStep = DefaultStep() ) {
+  func start(with step: Step = DefaultStep() ) {
     
   }
 }
 
-public protocol NavigationCoordinator: NCoordinator {
+public protocol NavigationCoordinator: Coordinator {
   
   var navigationController: UINavigationController { get }
   
 }
 
-// Describe un posible State de nagevación
+// MARK: - Step Protocol
 
-public protocol MyStep { }
+/// Describe un posible estado de navegación dentro de un Coordinator
 
-public struct DefaultStep: MyStep {
+public protocol Step { }
+
+public struct DefaultStep: Step {
   public init() { }
 }

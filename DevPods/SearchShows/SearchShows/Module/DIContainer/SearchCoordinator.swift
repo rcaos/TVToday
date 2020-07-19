@@ -1,5 +1,5 @@
 //
-//  SearchFlow.swift
+//  SearchCoordinator.swift
 //  TVToday
 //
 //  Created by Jeans Ruiz on 4/7/20.
@@ -18,32 +18,13 @@ public protocol SearchCoordinatorProtocol: class {
   func navigate(to step: SearchStep)
 }
 
-public enum SearchStep: MyStep {
-  
-  case
-  
-  searchFeatureInit,
-  
-  genreIsPicked(withId: Int, title: String?),
-  
-  showIsPicked(withId: Int)
-}
-
-public enum SearchChildCoordinator {
-  case
-  
-  detailShow,
-  
-  genreList
-}
-
 public class SearchCoordinator: NavigationCoordinator, SearchCoordinatorProtocol {
   
   public var navigationController: UINavigationController
   
   private let dependencies: SearchShowDependencies
   
-  private var childCoordinators = [SearchChildCoordinator: NCoordinator]()
+  private var childCoordinators = [SearchChildCoordinator: Coordinator]()
   
   // MARK: - Repositories
   
@@ -198,4 +179,27 @@ extension SearchCoordinator: TVShowDetailCoordinatorDelegate {
   public func tvShowDetailCoordinatorDidFinish() {
     childCoordinators[.detailShow] = nil
   }
+}
+
+// MARK: - Steps
+
+public enum SearchStep: Step {
+  
+  case
+  
+  searchFeatureInit,
+  
+  genreIsPicked(withId: Int, title: String?),
+  
+  showIsPicked(withId: Int)
+}
+
+// MARK: - ChildCoordinators
+
+public enum SearchChildCoordinator {
+  case
+  
+  detailShow,
+  
+  genreList
 }

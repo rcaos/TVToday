@@ -1,5 +1,5 @@
 //
-//  SignedFlow.swift
+//  SignedCoordinator.swift
 //  TVToday
 //
 //  Created by Jeans Ruiz on 4/7/20.
@@ -15,8 +15,6 @@ import SearchShows
 import Account
 import Shared
 import Persistence
-
-// MARK: - TODO:
 
 public struct SignedDependencies {
   let apiDataTransferService: DataTransferService
@@ -37,11 +35,11 @@ public enum SignedChildCoordinator {
   account
 }
 
-public class SignedCoordinator: NCoordinator {
+public class SignedCoordinator: Coordinator {
   
   public var tabBarController: UITabBarController
   
-  public var childCoordinators = [SignedChildCoordinator: NCoordinator]()
+  public var childCoordinators = [SignedChildCoordinator: Coordinator]()
   
   private let dependencies: SignedDependencies
   
@@ -72,7 +70,7 @@ public class SignedCoordinator: NCoordinator {
   
   // MARK: - Build Airing Today Coordinator
   
-  fileprivate func buildTodayCoordinator() -> (UIViewController, NCoordinator) {
+  fileprivate func buildTodayCoordinator() -> (UIViewController, Coordinator) {
     let coordinatorDependencies =
       AiringTodayDependencies(
         apiDataTransferService: dependencies.apiDataTransferService,
@@ -91,7 +89,7 @@ public class SignedCoordinator: NCoordinator {
   
   // MARK: - Build Popular Coordinator
   
-  fileprivate func buildPopularCoordinator() -> (UIViewController, NCoordinator) {
+  fileprivate func buildPopularCoordinator() -> (UIViewController, Coordinator) {
     let coordinatorDependencies =
       PopularShowsDependencies(
         apiDataTransferService: dependencies.apiDataTransferService,
@@ -110,7 +108,7 @@ public class SignedCoordinator: NCoordinator {
   
   // MARK: - Build Search Coordinator
   
-  fileprivate func buildSearchCoordinator() -> (UIViewController, NCoordinator) {
+  fileprivate func buildSearchCoordinator() -> (UIViewController, Coordinator) {
     let coordinatorDependencies =
       SearchShowDependencies(
       apiDataTransferService: dependencies.apiDataTransferService,
@@ -130,7 +128,7 @@ public class SignedCoordinator: NCoordinator {
   
   // MARK: - Build Account Coordinator
   
-  fileprivate func buildAccountCoordinator() -> (UIViewController, NCoordinator) {
+  fileprivate func buildAccountCoordinator() -> (UIViewController, Coordinator) {
     let coordinatorDependencies =
       AccountDependencies(apiDataTransferService: dependencies.apiDataTransferService,
       imagesBaseURL: dependencies.appConfigurations.imagesBaseURL,

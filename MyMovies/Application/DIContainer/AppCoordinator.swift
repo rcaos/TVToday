@@ -1,5 +1,5 @@
 //
-//  AppFlow.swift
+//  AppCoordinator.swift
 //  TVToday
 //
 //  Created by Jeans Ruiz on 4/7/20.
@@ -20,16 +20,17 @@ public struct AppDependencies {
 
 public enum AppChildCoordinator {
   case signed
+  
   // case signUp, login, onboarding, etc
 }
 
-class AppCoordinator: NCoordinator {
+class AppCoordinator: Coordinator {
   
   private let window: UIWindow
   
   private let dependencies: AppDependencies
   
-  var childCoordinators = [AppChildCoordinator: NCoordinator]()
+  var childCoordinators = [AppChildCoordinator: Coordinator]()
   
   // MARK: - Initializer
   

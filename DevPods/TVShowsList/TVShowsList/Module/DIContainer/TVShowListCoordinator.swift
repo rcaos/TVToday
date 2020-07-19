@@ -1,5 +1,5 @@
 //
-//  TVShowsListFlow.swift
+//  TVShowListCoordinator.swift
 //  TVShowsList
 //
 //  Created by Jeans Ruiz on 6/27/20.
@@ -12,25 +12,6 @@ import ShowDetails
 public protocol TVShowListCoordinatorProtocol: class {
   
   func navigate(to step: TVShowListStep)
-}
-
-public enum TVShowListStep: MyStep {
-  
-  case
-  
-  genreList(genreId: Int, title: String?),
-  
-  favoriteList,
-  
-  watchList,
-  
-  showIsPicked(showId: Int),
-  
-  showListDidFinish
-}
-
-public enum TVShowListChildCoordinator {
-  case detailShow
 }
 
 public protocol TVShowListCoordinatorDelegate: class {
@@ -48,7 +29,7 @@ public class TVShowListCoordinator: NavigationCoordinator, TVShowListCoordinator
   
   private let dependencies: ShowListDependencies
   
-  private var childCoordinators = [TVShowListChildCoordinator: NCoordinator]()
+  private var childCoordinators = [TVShowListChildCoordinator: Coordinator]()
   
   // MARK: - Repositories
   
@@ -178,4 +159,27 @@ extension TVShowListCoordinator: TVShowDetailCoordinatorDelegate {
   public func tvShowDetailCoordinatorDidFinish() {
     childCoordinators[.detailShow] = nil
   }
+}
+
+// MARK: - Steps
+
+public enum TVShowListStep: Step {
+  
+  case
+  
+  genreList(genreId: Int, title: String?),
+  
+  favoriteList,
+  
+  watchList,
+  
+  showIsPicked(showId: Int),
+  
+  showListDidFinish
+}
+
+// MARK: - ChildCoordinators
+
+public enum TVShowListChildCoordinator {
+  case detailShow
 }

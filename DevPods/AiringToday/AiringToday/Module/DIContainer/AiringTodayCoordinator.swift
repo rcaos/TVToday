@@ -16,22 +16,11 @@ public protocol AiringTodayCoordinatorProtocol: class {
   func navigate(to step: AiringTodayStep)
 }
 
-public enum AiringTodayStep: MyStep {
-  
-  case todayFeatureInit,
-  
-  showIsPicked(Int)
-}
-
-public enum AiringTodayChildCoordinator {
-  case detailShow
-}
-
 public class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinatorProtocol {
   
   public var navigationController: UINavigationController
   
-  private var childCoordinators = [AiringTodayChildCoordinator: NCoordinator]()
+  private var childCoordinators = [AiringTodayChildCoordinator: Coordinator]()
   
   private let dependencies: AiringTodayDependencies
   
@@ -108,4 +97,19 @@ extension AiringTodayCoordinator: TVShowDetailCoordinatorDelegate {
   public func tvShowDetailCoordinatorDidFinish() {
     childCoordinators[.detailShow] = nil
   }
+}
+
+// MARK: - Steps
+
+public enum AiringTodayStep: Step {
+  
+  case todayFeatureInit,
+  
+  showIsPicked(Int)
+}
+
+// MARK: - ChildCoordinators
+
+public enum AiringTodayChildCoordinator {
+  case detailShow
 }

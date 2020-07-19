@@ -7,11 +7,9 @@
 //
 
 import RxSwift
-import RxFlow
-import RxRelay
 import Shared
 
-final class AiringTodayViewModel: BaseViewModel, ShowsViewModel {
+final class AiringTodayViewModel: ShowsViewModel {
   
   var fetchTVShowsUseCase: FetchTVShowsUseCase
   
@@ -46,14 +44,12 @@ final class AiringTodayViewModel: BaseViewModel, ShowsViewModel {
     return entites.map { AiringTodayCollectionViewModel(show: $0) }
   }
   
-  // MARK: - Public
-  
   func getCurrentViewState() -> SimpleViewState<AiringTodayCollectionViewModel> {
     guard let currentState = try? viewStateObservableSubject.value() else { return .loading }
     return currentState
   }
   
-  func cellIsPicked(with id: Int) {
+  func showIsPicked(with id: Int) {
     navigateTo(step: .showIsPicked(id))
   }
   
@@ -66,7 +62,7 @@ final class AiringTodayViewModel: BaseViewModel, ShowsViewModel {
 
 // MARK: - BaseViewModel
 
-extension AiringTodayViewModel {
+extension AiringTodayViewModel: BaseViewModel {
   
   public struct Input { }
   

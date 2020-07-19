@@ -1,5 +1,5 @@
 //
-//  AiringToday.swift
+//  PopularFlow.swift
 //  TVToday
 //
 //  Created by Jeans Ruiz on 4/7/20.
@@ -11,31 +11,31 @@ import Networking
 import ShowDetails
 import Shared
 
-public protocol AiringTodayCoordinatorProtocol: class {
+public protocol PopularCoordinatorProtocol: class {
   
-  func navigate(to step: AiringTodayStep)
+  func navigate(to step: PopularStep)
 }
 
-public enum AiringTodayStep {
+public enum PopularStep {
   
-  case todayFeatureInit,
+  case popularFeatureInit,
   
   showIsPicked(Int)
 }
 
-public enum AiringTodayChildCoordinator {
+public enum PopularChildCoordinator {
   case detailShow
 }
 
-public class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinatorProtocol {
+public class PopularCoordinator: NavigationCoordinator, PopularCoordinatorProtocol {
   
   public var navigationController: UINavigationController
   
-  private var childCoordinators = [AiringTodayChildCoordinator: NCoordinator]()
+  private var childCoordinators = [PopularChildCoordinator: NCoordinator]()
   
-  // MARK: - Dependencies
+  // MARK: - Repositories
   
-  private let dependencies: AiringTodayDependencies
+  private let dependencies: PopularShowsDependencies
   
   private lazy var showsRepository: TVShowsRepository = {
     return DefaultTVShowsRepository(
@@ -43,15 +43,17 @@ public class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinat
       basePath: dependencies.imagesBaseURL)
   }()
   
+  // MARK: - Dependencies
+  
   private lazy var showDetailsDependencies: ShowDetailsDependencies = {
     return ShowDetailsDependencies(apiDataTransferService: dependencies.apiDataTransferService,
                                    imagesBaseURL: dependencies.imagesBaseURL,
                                    showsPersistenceRepository: dependencies.showsPersistence)
   }()
   
-  // MARK: - Initializer
+  // MARK: - Life Cycle
   
-  public init(navigationController: UINavigationController, dependencies: AiringTodayDependencies) {
+  public init(navigationController: UINavigationController, dependencies: PopularShowsDependencies) {
     self.navigationController = navigationController
     self.dependencies = dependencies
   }
@@ -61,34 +63,33 @@ public class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinat
   }
   
   public func start() {
-    navigate(to: .todayFeatureInit)
+    navigate(to: .popularFeatureInit)
   }
   
   // MARK: - Navigation
   
-  public func navigate(to step: AiringTodayStep) {
+  public func navigate(to step: PopularStep) {
     switch step {
-    case .todayFeatureInit:
-      navigateToTodayFeature()
+    case .popularFeatureInit :
+      return navigateToPopularFeature()
       
-    case .showIsPicked(let showId):
-      showDetailIsPicked(for: showId)
+    case .showIsPicked(let id) :
+      return navigateToShowDetailScreen(with: id)
     }
   }
   
   // MARK: - Default Step
   
-  fileprivate func navigateToTodayFeature() {
-    let viewModel = AiringTodayViewModel(fetchTVShowsUseCase: makeFetchTodayShowsUseCase(),
-                                         coordinator: self)
-    let todayVC = AiringTodayViewController.create(with: viewModel)
+  fileprivate func navigateToPopularFeature() {
+    let viewModel = PopularViewModel(fetchTVShowsUseCase: makeFetchPopularShowsUseCase(), coordinator: self)
+    let popularVC = PopularsViewController.create(with: viewModel)
     
-    navigationController.pushViewController(todayVC, animated: true)
+    navigationController.pushViewController(popularVC, animated: true)
   }
   
   // MARK: - Navigate to Show Detail
   
-  fileprivate func showDetailIsPicked(for showId: Int) {
+  fileprivate func navigateToShowDetailScreen(with showId: Int) {
     // TODO, dependencies should be in Struct with var?
     showDetailsDependencies.tvShowId = showId
     
@@ -101,14 +102,14 @@ public class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinat
   
   // MARK: - Uses Cases
   
-  private func makeFetchTodayShowsUseCase() -> FetchTVShowsUseCase {
-    return DefaultFetchAiringTodayTVShowsUseCase(tvShowsRepository: showsRepository)
+  private func makeFetchPopularShowsUseCase() -> FetchTVShowsUseCase {
+    return DefaultFetchPopularTVShowsUseCase(tvShowsRepository: showsRepository)
   }
 }
 
 // MARK: - TVShowDetailCoordinatorDelegate
 
-extension AiringTodayCoordinator: TVShowDetailCoordinatorDelegate {
+extension PopularCoordinator: TVShowDetailCoordinatorDelegate {
   
   public func tvShowDetailCoordinatorDidFinish() {
     childCoordinators[.detailShow] = nil

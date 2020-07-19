@@ -26,10 +26,13 @@ public struct SignedDependencies {
 }
 
 public enum SignedChildCoordinator {
-  case airingToday
+  case
+  
+  airingToday,
+  
+  popularShows
   
   // MARK: - TODO
-  // popularShows
   // search
   // account
 }
@@ -54,7 +57,18 @@ public class SignedCoordinator: NCoordinator {
   }
   
   fileprivate func showMainFeatures() {
+    let (todayVC, todayCoordinator) = buildTodayCoordinator()
+    let (popularVC, popularCoordinator) = buildPopularCoordinator()
     
+    tabBarController.setViewControllers([todayVC, popularVC], animated: true)
+    
+    childCoordinators[.airingToday] = todayCoordinator
+    childCoordinators[.popularShows] = popularCoordinator
+  }
+  
+  // MARK: - Build Airing Today Coordinator
+  
+  fileprivate func buildTodayCoordinator() -> (UIViewController, NCoordinator) {
     let coordinatorDependencies =
       AiringTodayDependencies(
         apiDataTransferService: dependencies.apiDataTransferService,
@@ -67,9 +81,26 @@ public class SignedCoordinator: NCoordinator {
     
     let item = UITabBarItem(title: "Today", image: UIImage(name: "calendar"), tag: 0)
     coordinator.navigationController.tabBarItem = item
-    tabBarController.setViewControllers([navigation], animated: true)
-    
-    childCoordinators[.airingToday] = coordinator
     coordinator.start()
+    return (navigation, coordinator)
+  }
+  
+  // MARK: - Build Popular Coordinator
+  
+  fileprivate func buildPopularCoordinator() -> (UIViewController, NCoordinator) {
+    let coordinatorDependencies =
+      PopularShowsDependencies(
+        apiDataTransferService: dependencies.apiDataTransferService,
+        imagesBaseURL: dependencies.appConfigurations.imagesBaseURL,
+        showsPersistence: dependencies.showsPersistence)
+    
+    let navigation = UINavigationController()
+    let coordinator = PopularCoordinator(navigationController: navigation,
+                                         dependencies: coordinatorDependencies)
+    
+    let item = UITabBarItem(title: "Popular", image: UIImage(name: "popular"), tag: 1)
+    coordinator.navigationController.tabBarItem = item
+    coordinator.start()
+    return (navigation, coordinator)
   }
 }

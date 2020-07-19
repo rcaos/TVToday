@@ -79,7 +79,7 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loada
       .modelSelected( AiringTodayCollectionViewModel.self)
       .subscribe(onNext: { [weak self] item in
         guard let strongSelf = self else { return }
-        strongSelf.viewModel.cellIsPicked(with: item.show.id)
+        strongSelf.viewModel.showIsPicked(with: item.show.id)
       })
       .disposed(by: disposeBag)
   }

@@ -7,13 +7,9 @@
 //
 
 import RxSwift
-import RxFlow
-import RxRelay
 import Shared
 
 final class PopularViewModel: ShowsViewModel {
-  
-  var steps = PublishRelay<Step>()
   
   var fetchTVShowsUseCase: FetchTVShowsUseCase
   
@@ -23,7 +19,9 @@ final class PopularViewModel: ShowsViewModel {
   
   var viewStateObservableSubject: BehaviorSubject<SimpleViewState<TVShowCellViewModel>> = .init(value: .loading)
   
-  var  disposeBag = DisposeBag()
+  weak var coordinator: PopularCoordinatorProtocol?
+  
+  var disposeBag = DisposeBag()
   
   var input: Input
   
@@ -31,8 +29,9 @@ final class PopularViewModel: ShowsViewModel {
   
   // MARK: - Initializers
   
-  init(fetchTVShowsUseCase: FetchTVShowsUseCase) {
+  init(fetchTVShowsUseCase: FetchTVShowsUseCase, coordinator: PopularCoordinatorProtocol?) {
     self.fetchTVShowsUseCase = fetchTVShowsUseCase
+    self.coordinator = coordinator
     shows = []
     
     self.input = Input()
@@ -41,6 +40,16 @@ final class PopularViewModel: ShowsViewModel {
   
   func mapToCell(entites: [TVShow]) -> [TVShowCellViewModel] {
     return entites.map { TVShowCellViewModel(show: $0) }
+  }
+  
+  func showIsPicked(with id: Int) {
+    navigateTo(step: .showIsPicked(id) )
+  }
+  
+  // MARK: - Navigation
+  
+  private func navigateTo(step: PopularStep) {
+    coordinator?.navigate(to: step)
   }
 }
 
@@ -52,14 +61,5 @@ extension PopularViewModel: BaseViewModel {
   
   public struct Output {
     let viewState: Observable<SimpleViewState<TVShowCellViewModel>>
-  }
-}
-
-// MARK: - Stepper
-
-extension PopularViewModel {
-  
-  public func navigateTo(step: Step) {
-    steps.accept(step)
   }
 }

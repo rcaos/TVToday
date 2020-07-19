@@ -92,7 +92,7 @@ class PopularsViewController: UIViewController, StoryboardInstantiable, Loadable
       .bind { [weak self] (indexPath, item) in
         guard let strongSelf = self else { return }
         strongSelf.tableView.deselectRow(at: indexPath, animated: true)
-        strongSelf.viewModel.navigateTo(step: PopularStep.showIsPicked(withId: item.entity.id) )
+        strongSelf.viewModel.showIsPicked(with: item.entity.id)
     }
     .disposed(by: disposeBag)
   }

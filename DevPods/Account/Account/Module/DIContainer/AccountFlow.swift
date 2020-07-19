@@ -106,8 +106,9 @@ public class AccountFlow: Flow {
     
     rootViewController.pushViewController(accountViewController, animated: true)
     
-    return .one(flowContributor: .contribute(
-      withNextPresentable: accountViewController, withNextStepper: accountViewModel))
+    return .none
+//    return .one(flowContributor: .contribute(
+//      withNextPresentable: accountViewController, withNextStepper: accountViewModel))
   }
   
   fileprivate func navigateToAuthPermission(url: URL, delegate: AuthPermissionViewModelDelegate?) -> FlowContributors {

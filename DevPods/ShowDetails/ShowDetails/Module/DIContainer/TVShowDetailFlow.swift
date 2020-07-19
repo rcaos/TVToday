@@ -12,26 +12,41 @@ import Networking
 import Shared
 import Persistence
 
-public class TVShowDetailFlow: Flow {
+public protocol TVShowDetailCoordinatorProtocol: class {
+  
+  func navigate(to step: ShowDetailsStep)
+}
+
+// MARK: - TODO, abstract to Step?
+
+public enum ShowDetailsStep {
+  
+  case showDetailsIsRequired(withId: Int),
+  
+  seasonsAreRequired(withId: Int),
+  
+  detailViewDidFinish
+}
+
+public protocol TVShowDetailCoordinatorDelegate: class {
+  
+  func tvShowDetailCoordinatorDidFinish()
+}
+
+public class TVShowDetailCoordinator: NavigationCoordinator, TVShowDetailCoordinatorProtocol {
+  
+  public var navigationController: UINavigationController
+  
+  public weak var delegate: TVShowDetailCoordinatorDelegate?
+  
+  // MARK: - Dependencies
   
   private let dependencies: ShowDetailsDependencies
-  
-  public var root: Presentable {
-    return self.rootViewController
-  }
-  
-  private var rootViewController: UIViewController!
   
   // MARK: - Repositories
   
   private lazy var tvShowsRepository: TVShowsRepository = {
     return DefaultTVShowsRepository(
-      dataTransferService: dependencies.apiDataTransferService,
-      basePath: dependencies.imagesBaseURL)
-  }()
-  
-  private lazy var episodesRepository: TVEpisodesRepository = {
-    return DefaultTVEpisodesRepository(
       dataTransferService: dependencies.apiDataTransferService,
       basePath: dependencies.imagesBaseURL)
   }()
@@ -45,75 +60,77 @@ public class TVShowDetailFlow: Flow {
     return DefaultKeychainRepository()
   }()
   
+  private lazy var episodesRepository: TVEpisodesRepository = {
+    return DefaultTVEpisodesRepository(
+      dataTransferService: dependencies.apiDataTransferService,
+      basePath: dependencies.imagesBaseURL)
+  }()
+  
   // MARK: - Life Cycle
   
-  public init(rootViewController: UIViewController, dependencies: ShowDetailsDependencies) {
-    self.rootViewController = rootViewController
+  public init(navigationController: UINavigationController, dependencies: ShowDetailsDependencies) {
+    
+    self.navigationController = navigationController
     self.dependencies = dependencies
+  }
+  
+  deinit {
+    print("deinit \(Self.self)")
+  }
+  
+  public func start() {
+    showDetailsFeature()
   }
   
   // MARK: - Navigation
   
-  public func navigate(to step: Step) -> FlowContributors {
+  public func navigate(to step: ShowDetailsStep) {
     switch step {
       
-    case ShowDetailsStep.showDetailsIsRequired(let showId):
-      return showDetailsFeature(with: showId)
+    case .showDetailsIsRequired:
+      break
       
-    case ShowDetailsStep.seasonsAreRequired(let showId):
+    case .detailViewDidFinish:
+      delegate?.tvShowDetailCoordinatorDidFinish()
+      
+    case .seasonsAreRequired(let showId):
       return navigateToSeasonsScreen(with: showId)
-      
-    default:
-      return .none
     }
   }
   
-  fileprivate func showDetailsFeature(with id: Int) -> FlowContributors {
+  // MARK: - Navigate to Show Details
+  
+  fileprivate func showDetailsFeature() {
+    guard let id = dependencies.tvShowId else { return }
     let viewModel = TVShowDetailViewModel(id,
                                           fetchLoggedUser: makeFetchLoggedUserUseCase(),
                                           fetchDetailShowUseCase: makeFetchShowDetailsUseCase(),
                                           fetchTvShowState: makeTVAccountStatesUseCase(),
                                           markAsFavoriteUseCase: makeMarkAsFavoriteUseCase(),
-                                          saveToWatchListUseCase: makeSaveToWatchListUseCase())
+                                          saveToWatchListUseCase: makeSaveToWatchListUseCase(),
+                                          coordinator: self)
     let detailVC = TVShowDetailViewController.create(with: viewModel)
-    
-    if let navigationVC = rootViewController as? UINavigationController {
-      navigationVC.pushViewController(detailVC, animated: true)
-    } else {
-      rootViewController.present(detailVC, animated: true)
-    }
-    
-    return .one(flowContributor: .contribute(
-      withNextPresentable: detailVC, withNextStepper: viewModel))
+    navigationController.pushViewController(detailVC, animated: true)
   }
   
-  fileprivate func navigateToSeasonsScreen(with id: Int) -> FlowContributors {
+  // MARK: - Navigate Seasons List
+  
+  fileprivate func navigateToSeasonsScreen(with id: Int) {
     let viewModel = EpisodesListViewModel(
       tvShowId: id,
       fetchDetailShowUseCase: makeFetchShowDetailsUseCase(),
       fetchEpisodesUseCase: makeFetchEpisodesUseCase())
     let seasonsVC = EpisodesListViewController.create(with: viewModel)
     
-    if let navigationVC = rootViewController as? UINavigationController {
-      navigationVC.pushViewController(seasonsVC, animated: true)
-    } else {
-      rootViewController.present(seasonsVC, animated: true)
-    }
-    
-    return .one(flowContributor: .contribute(
-      withNextPresentable: seasonsVC, withNextStepper: viewModel))
+    navigationController.pushViewController(seasonsVC, animated: true)
   }
   
-  // MARK: - Uses Cases
+  // MARK: - Uses Cases for Show Details
   
   private func makeFetchShowDetailsUseCase() -> FetchTVShowDetailsUseCase {
     return DefaultFetchTVShowDetailsUseCase(tvShowsRepository: tvShowsRepository,
                                             keychainRepository: keychainRepository,
                                             tvShowsVisitedRepository: dependencies.showsPersistenceRepository)
-  }
-  
-  private func makeFetchEpisodesUseCase() -> FetchEpisodesUseCase {
-    return DefaultFetchEpisodesUseCase(episodesRepository: episodesRepository)
   }
   
   private func makeMarkAsFavoriteUseCase() -> MarkAsFavoriteUseCase {
@@ -134,13 +151,11 @@ public class TVShowDetailFlow: Flow {
   private func makeFetchLoggedUserUseCase() -> FetchLoggedUser {
     return DefaultFetchLoggedUser(keychainRepository: keychainRepository)
   }
-}
-
-public enum ShowDetailsStep: Step {
   
-  case
+  // MARK: - Uses Cases for Seasons
   
-  showDetailsIsRequired(withId: Int),
+  private func makeFetchEpisodesUseCase() -> FetchEpisodesUseCase {
+    return DefaultFetchEpisodesUseCase(episodesRepository: episodesRepository)
+  }
   
-  seasonsAreRequired(withId: Int)
 }

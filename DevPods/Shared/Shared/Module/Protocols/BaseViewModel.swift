@@ -6,9 +6,7 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxFlow
-
-public protocol BaseViewModel: Stepper {
+public protocol BaseViewModel {
   
   associatedtype Input
   associatedtype Output

@@ -68,19 +68,21 @@ public class PopularFlow: Flow {
     
     rootViewController.pushViewController(popularVC, animated: true)
     
-    return .one(flowContributor: .contribute(
-      withNextPresentable: popularVC, withNextStepper: viewModel))
+    return .none
+//    return .one(flowContributor: .contribute(
+//      withNextPresentable: popularVC, withNextStepper: viewModel))
   }
   
   fileprivate func navigateToShowDetailScreen(with id: Int) -> FlowContributors {
-    let detailShowFlow = TVShowDetailFlow(rootViewController: rootViewController,
-                                          dependencies: showDetailsDependencies)
-    
-    return .one(flowContributor: .contribute(
-      withNextPresentable: detailShowFlow,
-      withNextStepper:
-      OneStepper(withSingleStep:
-        ShowDetailsStep.showDetailsIsRequired(withId: id))))
+    return .none
+//    let detailShowFlow = TVShowDetailFlow(rootViewController: rootViewController,
+//                                          dependencies: showDetailsDependencies)
+//    
+//    return .one(flowContributor: .contribute(
+//      withNextPresentable: detailShowFlow,
+//      withNextStepper:
+//      OneStepper(withSingleStep:
+//        ShowDetailsStep.showDetailsIsRequired(withId: id))))
   }
   
   // MARK: - Uses Cases

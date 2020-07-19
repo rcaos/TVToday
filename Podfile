@@ -73,11 +73,11 @@ target 'TVToday' do
   use_frameworks!
   
   # Third Party Pods.
-  # The main App only knows about Navigation
-  # pod 'RxFlow',          '2.7.0'
+  # ...
   
-   # Dev Pods
-   development_pods
+  # Development Pods
+  development_pods
+  
 end
 
 target 'Networking_Example' do

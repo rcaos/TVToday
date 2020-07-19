@@ -131,14 +131,15 @@ public class SearchFlow: Flow {
   // MARK: - Navigate to Detail TVShow
   
   fileprivate func navigateToShowDetailScreen(with id: Int) -> FlowContributors {
-    let detailShowFlow = TVShowDetailFlow(rootViewController: rootViewController,
-                                          dependencies: showDetailsDependencies)
-    
-    return .one(flowContributor: .contribute(
-      withNextPresentable: detailShowFlow,
-      withNextStepper:
-      OneStepper(withSingleStep:
-        ShowDetailsStep.showDetailsIsRequired(withId: id))))
+    return .none
+//    let detailShowFlow = TVShowDetailFlow(rootViewController: rootViewController,
+//                                          dependencies: showDetailsDependencies)
+//    
+//    return .one(flowContributor: .contribute(
+//      withNextPresentable: detailShowFlow,
+//      withNextStepper:
+//      OneStepper(withSingleStep:
+//        ShowDetailsStep.showDetailsIsRequired(withId: id))))
   }
   
   // MARK: - Uses Cases

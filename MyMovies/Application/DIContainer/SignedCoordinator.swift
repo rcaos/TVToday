@@ -25,26 +25,27 @@ public struct SignedDependencies {
   let searchsPersistence: SearchLocalRepository
 }
 
-public class SignedCoordinator: FCoordinator {
+public enum SignedChildCoordinator {
+  case airingToday
   
-  public var root: FPresentable {
-    return self.rootViewController
-  }
+  // MARK: - TODO
+  // popularShows
+  // search
+  // account
+}
+
+public class SignedCoordinator: NCoordinator {
   
-  public var childCoordinators: [FCoordinator] = []
+  public var tabBarController: UITabBarController
   
-  public var parentCoordinator: FCoordinator?
-  
-  public lazy var rootViewController: UITabBarController = {
-    let tabBarController = UITabBarController()
-    return tabBarController
-  }()
+  public var childCoordinators = [SignedChildCoordinator: NCoordinator]()
   
   private let dependencies: SignedDependencies
   
   // MARK: - Life Cycle
   
-  public init(dependencies: SignedDependencies) {
+  public init(tabBarController: UITabBarController, dependencies: SignedDependencies) {
+    self.tabBarController = tabBarController
     self.dependencies = dependencies
   }
   
@@ -54,22 +55,21 @@ public class SignedCoordinator: FCoordinator {
   
   fileprivate func showMainFeatures() {
     
-    let airingTodayDependencies =
-    AiringTodayDependencies(
-      apiDataTransferService: dependencies.apiDataTransferService,
-      imagesBaseURL: dependencies.appConfigurations.imagesBaseURL,
-      showsPersistence: dependencies.showsPersistence)
+    let coordinatorDependencies =
+      AiringTodayDependencies(
+        apiDataTransferService: dependencies.apiDataTransferService,
+        imagesBaseURL: dependencies.appConfigurations.imagesBaseURL,
+        showsPersistence: dependencies.showsPersistence)
     
-    let airingTodayCoordinator = AiringTodayCoordinator(dependencies: airingTodayDependencies)
+    let navigation = UINavigationController()
+    let coordinator = AiringTodayCoordinator(navigationController: navigation,
+                                             dependencies: coordinatorDependencies)
     
-    let airingTodayTabBarItem = UITabBarItem(title: "Today",
-                                             image: UIImage(name: "calendar"), tag: 0)
+    let item = UITabBarItem(title: "Today", image: UIImage(name: "calendar"), tag: 0)
+    coordinator.navigationController.tabBarItem = item
+    tabBarController.setViewControllers([navigation], animated: true)
     
-    if let root = airingTodayCoordinator.root as? UIViewController {
-      root.tabBarItem = airingTodayTabBarItem
-      
-      rootViewController.setViewControllers([root], animated: true)
-      airingTodayCoordinator.start()
-    }
+    childCoordinators[.airingToday] = coordinator
+    coordinator.start()
   }
 }

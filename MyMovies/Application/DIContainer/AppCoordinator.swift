@@ -11,8 +11,6 @@ import Networking
 import Persistence
 import Shared
 
-// MARK: - TODO:
-
 public struct AppDependencies {
   let apiDataTransferService: DataTransferService
   let appConfigurations: AppConfigurations
@@ -20,24 +18,23 @@ public struct AppDependencies {
   let searchsPersistence: SearchLocalRepository
 }
 
-class AppCoordinator: FCoordinator {
+public enum AppChildCoordinator {
+  case signed
+  // case signUp, login, onboarding, etc
+}
+
+class AppCoordinator: NCoordinator {
   
-  private let rootWindow: UIWindow
+  private let window: UIWindow
   
   private let dependencies: AppDependencies
   
-  var root: FPresentable {
-    let controller = UIViewController()
-    controller.view.backgroundColor = .white
-    return rootWindow.rootViewController ?? controller
-  }
+  var childCoordinators = [AppChildCoordinator: NCoordinator]()
   
-  var childCoordinators: [FCoordinator] = []
-  
-  var parentCoordinator: FCoordinator?
+  // MARK: - Initializer
   
   public init(window: UIWindow, dependencies: AppDependencies) {
-    self.rootWindow = window
+    self.window = window
     self.dependencies = dependencies
   }
   
@@ -53,13 +50,13 @@ class AppCoordinator: FCoordinator {
       showsPersistence: dependencies.showsPersistence,
       searchsPersistence: dependencies.searchsPersistence)
     
-    let signedCoordinator = SignedCoordinator(dependencies: signedDependencies)
+    let tabBar = UITabBarController()
+    let coordinator = SignedCoordinator(tabBarController: tabBar, dependencies: signedDependencies)
     
-    if let root = signedCoordinator.root as? UIViewController {
-      self.rootWindow.rootViewController = root
-      self.rootWindow.makeKeyAndVisible()
-      
-      signedCoordinator.start()
-    }
+    self.window.rootViewController = tabBar
+    self.window.makeKeyAndVisible()
+    
+    childCoordinators[.signed] = coordinator
+    coordinator.start()
   }
 }

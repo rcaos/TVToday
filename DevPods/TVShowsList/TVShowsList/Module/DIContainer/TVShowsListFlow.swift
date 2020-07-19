@@ -82,8 +82,9 @@ public class TVShowsListFlow: Flow {
     showList.title = title
     rootViewController.pushViewController(showList, animated: true)
     
-    return .one(flowContributor: .contribute(
-      withNextPresentable: showList, withNextStepper: viewModel))
+    return .none
+//    return .one(flowContributor: .contribute(
+//      withNextPresentable: showList, withNextStepper: viewModel))
   }
   
   // MARK: - Navigate to Favorites User
@@ -95,8 +96,9 @@ public class TVShowsListFlow: Flow {
     
     rootViewController.pushViewController(showList, animated: true)
     
-    return .one(flowContributor: .contribute(
-      withNextPresentable: showList, withNextStepper: viewModel))
+    return .none
+//    return .one(flowContributor: .contribute(
+//      withNextPresentable: showList, withNextStepper: viewModel))
   }
   
   // MARK: - Navigate to WatchList User
@@ -108,21 +110,23 @@ public class TVShowsListFlow: Flow {
     
     rootViewController.pushViewController(showList, animated: true)
     
-    return .one(flowContributor: .contribute(
-      withNextPresentable: showList, withNextStepper: viewModel))
+    return .none
+//    return .one(flowContributor: .contribute(
+//      withNextPresentable: showList, withNextStepper: viewModel))
   }
   
   // MARK: - Navigate to Detail TVShow
   
   fileprivate func navigateToShowDetailScreen(with id: Int) -> FlowContributors {
-    let detailShowFlow = TVShowDetailFlow(rootViewController: rootViewController,
-                                          dependencies: showDetailsDependencies)
-    
-    return .one(flowContributor: .contribute(
-      withNextPresentable: detailShowFlow,
-      withNextStepper:
-      OneStepper(withSingleStep:
-        ShowDetailsStep.showDetailsIsRequired(withId: id))))
+    return .none
+//    let detailShowFlow = TVShowDetailFlow(rootViewController: rootViewController,
+//                                          dependencies: showDetailsDependencies)
+//
+//    return .one(flowContributor: .contribute(
+//      withNextPresentable: detailShowFlow,
+//      withNextStepper:
+//      OneStepper(withSingleStep:
+//        ShowDetailsStep.showDetailsIsRequired(withId: id))))
     
   }
   

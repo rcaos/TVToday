@@ -7,23 +7,28 @@
 //
 
 import Foundation
-import RxFlow
 import Networking
 import Shared
 import TVShowsList
 
-public class AccountFlow: Flow {
+public protocol AccountCoordinatorProtocol: class {
+  
+  func navigate(to step: AccountStep)
+}
+
+public enum AccountChildCoordinator {
+  case
+  
+  tvShowList
+}
+
+public class AccountCoordinator: NavigationCoordinator, AccountCoordinatorProtocol {
+  
+  public var navigationController: UINavigationController
+  
+  private var childCoordinators = [AccountChildCoordinator: NCoordinator]()
   
   private let dependencies: AccountDependencies
-  
-  public var root: Presentable {
-    return self.rootViewController
-  }
-  
-  private lazy var rootViewController: UINavigationController = {
-    let navigationController = UINavigationController()
-    return navigationController
-  }()
   
   // MARK: - Repositories
   
@@ -55,35 +60,42 @@ public class AccountFlow: Flow {
   
   // MARK: - Life Cycle
   
-  public init(dependencies: AccountDependencies) {
+  public init(navigationController: UINavigationController, dependencies: AccountDependencies) {
+    self.navigationController = navigationController
     self.dependencies = dependencies
+  }
+  
+  deinit {
+    print("deinit \(Self.self)")
+  }
+  
+  public func start() {
+    navigate(to: .accountFeatureInit)
   }
   
   // MARK: - Navigation
   
-  public func navigate(to step: Step) -> FlowContributors {
+  public func navigate(to step: AccountStep) {
     switch step {
-    case AccountStep.accountFeatureInit:
-      return navigateToAccountFeature()
+    case .accountFeatureInit:
+      navigateToAccountFeature()
       
-    case AccountStep.signInIsPicked(let url, let delegate):
-      return navigateToAuthPermission(url: url, delegate: delegate)
+    case .signInIsPicked(let url, let delegate):
+      navigateToAuthPermission(url: url, delegate: delegate)
       
-    case AccountStep.authorizationIsComplete:
-      self.rootViewController.presentedViewController?.dismiss(animated: true)
-      return .none
+    case .authorizationIsComplete:
+      navigationController.presentedViewController?.dismiss(animated: true)
       
-    case AccountStep.favoritesIsPicked:
-      return navigateToFavorites()
+    case .favoritesIsPicked:
+      navigateToFavorites()
       
-    case AccountStep.watchListIsPicked:
-      return navigateToWatchList()
-    default:
-      return .none
+    case .watchListIsPicked:
+      navigateToWatchList()
+      
     }
   }
   
-  fileprivate func navigateToAccountFeature() -> FlowContributors {
+  fileprivate func navigateToAccountFeature() {
     
     let signViewModel = SignInViewModel()
     let signInViewController = SignInViewController.create(with: signViewModel)
@@ -97,55 +109,43 @@ public class AccountFlow: Flow {
                                             fetchLoggedUser: makeFetchLoggedUserUseCase(),
                                             deleteLoguedUser: makeDeleteLoguedUserUseCase(),
                                             signInViewModel: signViewModel,
-                                            profileViewMoel: profileViewModel)
+                                            profileViewMoel: profileViewModel,
+                                            coordinator: self)
     signViewModel.delegate = accountViewModel
     profileViewModel.delegate = accountViewModel
     let accountViewController = AccountViewController.create(with: accountViewModel,
                                                              signInViewController: signInViewController,
                                                              profileViewController: profileViewController)
     
-    rootViewController.pushViewController(accountViewController, animated: true)
-    
-    return .none
-//    return .one(flowContributor: .contribute(
-//      withNextPresentable: accountViewController, withNextStepper: accountViewModel))
+    navigationController.pushViewController(accountViewController, animated: true)
   }
   
-  fileprivate func navigateToAuthPermission(url: URL, delegate: AuthPermissionViewModelDelegate?) -> FlowContributors {
+  fileprivate func navigateToAuthPermission(url: URL, delegate: AuthPermissionViewModelDelegate?) {
     let authViewModel = AuthPermissionViewModel(url: url)
     authViewModel.delegate = delegate
     let authViewController = AuthPermissionViewController.create(with: authViewModel)
     
     let navController = UINavigationController(rootViewController: authViewController)
     
-    rootViewController.present(navController, animated: true)
-    
-    return .none
+    navigationController.present(navController, animated: true)
   }
   
   // MARK: - Navigate to Favorites User
   
-  fileprivate func navigateToFavorites() -> FlowContributors {
-    return .none
-//    let listFlow = TVShowsListFlow(rootViewController: rootViewController,
-//                                   dependencies: showListDependencies)
-//
-//    return .one(flowContributor: .contribute(
-//      withNextPresentable: listFlow,
-//      withNextStepper:
-//      OneStepper(withSingleStep: TVShowListStep.favoriteList)))
+  fileprivate func navigateToFavorites() {
+    let coordinator = TVShowListCoordinator(navigationController: navigationController, dependencies: showListDependencies)
+    coordinator.delegate = self
+    childCoordinators[.tvShowList] = coordinator
+    coordinator.start(with: .favoriteList)
   }
   
   // MARK: - Navigate to WatchList User
   
-  fileprivate func navigateToWatchList() -> FlowContributors {
-    return .none
-//    let listFlow = TVShowsListFlow(rootViewController: rootViewController,
-//                                   dependencies: showListDependencies)
-//    
-//    return .one(flowContributor: .contribute(
-//      withNextPresentable: listFlow, withNextStepper:
-//      OneStepper(withSingleStep: TVShowListStep.watchList)))
+  fileprivate func navigateToWatchList() {
+    let coordinator = TVShowListCoordinator(navigationController: navigationController, dependencies: showListDependencies)
+    coordinator.delegate = self
+    childCoordinators[.tvShowList] = coordinator
+    coordinator.start(with: .watchList)
   }
   
   // MARK: - Uses Cases
@@ -171,17 +171,22 @@ public class AccountFlow: Flow {
   }
 }
 
+// MARK: - TVShowListCoordinatorDelegate
+
+extension AccountCoordinator: TVShowListCoordinatorDelegate {
+  
+  public func tvShowListCoordinatorDidFinish() {
+    childCoordinators[.tvShowList] = nil
+  }
+}
+
 // MARK: - Steps
 
-public enum AccountStep: Step {
+public enum AccountStep: MyStep {
   
   case
   
   accountFeatureInit,
-  
-  signIsShow,
-  
-  profileIsShow,
   
   signInIsPicked(url: URL, delegate: AuthPermissionViewModelDelegate?),
   

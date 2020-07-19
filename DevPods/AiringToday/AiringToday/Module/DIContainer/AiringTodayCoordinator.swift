@@ -33,8 +33,6 @@ public class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinat
   
   private var childCoordinators = [AiringTodayChildCoordinator: NCoordinator]()
   
-  // MARK: - Dependencies
-  
   private let dependencies: AiringTodayDependencies
   
   private lazy var showsRepository: TVShowsRepository = {

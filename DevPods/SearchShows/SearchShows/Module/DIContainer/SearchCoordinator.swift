@@ -149,7 +149,6 @@ public class SearchCoordinator: NavigationCoordinator, SearchCoordinatorProtocol
   // MARK: - Navigate to Detail TVShow
   
   fileprivate func navigateToShowDetailScreen(with id: Int) {
-    
     let coordinator = TVShowDetailCoordinator(navigationController: navigationController, dependencies: showDetailsDependencies)
     coordinator.delegate = self
     childCoordinators[.detailShow] = coordinator

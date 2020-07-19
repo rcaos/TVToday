@@ -32,11 +32,9 @@ public enum SignedChildCoordinator {
   
   popularShows,
   
-  search
+  search,
   
-  // MARK: - TODO
-  // search
-  // account
+  account
 }
 
 public class SignedCoordinator: NCoordinator {
@@ -62,12 +60,14 @@ public class SignedCoordinator: NCoordinator {
     let (todayVC, todayCoordinator) = buildTodayCoordinator()
     let (popularVC, popularCoordinator) = buildPopularCoordinator()
     let (searchVC, searchCoordinator) = buildSearchCoordinator()
+    let (accountVC, accountCoordinator) = buildAccountCoordinator()
     
-    tabBarController.setViewControllers([todayVC, popularVC, searchVC], animated: true)
+    tabBarController.setViewControllers([todayVC, popularVC, searchVC, accountVC], animated: true)
     
     childCoordinators[.airingToday] = todayCoordinator
     childCoordinators[.popularShows] = popularCoordinator
     childCoordinators[.search] = searchCoordinator
+    childCoordinators[.account] = accountCoordinator
   }
   
   // MARK: - Build Airing Today Coordinator
@@ -123,6 +123,24 @@ public class SignedCoordinator: NCoordinator {
                                          dependencies: coordinatorDependencies)
     
     let item = UITabBarItem(tabBarSystemItem: .search, tag: 2)
+    coordinator.navigationController.tabBarItem = item
+    coordinator.start()
+    return (navigation, coordinator)
+  }
+  
+  // MARK: - Build Account Coordinator
+  
+  fileprivate func buildAccountCoordinator() -> (UIViewController, NCoordinator) {
+    let coordinatorDependencies =
+      AccountDependencies(apiDataTransferService: dependencies.apiDataTransferService,
+      imagesBaseURL: dependencies.appConfigurations.imagesBaseURL,
+      showsPersistence: dependencies.showsPersistence)
+    
+    let navigation = UINavigationController()
+    let coordinator = AccountCoordinator(navigationController: navigation,
+                                         dependencies: coordinatorDependencies)
+    
+    let item = UITabBarItem(title: "Account", image: UIImage(name: "accountTab"), tag: 3)
     coordinator.navigationController.tabBarItem = item
     coordinator.start()
     return (navigation, coordinator)

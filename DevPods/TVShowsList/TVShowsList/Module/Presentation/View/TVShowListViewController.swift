@@ -36,6 +36,7 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable, Loadab
   }
   
   deinit {
+    viewModel.viewDidFinish()
     print("deinit \(Self.self)")
   }
   
@@ -76,8 +77,7 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable, Loadab
         
         cell.viewModel = element
         
-        // MARK: - TODO, call "showsObservableSubject" dont be stay here
-        if case .paging(let entities, let nextPage) = try? strongSelf.viewModel.viewStateObservableSubject.value(),
+        if case .paging(let entities, let nextPage) = strongSelf.viewModel.getCurrentState(),
           index == entities.count - 1 {
           strongSelf.viewModel.getShows(for: nextPage)
         }

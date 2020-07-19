@@ -7,9 +7,6 @@
 //
 
 import RxSwift
-import RxCocoa
-import RxFlow
-import RxRelay
 import Shared
 
 final class TVShowDetailViewModel {
@@ -24,6 +21,8 @@ final class TVShowDetailViewModel {
   
   private let saveToWatchListUseCase: SaveToWatchListUseCase
   
+  private weak var coordinator: TVShowDetailCoordinatorProtocol?
+  
   private let showId: Int
   
   private var viewStateObservableSubject = BehaviorSubject<ViewState>(value: .loading)
@@ -36,13 +35,13 @@ final class TVShowDetailViewModel {
   
   private var isLoadingWatchList = BehaviorSubject<Bool>(value: false)
   
+  private let disposeBag = DisposeBag()
+  
+  // MARK: - Public
+  
   var input: Input
   
   var output: Output
-  
-  var steps = PublishRelay<Step>()
-  
-  private let disposeBag = DisposeBag()
   
   // MARK: - Initializers
   
@@ -51,13 +50,15 @@ final class TVShowDetailViewModel {
        fetchDetailShowUseCase: FetchTVShowDetailsUseCase,
        fetchTvShowState: FetchTVAccountStates,
        markAsFavoriteUseCase: MarkAsFavoriteUseCase,
-       saveToWatchListUseCase: SaveToWatchListUseCase) {
+       saveToWatchListUseCase: SaveToWatchListUseCase,
+       coordinator: TVShowDetailCoordinatorProtocol?) {
+    self.showId = showId
     self.fetchLoggedUser = fetchLoggedUser
     self.fetchDetailShowUseCase = fetchDetailShowUseCase
     self.fetchTvShowState = fetchTvShowState
     self.markAsFavoriteUseCase = markAsFavoriteUseCase
     self.saveToWatchListUseCase = saveToWatchListUseCase
-    self.showId = showId
+    self.coordinator = coordinator
     
     self.input = Input()
     self.output = Output(
@@ -313,15 +314,19 @@ extension TVShowDetailViewModel: BaseViewModel {
   }
 }
 
-// MARK: - Stepper
+// MARK: - Navigation
 
 extension TVShowDetailViewModel {
   
-  public func navigateTo(step: Step) {
-    steps.accept(step)
+  public func navigateToSeasons() {
+    navigateTo(step: .seasonsAreRequired(withId: showId) )
   }
   
-  public func navigateToSeasons() {
-    steps.accept( ShowDetailsStep.seasonsAreRequired(withId: showId) )
+  public func viewDidFinish() {
+    navigateTo(step: .detailViewDidFinish)
+  }
+  
+  fileprivate func navigateTo(step: ShowDetailsStep) {
+    coordinator?.navigate(to: step)
   }
 }

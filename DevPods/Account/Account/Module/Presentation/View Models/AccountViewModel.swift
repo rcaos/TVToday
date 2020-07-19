@@ -7,8 +7,6 @@
 //
 
 import Foundation
-import RxFlow
-import RxRelay
 import RxSwift
 import Shared
 
@@ -26,8 +24,6 @@ final class AccountViewModel {
   
   private let viewStateSubject: BehaviorSubject<ViewState> = .init(value: .login)
   
-  var steps = PublishRelay<Step>()
-  
   var input: Input
   
   var output: Output
@@ -35,6 +31,8 @@ final class AccountViewModel {
   private var signInViewModel: SignInViewModel
   
   private var profileViewModel: ProfileViewModel
+  
+  private weak var coordinator: AccountCoordinatorProtocol?
   
   private let disposeBag = DisposeBag()
   
@@ -46,7 +44,8 @@ final class AccountViewModel {
        fetchLoggedUser: FetchLoggedUser,
        deleteLoguedUser: DeleteLoguedUserUseCase,
        signInViewModel: SignInViewModel,
-       profileViewMoel: ProfileViewModel) {
+       profileViewMoel: ProfileViewModel,
+       coordinator: AccountCoordinatorProtocol?) {
     self.requestToken = requestToken
     self.createNewSession = createNewSession
     self.fetchAccountDetails = fetchAccountDetails
@@ -54,6 +53,7 @@ final class AccountViewModel {
     self.deleteLoguedUser = deleteLoguedUser
     self.signInViewModel = signInViewModel
     self.profileViewModel = profileViewMoel
+    self.coordinator = coordinator
     
     input = Input()
     output = Output(viewState: viewStateSubject.asObservable())
@@ -86,7 +86,8 @@ final class AccountViewModel {
     requestToken.execute()
       .subscribe(onNext: { [weak self] url in
         guard let strongSelf = self else { return }
-        strongSelf.steps.accept( AccountStep.signInIsPicked(url: url, delegate: strongSelf) )
+        strongSelf.coordinator?.navigate(to: .signInIsPicked(url: url, delegate: strongSelf))
+        
         }, onError: { [weak self] error in
           print("error to request token: \(error)")
           self?.viewStateSubject.onNext(.login)
@@ -121,6 +122,12 @@ final class AccountViewModel {
     deleteLoguedUser.execute()
     viewStateSubject.onNext(.login)
   }
+  
+  // MARK: - Navigation
+  
+  fileprivate func navigateTo(step: AccountStep) {
+    coordinator?.navigate(to: step)
+  }
 }
 
 // MARK: - SignInViewModelDelegate
@@ -136,7 +143,7 @@ extension AccountViewModel: SignInViewModelDelegate {
 extension AccountViewModel: AuthPermissionViewModelDelegate {
   func authPermissionViewModel(didSignedIn signedIn: Bool) {
     createSession()
-    steps.accept(AccountStep.authorizationIsComplete)
+    navigateTo(step: .authorizationIsComplete)
   }
 }
 
@@ -151,9 +158,9 @@ extension AccountViewModel: ProfileViewModelDelegate {
   func profileViewModel(didUserList tapped: UserListType) {
     switch tapped {
     case .favorites:
-      steps.accept(AccountStep.favoritesIsPicked)
+      navigateTo(step: .favoritesIsPicked)
     case .watchList:
-      steps.accept(AccountStep.watchListIsPicked)
+      navigateTo(step: .watchListIsPicked)
     }
   }
 }
@@ -164,13 +171,6 @@ extension AccountViewModel: BaseViewModel {
   
   public struct Output {
     let viewState: Observable<ViewState>
-  }
-}
-
-extension AccountViewModel {
-  
-  public func navigateTo(step: Step) {
-    steps.accept(step)
   }
 }
 

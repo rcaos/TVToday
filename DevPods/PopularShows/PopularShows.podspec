@@ -44,7 +44,6 @@ TODO: Add long description of the pod here.
   s.dependency 'RxSwift', '~> 5.0.0'
   s.dependency 'RxCocoa', '~> 5.0.0'
   s.dependency 'RxDataSources', '~> 4.0.0'
-  s.dependency 'RxFlow', '~> 2.7.0'
   
   # s.resource_bundles = {
   #   'PopularShows' => ['PopularShows/Assets/*.png']

@@ -68,6 +68,7 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable,
   }
   
   deinit {
+    viewModel.viewDidFinish()
     print("deinit \(Self.self)")
   }
   

@@ -12,8 +12,8 @@
 		770860F423CE6EB100625183 /* AppConfigurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770860F323CE6EB100625183 /* AppConfigurations.swift */; };
 		7762A94C249DC78300E00CDD /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7762A94B249DC78300E00CDD /* WebKit.framework */; };
 		777B1776243CD3CD002D5DCF /* AppDIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777B1775243CD3CD002D5DCF /* AppDIContainer.swift */; };
-		777B1778243CD676002D5DCF /* AppFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777B1777243CD676002D5DCF /* AppFlow.swift */; };
-		777B177A243CD9AC002D5DCF /* SignedFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777B1779243CD9AC002D5DCF /* SignedFlow.swift */; };
+		777B1778243CD676002D5DCF /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777B1777243CD676002D5DCF /* AppCoordinator.swift */; };
+		777B177A243CD9AC002D5DCF /* SignedCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777B1779243CD9AC002D5DCF /* SignedCoordinator.swift */; };
 		77F46327230C9F5A008FB9D6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F46326230C9F5A008FB9D6 /* AppDelegate.swift */; };
 		77F46331230C9F5C008FB9D6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77F4632F230C9F5C008FB9D6 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -24,8 +24,8 @@
 		770860F323CE6EB100625183 /* AppConfigurations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfigurations.swift; sourceTree = "<group>"; };
 		7762A94B249DC78300E00CDD /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		777B1775243CD3CD002D5DCF /* AppDIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDIContainer.swift; sourceTree = "<group>"; };
-		777B1777243CD676002D5DCF /* AppFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFlow.swift; sourceTree = "<group>"; };
-		777B1779243CD9AC002D5DCF /* SignedFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignedFlow.swift; sourceTree = "<group>"; };
+		777B1777243CD676002D5DCF /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		777B1779243CD9AC002D5DCF /* SignedCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignedCoordinator.swift; sourceTree = "<group>"; };
 		77F46323230C9F5A008FB9D6 /* TVToday.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TVToday.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		77F46326230C9F5A008FB9D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		77F46330230C9F5C008FB9D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -80,8 +80,8 @@
 			isa = PBXGroup;
 			children = (
 				777B1775243CD3CD002D5DCF /* AppDIContainer.swift */,
-				777B1777243CD676002D5DCF /* AppFlow.swift */,
-				777B1779243CD9AC002D5DCF /* SignedFlow.swift */,
+				777B1777243CD676002D5DCF /* AppCoordinator.swift */,
+				777B1779243CD9AC002D5DCF /* SignedCoordinator.swift */,
 			);
 			path = DIContainer;
 			sourceTree = "<group>";
@@ -255,8 +255,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				77F46327230C9F5A008FB9D6 /* AppDelegate.swift in Sources */,
-				777B177A243CD9AC002D5DCF /* SignedFlow.swift in Sources */,
-				777B1778243CD676002D5DCF /* AppFlow.swift in Sources */,
+				777B177A243CD9AC002D5DCF /* SignedCoordinator.swift in Sources */,
+				777B1778243CD676002D5DCF /* AppCoordinator.swift in Sources */,
 				777B1776243CD3CD002D5DCF /* AppDIContainer.swift in Sources */,
 				770860F423CE6EB100625183 /* AppConfigurations.swift in Sources */,
 			);

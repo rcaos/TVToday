@@ -6,11 +6,8 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
-import Foundation
 import RxSwift
 import RxDataSources
-import RxRelay
-import RxFlow
 import Shared
 
 final class SeasonListViewModel {
@@ -24,8 +21,6 @@ final class SeasonListViewModel {
   var input: Input
   
   var output: Output
-  
-  var steps = PublishRelay<Step>()
   
   var disposeBag = DisposeBag()
   

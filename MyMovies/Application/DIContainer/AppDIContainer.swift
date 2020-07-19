@@ -7,10 +7,10 @@
 //
 
 import UIKit
-import RxFlow
 import Networking
 import Persistence
 import RealmPersistence
+import Shared
 
 public class AppDIContainer {
   
@@ -42,27 +42,17 @@ public class AppDIContainer {
     return DefaultSearchLocalRepository(searchLocalStorage: localStorage)
   }()
   
-  public let coordinator: FlowCoordinator!
-  
-  private var appFlow: AppFlow!
+  private var appCoordinator: AppCoordinator!
   
   // MARK: - Life Cycle
   
   public init(window: UIWindow) {
+    let appDependencies = AppDependencies(apiDataTransferService: apiDataTransferService,
+                                          appConfigurations: appConfigurations,
+                                          showsPersistence: showsPersistence,
+                                          searchsPersistence: searchPersistence)
     
-    self.coordinator = FlowCoordinator()
-    
-    self.appFlow = AppFlow(
-      window: window,
-      dependencies: AppFlow.Dependencies(
-        apiDataTransferService: apiDataTransferService,
-        appConfigurations: appConfigurations,
-        showsPersistence: showsPersistence,
-        searchsPersistence: searchPersistence))
-    
-    // Base on some Conditions, guest, logged, etc, launch "appFlow" with "First Step"
-    // AppFlow handle "Flows.whenReady"
-    coordinator.coordinate(flow: appFlow,
-                           with: OneStepper(withSingleStep: AppStep.applicationAuthorized) )
+    appCoordinator = AppCoordinator(window: window, dependencies: appDependencies)
+    appCoordinator?.start()
   }
 }

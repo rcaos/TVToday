@@ -7,19 +7,17 @@
 //
 
 import RxSwift
-import RxFlow
-import RxRelay
 import Shared
 
 final class AiringTodayViewModel: ShowsViewModel {
-  
-  var steps = PublishRelay<Step>()
   
   var fetchTVShowsUseCase: FetchTVShowsUseCase
   
   var shows: [TVShow]
   
   var showsCells: [AiringTodayCollectionViewModel] = []
+  
+  weak var coordinator: AiringTodayCoordinatorProtocol?
   
   var disposeBag = DisposeBag()
   
@@ -32,8 +30,10 @@ final class AiringTodayViewModel: ShowsViewModel {
   
   // MARK: - Initializers
   
-  init(fetchTVShowsUseCase: FetchTVShowsUseCase) {
+  init(fetchTVShowsUseCase: FetchTVShowsUseCase,
+       coordinator: AiringTodayCoordinatorProtocol?) {
     self.fetchTVShowsUseCase = fetchTVShowsUseCase
+    self.coordinator = coordinator
     shows = []
     
     self.input = Input()
@@ -44,11 +44,19 @@ final class AiringTodayViewModel: ShowsViewModel {
     return entites.map { AiringTodayCollectionViewModel(show: $0) }
   }
   
-  // MARK: - Public
-  
   func getCurrentViewState() -> SimpleViewState<AiringTodayCollectionViewModel> {
     guard let currentState = try? viewStateObservableSubject.value() else { return .loading }
     return currentState
+  }
+  
+  func showIsPicked(with id: Int) {
+    navigateTo(step: .showIsPicked(id))
+  }
+  
+  // MARK: - Navigation
+  
+  fileprivate func navigateTo(step: AiringTodayStep) {
+    coordinator?.navigate(to: step)
   }
 }
 
@@ -60,14 +68,5 @@ extension AiringTodayViewModel: BaseViewModel {
   
   public struct Output {
     let viewState: Observable<SimpleViewState<AiringTodayCollectionViewModel>>
-  }
-}
-
-// MARK: - Stepper, Navigation
-
-extension AiringTodayViewModel {
-  
-  public func navigateTo(step: Step) {
-    steps.accept(step)
   }
 }

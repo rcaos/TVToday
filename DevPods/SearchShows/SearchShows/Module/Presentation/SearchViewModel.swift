@@ -7,17 +7,15 @@
 //
 
 import RxSwift
-import RxFlow
-import RxRelay
-import RxDataSources
+import Shared
 
-final class SearchViewModel: Stepper {
+final class SearchViewModel {
   
   private var resultsViewModel: ResultsSearchViewModel
   
-  var steps = PublishRelay<Step>()
-  
   private var searchBarTextSubject: BehaviorSubject<String> = .init(value: "")
+  
+  private weak var coordinator: SearchCoordinatorProtocol?
   
   var input: Input
   
@@ -25,8 +23,9 @@ final class SearchViewModel: Stepper {
   
   // MARK: - Initializer
   
-  init(resultsViewModel: ResultsSearchViewModel) {
+  init(resultsViewModel: ResultsSearchViewModel, coordinator: SearchCoordinatorProtocol) {
     self.resultsViewModel = resultsViewModel
+    self.coordinator = coordinator
     self.input = Input()
     self.output = Output(searchBarText: searchBarTextSubject.asObservable())
   }
@@ -40,9 +39,15 @@ final class SearchViewModel: Stepper {
   func resetSearch() {
     resultsViewModel.resetSearch()
   }
+  
+  // MARK: - Navigation
+  
+  fileprivate func navigateTo(step: SearchStep) {
+    coordinator?.navigate(to: step)
+  }
 }
 
-extension SearchViewModel {
+extension SearchViewModel: BaseViewModel {
   
   public struct Input { }
   
@@ -58,12 +63,12 @@ extension SearchViewModel: SearchOptionsViewModelDelegate {
   func searchOptionsViewModel(_ searchOptionsViewModel: SearchOptionsViewModel,
                               didGenrePicked idGenre: Int,
                               title: String?) {
-    steps.accept(SearchStep.genreIsPicked(withId: idGenre, title: title))
+    navigateTo(step: .genreIsPicked(withId: idGenre, title: title))
   }
   
   func searchOptionsViewModel(_ searchOptionsViewModel: SearchOptionsViewModel,
                               didRecentShowPicked idShow: Int) {
-    steps.accept(SearchStep.showIsPicked(withId: idShow))
+    navigateTo(step: .showIsPicked(withId: idShow))
   }
 }
 
@@ -71,7 +76,7 @@ extension SearchViewModel: ResultsSearchViewModelDelegate {
   
   func resultsSearchViewModel(_ resultsSearchViewModel: ResultsSearchViewModel,
                               didSelectShow idShow: Int) {
-    steps.accept(SearchStep.showIsPicked(withId: idShow))
+    navigateTo(step: .showIsPicked(withId: idShow))
   }
   
   func resultsSearchViewModel(_ resultsSearchViewModel: ResultsSearchViewModel,

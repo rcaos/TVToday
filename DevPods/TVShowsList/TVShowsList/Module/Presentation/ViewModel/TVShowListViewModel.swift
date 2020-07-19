@@ -29,24 +29,45 @@ final class TVShowListViewModel: ShowsViewModel {
   
   var viewStateObservableSubject: BehaviorSubject<SimpleViewState<TVShowCellViewModel>> = .init(value: .loading)
   
+  private weak var coordinator: TVShowListCoordinatorProtocol?
+  
   // MARK: - Initializers
   
-  init(fetchTVShowsUseCase: FetchTVShowsUseCase) {
+  init(fetchTVShowsUseCase: FetchTVShowsUseCase, coordinator: TVShowListCoordinatorProtocol) {
     self.fetchTVShowsUseCase = fetchTVShowsUseCase
+    self.coordinator = coordinator
     self.shows = []
     self.input = Input()
     self.output = Output(viewState: viewStateObservableSubject.asObservable())
+  }
+  
+  deinit {
+    print("deinit \(Self.self)")
   }
   
   func mapToCell(entites: [TVShow]) -> [TVShowCellViewModel] {
     return entites.map { TVShowCellViewModel(show: $0) }
   }
   
+  func getCurrentState() -> SimpleViewState<TVShowCellViewModel> {
+    if let state = try? viewStateObservableSubject.value() {
+      return state
+    }
+    return .loading
+  }
+  
   // MARK: - Navigation
   
-  public func showIsPicked(with showId: Int) {
-    let step = TVShowListStep.showIsPicked(showId: showId)
-    steps.accept(step)
+  public func showIsPicked(with id: Int) {
+    navigateTo(step: .showIsPicked(showId: id))
+  }
+  
+  public func viewDidFinish() {
+    navigateTo(step: .showListDidFinish)
+  }
+  
+  private func navigateTo(step: TVShowListStep) {
+    coordinator?.navigate(to: step)
   }
 
 }

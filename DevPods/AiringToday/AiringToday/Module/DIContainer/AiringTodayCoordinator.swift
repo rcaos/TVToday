@@ -16,7 +16,7 @@ public protocol AiringTodayCoordinatorProtocol: class {
   func navigate(to step: AiringTodayStep)
 }
 
-public enum AiringTodayStep {
+public enum AiringTodayStep: MyStep {
   
   case todayFeatureInit,
   
@@ -89,14 +89,11 @@ public class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinat
   // MARK: - Navigate to Show Detail
   
   fileprivate func showDetailIsPicked(for showId: Int) {
-    // TODO, dependencies should be in Struct with var?
-    showDetailsDependencies.tvShowId = showId
-    
     let tvDetailCoordinator = TVShowDetailCoordinator(navigationController: navigationController,
                                                       dependencies: showDetailsDependencies)
-    childCoordinators[.detailShow] = tvDetailCoordinator
     tvDetailCoordinator.delegate = self
-    tvDetailCoordinator.start()
+    childCoordinators[.detailShow] = tvDetailCoordinator
+    tvDetailCoordinator.start(with: .showDetailsIsRequired(withId: showId))
   }
   
   // MARK: - Uses Cases

@@ -16,7 +16,7 @@ public protocol PopularCoordinatorProtocol: class {
   func navigate(to step: PopularStep)
 }
 
-public enum PopularStep {
+public enum PopularStep: MyStep {
   
   case popularFeatureInit,
   
@@ -90,14 +90,11 @@ public class PopularCoordinator: NavigationCoordinator, PopularCoordinatorProtoc
   // MARK: - Navigate to Show Detail
   
   fileprivate func navigateToShowDetailScreen(with showId: Int) {
-    // TODO, dependencies should be in Struct with var?
-    showDetailsDependencies.tvShowId = showId
-    
     let tvDetailCoordinator = TVShowDetailCoordinator(navigationController: navigationController,
                                                       dependencies: showDetailsDependencies)
     childCoordinators[.detailShow] = tvDetailCoordinator
     tvDetailCoordinator.delegate = self
-    tvDetailCoordinator.start()
+    tvDetailCoordinator.start(with: .showDetailsIsRequired(withId: showId))
   }
   
   // MARK: - Uses Cases

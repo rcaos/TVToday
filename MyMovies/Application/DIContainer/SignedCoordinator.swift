@@ -30,7 +30,9 @@ public enum SignedChildCoordinator {
   
   airingToday,
   
-  popularShows
+  popularShows,
+  
+  search
   
   // MARK: - TODO
   // search
@@ -59,11 +61,13 @@ public class SignedCoordinator: NCoordinator {
   fileprivate func showMainFeatures() {
     let (todayVC, todayCoordinator) = buildTodayCoordinator()
     let (popularVC, popularCoordinator) = buildPopularCoordinator()
+    let (searchVC, searchCoordinator) = buildSearchCoordinator()
     
-    tabBarController.setViewControllers([todayVC, popularVC], animated: true)
+    tabBarController.setViewControllers([todayVC, popularVC, searchVC], animated: true)
     
     childCoordinators[.airingToday] = todayCoordinator
     childCoordinators[.popularShows] = popularCoordinator
+    childCoordinators[.search] = searchCoordinator
   }
   
   // MARK: - Build Airing Today Coordinator
@@ -99,6 +103,26 @@ public class SignedCoordinator: NCoordinator {
                                          dependencies: coordinatorDependencies)
     
     let item = UITabBarItem(title: "Popular", image: UIImage(name: "popular"), tag: 1)
+    coordinator.navigationController.tabBarItem = item
+    coordinator.start()
+    return (navigation, coordinator)
+  }
+  
+  // MARK: - Build Search Coordinator
+  
+  fileprivate func buildSearchCoordinator() -> (UIViewController, NCoordinator) {
+    let coordinatorDependencies =
+      SearchShowDependencies(
+      apiDataTransferService: dependencies.apiDataTransferService,
+      imagesBaseURL: dependencies.appConfigurations.imagesBaseURL,
+      showsPersistence: dependencies.showsPersistence,
+      searchsPersistence: dependencies.searchsPersistence)
+    
+    let navigation = UINavigationController()
+    let coordinator = SearchCoordinator(navigationController: navigation,
+                                         dependencies: coordinatorDependencies)
+    
+    let item = UITabBarItem(tabBarSystemItem: .search, tag: 2)
     coordinator.navigationController.tabBarItem = item
     coordinator.start()
     return (navigation, coordinator)

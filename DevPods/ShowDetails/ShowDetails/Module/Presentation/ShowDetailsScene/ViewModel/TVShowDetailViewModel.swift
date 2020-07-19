@@ -7,8 +7,6 @@
 //
 
 import RxSwift
-import RxCocoa
-import RxRelay
 import Shared
 
 final class TVShowDetailViewModel {

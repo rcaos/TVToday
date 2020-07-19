@@ -14,15 +14,12 @@ public struct ShowDetailsDependencies {
   let apiDataTransferService: DataTransferService
   let imagesBaseURL: String
   let showsPersistenceRepository: ShowsVisitedLocalRepository
-  public var tvShowId: Int?
   
   public init(apiDataTransferService: DataTransferService,
               imagesBaseURL: String,
-              showsPersistenceRepository: ShowsVisitedLocalRepository,
-              tvShowId: Int? = nil) {
+              showsPersistenceRepository: ShowsVisitedLocalRepository) {
     self.apiDataTransferService = apiDataTransferService
     self.imagesBaseURL = imagesBaseURL
     self.showsPersistenceRepository = showsPersistenceRepository
-    self.tvShowId = tvShowId
   }
 }

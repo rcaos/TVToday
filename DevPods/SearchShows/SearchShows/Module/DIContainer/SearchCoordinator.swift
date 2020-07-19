@@ -14,17 +14,37 @@ import TVShowsList
 import Persistence
 import Shared
 
-public class SearchFlow: Flow {
+public protocol SearchCoordinatorProtocol: class {
+  
+  func navigate(to step: SearchStep)
+}
+
+public enum SearchStep: MyStep {
+  
+  case
+  
+  searchFeatureInit,
+  
+  genreIsPicked(withId: Int, title: String?),
+  
+  showIsPicked(withId: Int)
+}
+
+public enum SearchChildCoordinator {
+  case
+  
+  detailShow,
+  
+  genreList
+}
+
+public class SearchCoordinator: NavigationCoordinator, SearchCoordinatorProtocol {
+  
+  public var navigationController: UINavigationController
   
   private let dependencies: SearchShowDependencies
   
-  public var root: Presentable {
-    return self.rootViewController
-  }  
-  private lazy var rootViewController: UINavigationController = {
-    let navigationController = UINavigationController()
-    return navigationController
-  }()
+  private var childCoordinators = [SearchChildCoordinator: NCoordinator]()
   
   // MARK: - Repositories
   
@@ -57,44 +77,44 @@ public class SearchFlow: Flow {
   
   // MARK: - Life Cycle
   
-  public init(dependencies: SearchShowDependencies) {
+  public init(navigationController: UINavigationController, dependencies: SearchShowDependencies) {
+    self.navigationController = navigationController
     self.dependencies = dependencies
+  }
+  
+  public func start() {
+    navigate(to: .searchFeatureInit)
   }
   
   // MARK: - Navigation
   
-  public func navigate(to step: Step) -> FlowContributors {
+  public func navigate(to step: SearchStep) {
     switch step {
-    case SearchStep.searchFeatureInit:
-      return navigateToSearchFeature()
+    case .searchFeatureInit:
+      navigateToSearchFeature()
       
-    case SearchStep.genreIsPicked(let id, let title):
-      return navigateToGenreListScreen(with: id, title: title)
+    case .genreIsPicked(let id, let title):
+      navigateToGenreListScreen(with: id, title: title)
       
-    case SearchStep.showIsPicked(let showId):
-      return navigateToShowDetailScreen(with: showId)
-      
-    default:
-      return .none
+    case .showIsPicked(let showId):
+      navigateToShowDetailScreen(with: showId)
     }
   }
   
   // MARK: - Main Search Screen
   
-  fileprivate func navigateToSearchFeature() -> FlowContributors {
+  fileprivate func navigateToSearchFeature() {
     let resultsSearchViewModel = buildResultsViewModel()
     
-    let viewModel = SearchViewModel(resultsViewModel: resultsSearchViewModel)
+    let viewModel = SearchViewModel(resultsViewModel: resultsSearchViewModel,
+                                    coordinator: self)
     resultsSearchViewModel.delegate = viewModel
     
     let searchVC = SearchViewController.create(with: viewModel,
                                                searchController: buildSearchController(with: resultsSearchViewModel),
                                                searchOptionsViewController: buildSearchOptionsController(with: viewModel))
     
-    rootViewController.pushViewController(searchVC, animated: true)
-    
-    return .one(flowContributor: .contribute(
-      withNextPresentable: searchVC, withNextStepper: viewModel))
+    navigationController.pushViewController(searchVC, animated: true)
   }
   
   fileprivate func buildResultsViewModel() -> ResultsSearchViewModel {
@@ -119,27 +139,21 @@ public class SearchFlow: Flow {
   
   // MARK: - Navigate to List by Genre
   
-  fileprivate func navigateToGenreListScreen(with id: Int, title: String?) -> FlowContributors {
-    let listFlow = TVShowsListFlow(rootViewController: rootViewController,
-                                   dependencies: showListDependencies)
-    return .one(flowContributor: .contribute(
-      withNextPresentable: listFlow,
-      withNextStepper:
-      OneStepper(withSingleStep: TVShowListStep.genreList(genreId: id, title: title) )))
+  fileprivate func navigateToGenreListScreen(with id: Int, title: String?) {
+    let coordinator = TVShowListCoordinator(navigationController: navigationController, dependencies: showListDependencies)
+    coordinator.delegate = self
+    childCoordinators[.genreList] = coordinator
+    coordinator.start(with: .genreList(genreId: id, title: title))
   }
   
   // MARK: - Navigate to Detail TVShow
   
-  fileprivate func navigateToShowDetailScreen(with id: Int) -> FlowContributors {
-    return .none
-//    let detailShowFlow = TVShowDetailFlow(rootViewController: rootViewController,
-//                                          dependencies: showDetailsDependencies)
-//    
-//    return .one(flowContributor: .contribute(
-//      withNextPresentable: detailShowFlow,
-//      withNextStepper:
-//      OneStepper(withSingleStep:
-//        ShowDetailsStep.showDetailsIsRequired(withId: id))))
+  fileprivate func navigateToShowDetailScreen(with id: Int) {
+    
+    let coordinator = TVShowDetailCoordinator(navigationController: navigationController, dependencies: showDetailsDependencies)
+    coordinator.delegate = self
+    childCoordinators[.detailShow] = coordinator
+    coordinator.start(with: .showDetailsIsRequired(withId: id))
   }
   
   // MARK: - Uses Cases
@@ -170,15 +184,20 @@ public class SearchFlow: Flow {
   }
 }
 
-// MARK: - Steps
+// MARK: - TVShowListCoordinatorDelegate
 
-public enum SearchStep: Step {
+extension SearchCoordinator: TVShowListCoordinatorDelegate {
   
-  case
+  public func tvShowListCoordinatorDidFinish() {
+    childCoordinators[.genreList] = nil
+  }
+}
+
+// MARK: - TVShowDetailCoordinatorDelegate
+
+extension SearchCoordinator: TVShowDetailCoordinatorDelegate {
   
-  searchFeatureInit,
-  
-  genreIsPicked(withId: Int, title: String?),
-  
-  showIsPicked(withId: Int)
+  public func tvShowDetailCoordinatorDidFinish() {
+    childCoordinators[.detailShow] = nil
+  }
 }

@@ -17,11 +17,11 @@ public protocol TVShowDetailCoordinatorProtocol: class {
   func navigate(to step: ShowDetailsStep)
 }
 
-// MARK: - TODO, abstract to Step?
-
-public enum ShowDetailsStep {
+public enum ShowDetailsStep: MyStep {
   
-  case showDetailsIsRequired(withId: Int),
+  case
+  
+  showDetailsIsRequired(withId: Int),
   
   seasonsAreRequired(withId: Int),
   
@@ -38,8 +38,6 @@ public class TVShowDetailCoordinator: NavigationCoordinator, TVShowDetailCoordin
   public var navigationController: UINavigationController
   
   public weak var delegate: TVShowDetailCoordinatorDelegate?
-  
-  // MARK: - Dependencies
   
   private let dependencies: ShowDetailsDependencies
   
@@ -78,8 +76,8 @@ public class TVShowDetailCoordinator: NavigationCoordinator, TVShowDetailCoordin
     print("deinit \(Self.self)")
   }
   
-  public func start() {
-    showDetailsFeature()
+  public func start(with step: ShowDetailsStep) {
+    navigate(to: step)
   }
   
   // MARK: - Navigation
@@ -87,22 +85,21 @@ public class TVShowDetailCoordinator: NavigationCoordinator, TVShowDetailCoordin
   public func navigate(to step: ShowDetailsStep) {
     switch step {
       
-    case .showDetailsIsRequired:
-      break
+    case .showDetailsIsRequired(let showId):
+      showDetailsFeature(with: showId)
+      
+    case .seasonsAreRequired(let showId):
+      navigateToSeasonsScreen(with: showId)
       
     case .detailViewDidFinish:
       delegate?.tvShowDetailCoordinatorDidFinish()
-      
-    case .seasonsAreRequired(let showId):
-      return navigateToSeasonsScreen(with: showId)
     }
   }
   
   // MARK: - Navigate to Show Details
   
-  fileprivate func showDetailsFeature() {
-    guard let id = dependencies.tvShowId else { return }
-    let viewModel = TVShowDetailViewModel(id,
+  fileprivate func showDetailsFeature(with showId: Int) {
+    let viewModel = TVShowDetailViewModel(showId,
                                           fetchLoggedUser: makeFetchLoggedUserUseCase(),
                                           fetchDetailShowUseCase: makeFetchShowDetailsUseCase(),
                                           fetchTvShowState: makeTVAccountStatesUseCase(),

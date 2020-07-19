@@ -126,24 +126,26 @@ public class AccountFlow: Flow {
   // MARK: - Navigate to Favorites User
   
   fileprivate func navigateToFavorites() -> FlowContributors {
-    let listFlow = TVShowsListFlow(rootViewController: rootViewController,
-                                   dependencies: showListDependencies)
-    
-    return .one(flowContributor: .contribute(
-      withNextPresentable: listFlow,
-      withNextStepper:
-      OneStepper(withSingleStep: TVShowListStep.favoriteList)))
+    return .none
+//    let listFlow = TVShowsListFlow(rootViewController: rootViewController,
+//                                   dependencies: showListDependencies)
+//
+//    return .one(flowContributor: .contribute(
+//      withNextPresentable: listFlow,
+//      withNextStepper:
+//      OneStepper(withSingleStep: TVShowListStep.favoriteList)))
   }
   
   // MARK: - Navigate to WatchList User
   
   fileprivate func navigateToWatchList() -> FlowContributors {
-    let listFlow = TVShowsListFlow(rootViewController: rootViewController,
-                                   dependencies: showListDependencies)
-    
-    return .one(flowContributor: .contribute(
-      withNextPresentable: listFlow, withNextStepper:
-      OneStepper(withSingleStep: TVShowListStep.watchList)))
+    return .none
+//    let listFlow = TVShowsListFlow(rootViewController: rootViewController,
+//                                   dependencies: showListDependencies)
+//    
+//    return .one(flowContributor: .contribute(
+//      withNextPresentable: listFlow, withNextStepper:
+//      OneStepper(withSingleStep: TVShowListStep.watchList)))
   }
   
   // MARK: - Uses Cases

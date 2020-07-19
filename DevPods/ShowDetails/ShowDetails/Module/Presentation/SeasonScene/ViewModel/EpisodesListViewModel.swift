@@ -7,13 +7,9 @@
 //
 
 import RxSwift
-import RxFlow
-import RxRelay
 import Shared
 
 final class EpisodesListViewModel {
-  
-  var steps = PublishRelay<Step>()
   
   private let fetchDetailShowUseCase: FetchTVShowDetailsUseCase
   private let fetchEpisodesUseCase: FetchEpisodesUseCase
@@ -225,14 +221,5 @@ extension EpisodesListViewModel: BaseViewModel {
     let data: Observable<[SeasonsSectionModel]>
     
     let viewState: Observable<ViewState>
-  }
-}
-
-// MARK: - Navigate
-
-extension EpisodesListViewModel {
-  
-  public func navigateTo(step: Step) {
-    steps.accept(step)
   }
 }

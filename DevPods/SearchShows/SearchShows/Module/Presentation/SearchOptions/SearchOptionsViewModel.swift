@@ -6,10 +6,8 @@
 //
 
 import RxSwift
-import RxFlow
 import Shared
 import Persistence
-import RxDataSources
 
 protocol SearchOptionsViewModelDelegate: class {
   

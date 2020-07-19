@@ -7,13 +7,9 @@
 //
 
 import RxSwift
-import RxFlow
-import RxRelay
 import Shared
 
 final class TVShowListViewModel: ShowsViewModel {
-  
-  var steps = PublishRelay<Step>()
   
   var fetchTVShowsUseCase: FetchTVShowsUseCase
   

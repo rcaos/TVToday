@@ -40,19 +40,5 @@ TODO: Add long description of the pod here.
   s.dependency 'UI'
 
   # Third Party Frameworks
-  s.dependency 'Kingfisher', '~> 5.13.0'
-  s.dependency 'RxFlow', '~> 2.7.0'
-  
-  # s.dependency 'RxSwift', '~> 5.0.0'
-  # s.dependency 'RxCocoa', '~> 5.0.0'
-  # s.dependency 'RxDataSources', '~> 4.0.0'
-  # s.dependency 'RxFlow', '~> 2.7.0'
-  
-  # s.resource_bundles = {
-  #   'Shared' => ['Shared/Assets/*.png']
-  # }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.dependency 'Kingfisher', '~> 5.13.0'  
 end

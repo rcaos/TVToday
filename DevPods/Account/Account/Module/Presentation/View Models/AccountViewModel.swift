@@ -7,8 +7,6 @@
 //
 
 import Foundation
-import RxFlow
-import RxRelay
 import RxSwift
 import Shared
 
@@ -25,8 +23,6 @@ final class AccountViewModel {
   private let deleteLoguedUser: DeleteLoguedUserUseCase
   
   private let viewStateSubject: BehaviorSubject<ViewState> = .init(value: .login)
-  
-  var steps = PublishRelay<Step>()
   
   var input: Input
   

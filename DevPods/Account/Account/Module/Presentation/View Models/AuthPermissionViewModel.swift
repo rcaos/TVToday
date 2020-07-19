@@ -6,8 +6,6 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxFlow
-import RxRelay
 import RxSwift
 
 public protocol AuthPermissionViewModelDelegate: class {

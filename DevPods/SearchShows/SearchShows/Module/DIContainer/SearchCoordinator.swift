@@ -6,8 +6,7 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import Foundation
-import RxFlow
+import UIKit
 import Networking
 import ShowDetails
 import TVShowsList

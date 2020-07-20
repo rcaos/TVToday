@@ -23,7 +23,7 @@ final class SearchViewModel {
   
   // MARK: - Initializer
   
-  init(resultsViewModel: ResultsSearchViewModel, coordinator: SearchCoordinatorProtocol) {
+  init(resultsViewModel: ResultsSearchViewModel, coordinator: SearchCoordinatorProtocol?) {
     self.resultsViewModel = resultsViewModel
     self.coordinator = coordinator
     self.input = Input()

@@ -9,8 +9,9 @@
 import Foundation
 import Networking
 import Persistence
+import Shared
 
-public struct SearchShowDependencies {
+public struct ModuleDependencies {
   
   let apiDataTransferService: DataTransferService
   let imagesBaseURL: String
@@ -25,5 +26,20 @@ public struct SearchShowDependencies {
     self.imagesBaseURL = imagesBaseURL
     self.showsPersistence = showsPersistence
     self.searchsPersistence = searchsPersistence
+  }
+}
+
+// MARK: - Entry to Module
+
+public struct Module {
+  
+  private let diContainer: DIContainer
+  
+  public init(dependencies: ModuleDependencies) {
+    self.diContainer = DIContainer(dependencies: dependencies)
+  }
+  
+  public func buildSearchCoordinator(in navigationController: UINavigationController) -> Coordinator {
+    return diContainer.buildModuleCoordinator(navigationController: navigationController)
   }
 }

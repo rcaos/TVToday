@@ -43,13 +43,9 @@ public class SignedCoordinator: Coordinator {
   fileprivate func showMainFeatures() {
     let todayScene = buildTodayScene()
     let popularScene = buildPopularScene()
+    let searchScene = buildSearchScene()
     
-    tabBarController.setViewControllers([todayScene, popularScene], animated: true)
-    
-//    childCoordinators[.airingToday] = todayCoordinator
-//    childCoordinators[.popularShows] = popularCoordinator
-//    childCoordinators[.search] = searchCoordinator
-//    childCoordinators[.account] = accountCoordinator
+    tabBarController.setViewControllers([todayScene, popularScene, searchScene], animated: true)
   }
   
   // MARK: - Build Airing Today Scene
@@ -77,33 +73,28 @@ public class SignedCoordinator: Coordinator {
     navigation.tabBarItem = item
     
     let popularModule = appDIContainer.buildPopularModule()
-    let popularCoordinator = popularModule.buildPopularCoordinator(in: navigation)
+    let coordinator = popularModule.buildPopularCoordinator(in: navigation)
     
-    popularCoordinator.start()
-    childCoordinators[.popularShows] = popularCoordinator
+    coordinator.start()
+    childCoordinators[.popularShows] = coordinator
     
     return navigation
   }
 //
-  // MARK: - Build Search Coordinator
+  // MARK: - Build Search Scene
   
-//  fileprivate func buildSearchCoordinator() -> (UIViewController, Coordinator) {
-//    let coordinatorDependencies =
-//      SearchShowDependencies(
-//      apiDataTransferService: dependencies.apiDataTransferService,
-//      imagesBaseURL: dependencies.appConfigurations.imagesBaseURL,
-//      showsPersistence: dependencies.showsPersistence,
-//      searchsPersistence: dependencies.searchsPersistence)
-//
-//    let navigation = UINavigationController()
-//    let coordinator = SearchCoordinator(navigationController: navigation,
-//                                         dependencies: coordinatorDependencies)
-//
-//    let item = UITabBarItem(tabBarSystemItem: .search, tag: 2)
-//    coordinator.navigationController.tabBarItem = item
-//    coordinator.start()
-//    return (navigation, coordinator)
-//  }
+  fileprivate func buildSearchScene() -> UIViewController {
+    let navigation = UINavigationController()
+    let item = UITabBarItem(tabBarSystemItem: .search, tag: 2)
+    navigation.tabBarItem = item
+    
+    let searchModule = appDIContainer.buildSearchModule()
+    let coordinator = searchModule.buildSearchCoordinator(in: navigation)
+    
+    coordinator.start()
+    childCoordinators[.search] = coordinator
+    return navigation
+  }
   
   // MARK: - Build Account Coordinator
   

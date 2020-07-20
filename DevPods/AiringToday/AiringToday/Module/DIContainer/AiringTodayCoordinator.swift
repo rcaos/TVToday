@@ -11,21 +11,21 @@ import Networking
 import ShowDetails
 import Shared
 
-public protocol AiringTodayCoordinatorDependencies {
+protocol AiringTodayCoordinatorDependencies {
   
   func buildAiringTodayViewController(coordinator: AiringTodayCoordinatorProtocol?) -> UIViewController
   
   func buildTVShowDetailCoordinator(navigationController: UINavigationController) -> TVShowDetailCoordinator
 }
 
-public protocol AiringTodayCoordinatorProtocol: class {
+protocol AiringTodayCoordinatorProtocol: class {
   
   func navigate(to step: AiringTodayStep)
 }
 
 // MARK: - Default Implementation
 
-public class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinatorProtocol {
+class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinatorProtocol {
   
   public var navigationController: UINavigationController
   

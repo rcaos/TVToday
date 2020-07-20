@@ -13,6 +13,7 @@ import Shared
 
 import AiringToday
 import PopularShows
+import SearchShows
 
 public class AppDIContainer {
   
@@ -59,5 +60,15 @@ public class AppDIContainer {
     let dependencies = PopularShows.ModuleDependencies(apiDataTransferService: apiDataTransferService,
                                                        imagesBaseURL: appConfigurations.imagesBaseURL, showsPersistence: showsPersistence)
     return PopularShows.Module(dependencies: dependencies)
+  }
+  
+  // MARK: - Search Module
+  
+  func buildSearchModule() -> SearchShows.Module {
+    let dependencies = SearchShows.ModuleDependencies(apiDataTransferService: apiDataTransferService,
+                                                      imagesBaseURL: appConfigurations.imagesBaseURL,
+                                                      showsPersistence: showsPersistence,
+                                                      searchsPersistence: searchPersistence)
+    return SearchShows.Module(dependencies: dependencies)
   }
 }

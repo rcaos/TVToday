@@ -32,7 +32,7 @@ final class DIContainer {
   
   // MARK: - Module Coordinator
   
-  func buildAiringTodayCoordinator(navigationController: UINavigationController) -> Coordinator {
+  func buildModuleCoordinator(navigationController: UINavigationController) -> Coordinator {
     return AiringTodayCoordinator(navigationController: navigationController, dependencies: self)
   }
   
@@ -41,8 +41,11 @@ final class DIContainer {
   fileprivate func makeFetchTodayShowsUseCase() -> FetchTVShowsUseCase {
     return DefaultFetchAiringTodayTVShowsUseCase(tvShowsRepository: showsRepository)
   }
-  
-  // MARK: - Airing Today List
+}
+
+// MARK: - AiringTodayCoordinatorDependencies
+
+extension DIContainer: AiringTodayCoordinatorDependencies {
   
   func buildAiringTodayViewController(coordinator: AiringTodayCoordinatorProtocol?) -> UIViewController {
     let viewModel = AiringTodayViewModel(fetchTVShowsUseCase: makeFetchTodayShowsUseCase(),
@@ -51,15 +54,9 @@ final class DIContainer {
     return todayVC
   }
   
-  // MARK: - Show Detail Coordinator
-  
   // TODO, move to Another Module
   func buildTVShowDetailCoordinator(navigationController: UINavigationController) -> TVShowDetailCoordinator {
     return TVShowDetailCoordinator(navigationController: navigationController,
                                    dependencies: showDetailsDependencies)
   }
-}
-
-extension DIContainer: AiringTodayCoordinatorDependencies {
-  
 }

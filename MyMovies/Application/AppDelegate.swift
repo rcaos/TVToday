@@ -14,7 +14,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   
   var window: UIWindow?
   
-  private var appDIContainer: AppDIContainer?
+  let appDIContainer = AppDIContainer()
+  
+  var appCoordinator: AppCoordinator?
   
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     
@@ -23,7 +25,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     window = UIWindow(frame: UIScreen.main.bounds)
     
-    appDIContainer = AppDIContainer(window: window!)
+    appCoordinator = AppCoordinator(window: window!, appDIContainer: appDIContainer)
+    appCoordinator?.start()
     
     return true
   }

@@ -10,13 +10,15 @@ import UIKit
 public protocol Coordinator: class {
   
   func start(with step: Step)
+  
+  func start()
 }
 
 public extension Coordinator {
 
-  func start(with step: Step = DefaultStep() ) {
-    
-  }
+  func start(with step: Step = DefaultStep() ) { }
+  
+  func start() { }
 }
 
 public protocol NavigationCoordinator: Coordinator {

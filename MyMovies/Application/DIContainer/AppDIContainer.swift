@@ -12,6 +12,8 @@ import Persistence
 import RealmPersistence
 import Shared
 
+import AiringToday
+
 public class AppDIContainer {
   
   lazy var appConfigurations = AppConfigurations()
@@ -42,17 +44,12 @@ public class AppDIContainer {
     return DefaultSearchLocalRepository(searchLocalStorage: localStorage)
   }()
   
-  private var appCoordinator: AppCoordinator!
+  // MARK: - Airing Today Module
   
-  // MARK: - Life Cycle
-  
-  public init(window: UIWindow) {
-    let appDependencies = AppDependencies(apiDataTransferService: apiDataTransferService,
-                                          appConfigurations: appConfigurations,
-                                          showsPersistence: showsPersistence,
-                                          searchsPersistence: searchPersistence)
-    
-    appCoordinator = AppCoordinator(window: window, dependencies: appDependencies)
-    appCoordinator?.start()
+  func makeAiringTodayModule() -> AiringToday.Module {
+    let dependencies = AiringToday.ModuleDependencies(apiDataTransferService: apiDataTransferService,
+                                                      imagesBaseURL: appConfigurations.imagesBaseURL,
+                                                      showsPersistence: showsPersistence)
+    return AiringToday.Module(dependencies: dependencies)
   }
 }

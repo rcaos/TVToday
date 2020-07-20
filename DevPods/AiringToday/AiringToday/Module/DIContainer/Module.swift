@@ -8,8 +8,9 @@
 import Foundation
 import Networking
 import Persistence
+import Shared
 
-public struct AiringTodayDependencies {
+public struct ModuleDependencies {
   
   let apiDataTransferService: DataTransferService
   let imagesBaseURL: String
@@ -22,4 +23,20 @@ public struct AiringTodayDependencies {
     self.imagesBaseURL = imagesBaseURL
     self.showsPersistence = showsPersistence
   }
+}
+
+// MARK: - Entry to Module
+
+public struct Module {
+  
+  private let diContainer: DIContainer
+  
+  public init(dependencies: ModuleDependencies) {
+    self.diContainer = DIContainer(dependencies: dependencies)
+  }
+  
+  public func buildAiringTodayCoordinator(in navigationController: UINavigationController) -> Coordinator {
+    return diContainer.makeAiringTodayCoordinator(navigationController: navigationController)
+  }
+  
 }

@@ -11,10 +11,19 @@ import Networking
 import ShowDetails
 import Shared
 
+public protocol AiringTodayCoordinatorDependencies {
+  
+  func makeAiringTodayViewController(coordinator: AiringTodayCoordinatorProtocol?) -> UIViewController
+  
+  func makeTVShowDetailCoordinator(navigationController: UINavigationController) -> TVShowDetailCoordinator
+}
+
 public protocol AiringTodayCoordinatorProtocol: class {
   
   func navigate(to step: AiringTodayStep)
 }
+
+// MARK: - Default Implementation
 
 public class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinatorProtocol {
   
@@ -22,23 +31,12 @@ public class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinat
   
   private var childCoordinators = [AiringTodayChildCoordinator: Coordinator]()
   
-  private let dependencies: AiringTodayDependencies
-  
-  private lazy var showsRepository: TVShowsRepository = {
-    return DefaultTVShowsRepository(
-      dataTransferService: dependencies.apiDataTransferService,
-      basePath: dependencies.imagesBaseURL)
-  }()
-  
-  private lazy var showDetailsDependencies: ShowDetailsDependencies = {
-    return ShowDetailsDependencies(apiDataTransferService: dependencies.apiDataTransferService,
-                                   imagesBaseURL: dependencies.imagesBaseURL,
-                                   showsPersistenceRepository: dependencies.showsPersistence)
-  }()
+  private let dependencies: AiringTodayCoordinatorDependencies
   
   // MARK: - Initializer
   
-  public init(navigationController: UINavigationController, dependencies: AiringTodayDependencies) {
+  public init(navigationController: UINavigationController,
+              dependencies: AiringTodayCoordinatorDependencies) {
     self.navigationController = navigationController
     self.dependencies = dependencies
   }
@@ -66,27 +64,17 @@ public class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinat
   // MARK: - Default Step
   
   fileprivate func navigateToTodayFeature() {
-    let viewModel = AiringTodayViewModel(fetchTVShowsUseCase: makeFetchTodayShowsUseCase(),
-                                         coordinator: self)
-    let todayVC = AiringTodayViewController.create(with: viewModel)
-    
-    navigationController.pushViewController(todayVC, animated: true)
+    let airingTodayController = dependencies.makeAiringTodayViewController(coordinator: self)
+    navigationController.pushViewController(airingTodayController, animated: true)
   }
   
   // MARK: - Navigate to Show Detail
   
   fileprivate func showDetailIsPicked(for showId: Int) {
-    let tvDetailCoordinator = TVShowDetailCoordinator(navigationController: navigationController,
-                                                      dependencies: showDetailsDependencies)
+    let tvDetailCoordinator = dependencies.makeTVShowDetailCoordinator(navigationController: navigationController)
     tvDetailCoordinator.delegate = self
     childCoordinators[.detailShow] = tvDetailCoordinator
     tvDetailCoordinator.start(with: .showDetailsIsRequired(withId: showId))
-  }
-  
-  // MARK: - Uses Cases
-  
-  private func makeFetchTodayShowsUseCase() -> FetchTVShowsUseCase {
-    return DefaultFetchAiringTodayTVShowsUseCase(tvShowsRepository: showsRepository)
   }
 }
 

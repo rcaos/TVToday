@@ -6,24 +6,25 @@
 ## Desarrollo en iOS
 - Swift 5
 - RxSwift, RxDataSources
-- RxFlow como coordinator entre pantallas
+- Cordinator Pattern para navegación entre pantallas
 - MVVM
-- Clean Architecture
+- Clean + Modular Architecture
 - Kingfisher para caché de imágenes
 - Realm para Persistencia
-- KeychainSwift para guardar la session en el KeyChain
+- KeychainSwift para manejo de session en el KeyChain
 
 ## Screenshots
 <p>
-<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen10.png" width="215" height="466">
-<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen08.png" width="215" height="466">
-<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen 011.png" width="215" height="466">
-<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen2.png" width="215" height="466">
-<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen3.png" width="215" height="466">
-<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen4.png" width="215" height="466">
-<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen07.png" width="215" height="466">
-<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen05.png" width="215" height="466">
-<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen06.png" width="215" height="466">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen 101.png" width="215" height="466">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen 102.png" width="215" height="466">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen 103.png" width="215" height="466">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen 103-2.png" width="215" height="466">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen 104.png" width="215" height="466">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen 105.png" width="215" height="466">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen 106.png" width="215" height="466">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen 107.png" width="215" height="466">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen 108.png" width="215" height="466">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen 109.png" width="215" height="466">
 </p>
 
 ## Clean Architecture

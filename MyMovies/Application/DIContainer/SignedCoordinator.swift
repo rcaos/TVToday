@@ -7,14 +7,7 @@
 //
 
 import UIKit
-
-import Networking
-import AiringToday
-import PopularShows
-import SearchShows
-import Account
 import Shared
-import Persistence
 
 public enum SignedChildCoordinator {
   case
@@ -48,16 +41,10 @@ public class SignedCoordinator: Coordinator {
   }
   
   fileprivate func showMainFeatures() {
-//    let (todayVC, todayCoordinator) = buildTodayCoordinator()
-//    let (popularVC, popularCoordinator) = buildPopularCoordinator()
-//    let (searchVC, searchCoordinator) = buildSearchCoordinator()
-//    let (accountVC, accountCoordinator) = buildAccountCoordinator()
-//
-//    tabBarController.setViewControllers([todayVC, popularVC, searchVC, accountVC], animated: true)
-  
     let todayScene = buildTodayScene()
+    let popularScene = buildPopularScene()
     
-    tabBarController.setViewControllers([todayScene], animated: true)
+    tabBarController.setViewControllers([todayScene, popularScene], animated: true)
     
 //    childCoordinators[.airingToday] = todayCoordinator
 //    childCoordinators[.popularShows] = popularCoordinator
@@ -65,7 +52,7 @@ public class SignedCoordinator: Coordinator {
 //    childCoordinators[.account] = accountCoordinator
   }
   
-  // MARK: - Build Airing Today Coordinator
+  // MARK: - Build Airing Today Scene
   
   fileprivate func buildTodayScene() -> UIViewController {
     let navigation = UINavigationController()
@@ -73,7 +60,7 @@ public class SignedCoordinator: Coordinator {
     let item = UITabBarItem(title: "Today", image: UIImage(name: "calendar"), tag: 0)
     navigation.tabBarItem = item
     
-    let todayModule = appDIContainer.makeAiringTodayModule()
+    let todayModule = appDIContainer.buildAiringTodayModule()
     let airingCoordinator = todayModule.buildAiringTodayCoordinator(in: navigation)
     airingCoordinator.start()
     childCoordinators[.airingToday] = airingCoordinator
@@ -81,24 +68,22 @@ public class SignedCoordinator: Coordinator {
     return navigation
   }
   
-  // MARK: - Build Popular Coordinator
+  // MARK: - Build Popular Scene
   
-//  fileprivate func buildPopularCoordinator() -> (UIViewController, Coordinator) {
-//    let coordinatorDependencies =
-//      PopularShowsDependencies(
-//        apiDataTransferService: dependencies.apiDataTransferService,
-//        imagesBaseURL: dependencies.appConfigurations.imagesBaseURL,
-//        showsPersistence: dependencies.showsPersistence)
-//
-//    let navigation = UINavigationController()
-//    let coordinator = PopularCoordinator(navigationController: navigation,
-//                                         dependencies: coordinatorDependencies)
-//
-//    let item = UITabBarItem(title: "Popular", image: UIImage(name: "popular"), tag: 1)
-//    coordinator.navigationController.tabBarItem = item
-//    coordinator.start()
-//    return (navigation, coordinator)
-//  }
+  fileprivate func buildPopularScene() -> UIViewController {
+    let navigation = UINavigationController()
+    
+    let item = UITabBarItem(title: "Popular", image: UIImage(name: "popular"), tag: 1)
+    navigation.tabBarItem = item
+    
+    let popularModule = appDIContainer.buildPopularModule()
+    let popularCoordinator = popularModule.buildPopularCoordinator(in: navigation)
+    
+    popularCoordinator.start()
+    childCoordinators[.popularShows] = popularCoordinator
+    
+    return navigation
+  }
 //
   // MARK: - Build Search Coordinator
   

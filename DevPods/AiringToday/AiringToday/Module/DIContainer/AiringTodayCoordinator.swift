@@ -13,9 +13,9 @@ import Shared
 
 public protocol AiringTodayCoordinatorDependencies {
   
-  func makeAiringTodayViewController(coordinator: AiringTodayCoordinatorProtocol?) -> UIViewController
+  func buildAiringTodayViewController(coordinator: AiringTodayCoordinatorProtocol?) -> UIViewController
   
-  func makeTVShowDetailCoordinator(navigationController: UINavigationController) -> TVShowDetailCoordinator
+  func buildTVShowDetailCoordinator(navigationController: UINavigationController) -> TVShowDetailCoordinator
 }
 
 public protocol AiringTodayCoordinatorProtocol: class {
@@ -64,14 +64,14 @@ public class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinat
   // MARK: - Default Step
   
   fileprivate func navigateToTodayFeature() {
-    let airingTodayController = dependencies.makeAiringTodayViewController(coordinator: self)
+    let airingTodayController = dependencies.buildAiringTodayViewController(coordinator: self)
     navigationController.pushViewController(airingTodayController, animated: true)
   }
   
   // MARK: - Navigate to Show Detail
   
   fileprivate func showDetailIsPicked(for showId: Int) {
-    let tvDetailCoordinator = dependencies.makeTVShowDetailCoordinator(navigationController: navigationController)
+    let tvDetailCoordinator = dependencies.buildTVShowDetailCoordinator(navigationController: navigationController)
     tvDetailCoordinator.delegate = self
     childCoordinators[.detailShow] = tvDetailCoordinator
     tvDetailCoordinator.start(with: .showDetailsIsRequired(withId: showId))

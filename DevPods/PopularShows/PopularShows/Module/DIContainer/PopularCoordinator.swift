@@ -7,42 +7,34 @@
 //
 
 import UIKit
-import Networking
 import ShowDetails
 import Shared
 
-public protocol PopularCoordinatorProtocol: class {
+protocol PopularCoordinatorDependencies {
+  
+  func buildPopularViewController(coordinator: PopularCoordinatorProtocol?) -> UIViewController
+  
+  func buildTVShowDetailCoordinator(navigationController: UINavigationController) -> TVShowDetailCoordinator
+}
+
+protocol PopularCoordinatorProtocol: class {
   
   func navigate(to step: PopularStep)
 }
 
-public class PopularCoordinator: NavigationCoordinator, PopularCoordinatorProtocol {
+// MARK: - Default Implementation
+
+class PopularCoordinator: NavigationCoordinator, PopularCoordinatorProtocol {
   
   public var navigationController: UINavigationController
   
   private var childCoordinators = [PopularChildCoordinator: Coordinator]()
   
-  // MARK: - Repositories
-  
-  private let dependencies: PopularShowsDependencies
-  
-  private lazy var showsRepository: TVShowsRepository = {
-    return DefaultTVShowsRepository(
-      dataTransferService: dependencies.apiDataTransferService,
-      basePath: dependencies.imagesBaseURL)
-  }()
-  
-  // MARK: - Dependencies
-  
-  private lazy var showDetailsDependencies: ShowDetailsDependencies = {
-    return ShowDetailsDependencies(apiDataTransferService: dependencies.apiDataTransferService,
-                                   imagesBaseURL: dependencies.imagesBaseURL,
-                                   showsPersistenceRepository: dependencies.showsPersistence)
-  }()
+  private let dependencies: PopularCoordinatorDependencies
   
   // MARK: - Life Cycle
   
-  public init(navigationController: UINavigationController, dependencies: PopularShowsDependencies) {
+  init(navigationController: UINavigationController, dependencies: PopularCoordinatorDependencies) {
     self.navigationController = navigationController
     self.dependencies = dependencies
   }
@@ -51,13 +43,13 @@ public class PopularCoordinator: NavigationCoordinator, PopularCoordinatorProtoc
     print("deinit \(Self.self)")
   }
   
-  public func start() {
+  func start() {
     navigate(to: .popularFeatureInit)
   }
   
   // MARK: - Navigation
   
-  public func navigate(to step: PopularStep) {
+  func navigate(to step: PopularStep) {
     switch step {
     case .popularFeatureInit :
       return navigateToPopularFeature()
@@ -70,26 +62,17 @@ public class PopularCoordinator: NavigationCoordinator, PopularCoordinatorProtoc
   // MARK: - Default Step
   
   fileprivate func navigateToPopularFeature() {
-    let viewModel = PopularViewModel(fetchTVShowsUseCase: makeFetchPopularShowsUseCase(), coordinator: self)
-    let popularVC = PopularsViewController.create(with: viewModel)
-    
-    navigationController.pushViewController(popularVC, animated: true)
+    let popularController = dependencies.buildPopularViewController(coordinator: self)
+    navigationController.pushViewController(popularController, animated: true)
   }
   
   // MARK: - Navigate to Show Detail
   
   fileprivate func navigateToShowDetailScreen(with showId: Int) {
-    let tvDetailCoordinator = TVShowDetailCoordinator(navigationController: navigationController,
-                                                      dependencies: showDetailsDependencies)
-    childCoordinators[.detailShow] = tvDetailCoordinator
+    let tvDetailCoordinator = dependencies.buildTVShowDetailCoordinator(navigationController: navigationController)
     tvDetailCoordinator.delegate = self
+    childCoordinators[.detailShow] = tvDetailCoordinator
     tvDetailCoordinator.start(with: .showDetailsIsRequired(withId: showId))
-  }
-  
-  // MARK: - Uses Cases
-  
-  private func makeFetchPopularShowsUseCase() -> FetchTVShowsUseCase {
-    return DefaultFetchPopularTVShowsUseCase(tvShowsRepository: showsRepository)
   }
 }
 
@@ -97,7 +80,7 @@ public class PopularCoordinator: NavigationCoordinator, PopularCoordinatorProtoc
 
 extension PopularCoordinator: TVShowDetailCoordinatorDelegate {
   
-  public func tvShowDetailCoordinatorDidFinish() {
+  func tvShowDetailCoordinatorDidFinish() {
     childCoordinators[.detailShow] = nil
   }
 }

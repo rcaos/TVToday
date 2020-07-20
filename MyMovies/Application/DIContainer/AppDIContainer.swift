@@ -6,13 +6,13 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import UIKit
 import Networking
 import Persistence
 import RealmPersistence
 import Shared
 
 import AiringToday
+import PopularShows
 
 public class AppDIContainer {
   
@@ -46,10 +46,18 @@ public class AppDIContainer {
   
   // MARK: - Airing Today Module
   
-  func makeAiringTodayModule() -> AiringToday.Module {
+  func buildAiringTodayModule() -> AiringToday.Module {
     let dependencies = AiringToday.ModuleDependencies(apiDataTransferService: apiDataTransferService,
                                                       imagesBaseURL: appConfigurations.imagesBaseURL,
                                                       showsPersistence: showsPersistence)
     return AiringToday.Module(dependencies: dependencies)
+  }
+  
+  // MARK: - Popular Module
+  
+  func buildPopularModule() -> PopularShows.Module {
+    let dependencies = PopularShows.ModuleDependencies(apiDataTransferService: apiDataTransferService,
+                                                       imagesBaseURL: appConfigurations.imagesBaseURL, showsPersistence: showsPersistence)
+    return PopularShows.Module(dependencies: dependencies)
   }
 }

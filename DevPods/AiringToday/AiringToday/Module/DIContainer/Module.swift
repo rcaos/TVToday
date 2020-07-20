@@ -36,7 +36,7 @@ public struct Module {
   }
   
   public func buildAiringTodayCoordinator(in navigationController: UINavigationController) -> Coordinator {
-    return diContainer.makeAiringTodayCoordinator(navigationController: navigationController)
+    return diContainer.buildAiringTodayCoordinator(navigationController: navigationController)
   }
   
 }

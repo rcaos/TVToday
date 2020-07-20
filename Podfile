@@ -9,7 +9,7 @@ def networking_pod
 end
 
 def account_pod
-  pod 'Account', :path =>  'DevPods/Account'
+  pod 'AccountTV', :path =>  'DevPods/Account'
 end
 
 def shared_pod

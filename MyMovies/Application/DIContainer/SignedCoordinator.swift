@@ -41,76 +41,64 @@ public class SignedCoordinator: Coordinator {
   }
   
   fileprivate func showMainFeatures() {
-    let todayScene = buildTodayScene()
-    let popularScene = buildPopularScene()
-    let searchScene = buildSearchScene()
+    let todayNavigation = UINavigationController()
+    todayNavigation.tabBarItem = UITabBarItem(title: "Today", image: UIImage(name: "calendar"), tag: 0)
+    buildTodayScene(in: todayNavigation)
     
-    tabBarController.setViewControllers([todayScene, popularScene, searchScene], animated: true)
+    let popularNavigation = UINavigationController()
+    popularNavigation.tabBarItem = UITabBarItem(title: "Popular", image: UIImage(name: "popular"), tag: 1)
+    buildPopularScene(in: popularNavigation)
+    
+    let searchNavigation = UINavigationController()
+    searchNavigation.tabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 2)
+    buildSearchScene(in: searchNavigation)
+    
+    let accountNavigation = UINavigationController()
+    accountNavigation.tabBarItem = UITabBarItem(title: "Account", image: UIImage(name: "accountTab"), tag: 3)
+    buildAccountCoordinator(in: accountNavigation)
+    
+    tabBarController.setViewControllers([todayNavigation,
+                                         popularNavigation,
+                                         searchNavigation,
+                                         accountNavigation], animated: true)
   }
   
   // MARK: - Build Airing Today Scene
   
-  fileprivate func buildTodayScene() -> UIViewController {
-    let navigation = UINavigationController()
-    
-    let item = UITabBarItem(title: "Today", image: UIImage(name: "calendar"), tag: 0)
-    navigation.tabBarItem = item
-    
+  fileprivate func buildTodayScene(in navigation: UINavigationController) {
     let todayModule = appDIContainer.buildAiringTodayModule()
     let airingCoordinator = todayModule.buildAiringTodayCoordinator(in: navigation)
     airingCoordinator.start()
     childCoordinators[.airingToday] = airingCoordinator
-    
-    return navigation
   }
   
   // MARK: - Build Popular Scene
   
-  fileprivate func buildPopularScene() -> UIViewController {
-    let navigation = UINavigationController()
-    
-    let item = UITabBarItem(title: "Popular", image: UIImage(name: "popular"), tag: 1)
-    navigation.tabBarItem = item
-    
+  fileprivate func buildPopularScene(in navigation: UINavigationController) {
     let popularModule = appDIContainer.buildPopularModule()
     let coordinator = popularModule.buildPopularCoordinator(in: navigation)
     
     coordinator.start()
     childCoordinators[.popularShows] = coordinator
-    
-    return navigation
   }
-//
+  
   // MARK: - Build Search Scene
   
-  fileprivate func buildSearchScene() -> UIViewController {
-    let navigation = UINavigationController()
-    let item = UITabBarItem(tabBarSystemItem: .search, tag: 2)
-    navigation.tabBarItem = item
-    
+  fileprivate func buildSearchScene(in navigation: UINavigationController) {
     let searchModule = appDIContainer.buildSearchModule()
     let coordinator = searchModule.buildSearchCoordinator(in: navigation)
     
     coordinator.start()
     childCoordinators[.search] = coordinator
-    return navigation
   }
   
-  // MARK: - Build Account Coordinator
+  // MARK: - Build Account Scene
   
-//  fileprivate func buildAccountCoordinator() -> (UIViewController, Coordinator) {
-//    let coordinatorDependencies =
-//      AccountDependencies(apiDataTransferService: dependencies.apiDataTransferService,
-//      imagesBaseURL: dependencies.appConfigurations.imagesBaseURL,
-//      showsPersistence: dependencies.showsPersistence)
-//
-//    let navigation = UINavigationController()
-//    let coordinator = AccountCoordinator(navigationController: navigation,
-//                                         dependencies: coordinatorDependencies)
-//
-//    let item = UITabBarItem(title: "Account", image: UIImage(name: "accountTab"), tag: 3)
-//    coordinator.navigationController.tabBarItem = item
-//    coordinator.start()
-//    return (navigation, coordinator)
-//  }
+  fileprivate func buildAccountCoordinator(in navigation: UINavigationController) {
+    let accountModule = appDIContainer.buildAccountModule()
+    let coordinator = accountModule.buildAccountCoordinator(in: navigation)
+    
+    coordinator.start()
+    childCoordinators[.account] = coordinator
+  }
 }

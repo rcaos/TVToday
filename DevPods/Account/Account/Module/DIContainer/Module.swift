@@ -8,8 +8,9 @@
 import Foundation
 import Networking
 import Persistence
+import Shared
 
-public struct AccountDependencies {
+public struct ModuleDependencies {
   
   let apiDataTransferService: DataTransferService
   let imagesBaseURL: String
@@ -21,5 +22,20 @@ public struct AccountDependencies {
     self.apiDataTransferService = apiDataTransferService
     self.imagesBaseURL = imagesBaseURL
     self.showsPersistence = showsPersistence
+  }
+}
+
+// MARK: - Entry to Module
+
+public struct Module {
+  
+  private let diContainer: DIContainer
+  
+  public init(dependencies: ModuleDependencies) {
+    self.diContainer = DIContainer(dependencies: dependencies)
+  }
+  
+  public func buildAccountCoordinator(in navigationController: UINavigationController) -> Coordinator {
+    return diContainer.buildModuleCoordinator(navigationController: navigationController)
   }
 }

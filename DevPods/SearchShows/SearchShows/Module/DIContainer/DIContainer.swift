@@ -105,7 +105,7 @@ final class DIContainer {
   }
 }
 
-// MARK:  - SearchCoordinatorDependencies
+// MARK: - SearchCoordinatorDependencies
 
 extension DIContainer: SearchCoordinatorDependencies {
   

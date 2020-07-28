@@ -67,7 +67,7 @@ extension SignInViewModel {
 
 extension SignInViewModel {
   
-  enum ViewState {
+  enum ViewState: Equatable {
     case initial,
     
     loading

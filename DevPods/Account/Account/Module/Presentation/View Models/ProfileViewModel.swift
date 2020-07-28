@@ -40,6 +40,23 @@ class ProfileViewModel {
     subscribe()
   }
   
+  // MARK: - Public
+  
+  func createSectionModel(account: AccountResult) {
+    
+    let items: [ProfilesSectionItem] = [
+      .userLists(items: .favorites),
+      .userLists(items: .watchList)]
+    
+    let sectionProfile: [ProfileSectionModel] = [
+      .userInfo(header: "", items: [.userInfo(number: account)]),
+      .userLists(header: "", items: items),
+      .logout(header: "", items: [.logout(items: "Log Out")])
+    ]
+    
+    sectionsSubject.onNext(sectionProfile)
+  }
+  
   fileprivate func subscribe() {
     input.tapLogoutAction.asObserver()
       .subscribe(onNext: { [weak self] in
@@ -64,23 +81,6 @@ class ProfileViewModel {
     default:
       break
     }
-  }
-  
-  // MARK: - Public
-  
-  func createSectionModel(account: AccountResult) {
-    
-    let items: [ProfilesSectionItem] = [
-      .userLists(items: .favorites),
-      .userLists(items: .watchList)]
-    
-    let sectionProfile: [ProfileSectionModel] = [
-      .userInfo(header: "", items: [.userInfo(number: account)]),
-      .userLists(header: "", items: items),
-      .logout(header: "", items: [.logout(items: "Log Out")])
-    ]
-    
-    sectionsSubject.onNext(sectionProfile)
   }
 }
 

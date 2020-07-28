@@ -276,10 +276,23 @@ final class TVShowDetailViewModel {
 
 extension TVShowDetailViewModel {
   
-  enum ViewState {
+  enum ViewState: Equatable {
     case loading
     case populated(TVShowDetailInfo)
     case error(String)
+    
+    static public func == (lhs: ViewState, rhs: ViewState) -> Bool {
+      switch (lhs, rhs) {
+      case (.loading, .loading):
+        return true
+      case (let .populated(lDetail), let .populated(rDetail)):
+        return lDetail.id == rDetail.id
+      case (.error, .error):
+        return true
+      default:
+        return false
+      }
+    }
   }
 }
 

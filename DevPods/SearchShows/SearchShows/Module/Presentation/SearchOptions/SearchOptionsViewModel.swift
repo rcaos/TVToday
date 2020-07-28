@@ -29,7 +29,7 @@ final class SearchOptionsViewModel {
   
   private let recentVisitedShowsDidChange: RecentVisitedShowDidChangeUseCase
   
-  private let viewStateObservableSubject = BehaviorSubject<SimpleViewState<Genre>>(value: .loading)
+  private let viewStateObservableSubject = BehaviorSubject<SimpleViewState<GenreViewModel>>(value: .loading)
   
   private let dataSourceObservableSubject = BehaviorSubject<[SearchOptionsSectionModel]>(value: [])
   
@@ -107,19 +107,23 @@ final class SearchOptionsViewModel {
   }
   
   private func processFetched(for response: GenreListResult) {
-    let fetchedGenres = response.genres ?? []
+    let fetchedGenres = (response.genres ?? [])
+    let genresVModels = fetchedGenres.map { GenreViewModel(genre: $0) }
     
     if fetchedGenres.isEmpty {
       viewStateObservableSubject.onNext(.empty)
     } else {
-      viewStateObservableSubject.onNext( .populated(fetchedGenres) )
+      viewStateObservableSubject.onNext( .populated(genresVModels) )
     }
   }
   
   private func createSectionModel(showsVisited: [ShowVisited], genres: [Genre]) {
     
     let showsSectionItem = mapRecentShowsToSectionItem(recentsShows: showsVisited)
-    let genresSectionItem = genres.map { SearchSectionItem.genres(items: $0) }
+    
+    let genresSectionItem = genres
+      .map { GenreViewModel(genre: $0)  }
+      .map { SearchSectionItem.genres(items: $0) }
     
     var dataSource: [SearchOptionsSectionModel] = []
     
@@ -147,7 +151,7 @@ extension SearchOptionsViewModel {
   public struct Input { }
   
   public struct Output {
-    let viewState: Observable<SimpleViewState<Genre>>
+    let viewState: Observable<SimpleViewState<GenreViewModel>>
     let dataSource: Observable<[SearchOptionsSectionModel]>
   }
 }

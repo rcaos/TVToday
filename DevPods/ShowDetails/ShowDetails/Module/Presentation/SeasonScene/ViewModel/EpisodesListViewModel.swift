@@ -199,7 +199,7 @@ final class EpisodesListViewModel {
 
 extension EpisodesListViewModel {
   
-  enum ViewState {
+  enum ViewState: Equatable {
     
     case loading
     case didLoadHeader
@@ -208,6 +208,34 @@ extension EpisodesListViewModel {
     case empty
     case error(String)
     case errorSeason(String)
+    
+//    static public func == (lhs: ViewState, rhs: ViewState) -> Bool {
+//      switch (lhs, rhs) {
+//      case (.loading, .loading):
+//        return true
+//
+//      case (.didLoadHeader, .didLoadHeader):
+//        return true
+//
+//      case (.populated, .populated):
+//        return true
+//
+//      case (.loadingSeason, .loadingSeason):
+//        return true
+//
+//      case (.empty, .empty):
+//        return true
+//
+//      case (.error, .error):
+//        return true
+//
+//      case (.errorSeason, .errorSeason):
+//        return true
+//
+//      default:
+//        return false
+//      }
+//    }
   }
 }
 

@@ -140,20 +140,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CE6BBD82D04BB9979981548F9F4AC932"
-               BuildableName = "Account.framework"
-               BlueprintName = "Account"
-               ReferencedContainer = "container:Pods/Pods.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "AE330AD735EEDF742B1B4EE5EE1C961D"
                BuildableName = "KeyChainStorage.framework"
                BlueprintName = "KeyChainStorage"
@@ -185,6 +171,20 @@
                BlueprintIdentifier = "CB022A974D6493D4EA789ED49CE8AA57"
                BuildableName = "Persistence.framework"
                BlueprintName = "Persistence"
+               ReferencedContainer = "container:Pods/Pods.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "3D551C9688CDB9DA661D0796DF18E5A3"
+               BuildableName = "AccountTV.framework"
+               BlueprintName = "AccountTV"
                ReferencedContainer = "container:Pods/Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

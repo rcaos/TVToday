@@ -125,7 +125,7 @@ extension ProfileViewController {
   
   fileprivate func buildCellForUserLists(at indexPath: IndexPath, element: UserListType) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: GenericViewCell.self, for: indexPath)
-    cell.title = element.rawValue
+    cell.setupUI(with: element.rawValue)
     return cell
   }
   

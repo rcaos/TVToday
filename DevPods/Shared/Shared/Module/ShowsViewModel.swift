@@ -11,7 +11,7 @@ import RxSwift
 
 public protocol ShowsViewModel: class {
   
-  associatedtype MovieCellViewModel
+  associatedtype MovieCellViewModel: Equatable
   
   var fetchTVShowsUseCase: FetchTVShowsUseCase { get set }
   

@@ -48,7 +48,7 @@ class SearchOptionsViewController: UIViewController, StoryboardInstantiable, Loa
   
   private func registerCells() {
     tableView.registerNib(cellType: VisitedShowTableViewCell.self)
-    tableView.registerNib(cellType: GenericViewCell.self)
+    tableView.registerNib(cellType: GenreTableViewCell.self)
     tableView.rowHeight = UITableView.automaticDimension
   }
   
@@ -99,7 +99,7 @@ class SearchOptionsViewController: UIViewController, StoryboardInstantiable, Loa
     .disposed(by: disposeBag)
   }
   
-  private func handleTableState(with state: SimpleViewState<Genre>) {
+  private func handleTableState(with state: SimpleViewState<GenreViewModel>) {
     hideLoadingView()
     
     switch state {
@@ -140,9 +140,9 @@ extension SearchOptionsViewController {
     return cell
   }
   
-  private func makeCellForGenre(at indexPath: IndexPath, element: Genre) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(with: GenericViewCell.self, for: indexPath)
-    cell.title = element.name
+  private func makeCellForGenre(at indexPath: IndexPath, element: GenreViewModel) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCell(with: GenreTableViewCell.self, for: indexPath)
+    cell.viewModel = element
     return cell
   }
 }

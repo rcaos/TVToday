@@ -176,7 +176,7 @@ extension AccountViewModel: BaseViewModel {
 
 extension AccountViewModel {
   
-  enum ViewState {
+  enum ViewState: Equatable {
     case login,
     
     profile

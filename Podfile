@@ -17,7 +17,7 @@ def shared_pod
 end
 
 def airingToday_pod
-  pod 'AiringToday', :path =>  'DevPods/AiringToday'
+  pod 'AiringToday', :path =>  'DevPods/AiringToday', :testspecs => ['Tests']
 end
 
 def popularShows_pod

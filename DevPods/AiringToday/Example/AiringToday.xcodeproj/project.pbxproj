@@ -30,7 +30,7 @@
 		80435F46523ED39F40D19752 /* Pods_AiringToday_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AiringToday_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F219868029C12C174D595E2 /* Pods_AiringToday_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AiringToday_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7CB2DA428A2A9A625A1F019 /* Pods-AiringToday_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AiringToday_Tests.debug.xcconfig"; path = "Target Support Files/Pods-AiringToday_Tests/Pods-AiringToday_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		D94A406B7FF55ABDEDF7257F /* AiringToday.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = AiringToday.podspec; path = ../AiringToday.podspec; sourceTree = "<group>"; };
+		D94A406B7FF55ABDEDF7257F /* AiringToday.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = AiringToday.podspec; path = ../AiringToday.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		FC6E333084812FB9C7911BC0 /* Pods-AiringToday_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AiringToday_Example.release.xcconfig"; path = "../../../../Pods/Target Support Files/Pods-AiringToday_Example/Pods-AiringToday_Example.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 

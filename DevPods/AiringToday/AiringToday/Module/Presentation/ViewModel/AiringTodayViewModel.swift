@@ -9,7 +9,21 @@
 import RxSwift
 import Shared
 
-final class AiringTodayViewModel: ShowsViewModel {
+protocol AiringTodayViewModelProtocol {
+  
+  // MARK: - Input
+  
+  func viewDidLoad()
+  func didLoadNextPage()
+  func showIsPicked(with id: Int)
+  
+  // MARK: - Output
+  
+  var viewState: Observable<SimpleViewState<AiringTodayCollectionViewModel>> { get }
+  func getCurrentViewState() -> SimpleViewState<AiringTodayCollectionViewModel>
+}
+
+final class AiringTodayViewModel: AiringTodayViewModelProtocol, ShowsViewModel {
   
   var fetchTVShowsUseCase: FetchTVShowsUseCase
   
@@ -19,14 +33,11 @@ final class AiringTodayViewModel: ShowsViewModel {
   
   weak var coordinator: AiringTodayCoordinatorProtocol?
   
-  var disposeBag = DisposeBag()
+  var viewState: Observable<SimpleViewState<AiringTodayCollectionViewModel>>
   
-  // MARK: - Base ViewModel
-  var input: Input
-  var output: Output
-  
-  // MARK: - Output VM
   var viewStateObservableSubject = BehaviorSubject<SimpleViewState<AiringTodayCollectionViewModel>>(value: .loading)
+  
+  var disposeBag = DisposeBag()
   
   // MARK: - Initializers
   
@@ -36,13 +47,26 @@ final class AiringTodayViewModel: ShowsViewModel {
     self.coordinator = coordinator
     shows = []
     
-    self.input = Input()
-    self.output = Output(viewState: viewStateObservableSubject.asObservable())
+    viewState = viewStateObservableSubject.asObservable()
   }
   
   func mapToCell(entites: [TVShow]) -> [AiringTodayCollectionViewModel] {
     return entites.map { AiringTodayCollectionViewModel(show: $0) }
   }
+  
+  // MARK: Input
+  
+  func viewDidLoad() {
+    getShows(for: 1)
+  }
+  
+  func didLoadNextPage() {
+    if case .paging(_, let nextPage) = getCurrentViewState() {
+      getShows(for: nextPage)
+    }
+  }
+  
+  // MARK: - Output
   
   func getCurrentViewState() -> SimpleViewState<AiringTodayCollectionViewModel> {
     guard let currentState = try? viewStateObservableSubject.value() else { return .loading }
@@ -57,16 +81,5 @@ final class AiringTodayViewModel: ShowsViewModel {
   
   fileprivate func navigateTo(step: AiringTodayStep) {
     coordinator?.navigate(to: step)
-  }
-}
-
-// MARK: - BaseViewModel
-
-extension AiringTodayViewModel: BaseViewModel {
-  
-  public struct Input { }
-  
-  public struct Output {
-    let viewState: Observable<SimpleViewState<AiringTodayCollectionViewModel>>
   }
 }

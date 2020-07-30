@@ -46,13 +46,13 @@ class AiringTodayViewModelTests: QuickSpec {
           // given
           // not response yet
           
-          let viewModel = AiringTodayViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
+          let viewModel: AiringTodayViewModelProtocol = AiringTodayViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
           
           // when
-          viewModel.getShows(for: 1)
+          viewModel.viewDidLoad()
           
           // when
-          let viewState = try? viewModel.output.viewState.toBlocking(timeout: 2).first()
+          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
           guard let currentViewState = viewState else {
             fail("It should emit a View State")
             return
@@ -69,13 +69,13 @@ class AiringTodayViewModelTests: QuickSpec {
           fetchUseCaseMock.result = self.firstPage
           let firstPageCells = self.firstPage.results!.map { AiringTodayCollectionViewModel(show: $0) }
           
-          let viewModel = AiringTodayViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
+          let viewModel: AiringTodayViewModelProtocol = AiringTodayViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
           
           // when
-          viewModel.getShows(for: 1)
+          viewModel.viewDidLoad()
           
           // then
-          let viewState = try? viewModel.output.viewState.toBlocking(timeout: 2).first()
+          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
           guard let currentViewState = viewState else {
             fail("It should emit a View State")
             return
@@ -95,16 +95,15 @@ class AiringTodayViewModelTests: QuickSpec {
           // given
           fetchUseCaseMock.result = self.firstPage
           
-          let viewModel = AiringTodayViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
+          let viewModel: AiringTodayViewModelProtocol = AiringTodayViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
           
           // when
-          viewModel.getShows(for: 1)
-          
+          viewModel.viewDidLoad()
           fetchUseCaseMock.result = self.secondPage
-          viewModel.getShows(for: 2)
+          viewModel.didLoadNextPage()
           
           //then
-          let viewState = try? viewModel.output.viewState.toBlocking(timeout: 2).first()
+          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
           guard let currentViewState = viewState else {
             fail("It should emit a View State")
             return
@@ -123,10 +122,10 @@ class AiringTodayViewModelTests: QuickSpec {
           let viewModel = AiringTodayViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
           
           // when
-          viewModel.getShows(for: 1)
+          viewModel.viewDidLoad()
           
           // when
-          let viewState = try? viewModel.output.viewState.toBlocking(timeout: 2).first()
+          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
           guard let currentViewState = viewState else {
             fail("It should emit a View State")
             return
@@ -145,10 +144,10 @@ class AiringTodayViewModelTests: QuickSpec {
           let viewModel = AiringTodayViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
           
           // when
-          viewModel.getShows(for: 1)
+          viewModel.viewDidLoad()
           
           // when
-          let viewState = try? viewModel.output.viewState.toBlocking(timeout: 2).first()
+          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
           guard let currentViewState = viewState else {
             fail("It should emit a View State")
             return

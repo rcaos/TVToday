@@ -16,9 +16,9 @@ class PopularsViewController: UIViewController, StoryboardInstantiable, Loadable
   
   @IBOutlet weak var tableView: UITableView!
   
-  var viewModel: PopularViewModel!
+  var viewModel: PopularViewModelProtocol!
   
-  static func create(with viewModel: PopularViewModel) -> PopularsViewController {
+  static func create(with viewModel: PopularViewModelProtocol) -> PopularsViewController {
     let controller = PopularsViewController.instantiateViewController()
     controller.viewModel = viewModel
     return controller
@@ -33,7 +33,7 @@ class PopularsViewController: UIViewController, StoryboardInstantiable, Loadable
     
     setupUI()
     setupViewModel()
-    viewModel.getShows(for: 1)
+    viewModel.viewDidLoad()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -62,24 +62,15 @@ class PopularsViewController: UIViewController, StoryboardInstantiable, Loadable
   // MARK: - Setup ViewModel
   
   func setupViewModel() {
-    viewModel.output
-      .viewState
-      .map { $0.currentEntities }
-      .bind(to:
-        tableView.rx.items( cellIdentifier: "TVShowViewCell",
-                            cellType: TVShowViewCell.self)) { [weak self] (index, element, cell) in
-                              guard let strongSelf = self else { return }
-                              
-                              cell.viewModel = element
-                              
-                              if case .paging(let entities, let nextPage) = try? strongSelf.viewModel.viewStateObservableSubject.value(),
-                                index == entities.count - 1 {
-                                strongSelf.viewModel.getShows(for: nextPage)
-                              }
-    }
-    .disposed(by: disposeBag)
+    let dataSource = configureTableViewDataSource()
     
-    viewModel.output
+    viewModel
+      .viewState
+      .map {  [SectionPopularView(header: "Popular Shows", items: $0.currentEntities)] }
+      .bind(to: tableView.rx.items(dataSource: dataSource))
+      .disposed(by: disposeBag)
+    
+    viewModel
       .viewState
       .subscribe(onNext: { [weak self] state in
         guard let strongSelf = self else { return }
@@ -115,7 +106,7 @@ class PopularsViewController: UIViewController, StoryboardInstantiable, Loadable
     case .populated:
       hideLoadingView()
       hideMessageView()
-      tableView.tableFooterView = nil
+      tableView.tableFooterView = UIView()
       tableView.separatorStyle = .singleLine
       
     case .empty:
@@ -133,6 +124,24 @@ class PopularsViewController: UIViewController, StoryboardInstantiable, Loadable
       })
     }
   }
+  
+  fileprivate func configureTableViewDataSource() ->
+    RxTableViewSectionedReloadDataSource<SectionPopularView> {
+      let configureCell = RxTableViewSectionedReloadDataSource<SectionPopularView>(
+        configureCell: { [weak self] dataSource, tableView, indexPath, item in
+          guard let strongSelf = self else { fatalError() }
+          
+          let cell = tableView.dequeueReusableCell(with: TVShowViewCell.self, for: indexPath)
+          cell.viewModel = item
+          
+          if let totalItems = dataSource.sectionModels.first?.items.count, indexPath.row == totalItems - 1 {
+            strongSelf.viewModel.didLoadNextPage()
+          }
+          return cell
+      })
+      return configureCell
+  }
+  
 }
 
 // MARK: - UITableViewDelegate

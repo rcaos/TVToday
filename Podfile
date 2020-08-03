@@ -21,7 +21,7 @@ def airingToday_pod
 end
 
 def popularShows_pod
-  pod 'PopularShows', :path =>  'DevPods/PopularShows'
+  pod 'PopularShows', :path =>  'DevPods/PopularShows', :testspecs => ['Tests']
 end
 
 def searchShows_pod

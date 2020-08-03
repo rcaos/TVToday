@@ -45,11 +45,14 @@ TODO: Add long description of the pod here.
   s.dependency 'RxCocoa', '~> 5.0.0'
   s.dependency 'RxDataSources', '~> 4.0.0'
   
-  # s.resource_bundles = {
-  #   'PopularShows' => ['PopularShows/Assets/*.png']
-  # }
+  s.test_spec 'Tests' do |test_spec|
+    test_spec.source_files = 'PopularShows/Tests/**/*.{swift}'
 
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+    test_spec.dependency 'Quick'
+    test_spec.dependency 'Nimble'
+    test_spec.dependency 'iOSSnapshotTestCase'
+    
+    test_spec.dependency 'RxTest'
+    test_spec.dependency 'RxBlocking'
+  end
 end

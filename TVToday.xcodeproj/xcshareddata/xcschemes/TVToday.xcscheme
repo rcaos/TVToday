@@ -202,6 +202,20 @@
                ReferencedContainer = "container:Pods/Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D8100F0593E83D50D2552BF9E01B80DB"
+               BuildableName = "PopularShows-Unit-Tests.xctest"
+               BlueprintName = "PopularShows-Unit-Tests"
+               ReferencedContainer = "container:Pods/Pods.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -228,6 +242,16 @@
                BlueprintIdentifier = "2539B5542240B598247987BC3E77C0E2"
                BuildableName = "AiringToday-Unit-Tests.xctest"
                BlueprintName = "AiringToday-Unit-Tests"
+               ReferencedContainer = "container:Pods/Pods.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D8100F0593E83D50D2552BF9E01B80DB"
+               BuildableName = "PopularShows-Unit-Tests.xctest"
+               BlueprintName = "PopularShows-Unit-Tests"
                ReferencedContainer = "container:Pods/Pods.xcodeproj">
             </BuildableReference>
          </TestableReference>

@@ -216,6 +216,20 @@
                ReferencedContainer = "container:Pods/Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "729519ECCECFA4C1BCCFF0A3FC89E6B6"
+               BuildableName = "TVShowsList-Unit-Tests.xctest"
+               BlueprintName = "TVShowsList-Unit-Tests"
+               ReferencedContainer = "container:Pods/Pods.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -231,6 +245,20 @@
             BlueprintIdentifier = "94CAB0A56C8C9176AF6205EA2B2F6858"
             BuildableName = "AiringToday.framework"
             BlueprintName = "AiringToday"
+            ReferencedContainer = "container:Pods/Pods.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "85FF8F3864594A1E016F8098423D813D"
+            BuildableName = "PopularShows.framework"
+            BlueprintName = "PopularShows"
+            ReferencedContainer = "container:Pods/Pods.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "9DA28EE8A3E3B26B7B7CE35F50154275"
+            BuildableName = "TVShowsList.framework"
+            BlueprintName = "TVShowsList"
             ReferencedContainer = "container:Pods/Pods.xcodeproj">
          </BuildableReference>
       </CodeCoverageTargets>
@@ -252,6 +280,16 @@
                BlueprintIdentifier = "D8100F0593E83D50D2552BF9E01B80DB"
                BuildableName = "PopularShows-Unit-Tests.xctest"
                BlueprintName = "PopularShows-Unit-Tests"
+               ReferencedContainer = "container:Pods/Pods.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "729519ECCECFA4C1BCCFF0A3FC89E6B6"
+               BuildableName = "TVShowsList-Unit-Tests.xctest"
+               BlueprintName = "TVShowsList-Unit-Tests"
                ReferencedContainer = "container:Pods/Pods.xcodeproj">
             </BuildableReference>
          </TestableReference>

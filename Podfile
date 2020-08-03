@@ -29,7 +29,7 @@ def searchShows_pod
 end
 
 def showsList_pod
-  pod 'TVShowsList', :path =>  'DevPods/TVShowsList'
+  pod 'TVShowsList', :path =>  'DevPods/TVShowsList', :testspecs => ['Tests']
 end
 
 def showDetails_pod

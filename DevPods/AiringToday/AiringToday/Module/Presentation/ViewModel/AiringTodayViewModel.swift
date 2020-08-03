@@ -34,9 +34,9 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol, ShowsViewModel {
   
   weak var coordinator: AiringTodayCoordinatorProtocol?
   
-  var viewState: Observable<SimpleViewState<AiringTodayCollectionViewModel>>
-  
   var viewStateObservableSubject = BehaviorSubject<SimpleViewState<AiringTodayCollectionViewModel>>(value: .loading)
+  
+  var viewState: Observable<SimpleViewState<AiringTodayCollectionViewModel>>
   
   var disposeBag = DisposeBag()
   

@@ -25,21 +25,6 @@ protocol PopularViewModelProtocol {
   func getCurrentViewState() -> SimpleViewState<TVShowCellViewModel>
 }
 
-struct SectionPopularView {
-  var header: String
-  var items: [Item]
-}
-
-extension SectionPopularView: SectionModelType {
-  
-  typealias Item = TVShowCellViewModel
-  
-  init(original: SectionPopularView, items: [Item]) {
-    self = original
-    self.items = items
-  }
-}
-
 final class PopularViewModel: PopularViewModelProtocol, ShowsViewModel {
   
   var fetchTVShowsUseCase: FetchTVShowsUseCase

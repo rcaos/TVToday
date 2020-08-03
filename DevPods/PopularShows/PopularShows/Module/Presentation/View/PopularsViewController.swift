@@ -141,7 +141,6 @@ class PopularsViewController: UIViewController, StoryboardInstantiable, Loadable
       })
       return configureCell
   }
-  
 }
 
 // MARK: - UITableViewDelegate

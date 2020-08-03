@@ -1,5 +1,5 @@
 //
-//  AiringTodayViewTests.swift
+//  TVShowListViewTests.swift
 //  AiringToday-Unit-Tests
 //
 //  Created by Jeans Ruiz on 7/30/20.
@@ -8,10 +8,10 @@
 import FBSnapshotTestCase
 import RxSwift
 
-@testable import AiringToday
+@testable import TVShowsList
 @testable import Shared
 
-class AiringTodayViewTests: FBSnapshotTestCase {
+class TVShowListViewTests: FBSnapshotTestCase {
   
   let firstShow = TVShow.stub(id: 1, name: "title1 🐶", posterPath: "/1",
                               backDropPath: "/back1", overview: "overview")
@@ -39,17 +39,17 @@ class AiringTodayViewTests: FBSnapshotTestCase {
   
   func test_WhenViewIsLoading_thenShowLoadingScreen() {
     // given
-    let viewController = AiringTodayViewController.create(with: AiringTodayViewModelMock(state: .loading) )
+    let viewController = TVShowListViewController.create(with: TVShowListViewModelMock(state: .loading) )
     
     FBSnapshotVerifyView(viewController.view)
   }
   
   func test_WhenViewPaging_thenShowPagingScreen() {
     
-    let firsPageCells = firstPage.results!.map { AiringTodayCollectionViewModel(show: $0) }
+    let firsPageCells = firstPage.results!.map { TVShowCellViewModel(show: $0) }
     
     // given
-    let viewController = AiringTodayViewController.create(with: AiringTodayViewModelMock(state: .paging(firsPageCells, next: 2) ) )
+    let viewController = TVShowListViewController.create(with: TVShowListViewModelMock(state: .paging(firsPageCells, next: 2) ) )
     
     FBSnapshotVerifyView(viewController.view)
   }
@@ -57,33 +57,33 @@ class AiringTodayViewTests: FBSnapshotTestCase {
   func test_WhenViewPopulated_thenShowPopulatedScreen() {
     
     let totalCells = (self.firstPage.results + self.secondPage.results)
-               .map { AiringTodayCollectionViewModel(show: $0) }
+               .map { TVShowCellViewModel(show: $0) }
     
     // given
-    let viewController = AiringTodayViewController.create(with: AiringTodayViewModelMock(state: .populated(totalCells) ) )
+    let viewController = TVShowListViewController.create(with: TVShowListViewModelMock(state: .populated(totalCells) ) )
     
     FBSnapshotVerifyView(viewController.view)
   }
   
   func test_WhenViewIsEmpty_thenShowEmptyScreen() {
     // given
-    let viewController = AiringTodayViewController.create(with: AiringTodayViewModelMock(state: .empty ) )
+    let viewController = TVShowListViewController.create(with: TVShowListViewModelMock(state: .empty ) )
     
     FBSnapshotVerifyView(viewController.view)
   }
   
   func test_WhenViewIsError_thenShowErrorScreen() {
     // given
-    let viewController = AiringTodayViewController.create(with: AiringTodayViewModelMock(state: .error("Error to Fetch Shows") ) )
+    let viewController = TVShowListViewController.create(with: TVShowListViewModelMock(state: .error("Error to Fetch Shows") ) )
     
     FBSnapshotVerifyView(viewController.view)
   }
   
 }
 
-// MARK: AiringTodayViewModelProtocol
+// MARK: TVShowListViewModelProtocol
 
-class AiringTodayViewModelMock: AiringTodayViewModelProtocol {
+class TVShowListViewModelMock: TVShowListViewModelProtocol {
   
   func viewDidLoad() { }
   
@@ -93,18 +93,20 @@ class AiringTodayViewModelMock: AiringTodayViewModelProtocol {
   
   func refreshView() { }
   
-  func getCurrentViewState() -> SimpleViewState<AiringTodayCollectionViewModel> {
+  func viewDidFinish() { }
+  
+  func getCurrentViewState() -> SimpleViewState<TVShowCellViewModel> {
     if let currentViewState = try? viewStateObservableSubject.value() {
       return currentViewState
     }
     return .empty
   }
   
-  var viewState: Observable<SimpleViewState<AiringTodayCollectionViewModel>>
+  var viewState: Observable<SimpleViewState<TVShowCellViewModel>>
   
-  var viewStateObservableSubject: BehaviorSubject<SimpleViewState<AiringTodayCollectionViewModel>>
+  var viewStateObservableSubject: BehaviorSubject<SimpleViewState<TVShowCellViewModel>>
   
-  init(state: SimpleViewState<AiringTodayCollectionViewModel>) {
+  init(state: SimpleViewState<TVShowCellViewModel>) {
     viewStateObservableSubject = BehaviorSubject(value: state)
     viewState = viewStateObservableSubject.asObservable()
   }

@@ -9,17 +9,18 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import RxDataSources
 import Shared
 
 class TVShowListViewController: UIViewController, StoryboardInstantiable, Loadable, Retryable, Emptiable {
   
   @IBOutlet weak var tableView: UITableView!
   
-  private var viewModel: TVShowListViewModel!
+  private var viewModel: TVShowListViewModelProtocol!
   
   private let disposeBag = DisposeBag()
   
-  static func create(with viewModel: TVShowListViewModel) -> TVShowListViewController {
+  static func create(with viewModel: TVShowListViewModelProtocol) -> TVShowListViewController {
     let controller = TVShowListViewController.instantiateViewController()
     controller.viewModel = viewModel
     return controller
@@ -32,7 +33,7 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable, Loadab
     
     setupTable()
     setupViewModel()
-    viewModel.getShows(for: 1)
+    viewModel.viewDidLoad()
   }
   
   deinit {
@@ -59,7 +60,7 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable, Loadab
   }
   
   private func subscribeToViewState() {
-    viewModel.output
+    viewModel
       .viewState
       .subscribe(onNext: { [weak self] state in
         guard let strongSelf = self else { return }
@@ -69,20 +70,13 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable, Loadab
   }
   
   private func subscribeToData() {
-    viewModel.output
+    let dataSource = configureTableViewDataSource()
+    
+    viewModel
       .viewState
-      .map { $0.currentEntities }
-      .bind(to: tableView.rx.items(cellIdentifier: "TVShowViewCell", cellType: TVShowViewCell.self )) { [weak self] (index, element, cell) in
-        guard let strongSelf = self else { return }
-        
-        cell.viewModel = element
-        
-        if case .paging(let entities, let nextPage) = strongSelf.viewModel.getCurrentState(),
-          index == entities.count - 1 {
-          strongSelf.viewModel.getShows(for: nextPage)
-        }
-    }
-    .disposed(by: disposeBag)
+      .map {  [SectionTVShowListView(header: "TV Shows List", items: $0.currentEntities)] }
+      .bind(to: tableView.rx.items(dataSource: dataSource))
+      .disposed(by: disposeBag)
   }
   
   private func handleSelectionItems() {
@@ -113,7 +107,7 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable, Loadab
       
     case .populated :
       hideLoadingView()
-      tableView.tableFooterView = nil
+      tableView.tableFooterView = UIView()
       tableView.separatorStyle = .singleLine
       hideMessageView()
       
@@ -132,6 +126,23 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable, Loadab
                         self?.viewModel.refreshView()
       })
     }
+  }
+  
+  fileprivate func configureTableViewDataSource() ->
+    RxTableViewSectionedReloadDataSource<SectionTVShowListView> {
+      let configureCell = RxTableViewSectionedReloadDataSource<SectionTVShowListView>(
+        configureCell: { [weak self] dataSource, tableView, indexPath, item in
+          guard let strongSelf = self else { fatalError() }
+          
+          let cell = tableView.dequeueReusableCell(with: TVShowViewCell.self, for: indexPath)
+          cell.viewModel = item
+          
+          if let totalItems = dataSource.sectionModels.first?.items.count, indexPath.row == totalItems - 1 {
+            strongSelf.viewModel.didLoadNextPage()
+          }
+          return cell
+      })
+      return configureCell
   }
 }
 

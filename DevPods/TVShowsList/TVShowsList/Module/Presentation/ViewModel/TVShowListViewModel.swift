@@ -9,7 +9,23 @@
 import RxSwift
 import Shared
 
-final class TVShowListViewModel: ShowsViewModel {
+protocol TVShowListViewModelProtocol {
+  
+  // MARK: - Input
+  
+  func viewDidLoad()
+  func didLoadNextPage()
+  func showIsPicked(with id: Int)
+  func refreshView()
+  func viewDidFinish()
+  
+  // MARK: - Output
+  
+  var viewState: Observable<SimpleViewState<TVShowCellViewModel>> { get }
+  func getCurrentViewState() -> SimpleViewState<TVShowCellViewModel>
+}
+
+final class TVShowListViewModel: TVShowListViewModelProtocol, ShowsViewModel {
   
   var fetchTVShowsUseCase: FetchTVShowsUseCase
   
@@ -17,24 +33,21 @@ final class TVShowListViewModel: ShowsViewModel {
   
   var showsCells: [TVShowCellViewModel] = []
   
-  var disposeBag = DisposeBag()
-  
-  var input: Input
-  
-  var output: Output
-  
   var viewStateObservableSubject: BehaviorSubject<SimpleViewState<TVShowCellViewModel>> = .init(value: .loading)
+  
+  var viewState: Observable<SimpleViewState<TVShowCellViewModel>>
   
   private weak var coordinator: TVShowListCoordinatorProtocol?
   
+  var disposeBag = DisposeBag()
+  
   // MARK: - Initializers
   
-  init(fetchTVShowsUseCase: FetchTVShowsUseCase, coordinator: TVShowListCoordinatorProtocol) {
+  init(fetchTVShowsUseCase: FetchTVShowsUseCase, coordinator: TVShowListCoordinatorProtocol?) {
     self.fetchTVShowsUseCase = fetchTVShowsUseCase
     self.coordinator = coordinator
     self.shows = []
-    self.input = Input()
-    self.output = Output(viewState: viewStateObservableSubject.asObservable())
+    viewState = viewStateObservableSubject.asObservable()
   }
   
   deinit {
@@ -45,7 +58,19 @@ final class TVShowListViewModel: ShowsViewModel {
     return entites.map { TVShowCellViewModel(show: $0) }
   }
   
-  func getCurrentState() -> SimpleViewState<TVShowCellViewModel> {
+  // MARK: - Input
+  
+  func viewDidLoad() {
+    getShows(for: 1)
+  }
+  
+  func didLoadNextPage() {
+    if case .paging(_, let nextPage) = getCurrentViewState() {
+      getShows(for: nextPage)
+    }
+  }
+  
+  func getCurrentViewState() -> SimpleViewState<TVShowCellViewModel> {
     if let state = try? viewStateObservableSubject.value() {
       return state
     }
@@ -68,17 +93,5 @@ final class TVShowListViewModel: ShowsViewModel {
   
   private func navigateTo(step: TVShowListStep) {
     coordinator?.navigate(to: step)
-  }
-
-}
-
-// MARK: - BaseViewModel
-
-extension TVShowListViewModel: BaseViewModel {
-  
-  public struct Input { }
-  
-  public struct Output {
-    let viewState: Observable<SimpleViewState<TVShowCellViewModel>>
   }
 }

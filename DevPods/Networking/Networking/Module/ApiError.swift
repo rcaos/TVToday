@@ -10,14 +10,14 @@ import Foundation
 
 enum APIError: Error {
   
+  case networkProblem
   case requestFailed
   case invalidData
-  
-  case badRequest         //400
-  case notAuthenticaded   //401
-  case notFound           //404
-  
   case unknown(HTTPURLResponse?)
+  
+  case badRequest
+  case notAuthenticaded
+  case notFound
   
   init(response: URLResponse?) {
     guard let response = response as? HTTPURLResponse else {
@@ -35,17 +35,31 @@ enum APIError: Error {
       self = .unknown(response)
     }
   }
+}
+
+extension APIError: LocalizedError {
   
-  var description: String {
+  public var errorDescription: String? {
     switch self {
     case .notAuthenticaded:
-      return "This information is not available."
+      return ErrorMessages.NotAuthorized
     case .notFound:
-      return "Bad request error."
-    case .unknown:
-      return "Server Error. Please, try again later."
-    case .requestFailed, .invalidData, .badRequest:
-      return "Resquest failed. Please, try again later."
+      return ErrorMessages.NotFound
+    case .networkProblem, .unknown:
+      return ErrorMessages.ServerError
+    case .requestFailed, .badRequest, .invalidData:
+      return ErrorMessages.RequestFailed
     }
+  }
+  
+}
+
+extension APIError {
+  
+  struct ErrorMessages {
+    static let ServerError = "Server Error, Please, try again later."
+    static let NotAuthorized = "This information is not available."
+    static let NotFound = "Bad requested error."
+    static let RequestFailed = "Request failed. Please try again later."
   }
 }

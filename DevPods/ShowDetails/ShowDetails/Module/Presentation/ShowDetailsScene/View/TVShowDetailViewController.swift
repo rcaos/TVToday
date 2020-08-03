@@ -12,7 +12,7 @@ import RxDataSources
 import Shared
 import UI
 
-class TVShowDetailViewController: UITableViewController, StoryboardInstantiable, Loadable, PresentableView {
+class TVShowDetailViewController: UITableViewController, StoryboardInstantiable, Loadable, Retryable {
   
   var viewModel: TVShowDetailViewModel!
   
@@ -151,10 +151,13 @@ class TVShowDetailViewController: UITableViewController, StoryboardInstantiable,
       setupUI(with: tvShowDetail)
       tableView.separatorStyle = .singleLine
       
-    case .error(let error):
+    case .error(let message):
       hideLoadingView()
       tableView.separatorStyle = .none
-      showMessageView(with: error)
+      showMessageView(with: message,
+                      errorHandler: { [weak self] in
+                        self?.viewModel.refreshView()
+      })
     }
   }
   

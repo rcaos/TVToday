@@ -11,7 +11,7 @@ import RxSwift
 import RxDataSources
 import Shared
 
-class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loadable, PresentableView {
+class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loadable, Retryable, Emptiable {
   
   @IBOutlet weak var collectionView: UICollectionView!
   
@@ -102,11 +102,14 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loada
       
     case .empty:
       hideLoadingView()
-      showMessageView(with: "No Shows for Today")
+      showEmptyView(with: "No shows for Today")
       
     case .error(let message):
       hideLoadingView()
-      showMessageView(with: message)
+      showMessageView(with: message,
+                      errorHandler: { [weak self] in
+                        self?.viewModel.refreshView()
+      })
       
     default:
       hideLoadingView()

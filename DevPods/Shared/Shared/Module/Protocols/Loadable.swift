@@ -15,10 +15,10 @@ public protocol Loadable {
 
 // MARK: - UIButton
 
-public extension Loadable where Self: UIView {
+public extension Loadable where Self: UIButton {
   
   func showLoadingView() {
-    let activityIndicator = UIActivityIndicatorView(style: .gray)
+    let activityIndicator = UIActivityIndicatorView(style: .white)
     addSubview(activityIndicator)
     activityIndicator.translatesAutoresizingMaskIntoConstraints = false
     activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
@@ -39,12 +39,37 @@ public extension Loadable where Self: UIView {
   }
 }
 
+// MARK: - UIView
+
+public extension Loadable where Self: UIView {
+
+  func showLoadingView() {
+    let activityIndicator = UIActivityIndicatorView(style: .gray)
+    addSubview(activityIndicator)
+    activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+    activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+    activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+    activityIndicator.startAnimating()
+    activityIndicator.tag = ConstantsLoadable.loadingViewTag
+
+    isUserInteractionEnabled = false
+  }
+  
+  func hideLoadingView() {
+    subviews.forEach { subview in
+      if subview.tag == ConstantsLoadable.loadingViewTag {
+        subview.removeFromSuperview()
+      }
+    }
+    isUserInteractionEnabled = true
+  }
+}
+
 // MARK: - UIViewController
 
 public extension Loadable where Self: UIViewController {
   
   func showLoadingView() {
-    
     let loadingView = LoadingView()
     
     loadingView.translatesAutoresizingMaskIntoConstraints = false

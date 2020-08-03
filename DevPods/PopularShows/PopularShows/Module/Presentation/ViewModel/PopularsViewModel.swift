@@ -46,6 +46,10 @@ final class PopularViewModel: ShowsViewModel {
     navigateTo(step: .showIsPicked(id) )
   }
   
+  func refreshView() {
+    getShows(for: 1, showLoader: false)
+  }
+  
   // MARK: - Navigation
   
   private func navigateTo(step: PopularStep) {

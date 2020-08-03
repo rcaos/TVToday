@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 import Shared
 
-class TVShowListViewController: UIViewController, StoryboardInstantiable, Loadable, PresentableView {
+class TVShowListViewController: UIViewController, StoryboardInstantiable, Loadable, Retryable, Emptiable {
   
   @IBOutlet weak var tableView: UITableView!
   
@@ -121,13 +121,16 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable, Loadab
       hideLoadingView()
       tableView.tableFooterView = nil
       tableView.separatorStyle = .none
-      showMessageView(with: "No TvShows to show")
+      showEmptyView(with: "No TvShow to see")
       
-    case .error(let error):
+    case .error(let message):
       hideLoadingView()
       tableView.tableFooterView = nil
       tableView.separatorStyle = .none
-      showMessageView(with: error)
+      showMessageView(with: message,
+                      errorHandler: { [weak self] in
+                        self?.viewModel.refreshView()
+      })
     }
   }
 }

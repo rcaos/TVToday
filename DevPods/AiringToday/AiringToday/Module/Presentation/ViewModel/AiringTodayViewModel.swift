@@ -16,6 +16,7 @@ protocol AiringTodayViewModelProtocol {
   func viewDidLoad()
   func didLoadNextPage()
   func showIsPicked(with id: Int)
+  func refreshView()
   
   // MARK: - Output
   
@@ -64,6 +65,10 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol, ShowsViewModel {
     if case .paging(_, let nextPage) = getCurrentViewState() {
       getShows(for: nextPage)
     }
+  }
+  
+  func refreshView() {
+    getShows(for: 1, showLoader: false)
   }
   
   // MARK: - Output

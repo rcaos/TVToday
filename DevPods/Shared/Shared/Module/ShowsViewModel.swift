@@ -28,9 +28,11 @@ public protocol ShowsViewModel: class {
 
 extension ShowsViewModel {
   
-  public func getShows(for page: Int) {
+  public func getShows(for page: Int, showLoader: Bool = true) {
     
-    if let state = try? viewStateObservableSubject.value(), state.isInitialPage {
+    if let state = try? viewStateObservableSubject.value(),
+      state.isInitialPage,
+      showLoader {
       viewStateObservableSubject.onNext(.loading)
     }
     

@@ -104,8 +104,10 @@ final class EpisodesListViewModel {
   
   // MARK: - Networking
   
-  fileprivate func fetchShowDetailsAndFirstSeason() {
-    viewStateObservableSubject.onNext( .loading )
+  fileprivate func fetchShowDetailsAndFirstSeason(showLoader: Bool = true) {
+    if showLoader {
+      viewStateObservableSubject.onNext( .loading )
+    }
     
     let requestDetailsShow = FetchTVShowDetailsUseCaseRequestValue(identifier: tvShowId)
     let requestFirstSeason = FetchEpisodesUseCaseRequestValue(showIdentifier: tvShowId, seasonNumber: 1)
@@ -180,6 +182,10 @@ final class EpisodesListViewModel {
     fetchShowDetailsAndFirstSeason()
   }
   
+  func refreshView() {
+    fetchShowDetailsAndFirstSeason(showLoader: false)
+  }
+  
   func buildHeaderViewModel() -> SeasonHeaderViewModel? {
     guard let show = showDetailResult else { return nil }
     return SeasonHeaderViewModel(showDetail: show)
@@ -208,34 +214,6 @@ extension EpisodesListViewModel {
     case empty
     case error(String)
     case errorSeason(String)
-    
-//    static public func == (lhs: ViewState, rhs: ViewState) -> Bool {
-//      switch (lhs, rhs) {
-//      case (.loading, .loading):
-//        return true
-//
-//      case (.didLoadHeader, .didLoadHeader):
-//        return true
-//
-//      case (.populated, .populated):
-//        return true
-//
-//      case (.loadingSeason, .loadingSeason):
-//        return true
-//
-//      case (.empty, .empty):
-//        return true
-//
-//      case (.error, .error):
-//        return true
-//
-//      case (.errorSeason, .errorSeason):
-//        return true
-//
-//      default:
-//        return false
-//      }
-//    }
   }
 }
 

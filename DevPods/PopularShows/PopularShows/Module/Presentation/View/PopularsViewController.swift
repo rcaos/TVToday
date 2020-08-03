@@ -12,7 +12,7 @@ import RxCocoa
 import RxDataSources
 import Shared
 
-class PopularsViewController: UIViewController, StoryboardInstantiable, Loadable, PresentableView {
+class PopularsViewController: UIViewController, StoryboardInstantiable, Loadable, Retryable, Emptiable {
   
   @IBOutlet weak var tableView: UITableView!
   
@@ -122,13 +122,15 @@ class PopularsViewController: UIViewController, StoryboardInstantiable, Loadable
       hideLoadingView()
       tableView.tableFooterView = nil
       tableView.separatorStyle = .none
-      showMessageView(with: "No TVshow to show")
+      showEmptyView(with: "No Populars TVShow to see")
       
-    case .error(let error):
+    case .error(let message):
       hideLoadingView()
       tableView.tableFooterView = nil
       tableView.separatorStyle = .none
-      showMessageView(with: error)
+      showMessageView(with: message, errorHandler: { [weak self] in
+        self?.viewModel.refreshView()
+      })
     }
   }
 }

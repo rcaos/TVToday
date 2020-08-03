@@ -52,6 +52,10 @@ final class TVShowListViewModel: ShowsViewModel {
     return .loading
   }
   
+  func refreshView() {
+    getShows(for: 1, showLoader: false)
+  }
+  
   // MARK: - Navigation
   
   public func showIsPicked(with id: Int) {

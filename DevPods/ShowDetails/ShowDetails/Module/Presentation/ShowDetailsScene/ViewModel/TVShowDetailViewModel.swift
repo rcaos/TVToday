@@ -79,6 +79,10 @@ final class TVShowDetailViewModel {
     return fetchLoggedUser.execute() == nil ? false : true
   }
   
+  public func refreshView() {
+    // MARK: - TODO, implement.
+  }
+  
   fileprivate func subscribe() {
     subscribeToViewAppears()
     subscribeButtonsWhenPopulated()

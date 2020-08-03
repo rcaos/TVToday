@@ -11,7 +11,7 @@ import RxSwift
 import RxDataSources
 import Shared
 
-class EpisodesListViewController: UIViewController, StoryboardInstantiable, Loadable, PresentableView {
+class EpisodesListViewController: UIViewController, StoryboardInstantiable, Loadable, Retryable {
   
   @IBOutlet weak var tableView: UITableView!
   
@@ -130,7 +130,10 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable, Load
       hideLoadingView()
       tableView.tableFooterView = nil
       tableView.separatorStyle = .none
-      showMessageView(with: message)
+      showMessageView(with: message,
+                      errorHandler: { [weak self] in
+                        self?.viewModel.refreshView()
+      })
       
     case .errorSeason:
       hideLoadingView()

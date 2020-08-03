@@ -34,7 +34,7 @@ class AiringTodayViewTests: FBSnapshotTestCase {
   
   override func setUp() {
     super.setUp()
-    //self.recordMode = true
+    self.recordMode = true
   }
   
   func test_WhenViewIsLoading_thenShowLoadingScreen() {
@@ -90,6 +90,8 @@ class AiringTodayViewModelMock: AiringTodayViewModelProtocol {
   func didLoadNextPage() { }
   
   func showIsPicked(with id: Int) { }
+  
+  func refreshView() { }
   
   func getCurrentViewState() -> SimpleViewState<AiringTodayCollectionViewModel> {
     if let currentViewState = try? viewStateObservableSubject.value() {

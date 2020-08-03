@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UI
 
 public class MessageImageView: UIView {
   
@@ -40,6 +41,7 @@ public class MessageImageView: UIView {
     
     messageLabel.numberOfLines = 0
     messageLabel.textAlignment = .center
+    messageLabel.font = Font.sanFrancisco.of(type: .regular, with: .normal)
     
     imageView.contentMode = .scaleAspectFit
     

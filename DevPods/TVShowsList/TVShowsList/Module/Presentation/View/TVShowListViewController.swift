@@ -119,7 +119,7 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable, Loadab
       
     case .error(let message):
       hideLoadingView()
-      tableView.tableFooterView = nil
+      tableView.tableFooterView = UIView()
       tableView.separatorStyle = .none
       showMessageView(with: message,
                       errorHandler: { [weak self] in

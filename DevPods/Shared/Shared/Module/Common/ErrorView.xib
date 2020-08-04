@@ -15,7 +15,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="bQV-3i-JOI">
-                    <rect key="frame" x="41.5" y="233" width="331" height="370"/>
+                    <rect key="frame" x="41.5" y="263" width="331" height="370"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Error003" translatesAutoresizingMaskIntoConstraints="NO" id="XJL-Qi-F1N">
                             <rect key="frame" x="0.0" y="0.0" width="331" height="265"/>
@@ -51,7 +51,7 @@
             <constraints>
                 <constraint firstItem="bQV-3i-JOI" firstAttribute="width" secondItem="vUN-kp-3ea" secondAttribute="width" multiplier="0.8" id="7ag-oI-WhS"/>
                 <constraint firstItem="bQV-3i-JOI" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="TRT-O1-po7"/>
-                <constraint firstItem="bQV-3i-JOI" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" constant="-30" id="lBV-I4-g6c"/>
+                <constraint firstItem="bQV-3i-JOI" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="lBV-I4-g6c"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>

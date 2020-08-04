@@ -15,7 +15,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="OTE-Sn-Z6S">
-                    <rect key="frame" x="83" y="333.5" width="248" height="229"/>
+                    <rect key="frame" x="83" y="338.5" width="248" height="229"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TPR-qe-snr">
                             <rect key="frame" x="0.0" y="0.0" width="248" height="198.5"/>
@@ -36,7 +36,7 @@
             <constraints>
                 <constraint firstItem="OTE-Sn-Z6S" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="Osw-hk-wO7"/>
                 <constraint firstItem="OTE-Sn-Z6S" firstAttribute="width" secondItem="vUN-kp-3ea" secondAttribute="width" multiplier="0.6" id="iaJ-3g-Js4"/>
-                <constraint firstItem="OTE-Sn-Z6S" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="lxb-VC-3U7"/>
+                <constraint firstItem="OTE-Sn-Z6S" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="lxb-VC-3U7"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <connections>

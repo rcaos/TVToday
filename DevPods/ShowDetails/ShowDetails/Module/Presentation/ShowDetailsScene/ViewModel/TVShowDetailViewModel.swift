@@ -60,7 +60,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   
   private let disposeBag = DisposeBag()
   
-  // MARK: -  Public Api
+  // MARK: - Public Api
   
   var tapFavoriteButton: PublishSubject<Void>
   
@@ -108,7 +108,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   }
   
   public func refreshView() {
-    // MARK: - TODO, implement
+    didLoadView.onNext(true)
   }
   
   public func isUserLogged() -> Bool {
@@ -217,55 +217,74 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   fileprivate func requestTVShowDetails() {
     didLoadView
       .filter { $0 == true }
-      .flatMap { [weak self] _ -> Observable<(TVShowDetailResult)> in
+      .flatMap { [weak self] _ -> Observable<Result<TVShowDetailResult, Error>> in
         guard let strongSelf = self else { return Observable.error(CustomError.genericError) }
         return strongSelf.fetchShowDetails()
     }
-    .flatMap { [weak self] (detailShow) -> Observable<ViewState> in
-      guard let strongSelf = self else { return Observable.error(CustomError.genericError) }
-      return Observable.just( .populated( strongSelf.setupTVShow(detailShow)) )
+    .flatMap { (result) -> Observable<ViewState> in
+      switch result {
+      case .success(let detailResult):
+        return Observable.just(.populated( TVShowDetailInfo(show: detailResult) ))
+      case .failure(let error):
+        return Observable.just(.error(error.localizedDescription))
+      }
     }
-    .do(onError: { [weak self] error in
-      self?.viewStateObservableSubject.onNext( .error(error.localizedDescription) )
-    })
-      .bind(to: viewStateObservableSubject)
-      .disposed(by: disposeBag)
+    .bind(to: viewStateObservableSubject)
+    .disposed(by: disposeBag)
   }
   
   // MARK: - Request For Logged Users
   
   fileprivate func requestTVShowDetaisAndState() {
-    let multipleRequest = Observable.zip(fetchShowDetails(), fetchTVShowState())
+    typealias ResultForDetails = (Result<TVShowDetailResult, Error>)
+    typealias ResultForShowState = (Result<TVShowAccountStateResult, Error>)
     
     let responses =
       didLoadView
         .filter { $0 == true }
-        .flatMap { _ -> Observable<(TVShowDetailResult, TVShowAccountStateResult)> in
-          return multipleRequest
+        .flatMap { [weak self] _ -> Observable< (ResultForDetails, ResultForShowState)> in
+          guard let strongSelf = self else {
+            return Observable.just( (.failure(CustomError.genericError), .failure(CustomError.genericError) ) )
+          }
+          return Observable.zip(strongSelf.fetchShowDetails(), strongSelf.fetchTVShowState())
       }.share()
     
     responses
-    .debug()
-      .flatMap { [weak self] (detailShow, _ ) -> Observable<ViewState> in
-        guard let strongSelf = self else { return Observable.error(CustomError.genericError) }
-        return Observable.just( .populated( strongSelf.setupTVShow(detailShow)) )
+      .debug()
+      .flatMap { (resultDetails, resultState ) -> Observable<ViewState> in
+        
+        switch (resultDetails, resultState) {
+        case (.success(let detailResult), .success):
+          return Observable.just(.populated( TVShowDetailInfo(show: detailResult) ))
+        case (.failure(let error), _):
+          return Observable.just(.error(error.localizedDescription))
+        case (_, .failure(let error)):
+          return Observable.just(.error(error.localizedDescription))
+        }
     }
-    .do(onError: { [weak self] error in
-      self?.viewStateObservableSubject.onNext( .error(error.localizedDescription) )
-    })
-      .bind(to: viewStateObservableSubject)
-      .disposed(by: disposeBag)
+    .bind(to: viewStateObservableSubject)
+    .disposed(by: disposeBag)
     
     responses
-      .flatMap { (_, stateShow) -> Observable<Bool> in
-        return Observable.just(stateShow.isFavorite)
+      .flatMap { (_, result) -> Observable<Bool> in
+        switch result {
+        case .success(let stateShow):
+          return Observable.just(stateShow.isFavorite)
+        case .failure:
+          return Observable.just(false)
+        }
     }
     .bind(to: isFavoriteSubject)
     .disposed(by: disposeBag)
     
     responses
-      .flatMap { (_, stateShow) -> Observable<Bool> in
-        return Observable.just(stateShow.isWatchList)
+      .flatMap { (_, result) -> Observable<Bool> in
+        switch result {
+        case .success(let stateShow):
+          return Observable.just(stateShow.isWatchList)
+        case .failure:
+          return Observable.just(false)
+        }
     }
     .bind(to: isWatchListSubject)
     .disposed(by: disposeBag)
@@ -273,12 +292,12 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   
   // MARK: - Observables
   
-  fileprivate func fetchShowDetails() -> Observable<TVShowDetailResult> {
+  fileprivate func fetchShowDetails() -> Observable<Result<TVShowDetailResult, Error>> {
     let request = FetchTVShowDetailsUseCaseRequestValue(identifier: showId)
     return fetchDetailShowUseCase.execute(requestValue: request)
   }
   
-  fileprivate func fetchTVShowState() -> Observable<TVShowAccountStateResult> {
+  fileprivate func fetchTVShowState() -> Observable<Result<TVShowAccountStateResult, Error>> {
     let request = FetchTVAccountStatesRequestValue(showId: showId)
     return fetchTvShowState.execute(requestValue: request)
   }
@@ -291,23 +310,6 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   fileprivate func saveToWatchList(state: Bool) -> Observable<Result<Bool, Error>> {
     let request = SaveToWatchListUseCaseRequestValue(showId: showId, watchList: !state)
     return saveToWatchListUseCase.execute(requestValue: request)
-  }
-  
-  // MARK: - Transform Response for the View
-  
-  fileprivate func setupTVShow(_ show: TVShowDetailResult) -> TVShowDetailInfo {
-    return TVShowDetailInfo(
-      id: show.id,
-      backDropPath: show.backDropPathURL,
-      nameShow: show.name,
-      yearsRelease: show.releaseYears,
-      duration: show.episodeDuration,
-      genre: show.genreIds?.first?.name,
-      numberOfEpisodes: (show.numberOfEpisodes != nil) ? String(show.numberOfEpisodes!) : "",
-      posterPath: show.posterPathURL,
-      overView: show.overview,
-      score: (show.voteAverage != nil) ? String(show.voteAverage!) : "",
-      countVote: (show.voteCount != nil) ? String(show.voteCount!) : "")
   }
 }
 
@@ -333,39 +335,6 @@ extension TVShowDetailViewModel {
       }
     }
   }
-}
-
-// MARK: - BaseViewModel
-
-//extension TVShowDetailViewModel: BaseViewModel {
-extension TVShowDetailViewModel {
-  
-  public struct TVShowDetailInfo {
-    var id: Int
-    var backDropPath: URL?
-    var nameShow: String?
-    var yearsRelease: String?
-    var duration: String?
-    var genre: String?
-    var numberOfEpisodes: String?
-    var posterPath: URL?
-    var overView: String?
-    var score: String?
-    var maxScore: String = "/10"
-    var countVote: String?
-  }
-  
-  //  public struct Input {
-  //    let tapFavoriteButton = PublishSubject<Void>()
-  //    let tapWatchedButton = PublishSubject<Void>()
-  //    let didLoadView = BehaviorSubject<Bool>(value: false)
-  //  }
-  //
-  //  public struct Output {
-  //    let viewState: Observable<ViewState>
-  //    let isFavorite: Observable<Bool>
-  //    let isWatchList: Observable<Bool>
-  //  }
 }
 
 // MARK: - Navigation

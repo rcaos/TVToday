@@ -115,13 +115,21 @@ final class EpisodesListViewModel {
     Observable.zip(
       fetchDetailShowUseCase.execute(requestValue: requestDetailsShow),
       fetchEpisodesUseCase.execute(requestValue: requestFirstSeason))
-      .subscribe(onNext: { [weak self] (showDetails, firstSeason) in
+      .subscribe(onNext: { [weak self] (resultShowDetails, firstSeason) in
         guard let strongSelf = self else { return }
-        strongSelf.showDetailResult = showDetails
+       
+        // MARK: - TODO, refactor this
         
-        strongSelf.viewStateObservableSubject.onNext( .didLoadHeader )
-        strongSelf.processFetched(with: firstSeason)
-        strongSelf.selectFirstSeason()
+        switch resultShowDetails {
+        case .success(let detailResult):
+          //return Observable.just(.populated( TVShowDetailInfo(show: detailResult) ))
+          strongSelf.showDetailResult = detailResult
+          strongSelf.viewStateObservableSubject.onNext( .didLoadHeader )
+          strongSelf.processFetched(with: firstSeason)
+          strongSelf.selectFirstSeason()
+        case .failure(let error):
+          strongSelf.viewStateObservableSubject.onNext( .error(error.localizedDescription) )
+        }
         }, onError: {[weak self] error in
           guard let strongSelf = self else { return }
           strongSelf.viewStateObservableSubject.onNext( .error(error.localizedDescription) )

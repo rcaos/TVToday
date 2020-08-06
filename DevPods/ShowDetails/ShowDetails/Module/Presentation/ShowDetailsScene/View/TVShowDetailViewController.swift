@@ -163,7 +163,7 @@ class TVShowDetailViewController: UIViewController, StoryboardInstantiable, Load
     }
   }
   
-  private func setupUI(with show: TVShowDetailViewModel.TVShowDetailInfo) {
+  private func setupUI(with show: TVShowDetailInfo) {
     nameLabel.text = show.nameShow
     yearsRelease.text = show.yearsRelease
     

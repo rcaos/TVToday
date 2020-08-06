@@ -33,7 +33,7 @@ def showsList_pod
 end
 
 def showDetails_pod
-  pod 'ShowDetails', :path =>  'DevPods/ShowDetails'
+  pod 'ShowDetails', :path =>  'DevPods/ShowDetails', :testspecs => ['Tests']
 end
 
 def keychain_pod

@@ -12,7 +12,9 @@ import Persistence
 
 public protocol FetchTVShowDetailsUseCase {
   
-  func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> Observable<TVShowDetailResult>
+  typealias Response = Result<TVShowDetailResult, Error>
+  
+  func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> Observable<Response>
 }
 
 public struct FetchTVShowDetailsUseCaseRequestValue {
@@ -35,7 +37,7 @@ public final class DefaultFetchTVShowDetailsUseCase: FetchTVShowDetailsUseCase {
     self.tvShowsVisitedRepository = tvShowsVisitedRepository
   }
   
-  public func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> Observable<TVShowDetailResult> {
+  public func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> Observable<Response> {
     
     var idLogged = 0
     if let userLogged = keychainRepository.fetchLoguedUser() {
@@ -44,13 +46,14 @@ public final class DefaultFetchTVShowDetailsUseCase: FetchTVShowDetailsUseCase {
     
     return tvShowsRepository
       .fetchTVShowDetails(with: requestValue.identifier)
-      .flatMap { details -> Observable<TVShowDetailResult>  in
+      .flatMap { details -> Observable<Result<TVShowDetailResult, Error>>  in
         self.tvShowsVisitedRepository.saveShow(id: details.id ?? 0,
                                                pathImage: details.posterPath ?? "",
                                                userId: idLogged)
-          .flatMap { _ -> Observable<TVShowDetailResult> in
-            return Observable.just(details)
+          .flatMap { _ -> Observable<Result<TVShowDetailResult, Error>> in
+            return Observable.just(.success(details))
         }
     }
+    .catchErrorJustReturn(.failure(CustomError.genericError))
   }
 }

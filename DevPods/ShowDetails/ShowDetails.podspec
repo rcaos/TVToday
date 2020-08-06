@@ -44,4 +44,15 @@ TODO: Add long description of the pod here.
   s.dependency 'RxSwift', '~> 5.0.0'
   s.dependency 'RxCocoa', '~> 5.0.0'
   s.dependency 'RxDataSources', '~> 4.0.0'
+  
+  s.test_spec 'Tests' do |test_spec|
+    test_spec.source_files = 'ShowDetails/Tests/**/*.{swift}'
+
+    test_spec.dependency 'Quick'
+    test_spec.dependency 'Nimble'
+    test_spec.dependency 'iOSSnapshotTestCase'
+    
+    test_spec.dependency 'RxTest'
+    test_spec.dependency 'RxBlocking'
+  end
 end

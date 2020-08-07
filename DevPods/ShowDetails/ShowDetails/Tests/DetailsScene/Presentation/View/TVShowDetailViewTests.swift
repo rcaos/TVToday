@@ -7,7 +7,6 @@
 
 import FBSnapshotTestCase
 import RxSwift
-import RxCocoa
 
 @testable import ShowDetails
 @testable import Shared

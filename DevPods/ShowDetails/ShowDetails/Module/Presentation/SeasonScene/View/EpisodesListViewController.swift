@@ -15,13 +15,13 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable, Load
   
   @IBOutlet weak var tableView: UITableView!
   
-  private var viewModel: EpisodesListViewModel!
+  private var viewModel: EpisodesListViewModelProtocol!
   
   let loadingView = LoadingView(frame: .zero)
   let emptyView = MessageImageView(message: "No episodes available", image: "tvshowEmpty")
   let errorView = MessageImageView(message: "Unable to connect to server", image: "error")
   
-  static func create(with viewModel: EpisodesListViewModel) -> EpisodesListViewController {
+  static func create(with viewModel: EpisodesListViewModelProtocol) -> EpisodesListViewController {
     let controller = EpisodesListViewController.instantiateViewController()
     controller.viewModel = viewModel
     return controller
@@ -42,7 +42,7 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable, Load
     super.viewDidLoad()
     configureTable()
     setupBindables()
-    viewModel?.viewDidLoad()
+    viewModel.viewDidLoad()
     
     title = "All Episodes"
   }
@@ -68,7 +68,8 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable, Load
   }
   
   private func setupBindables() {
-    viewModel.output.viewState
+    viewModel
+      .viewState
       .subscribe(onNext: { [weak self] state in
         guard let strongSelf = self else { return }
         strongSelf.configureView(with: state)
@@ -86,7 +87,7 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable, Load
         }
     })
     
-    viewModel.output
+    viewModel
       .data
       .bind(to: tableView.rx.items(dataSource: dataSource) )
       .disposed(by: disposeBag)
@@ -104,25 +105,23 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable, Load
       tableView.separatorStyle = .none
       hideMessageView()
       
-    case .didLoadHeader :
-      hideLoadingView()
-      setupTableHeaderView()
-      hideMessageView()
-      
     case .populated :
       hideLoadingView()
+      setupTableHeaderView()
       tableView.tableFooterView = UIView()
       tableView.separatorStyle = .singleLine
       hideMessageView()
       
     case .loadingSeason:
       hideLoadingView()
+      setupTableHeaderView()
       tableView.tableFooterView = loadingView
       tableView.separatorStyle = .none
       hideMessageView()
       
     case .empty :
       hideLoadingView()
+      setupTableHeaderView()
       tableView.tableFooterView = emptyView
       tableView.separatorStyle = .none
       
@@ -137,6 +136,7 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable, Load
       
     case .errorSeason:
       hideLoadingView()
+      setupTableHeaderView()
       tableView.tableFooterView = errorView
       tableView.separatorStyle = .none
       hideMessageView()

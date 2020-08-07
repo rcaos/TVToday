@@ -13,7 +13,7 @@ public struct TVShowDetailResult {
   public let id: Int!
   public let name: String!
   public let firstAirDate: String?
-  public let lasttAirDate: String?
+  public let lastAirDate: String?
   public let episodeRunTime: [Int]?
   public let genreIds: [Genre]?
   public let numberOfEpisodes: Int?
@@ -38,7 +38,7 @@ extension TVShowDetailResult {
     
     var yearEnd = ""
     if let status = status, status == "Ended"{
-      yearEnd = getYear(from: lasttAirDate)
+      yearEnd = getYear(from: lastAirDate)
     } else {
       yearEnd = ""
     }

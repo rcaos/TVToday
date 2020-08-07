@@ -9,7 +9,12 @@
 import Foundation
 import Shared
 
-public final class SeasonHeaderViewModel {
+protocol SeasonHeaderViewModelProtocol {
+  
+  var showName: String { get }
+}
+
+public final class SeasonHeaderViewModel: SeasonHeaderViewModelProtocol {
   
   var showName: String  = ""
   

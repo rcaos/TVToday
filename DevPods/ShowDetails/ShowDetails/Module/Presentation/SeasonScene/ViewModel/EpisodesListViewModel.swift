@@ -9,7 +9,24 @@
 import RxSwift
 import Shared
 
-final class EpisodesListViewModel {
+protocol EpisodesListViewModelProtocol: SeasonListViewModelDelegate {
+  
+  // MARK: - Input
+  
+  func viewDidLoad()
+  func refreshView()
+  
+  // MARK: - Output
+  
+  func buildHeaderViewModel() -> SeasonHeaderViewModelProtocol?
+  func buildModelForSeasons(with numberOfSeasons: Int) -> SeasonListViewModelProtocol?
+  func getModel(for episode: EpisodeSectionModelType) -> EpisodeItemViewModel?
+  
+  var viewState: Observable<EpisodesListViewModel.ViewState> { get }
+  var data: Observable<[SeasonsSectionModel]> { get }
+}
+
+final class EpisodesListViewModel: EpisodesListViewModelProtocol {
   
   private let fetchDetailShowUseCase: FetchTVShowDetailsUseCase
   private let fetchEpisodesUseCase: FetchEpisodesUseCase
@@ -31,11 +48,13 @@ final class EpisodesListViewModel {
   
   private let seasonSelectedSubject = BehaviorSubject<Int>(value: 0)
   
-  private var seasonListViewModel: SeasonListViewModel?
+  private var seasonListViewModel: SeasonListViewModelProtocol?
   
-  // MARK: - Base ViewModel
-  var input: Input
-  var output: Output
+  // MARK: - Public Api
+  
+  var viewState: Observable<ViewState>
+  
+  var data: Observable<[SeasonsSectionModel]>
   
   // MARK: - Initializers
   
@@ -45,22 +64,14 @@ final class EpisodesListViewModel {
     self.fetchDetailShowUseCase = fetchDetailShowUseCase
     self.fetchEpisodesUseCase = fetchEpisodesUseCase
     
-    self.input = Input()
-    self.output = Output(
-      data: dataObservableSubject.asObservable(),
-      viewState: viewStateObservableSubject.asObservable())
+    data = dataObservableSubject.asObservable()
+    viewState = viewStateObservableSubject.asObservable()
     
     controlSeasons()
   }
   
   deinit {
     print("deinit \(Self.self)")
-  }
-  
-  fileprivate func controlSeasonSelected(with viewModel: SeasonListViewModel) {
-    viewModel.input.selectedSeason
-      .bind(to: seasonSelectedSubject)
-      .disposed(by: viewModel.disposeBag)
   }
   
   fileprivate func controlSeasons() {
@@ -117,22 +128,20 @@ final class EpisodesListViewModel {
       fetchEpisodesUseCase.execute(requestValue: requestFirstSeason))
       .subscribe(onNext: { [weak self] (resultShowDetails, firstSeason) in
         guard let strongSelf = self else { return }
-       
+        
         // MARK: - TODO, refactor this
         
         switch resultShowDetails {
         case .success(let detailResult):
-          //return Observable.just(.populated( TVShowDetailInfo(show: detailResult) ))
           strongSelf.showDetailResult = detailResult
-          strongSelf.viewStateObservableSubject.onNext( .didLoadHeader )
           strongSelf.processFetched(with: firstSeason)
           strongSelf.selectFirstSeason()
-        case .failure(let error):
-          strongSelf.viewStateObservableSubject.onNext( .error(error.localizedDescription) )
+        case .failure:
+          strongSelf.viewStateObservableSubject.onNext( .error(CustomError.genericError.localizedDescription) )
         }
         }, onError: {[weak self] error in
           guard let strongSelf = self else { return }
-          strongSelf.viewStateObservableSubject.onNext( .error(error.localizedDescription) )
+          strongSelf.viewStateObservableSubject.onNext( .error(CustomError.genericError.localizedDescription) )
       })
       .disposed(by: disposeBag)
   }
@@ -184,7 +193,7 @@ final class EpisodesListViewModel {
     viewStateObservableSubject.onNext( state )
   }
   
-  // MARK: - Public
+  // MARK: - Public Api
   
   func viewDidLoad() {
     fetchShowDetailsAndFirstSeason()
@@ -194,15 +203,15 @@ final class EpisodesListViewModel {
     fetchShowDetailsAndFirstSeason(showLoader: false)
   }
   
-  func buildHeaderViewModel() -> SeasonHeaderViewModel? {
+  func buildHeaderViewModel() -> SeasonHeaderViewModelProtocol? {
     guard let show = showDetailResult else { return nil }
     return SeasonHeaderViewModel(showDetail: show)
   }
   
-  func buildModelForSeasons(with numberOfSeasons: Int) -> SeasonListViewModel? {
+  func buildModelForSeasons(with numberOfSeasons: Int) -> SeasonListViewModelProtocol? {
     let seasons: [Int] = (1...numberOfSeasons).map { $0 }
-    seasonListViewModel = SeasonListViewModel(seasons: seasons)
-    controlSeasonSelected(with: seasonListViewModel!)
+    seasonListViewModel = SeasonListViewModel(seasonList: seasons)
+    seasonListViewModel?.delegate = self
     return seasonListViewModel
   }
   
@@ -211,29 +220,24 @@ final class EpisodesListViewModel {
   }
 }
 
+// MARK: - SeasonListViewModelDelegate
+
+extension EpisodesListViewModel {
+  
+  func seasonListViewModel(_ seasonListViewModel: SeasonListViewModelProtocol, didSelectSeason number: Int) {
+    seasonSelectedSubject.onNext(number)
+  }
+}
+
 extension EpisodesListViewModel {
   
   enum ViewState: Equatable {
     
     case loading
-    case didLoadHeader
     case populated
+    case error(String)
     case loadingSeason
     case empty
-    case error(String)
     case errorSeason(String)
-  }
-}
-
-// MARK: - BaseViewModel
-
-extension EpisodesListViewModel: BaseViewModel {
-  
-  public struct Input { }
-  
-  public struct Output {
-    let data: Observable<[SeasonsSectionModel]>
-    
-    let viewState: Observable<ViewState>
   }
 }

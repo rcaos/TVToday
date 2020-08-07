@@ -28,7 +28,7 @@ class TVShowDetailViewModelMock: TVShowDetailViewModelProtocol {
   var isFavorite = Observable<Bool>.just(false)
   var isWatchList = Observable<Bool>.just(false)
   
-  var viewStateObservableSubject: BehaviorSubject<TVShowDetailViewModel.ViewState>
+  private var viewStateObservableSubject: BehaviorSubject<TVShowDetailViewModel.ViewState>
   
   init(state: TVShowDetailViewModel.ViewState) {
     viewStateObservableSubject = BehaviorSubject(value: state)

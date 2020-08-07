@@ -15,7 +15,7 @@ class SeasonHeaderView: UIView, NibLoadable {
   @IBOutlet weak var showNameLabel: UILabel!
   @IBOutlet weak var seasonsLabel: UILabel!
   
-  var viewModel: SeasonHeaderViewModel? {
+  var viewModel: SeasonHeaderViewModelProtocol? {
     didSet {
       setupUI()
     }

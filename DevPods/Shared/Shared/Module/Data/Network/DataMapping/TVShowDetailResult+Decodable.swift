@@ -14,7 +14,7 @@ extension TVShowDetailResult: Decodable {
     case id
     case name
     case firstAirDate = "first_air_date"
-    case lasttAirDate = "last_air_date"
+    case lastAirDate = "last_air_date"
     case episodeRunTime = "episode_run_time"
     case genreIds = "genres"
     case numberOfEpisodes = "number_of_episodes"
@@ -36,7 +36,7 @@ extension TVShowDetailResult: Decodable {
     self.id = try container.decode(Int.self, forKey: .id)
     self.name = try container.decode(String.self, forKey: .name)
     self.firstAirDate = try container.decodeIfPresent(String.self, forKey: .firstAirDate)
-    self.lasttAirDate = try container.decodeIfPresent(String.self, forKey: .lasttAirDate)
+    self.lastAirDate = try container.decodeIfPresent(String.self, forKey: .lastAirDate)
     self.episodeRunTime = try container.decodeIfPresent([Int].self, forKey: .episodeRunTime)
     self.genreIds = try container.decodeIfPresent([Genre].self, forKey: .genreIds)
     self.numberOfEpisodes = try container.decodeIfPresent(Int.self, forKey: .numberOfEpisodes)

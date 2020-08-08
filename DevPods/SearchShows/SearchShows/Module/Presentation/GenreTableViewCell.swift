@@ -12,7 +12,7 @@ class GenreTableViewCell: UITableViewCell {
   
   @IBOutlet weak public var regularTextLabel: TVRegularLabel!
   
-  public var viewModel: GenreViewModel? {
+  public var viewModel: GenreViewModelProtocol? {
     didSet {
       setupUI()
     }
@@ -30,6 +30,6 @@ class GenreTableViewCell: UITableViewCell {
   }
   
   deinit {
-    print("deinit GenreTableViewCell")
+    print("deinit \(Self.self)")
   }
 }

@@ -7,7 +7,14 @@
 
 import Shared
 
-final class GenreViewModel {
+protocol GenreViewModelProtocol {
+  
+  var id: Int { get }
+  
+  var name: String { get }
+}
+
+final class GenreViewModel: GenreViewModelProtocol {
   
   let id: Int
   
@@ -20,12 +27,5 @@ final class GenreViewModel {
     
     id = genre.id
     name = genre.name
-  }
-}
-
-extension GenreViewModel: Equatable {
-  
-  public static func == (lhs: GenreViewModel, rhs: GenreViewModel) -> Bool {
-    return lhs.genre.id == rhs.genre.id
   }
 }

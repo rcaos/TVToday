@@ -1,21 +1,42 @@
 PODS:
-  - Account (0.1.0):
+  - AccountTV (0.1.0):
     - Networking
+    - Persistence
     - RxCocoa (~> 5.0.0)
     - RxDataSources (~> 4.0.0)
-    - RxFlow (~> 2.7.0)
     - RxSwift (~> 5.0.0)
     - Shared
     - TVShowsList
+    - UI
   - AiringToday (0.1.0):
     - Networking
+    - Persistence
     - RxCocoa (~> 5.0.0)
     - RxDataSources (~> 4.0.0)
-    - RxFlow (~> 2.7.0)
     - RxSwift (~> 5.0.0)
     - Shared
     - ShowDetails
+    - UI
+  - AiringToday/Tests (0.1.0):
+    - iOSSnapshotTestCase
+    - Networking
+    - Nimble
+    - Persistence
+    - Quick
+    - RxBlocking
+    - RxCocoa (~> 5.0.0)
+    - RxDataSources (~> 4.0.0)
+    - RxSwift (~> 5.0.0)
+    - RxTest
+    - Shared
+    - ShowDetails
+    - UI
   - Differentiator (4.0.1)
+  - iOSSnapshotTestCase (6.2.0):
+    - iOSSnapshotTestCase/SwiftSupport (= 6.2.0)
+  - iOSSnapshotTestCase/Core (6.2.0)
+  - iOSSnapshotTestCase/SwiftSupport (6.2.0):
+    - iOSSnapshotTestCase/Core
   - KeyChainStorage (0.1.0):
     - KeychainSwift (~> 14.0)
   - KeychainSwift (14.0.2)
@@ -24,84 +45,163 @@ PODS:
   - Kingfisher/Core (5.13.4)
   - Networking (0.1.0):
     - RxSwift (~> 5.0.0)
+  - Nimble (8.0.9)
+  - Persistence (0.1.0):
+    - RxSwift (~> 5.0.0)
+    - Shared
   - PopularShows (0.1.0):
     - Networking
+    - Persistence
     - RxCocoa (~> 5.0.0)
     - RxDataSources (~> 4.0.0)
-    - RxFlow (~> 2.7.0)
     - RxSwift (~> 5.0.0)
     - Shared
     - ShowDetails
-  - RxCocoa (5.0.0):
+  - PopularShows/Tests (0.1.0):
+    - iOSSnapshotTestCase
+    - Networking
+    - Nimble
+    - Persistence
+    - Quick
+    - RxBlocking
+    - RxCocoa (~> 5.0.0)
+    - RxDataSources (~> 4.0.0)
+    - RxSwift (~> 5.0.0)
+    - RxTest
+    - Shared
+    - ShowDetails
+  - Quick (2.2.0)
+  - Realm (5.0.2):
+    - Realm/Headers (= 5.0.2)
+  - Realm/Headers (5.0.2)
+  - RealmPersistence (0.1.0):
+    - Persistence
+    - RealmSwift
+    - RxSwift (~> 5.0.0)
+  - RealmSwift (5.0.2):
+    - Realm (= 5.0.2)
+  - RxBlocking (5.1.1):
+    - RxSwift (~> 5)
+  - RxCocoa (5.0.1):
     - RxRelay (~> 5)
     - RxSwift (~> 5)
-  - RxDataSources (4.0.0):
+  - RxDataSources (4.0.1):
     - Differentiator (~> 4.0)
     - RxCocoa (~> 5.0)
     - RxSwift (~> 5.0)
-  - RxFlow (2.7.0):
-    - RxCocoa (>= 5.0.0)
-    - RxSwift (>= 5.0.0)
   - RxRelay (5.1.1):
     - RxSwift (~> 5)
-  - RxSwift (5.0.0)
+  - RxSwift (5.0.1)
+  - RxTest (5.1.1):
+    - RxSwift (~> 5)
   - SearchShows (0.1.0):
     - Networking
+    - Persistence
     - RxCocoa (~> 5.0.0)
     - RxDataSources (~> 4.0.0)
-    - RxFlow (~> 2.7.0)
     - RxSwift (~> 5.0.0)
+    - Shared
+    - TVShowsList
+  - SearchShows/Tests (0.1.0):
+    - iOSSnapshotTestCase
+    - Networking
+    - Nimble
+    - Persistence
+    - Quick
+    - RxBlocking
+    - RxCocoa (~> 5.0.0)
+    - RxDataSources (~> 4.0.0)
+    - RxSwift (~> 5.0.0)
+    - RxTest
     - Shared
     - TVShowsList
   - Shared (0.1.0):
     - KeyChainStorage
     - Kingfisher (~> 5.13.0)
     - Networking
-    - RxFlow (~> 2.7.0)
+    - UI
   - ShowDetails (0.1.0):
     - Networking
+    - Persistence
     - RxCocoa (~> 5.0.0)
     - RxDataSources (~> 4.0.0)
-    - RxFlow (~> 2.7.0)
     - RxSwift (~> 5.0.0)
     - Shared
-  - TVShowsList (0.1.0):
+    - UI
+  - ShowDetails/Tests (0.1.0):
+    - iOSSnapshotTestCase
     - Networking
+    - Nimble
+    - Persistence
+    - Quick
+    - RxBlocking
     - RxCocoa (~> 5.0.0)
     - RxDataSources (~> 4.0.0)
-    - RxFlow (~> 2.7.0)
+    - RxSwift (~> 5.0.0)
+    - RxTest
+    - Shared
+    - UI
+  - TVShowsList (0.1.0):
+    - Networking
+    - Persistence
+    - RxCocoa (~> 5.0.0)
+    - RxDataSources (~> 4.0.0)
     - RxSwift (~> 5.0.0)
     - Shared
     - ShowDetails
+  - TVShowsList/Tests (0.1.0):
+    - iOSSnapshotTestCase
+    - Networking
+    - Nimble
+    - Persistence
+    - Quick
+    - RxBlocking
+    - RxCocoa (~> 5.0.0)
+    - RxDataSources (~> 4.0.0)
+    - RxSwift (~> 5.0.0)
+    - RxTest
+    - Shared
+    - ShowDetails
+  - UI (0.1.0)
 
 DEPENDENCIES:
-  - Account (from `DevPods/Account`)
+  - AccountTV (from `DevPods/Account`)
   - AiringToday (from `DevPods/AiringToday`)
+  - AiringToday/Tests (from `DevPods/AiringToday`)
   - KeyChainStorage (from `DevPods/KeyChainStorage`)
   - Networking (from `DevPods/Networking`)
+  - Persistence (from `DevPods/Persistence`)
   - PopularShows (from `DevPods/PopularShows`)
-  - RxCocoa (= 5.0.0)
-  - RxDataSources (= 4.0.0)
-  - RxFlow (= 2.7.0)
-  - RxSwift (= 5.0.0)
+  - PopularShows/Tests (from `DevPods/PopularShows`)
+  - RealmPersistence (from `DevPods/RealmPersistence`)
   - SearchShows (from `DevPods/SearchShows`)
+  - SearchShows/Tests (from `DevPods/SearchShows`)
   - Shared (from `DevPods/Shared`)
   - ShowDetails (from `DevPods/ShowDetails`)
+  - ShowDetails/Tests (from `DevPods/ShowDetails`)
   - TVShowsList (from `DevPods/TVShowsList`)
+  - TVShowsList/Tests (from `DevPods/TVShowsList`)
+  - UI (from `DevPods/UI`)
 
 SPEC REPOS:
   trunk:
     - Differentiator
+    - iOSSnapshotTestCase
     - KeychainSwift
     - Kingfisher
+    - Nimble
+    - Quick
+    - Realm
+    - RealmSwift
+    - RxBlocking
     - RxCocoa
     - RxDataSources
-    - RxFlow
     - RxRelay
     - RxSwift
+    - RxTest
 
 EXTERNAL SOURCES:
-  Account:
+  AccountTV:
     :path: DevPods/Account
   AiringToday:
     :path: DevPods/AiringToday
@@ -109,8 +209,12 @@ EXTERNAL SOURCES:
     :path: DevPods/KeyChainStorage
   Networking:
     :path: DevPods/Networking
+  Persistence:
+    :path: DevPods/Persistence
   PopularShows:
     :path: DevPods/PopularShows
+  RealmPersistence:
+    :path: DevPods/RealmPersistence
   SearchShows:
     :path: DevPods/SearchShows
   Shared:
@@ -119,26 +223,37 @@ EXTERNAL SOURCES:
     :path: DevPods/ShowDetails
   TVShowsList:
     :path: DevPods/TVShowsList
+  UI:
+    :path: DevPods/UI
 
 SPEC CHECKSUMS:
-  Account: 3145fdb23377c8e3bae824cedd31d7762100e2bf
-  AiringToday: 4583886e82caeb0a1a9d83c63853535fa7e7c80d
+  AccountTV: 71158ccdc7de8494ef869776a3fc2894d0416f62
+  AiringToday: 096d38ed792775c962715780b0ea12b6ad287a87
   Differentiator: 886080237d9f87f322641dedbc5be257061b0602
+  iOSSnapshotTestCase: 9ab44cb5aa62b84d31847f40680112e15ec579a6
   KeyChainStorage: 641120d8b3d3cbdf9605c21a6daa7d327fafb262
   KeychainSwift: b90e7ed24e6ec9f98c304b580c86a3ada081a3e5
   Kingfisher: d2279a7abece3c7f25a80cd2b7f363ca5cf3f44c
   Networking: ac58503fe5f1b6d04d6414932d398eb0b2c9f746
-  PopularShows: ecdfe462adbe8ac3153e48eb90053ed9758edac7
-  RxCocoa: fcf32050ac00d801f34a7f71d5e8e7f23026dcd8
-  RxDataSources: 38b21b38b9fe646d3bf2641f1720efa05ef1add5
-  RxFlow: 605ef6364d7e937bea8f9507a1e99a431cdc2493
+  Nimble: 98b888285a615fd34f20e61753cf58ea1402bde4
+  Persistence: 5dc010c9cae0f241c9ebd5fc5f474423e976e63f
+  PopularShows: 3d7a2aa50d17b6e4329394b1e878a52055a8d144
+  Quick: 7fb19e13be07b5dfb3b90d4f9824c855a11af40e
+  Realm: 6b6f096671b64b04d08974177cabb2ff9343d153
+  RealmPersistence: 397ed107fc73f41c5aa5069f0564903f47904c72
+  RealmSwift: a3db6be0488bf3e1d5314c2956cefe98a65cdd01
+  RxBlocking: 5f700a78cad61ce253ebd37c9a39b5ccc76477b4
+  RxCocoa: e741b9749968e8a143e2b787f1dfbff2b63d0a5c
+  RxDataSources: efee07fa4de48477eca0a4611e6d11e2da9c1114
   RxRelay: d77f7d771495f43c556cbc43eebd1bb54d01e8e9
-  RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
-  SearchShows: b21fab355c73d4b80cdd54077150026e95903479
-  Shared: 07fb407132d1ef0989e9f205e2a6fea0dcc0766f
-  ShowDetails: 4ca2e9e6c780bad4ae7b7edfa542fd1155deada7
-  TVShowsList: de4df48fe50d7fd762e177ade548ceb844af49f5
+  RxSwift: e2dc62b366a3adf6a0be44ba9f405efd4c94e0c4
+  RxTest: 711632d5644dffbeb62c936a521b5b008a1e1faa
+  SearchShows: 88a34ba01cf93cff7624b130cb9a55f386b94ef4
+  Shared: 0f8f9cf5d35ee48782545d31d341eb6561b163c7
+  ShowDetails: c5294ceaff76ae438c2df574705795be05203e3c
+  TVShowsList: 9f6a74844f1fd1cf1e6410706f79aefef0bd5545
+  UI: e4bb340d016186906a94c1acf88a4c3e630e3051
 
-PODFILE CHECKSUM: 5abb51ee76e970adcb3f43077be17a94826dbad5
+PODFILE CHECKSUM: 666a5ccdd464a87ce0418f7f4677cbb69221d786
 
 COCOAPODS: 1.9.1

@@ -35,7 +35,7 @@ class TVShowListViewModelTests: QuickSpec {
   let emptyPage = TVShowResult.stub(page: 1, results: [], totalResults: 0, totalPages: 1)
   
   override func spec() {
-    describe("PopularsViewModel") {
+    describe("TVShowListViewModel") {
       var fetchUseCaseMock: FetchShowsUseCaseMock!
       beforeEach {
         fetchUseCaseMock = FetchShowsUseCaseMock()
@@ -46,7 +46,8 @@ class TVShowListViewModelTests: QuickSpec {
           // given
           // not response yet
           
-          let viewModel: TVShowListViewModelProtocol = TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
+          let viewModel: TVShowListViewModelProtocol =
+            TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
           
           // when
           viewModel.viewDidLoad()
@@ -69,7 +70,8 @@ class TVShowListViewModelTests: QuickSpec {
           fetchUseCaseMock.result = self.firstPage
           let firstPageCells = self.firstPage.results!.map { TVShowCellViewModel(show: $0) }
           
-          let viewModel: TVShowListViewModelProtocol = TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
+          let viewModel: TVShowListViewModelProtocol =
+            TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
           
           // when
           viewModel.viewDidLoad()
@@ -95,7 +97,8 @@ class TVShowListViewModelTests: QuickSpec {
           // given
           fetchUseCaseMock.result = self.firstPage
           
-          let viewModel: TVShowListViewModelProtocol = TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
+          let viewModel: TVShowListViewModelProtocol =
+            TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
           
           // when
           viewModel.viewDidLoad()
@@ -119,7 +122,8 @@ class TVShowListViewModelTests: QuickSpec {
           // given
           fetchUseCaseMock.error = CustomError.genericError
           
-          let viewModel: TVShowListViewModelProtocol = TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
+          let viewModel: TVShowListViewModelProtocol =
+            TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
           
           // when
           viewModel.viewDidLoad()
@@ -141,7 +145,8 @@ class TVShowListViewModelTests: QuickSpec {
           // given
           fetchUseCaseMock.result = self.emptyPage
           
-          let viewModel: TVShowListViewModelProtocol = TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
+          let viewModel: TVShowListViewModelProtocol =
+            TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
           
           // when
           viewModel.viewDidLoad()

@@ -39,7 +39,8 @@ class AiringTodayViewTests: FBSnapshotTestCase {
   
   func test_WhenViewIsLoading_thenShowLoadingScreen() {
     // given
-    let viewController = PopularsViewController.create(with: PopularViewModelMock(state: .loading) )
+    let viewModel = PopularViewModelMock(state: .loading)
+    let viewController = PopularsViewController.create(with: viewModel)
     
     FBSnapshotVerifyView(viewController.view)
   }
@@ -49,7 +50,8 @@ class AiringTodayViewTests: FBSnapshotTestCase {
     let firsPageCells = firstPage.results!.map { TVShowCellViewModel(show: $0) }
     
     // given
-    let viewController = PopularsViewController.create(with: PopularViewModelMock(state: .paging(firsPageCells, next: 2) ) )
+    let viewModel = PopularViewModelMock(state: .paging(firsPageCells, next: 2) )
+    let viewController = PopularsViewController.create(with: viewModel)
     
     FBSnapshotVerifyView(viewController.view)
   }
@@ -57,55 +59,28 @@ class AiringTodayViewTests: FBSnapshotTestCase {
   func test_WhenViewPopulated_thenShowPopulatedScreen() {
     
     let totalCells = (self.firstPage.results + self.secondPage.results)
-               .map { TVShowCellViewModel(show: $0) }
+      .map { TVShowCellViewModel(show: $0) }
     
     // given
-    let viewController = PopularsViewController.create(with: PopularViewModelMock(state: .populated(totalCells) ) )
+    let viewModel = PopularViewModelMock(state: .populated(totalCells) )
+    let viewController = PopularsViewController.create(with: viewModel)
     
     FBSnapshotVerifyView(viewController.view)
   }
   
   func test_WhenViewIsEmpty_thenShowEmptyScreen() {
     // given
-    let viewController = PopularsViewController.create(with: PopularViewModelMock(state: .empty ) )
+    let viewModel = PopularViewModelMock(state: .empty)
+    let viewController = PopularsViewController.create(with: viewModel)
     
     FBSnapshotVerifyView(viewController.view)
   }
   
   func test_WhenViewIsError_thenShowErrorScreen() {
     // given
-    let viewController = PopularsViewController.create(with: PopularViewModelMock(state: .error("Error to Fetch Shows") ) )
+    let viewModel = PopularViewModelMock(state: .error("Error to Fetch Shows") )
+    let viewController = PopularsViewController.create(with: viewModel)
     
     FBSnapshotVerifyView(viewController.view)
-  }
-  
-}
-
-// MARK: AiringTodayViewModelProtocol
-
-class PopularViewModelMock: PopularViewModelProtocol {
-  
-  func viewDidLoad() { }
-  
-  func didLoadNextPage() { }
-  
-  func showIsPicked(with id: Int) { }
-  
-  func refreshView() { }
-  
-  func getCurrentViewState() -> SimpleViewState<TVShowCellViewModel> {
-    if let currentViewState = try? viewStateObservableSubject.value() {
-      return currentViewState
-    }
-    return .empty
-  }
-  
-  var viewState: Observable<SimpleViewState<TVShowCellViewModel>>
-  
-  var viewStateObservableSubject: BehaviorSubject<SimpleViewState<TVShowCellViewModel>>
-  
-  init(state: SimpleViewState<TVShowCellViewModel>) {
-    viewStateObservableSubject = BehaviorSubject(value: state)
-    viewState = viewStateObservableSubject.asObservable()
   }
 }

@@ -11,7 +11,7 @@ import Shared
 
 final class SearchViewModel {
   
-  private var resultsViewModel: ResultsSearchViewModel
+  private var resultsViewModel: ResultsSearchViewModelProtocol
   
   private var searchBarTextSubject: BehaviorSubject<String> = .init(value: "")
   
@@ -23,7 +23,7 @@ final class SearchViewModel {
   
   // MARK: - Initializer
   
-  init(resultsViewModel: ResultsSearchViewModel, coordinator: SearchCoordinatorProtocol?) {
+  init(resultsViewModel: ResultsSearchViewModelProtocol, coordinator: SearchCoordinatorProtocol?) {
     self.resultsViewModel = resultsViewModel
     self.coordinator = coordinator
     self.input = Input()
@@ -74,12 +74,12 @@ extension SearchViewModel: SearchOptionsViewModelDelegate {
 
 extension SearchViewModel: ResultsSearchViewModelDelegate {
   
-  func resultsSearchViewModel(_ resultsSearchViewModel: ResultsSearchViewModel,
+  func resultsSearchViewModel(_ resultsSearchViewModel: ResultsSearchViewModelProtocol,
                               didSelectShow idShow: Int) {
     navigateTo(step: .showIsPicked(withId: idShow))
   }
   
-  func resultsSearchViewModel(_ resultsSearchViewModel: ResultsSearchViewModel,
+  func resultsSearchViewModel(_ resultsSearchViewModel: ResultsSearchViewModelProtocol,
                               didSelectRecentSearch query: String) {
     searchBarTextSubject.onNext(query)
     startSearch(with: query)

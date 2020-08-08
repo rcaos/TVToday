@@ -25,7 +25,7 @@ def popularShows_pod
 end
 
 def searchShows_pod
-  pod 'SearchShows', :path =>  'DevPods/SearchShows'
+  pod 'SearchShows', :path =>  'DevPods/SearchShows', :testspecs => ['Tests']
 end
 
 def showsList_pod

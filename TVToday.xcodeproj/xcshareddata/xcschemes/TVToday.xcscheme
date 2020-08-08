@@ -176,7 +176,7 @@
          </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
-            buildForRunning = "NO"
+            buildForRunning = "YES"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
             buildForAnalyzing = "NO">
@@ -204,7 +204,7 @@
          </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
-            buildForRunning = "NO"
+            buildForRunning = "YES"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
             buildForAnalyzing = "NO">
@@ -218,7 +218,7 @@
          </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
-            buildForRunning = "NO"
+            buildForRunning = "YES"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
             buildForAnalyzing = "NO">
@@ -232,7 +232,7 @@
          </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
-            buildForRunning = "NO"
+            buildForRunning = "YES"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
             buildForAnalyzing = "NO">
@@ -241,6 +241,20 @@
                BlueprintIdentifier = "94CBF887B2A1C0ED1FC3ADCA1B8B41D3"
                BuildableName = "ShowDetails-Unit-Tests.xctest"
                BlueprintName = "ShowDetails-Unit-Tests"
+               ReferencedContainer = "container:Pods/Pods.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D24597419BFF790EC91CC4423ABD9840"
+               BuildableName = "SearchShows-Unit-Tests.xctest"
+               BlueprintName = "SearchShows-Unit-Tests"
                ReferencedContainer = "container:Pods/Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -282,6 +296,13 @@
             BlueprintName = "ShowDetails"
             ReferencedContainer = "container:Pods/Pods.xcodeproj">
          </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "5A8F4C9DE575CFEA9835DBCAEF05CE87"
+            BuildableName = "SearchShows.framework"
+            BlueprintName = "SearchShows"
+            ReferencedContainer = "container:Pods/Pods.xcodeproj">
+         </BuildableReference>
       </CodeCoverageTargets>
       <Testables>
          <TestableReference
@@ -321,6 +342,16 @@
                BlueprintIdentifier = "94CBF887B2A1C0ED1FC3ADCA1B8B41D3"
                BuildableName = "ShowDetails-Unit-Tests.xctest"
                BlueprintName = "ShowDetails-Unit-Tests"
+               ReferencedContainer = "container:Pods/Pods.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D24597419BFF790EC91CC4423ABD9840"
+               BuildableName = "SearchShows-Unit-Tests.xctest"
+               BlueprintName = "SearchShows-Unit-Tests"
                ReferencedContainer = "container:Pods/Pods.xcodeproj">
             </BuildableReference>
          </TestableReference>

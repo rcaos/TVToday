@@ -84,12 +84,12 @@ final class DIContainer {
   
   // MARK: - Search Feature View Models
   
-  fileprivate func buildResultsViewModel() -> ResultsSearchViewModel {
-    return ResultsSearchViewModel(fetchTVShowsUseCase: makeSearchShowsUseCase(),
+  fileprivate func buildResultsViewModel() -> ResultsSearchViewModelProtocol {
+    return ResultsSearchViewModel(searchTVShowsUseCase: makeSearchShowsUseCase(),
                                   fetchRecentSearchsUseCase: makeFetchSearchsUseCase())
   }
   
-  fileprivate func buildSearchController(with viewModel: ResultsSearchViewModel) -> UISearchController {
+  fileprivate func buildSearchController(with viewModel: ResultsSearchViewModelProtocol) -> UISearchController {
     let resultsController = ResultsSearchViewController(viewModel: viewModel)
     let searchController = UISearchController(searchResultsController: resultsController)
     return searchController
@@ -110,7 +110,7 @@ final class DIContainer {
 extension DIContainer: SearchCoordinatorDependencies {
   
   func buildSearchViewController(coordinator: SearchCoordinatorProtocol?) -> UIViewController {
-    let resultsSearchViewModel = buildResultsViewModel()
+    var resultsSearchViewModel = buildResultsViewModel()
     let viewModel = SearchViewModel(resultsViewModel: resultsSearchViewModel,
                                     coordinator: coordinator)
     resultsSearchViewModel.delegate = viewModel

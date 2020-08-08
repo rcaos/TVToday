@@ -25,8 +25,8 @@ enum SearchOptionsSectionModel {
 
 enum SearchSectionItem {
   case
-  showsVisited(items: VisitedShowViewModel),
-  genres(items: GenreViewModel)
+  showsVisited(items: VisitedShowViewModelProtocol),
+  genres(items: GenreViewModelProtocol)
 }
 
 extension SearchOptionsSectionModel: SectionModelType {

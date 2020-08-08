@@ -27,7 +27,7 @@ class EpisodesListViewModelTests: QuickSpec {
   }()
   
   override func spec() {
-    describe("TVShowDetailViewModel for Guest Users") {
+    describe("EpisodesListViewModel") {
       var fetchTVShowDetailsUseCaseMock: FetchTVShowDetailsUseCaseMock!
       var fetchEpisodesUseCaseMock: FetchEpisodesUseCaseMock!
       
@@ -360,7 +360,7 @@ class EpisodesListViewModelTests: QuickSpec {
           let secondSeasonResult = SeasonResult(id: "2", episodes: self.episodes, seasonNumber: 2)
           fetchEpisodesUseCaseMock.result = secondSeasonResult
           fetchEpisodesUseCaseMock.error = nil
-
+          
           // select next Season
           viewModel.seasonListViewModel(seasonViewModel, didSelectSeason: 2)
           

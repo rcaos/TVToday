@@ -14,11 +14,9 @@ class SeasonListTableViewCell: UITableViewCell {
   
   @IBOutlet weak var collectionView: UICollectionView!
   
-  var viewModel: SeasonListViewModel? {
+  var viewModel: SeasonListViewModelProtocol? {
     didSet {
-      DispatchQueue.main.async { [weak self] in
-        self?.setupBindables()
-      }
+      setupBindables()
     }
   }
   
@@ -45,23 +43,21 @@ class SeasonListTableViewCell: UITableViewCell {
     
     let dataSource = RxCollectionViewSectionedReloadDataSource<SectionSeasonsList>(configureCell: configureCollectionViewCell())
     
-    viewModel.output
+    viewModel
       .seasons
       .map { [SectionSeasonsList(header: "Seasons", items: $0 )] }
       .bind(to: collectionView.rx.items(dataSource: dataSource) )
       .disposed(by: disposeBag)
     
     collectionView.rx.modelSelected(Int.self)
-      .bind(to: viewModel.input.selectedSeason)
+      .bind(to: viewModel.inputSelectedSeason)
       .disposed(by: disposeBag)
     
-    viewModel.output.seasonSelected
+    viewModel
+      .seasonSelected
       .filter { $0 > 0 }
       .subscribe(onNext: { [weak self] season in
-        guard let strongSelf = self else { return }
-        DispatchQueue.main.async {
-          strongSelf.selectedSeason(at: season)
-        }
+        self?.selectedSeason(at: season)
       })
       .disposed(by: disposeBag)
   }

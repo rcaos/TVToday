@@ -12,13 +12,13 @@ import Shared
 
 class AccountViewController: UIViewController, StoryboardInstantiable {
   
-  private var viewModel: AccountViewModel!
+  private var viewModel: AccountViewModelProtocol!
   
   private var signInViewController: SignInViewController!
   
   private var profileViewController: ProfileViewController!
   
-  static func create(with viewModel: AccountViewModel,
+  static func create(with viewModel: AccountViewModelProtocol,
                      signInViewController: SignInViewController,
                      profileViewController: ProfileViewController) -> AccountViewController {
     let controller = AccountViewController.instantiateViewController()
@@ -34,22 +34,21 @@ class AccountViewController: UIViewController, StoryboardInstantiable {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    view.backgroundColor = .cyan
-    
     subscribe()
   }
   
   // MARK: - Setup UI
   
   fileprivate func subscribe() {
-    viewModel.output.viewState
+    viewModel
+      .viewState
       .subscribe(onNext: { [weak self] viewState in
         self?.setupUI(with: viewState)
       })
       .disposed(by: disposeBag)
   }
   
-  fileprivate func setupUI(with state: AccountViewModel.ViewState) {
+  fileprivate func setupUI(with state: AccountViewState) {
     switch state {
     case .login:
       remove(asChildViewController: profileViewController)

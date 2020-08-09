@@ -6,6 +6,8 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
+// MARK: - TODO, DELETE!
+
 public protocol BaseViewModel {
   
   associatedtype Input

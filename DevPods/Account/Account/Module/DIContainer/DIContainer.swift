@@ -83,14 +83,13 @@ final class DIContainer {
 extension DIContainer: AccountCoordinatorDependencies {
   
   func buildAccountViewController(coordinator: AccountCoordinatorProtocol?) -> UIViewController {
-    let signViewModel = SignInViewModel()
+    let signViewModel = SignInViewModel(createTokenUseCase: makeCreateTokenUseCase())
     let signInViewController = SignInViewController.create(with: signViewModel)
     
     let profileViewModel = ProfileViewModel()
     let profileViewController = ProfileViewController.create(with: profileViewModel)
     
-    let accountViewModel = AccountViewModel(requestToken: makeCreateTokenUseCase(),
-                                            createNewSession: makeCreateSessionUseCase(),
+    let accountViewModel = AccountViewModel(createNewSession: makeCreateSessionUseCase(),
                                             fetchAccountDetails: makeFetchAccountDetailsUseCase(),
                                             fetchLoggedUser: makeFetchLoggedUserUseCase(),
                                             deleteLoguedUser: makeDeleteLoguedUserUseCase(),

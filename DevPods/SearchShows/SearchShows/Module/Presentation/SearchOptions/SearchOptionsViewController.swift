@@ -15,13 +15,13 @@ class SearchOptionsViewController: UIViewController, StoryboardInstantiable, Loa
   
   @IBOutlet var tableView: UITableView!
   
-  private var viewModel: SearchOptionsViewModel!
+  private var viewModel: SearchOptionsViewModelProtocol!
   
   private var messageView = MessageView(frame: .zero)
   
   private let disposeBag = DisposeBag()
   
-  static func create(with viewModel: SearchOptionsViewModel) -> SearchOptionsViewController {
+  static func create(with viewModel: SearchOptionsViewModelProtocol) -> SearchOptionsViewController {
     let controller = SearchOptionsViewController.instantiateViewController(fromStoryBoard: "SearchViewController")
     controller.viewModel = viewModel
     return controller
@@ -48,12 +48,12 @@ class SearchOptionsViewController: UIViewController, StoryboardInstantiable, Loa
   
   private func registerCells() {
     tableView.registerNib(cellType: VisitedShowTableViewCell.self)
-    tableView.registerNib(cellType: GenericViewCell.self)
+    tableView.registerNib(cellType: GenreTableViewCell.self)
     tableView.rowHeight = UITableView.automaticDimension
   }
   
   private func bindViewState() {
-    viewModel.output.viewState
+    viewModel.viewState
       .subscribe(onNext: { [weak self] state in
         guard let strongSelf = self else { return }
         strongSelf.handleTableState(with: state)
@@ -74,7 +74,7 @@ class SearchOptionsViewController: UIViewController, StoryboardInstantiable, Loa
         case .showsVisited(items: let viewModel):
           return strongSelf.makeCellForShowVisited(at: indexPath, cellViewModel: viewModel)
         case .genres(items: let genre):
-          return strongSelf.makeCellForGenre(at: indexPath, element: genre)
+          return strongSelf.makeCellForGenre(at: indexPath, viewModel: genre)
         }
     })
     
@@ -82,7 +82,7 @@ class SearchOptionsViewController: UIViewController, StoryboardInstantiable, Loa
       return dataSource.sectionModels[section].getHeader()
     }
     
-    viewModel.output
+    viewModel
       .dataSource
       .bind(to: tableView.rx.items(dataSource: dataSource))
       .disposed(by: disposeBag)
@@ -99,7 +99,7 @@ class SearchOptionsViewController: UIViewController, StoryboardInstantiable, Loa
     .disposed(by: disposeBag)
   }
   
-  private func handleTableState(with state: SimpleViewState<Genre>) {
+  private func handleTableState(with state: SearchViewState) {
     hideLoadingView()
     
     switch state {
@@ -107,10 +107,6 @@ class SearchOptionsViewController: UIViewController, StoryboardInstantiable, Loa
       showLoadingView()
       tableView.tableFooterView = nil
       tableView.separatorStyle = .none
-      
-    case .paging:
-      tableView.tableFooterView = LoadingView.defaultView
-      tableView.separatorStyle = .singleLine
       
     case .populated:
       tableView.tableFooterView = nil
@@ -133,16 +129,15 @@ class SearchOptionsViewController: UIViewController, StoryboardInstantiable, Loa
 
 extension SearchOptionsViewController {
   
-  private func makeCellForShowVisited(at indexPath: IndexPath, cellViewModel: VisitedShowViewModel) -> UITableViewCell {
+  private func makeCellForShowVisited(at indexPath: IndexPath, cellViewModel: VisitedShowViewModelProtocol) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: VisitedShowTableViewCell.self, for: indexPath)
-    cellViewModel.delegate = viewModel
     cell.setupCell(with: cellViewModel)
     return cell
   }
   
-  private func makeCellForGenre(at indexPath: IndexPath, element: Genre) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(with: GenericViewCell.self, for: indexPath)
-    cell.title = element.name
+  private func makeCellForGenre(at indexPath: IndexPath, viewModel: GenreViewModelProtocol) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCell(with: GenreTableViewCell.self, for: indexPath)
+    cell.viewModel = viewModel
     return cell
   }
 }

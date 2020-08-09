@@ -9,14 +9,14 @@
 import Foundation
 import Shared
 
-public final class AiringTodayCollectionViewModel {
+final class AiringTodayCollectionViewModel {
   
   let show: TVShow
   
-  public var showName: String?
-  public var average: String?
+  var showName: String?
+  var average: String?
   
-  public var posterURL: URL?
+  var posterURL: URL?
   
   // MARK: - Initializers
   
@@ -26,13 +26,20 @@ public final class AiringTodayCollectionViewModel {
   }
   
   fileprivate func setup() {
-    self.showName = show.name ?? ""
+    showName = show.name ?? ""
     
     if let average = show.voteAverage {
       self.average = String(average)
     } else {
       average = "0.0"
     }
-    self.posterURL = show.backDropPathURL
+    posterURL = show.backDropPathURL
+  }
+}
+
+extension AiringTodayCollectionViewModel: Equatable {
+  
+  public static func == (lhs: AiringTodayCollectionViewModel, rhs: AiringTodayCollectionViewModel) -> Bool {
+    return lhs.show.id == rhs.show.id
   }
 }

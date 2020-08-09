@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum SimpleViewState<Entity> {
+public enum SimpleViewState<Entity: Equatable> {
   
   case loading
   case paging([Entity], next: Int)
@@ -38,5 +38,27 @@ public enum SimpleViewState<Entity> {
   
   public var isInitialPage: Bool {
     return currentPage == 1
+  }
+}
+
+extension SimpleViewState: Equatable {
+  
+  static public func == (lhs: SimpleViewState<Entity>, rhs: SimpleViewState<Entity>) -> Bool {
+    switch (lhs, rhs) {
+    case (.loading, .loading):
+      return true
+    case (let .paging(lhsShows, lNextPage), let .paging(rhsShows, rNextPage)):
+      return (lhsShows == rhsShows) && (lNextPage == rNextPage)
+    case (let .populated(lhShows), let .populated(rhShows)):
+      return lhShows == rhShows
+      
+    case (.empty, .empty):
+      return true
+    case (.error, .error):
+      return true
+      
+    default:
+      return false
+    }
   }
 }

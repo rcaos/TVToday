@@ -22,16 +22,16 @@
          </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
-            buildForRunning = "YES"
+            buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
+            buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "607FACE41AFB9204008FA782"
-               BuildableName = "AiringToday_Tests.xctest"
-               BlueprintName = "AiringToday_Tests"
-               ReferencedContainer = "container:AiringToday.xcodeproj">
+               BlueprintIdentifier = "2539B5542240B598247987BC3E77C0E2"
+               BuildableName = "AiringToday-Unit-Tests.xctest"
+               BlueprintName = "AiringToday-Unit-Tests"
+               ReferencedContainer = "container:../../../Pods/Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -40,7 +40,9 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      codeCoverageEnabled = "YES"
+      onlyGenerateCoverageForSpecifiedTargets = "YES">
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
@@ -50,7 +52,26 @@
             ReferencedContainer = "container:AiringToday.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
+      <CodeCoverageTargets>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "94CAB0A56C8C9176AF6205EA2B2F6858"
+            BuildableName = "AiringToday.framework"
+            BlueprintName = "AiringToday"
+            ReferencedContainer = "container:../../../Pods/Pods.xcodeproj">
+         </BuildableReference>
+      </CodeCoverageTargets>
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2539B5542240B598247987BC3E77C0E2"
+               BuildableName = "AiringToday-Unit-Tests.xctest"
+               BlueprintName = "AiringToday-Unit-Tests"
+               ReferencedContainer = "container:../../../Pods/Pods.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

@@ -10,7 +10,10 @@ import RxSwift
 import Shared
 
 protocol FetchTVAccountStates {
-  func execute(requestValue: FetchTVAccountStatesRequestValue) -> Observable<TVShowAccountStateResult>
+  
+  typealias Response = Result<TVShowAccountStateResult, Error>
+  
+  func execute(requestValue: FetchTVAccountStatesRequestValue) -> Observable<Response>
 }
 
 struct FetchTVAccountStatesRequestValue {
@@ -29,14 +32,18 @@ final class DefaultFetchTVAccountStates: FetchTVAccountStates {
     self.keychainRepository = keychainRepository
   }
   
-  func execute(requestValue: FetchTVAccountStatesRequestValue) -> Observable<TVShowAccountStateResult> {
+  func execute(requestValue: FetchTVAccountStatesRequestValue) -> Observable<Response> {
     
     guard let account = keychainRepository.fetchLoguedUser() else {
-      return Observable.error(CustomError.genericError)
+      return Observable.just( .failure(CustomError.genericError) )
     }
     
     return accountShowsRepository.fetchTVAccountStates(
       tvShowId: requestValue.showId,
       sessionId: account.sessionId)
+      .flatMap { detailState -> Observable<Result<TVShowAccountStateResult, Error>> in
+        return Observable.just(.success(detailState))
+    }
+    .catchErrorJustReturn(.failure(CustomError.genericError))
   }
 }

@@ -7,19 +7,21 @@
 
 import UIKit
 
-public protocol PresentableView {
+public protocol Retryable {
   
-  func showMessageView(with message: String?)
+  func showMessageView(with message: String?, errorHandler: @escaping () -> Void)
   
   func hideMessageView()
 }
 
 // MARK: - UIViewController
 
-public extension PresentableView where Self: UIViewController {
+public extension Retryable where Self: UIViewController {
   
-  func showMessageView(with message: String?) {
-    let messageView = MessageView(message: message)
+  func showMessageView(with message: String?, errorHandler: @escaping () -> Void ) {
+    let messageView = ErrorView.loadFromNib()
+    messageView.messageLabel.text = message
+    messageView.retry = errorHandler
     
     messageView.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(messageView)

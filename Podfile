@@ -9,7 +9,7 @@ def networking_pod
 end
 
 def account_pod
-  pod 'AccountTV', :path =>  'DevPods/Account'
+  pod 'AccountTV', :path =>  'DevPods/Account', :testspecs => ['Tests']
 end
 
 def shared_pod
@@ -17,23 +17,23 @@ def shared_pod
 end
 
 def airingToday_pod
-  pod 'AiringToday', :path =>  'DevPods/AiringToday'
+  pod 'AiringToday', :path =>  'DevPods/AiringToday', :testspecs => ['Tests']
 end
 
 def popularShows_pod
-  pod 'PopularShows', :path =>  'DevPods/PopularShows'
+  pod 'PopularShows', :path =>  'DevPods/PopularShows', :testspecs => ['Tests']
 end
 
 def searchShows_pod
-  pod 'SearchShows', :path =>  'DevPods/SearchShows'
+  pod 'SearchShows', :path =>  'DevPods/SearchShows', :testspecs => ['Tests']
 end
 
 def showsList_pod
-  pod 'TVShowsList', :path =>  'DevPods/TVShowsList'
+  pod 'TVShowsList', :path =>  'DevPods/TVShowsList', :testspecs => ['Tests']
 end
 
 def showDetails_pod
-  pod 'ShowDetails', :path =>  'DevPods/ShowDetails'
+  pod 'ShowDetails', :path =>  'DevPods/ShowDetails', :testspecs => ['Tests']
 end
 
 def keychain_pod

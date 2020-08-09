@@ -9,7 +9,28 @@
 import RxSwift
 import Shared
 
-final class TVShowDetailViewModel {
+protocol TVShowDetailViewModelProtocol {
+  
+  // MARK: - Input
+  
+  func viewDidLoad()
+  func refreshView()
+  func viewDidFinish()
+  
+  var tapFavoriteButton: PublishSubject<Void> { get }
+  var tapWatchedButton: PublishSubject<Void> { get }
+  
+  // MARK: - Output
+  
+  func isUserLogged() -> Bool
+  func navigateToSeasons()
+  
+  var viewState: Observable<TVShowDetailViewModel.ViewState> { get }
+  var isFavorite: Observable<Bool> { get }
+  var isWatchList: Observable<Bool> { get }
+}
+
+final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   
   private let fetchLoggedUser: FetchLoggedUser
   
@@ -25,6 +46,8 @@ final class TVShowDetailViewModel {
   
   private let showId: Int
   
+  private var didLoadView = BehaviorSubject<Bool>(value: false)
+  
   private var viewStateObservableSubject = BehaviorSubject<ViewState>(value: .loading)
   
   private var isFavoriteSubject = BehaviorSubject<Bool>(value: false)
@@ -37,11 +60,17 @@ final class TVShowDetailViewModel {
   
   private let disposeBag = DisposeBag()
   
-  // MARK: - Public
+  // MARK: - Public Api
   
-  var input: Input
+  var tapFavoriteButton: PublishSubject<Void>
   
-  var output: Output
+  var tapWatchedButton: PublishSubject<Void>
+  
+  var viewState: Observable<ViewState>
+  
+  var isFavorite: Observable<Bool>
+  
+  var isWatchList: Observable<Bool>
   
   // MARK: - Initializers
   
@@ -60,11 +89,12 @@ final class TVShowDetailViewModel {
     self.saveToWatchListUseCase = saveToWatchListUseCase
     self.coordinator = coordinator
     
-    self.input = Input()
-    self.output = Output(
-      viewState: viewStateObservableSubject.asObservable(),
-      isFavorite: isFavoriteSubject.asObservable(),
-      isWatchList: isWatchListSubject.asObservable())
+    tapFavoriteButton = PublishSubject<Void>()
+    tapWatchedButton = PublishSubject<Void>()
+    
+    viewState = viewStateObservableSubject.asObservable()
+    isFavorite = isFavoriteSubject.asObservable()
+    isWatchList = isWatchListSubject.asObservable()
     
     subscribe()
   }
@@ -73,11 +103,19 @@ final class TVShowDetailViewModel {
     print("deinit \(Self.self)")
   }
   
-  // MARK: - Private
+  func viewDidLoad() {
+    didLoadView.onNext(true)
+  }
+  
+  public func refreshView() {
+    didLoadView.onNext(true)
+  }
   
   public func isUserLogged() -> Bool {
     return fetchLoggedUser.execute() == nil ? false : true
   }
+  
+  // MARK: - Private
   
   fileprivate func subscribe() {
     subscribeToViewAppears()
@@ -111,7 +149,7 @@ final class TVShowDetailViewModel {
   // MARK: - Handle Favorite Tap Button ❤️
   
   fileprivate func subscribeFavoriteTap() {
-    let requestFavorite = input.tapFavoriteButton
+    let requestFavorite = tapFavoriteButton
       .debounce(RxTimeInterval.milliseconds(300), scheduler: MainScheduler.instance)
       .withLatestFrom(isLoadingFavoriteSubject)
       .filter { $0 == false }
@@ -144,7 +182,7 @@ final class TVShowDetailViewModel {
   // MARK: - Handle Wath List Button Tap 🎦
   
   fileprivate func subscribeWatchListTap() {
-    let requestFavorite = input.tapWatchedButton
+    let requestFavorite = tapWatchedButton
       .debounce(RxTimeInterval.milliseconds(300), scheduler: MainScheduler.instance)
       .withLatestFrom(isLoadingWatchList)
       .filter { $0 == false }
@@ -177,56 +215,76 @@ final class TVShowDetailViewModel {
   // MARK: - Request For Guest Users
   
   fileprivate func requestTVShowDetails() {
-    input.didLoadView
+    didLoadView
       .filter { $0 == true }
-      .flatMap { [weak self] _ -> Observable<(TVShowDetailResult)> in
+      .flatMap { [weak self] _ -> Observable<Result<TVShowDetailResult, Error>> in
         guard let strongSelf = self else { return Observable.error(CustomError.genericError) }
         return strongSelf.fetchShowDetails()
     }
-    .flatMap { [weak self] (detailShow) -> Observable<ViewState> in
-      guard let strongSelf = self else { return Observable.error(CustomError.genericError) }
-      return Observable.just( .populated( strongSelf.setupTVShow(detailShow)) )
+    .flatMap { (result) -> Observable<ViewState> in
+      switch result {
+      case .success(let detailResult):
+        return Observable.just(.populated( TVShowDetailInfo(show: detailResult) ))
+      case .failure(let error):
+        return Observable.just(.error(error.localizedDescription))
+      }
     }
-    .do(onError: { [weak self] error in
-      self?.viewStateObservableSubject.onNext( .error(error.localizedDescription) )
-    })
-      .bind(to: viewStateObservableSubject)
-      .disposed(by: disposeBag)
+    .bind(to: viewStateObservableSubject)
+    .disposed(by: disposeBag)
   }
   
   // MARK: - Request For Logged Users
   
   fileprivate func requestTVShowDetaisAndState() {
-    let multipleRequest = Observable.zip(fetchShowDetails(), fetchTVShowState())
-
+    typealias ResultForDetails = (Result<TVShowDetailResult, Error>)
+    typealias ResultForShowState = (Result<TVShowAccountStateResult, Error>)
+    
     let responses =
-      input.didLoadView
+      didLoadView
         .filter { $0 == true }
-        .flatMap { _ -> Observable<(TVShowDetailResult, TVShowAccountStateResult)> in
-          return multipleRequest
+        .flatMap { [weak self] _ -> Observable< (ResultForDetails, ResultForShowState)> in
+          guard let strongSelf = self else {
+            return Observable.just( (.failure(CustomError.genericError), .failure(CustomError.genericError) ) )
+          }
+          return Observable.zip(strongSelf.fetchShowDetails(), strongSelf.fetchTVShowState())
       }.share()
-
+    
     responses
-      .flatMap { [weak self] (detailShow, _ ) -> Observable<ViewState> in
-        guard let strongSelf = self else { return Observable.error(CustomError.genericError) }
-        return Observable.just( .populated( strongSelf.setupTVShow(detailShow)) )
+      .debug()
+      .flatMap { (resultDetails, resultState ) -> Observable<ViewState> in
+        
+        switch (resultDetails, resultState) {
+        case (.success(let detailResult), .success):
+          return Observable.just(.populated( TVShowDetailInfo(show: detailResult) ))
+        case (.failure(let error), _):
+          return Observable.just(.error(error.localizedDescription))
+        case (_, .failure(let error)):
+          return Observable.just(.error(error.localizedDescription))
+        }
     }
-    .do(onError: { [weak self] error in
-      self?.viewStateObservableSubject.onNext( .error(error.localizedDescription) )
-    })
-      .bind(to: viewStateObservableSubject)
-      .disposed(by: disposeBag)
-
+    .bind(to: viewStateObservableSubject)
+    .disposed(by: disposeBag)
+    
     responses
-      .flatMap { (_, stateShow) -> Observable<Bool> in
-        return Observable.just(stateShow.isFavorite)
+      .flatMap { (_, result) -> Observable<Bool> in
+        switch result {
+        case .success(let stateShow):
+          return Observable.just(stateShow.isFavorite)
+        case .failure:
+          return Observable.just(false)
+        }
     }
     .bind(to: isFavoriteSubject)
     .disposed(by: disposeBag)
-
+    
     responses
-      .flatMap { (_, stateShow) -> Observable<Bool> in
-        return Observable.just(stateShow.isWatchList)
+      .flatMap { (_, result) -> Observable<Bool> in
+        switch result {
+        case .success(let stateShow):
+          return Observable.just(stateShow.isWatchList)
+        case .failure:
+          return Observable.just(false)
+        }
     }
     .bind(to: isWatchListSubject)
     .disposed(by: disposeBag)
@@ -234,12 +292,12 @@ final class TVShowDetailViewModel {
   
   // MARK: - Observables
   
-  fileprivate func fetchShowDetails() -> Observable<TVShowDetailResult> {
+  fileprivate func fetchShowDetails() -> Observable<Result<TVShowDetailResult, Error>> {
     let request = FetchTVShowDetailsUseCaseRequestValue(identifier: showId)
     return fetchDetailShowUseCase.execute(requestValue: request)
   }
   
-  fileprivate func fetchTVShowState() -> Observable<TVShowAccountStateResult> {
+  fileprivate func fetchTVShowState() -> Observable<Result<TVShowAccountStateResult, Error>> {
     let request = FetchTVAccountStatesRequestValue(showId: showId)
     return fetchTvShowState.execute(requestValue: request)
   }
@@ -253,64 +311,29 @@ final class TVShowDetailViewModel {
     let request = SaveToWatchListUseCaseRequestValue(showId: showId, watchList: !state)
     return saveToWatchListUseCase.execute(requestValue: request)
   }
-  
-  // MARK: - Transform Response for the View
-  
-  fileprivate func setupTVShow(_ show: TVShowDetailResult) -> TVShowDetailInfo {
-    return TVShowDetailInfo(
-      id: show.id,
-      backDropPath: show.backDropPathURL,
-      nameShow: show.name,
-      yearsRelease: show.releaseYears,
-      duration: show.episodeDuration,
-      genre: show.genreIds?.first?.name,
-      numberOfEpisodes: (show.numberOfEpisodes != nil) ? String(show.numberOfEpisodes!) : "",
-      posterPath: show.posterPathURL,
-      overView: show.overview,
-      score: (show.voteAverage != nil) ? String(show.voteAverage!) : "",
-      countVote: (show.voteCount != nil) ? String(show.voteCount!) : "")
-  }
 }
 
 // MARK: - ViewState
 
 extension TVShowDetailViewModel {
   
-  enum ViewState {
+  enum ViewState: Equatable {
     case loading
     case populated(TVShowDetailInfo)
     case error(String)
-  }
-}
-
-// MARK: - BaseViewModel
-
-extension TVShowDetailViewModel: BaseViewModel {
-  
-  public struct TVShowDetailInfo {
-    var id: Int
-    var backDropPath: URL?
-    var nameShow: String?
-    var yearsRelease: String?
-    var duration: String?
-    var genre: String?
-    var numberOfEpisodes: String?
-    var posterPath: URL?
-    var overView: String?
-    var score: String?
-    var countVote: String?
-  }
-  
-  public struct Input {
-    let tapFavoriteButton = PublishSubject<Void>()
-    let tapWatchedButton = PublishSubject<Void>()
-    let didLoadView = BehaviorSubject<Bool>(value: false)
-  }
-  
-  public struct Output {
-    let viewState: Observable<ViewState>
-    let isFavorite: Observable<Bool>
-    let isWatchList: Observable<Bool>
+    
+    static public func == (lhs: ViewState, rhs: ViewState) -> Bool {
+      switch (lhs, rhs) {
+      case (.loading, .loading):
+        return true
+      case (let .populated(lDetail), let .populated(rDetail)):
+        return lDetail.id == rDetail.id
+      case (.error, .error):
+        return true
+      default:
+        return false
+      }
+    }
   }
 }
 

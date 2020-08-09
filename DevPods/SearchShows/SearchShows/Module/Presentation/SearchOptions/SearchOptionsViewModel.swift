@@ -9,17 +9,7 @@ import RxSwift
 import Shared
 import Persistence
 
-protocol SearchOptionsViewModelDelegate: class {
-  
-  func searchOptionsViewModel(_ searchOptionsViewModel: SearchOptionsViewModel,
-                              didGenrePicked idGenre: Int,
-                              title: String?)
-  
-  func searchOptionsViewModel(_ searchOptionsViewModel: SearchOptionsViewModel,
-                              didRecentShowPicked idShow: Int)
-}
-
-final class SearchOptionsViewModel {
+final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
   
   weak var delegate: SearchOptionsViewModelDelegate?
   
@@ -29,7 +19,7 @@ final class SearchOptionsViewModel {
   
   private let recentVisitedShowsDidChange: RecentVisitedShowDidChangeUseCase
   
-  private let viewStateObservableSubject = BehaviorSubject<SimpleViewState<Genre>>(value: .loading)
+  private let viewStateObservableSubject = BehaviorSubject<SearchViewState>(value: .loading)
   
   private let dataSourceObservableSubject = BehaviorSubject<[SearchOptionsSectionModel]>(value: [])
   
@@ -39,9 +29,9 @@ final class SearchOptionsViewModel {
   
   private let disposeBag = DisposeBag()
   
-  var input: Input
+  var viewState: Observable<SearchViewState>
   
-  var output: Output
+  var dataSource: Observable<[SearchOptionsSectionModel]>
   
   // MARK: - Initializer
   
@@ -52,9 +42,8 @@ final class SearchOptionsViewModel {
     self.fetchVisitedShowsUseCase = fetchVisitedShowsUseCase
     self.recentVisitedShowsDidChange = recentVisitedShowsDidChange
     
-    self.input = Input()
-    self.output = Output(viewState: viewStateObservableSubject.asObservable(),
-                         dataSource: dataSourceObservableSubject.asObservable())
+    viewState = viewStateObservableSubject.asObservable()
+    dataSource = dataSourceObservableSubject.asObservable()
   }
   
   // MARK: - Public
@@ -74,7 +63,7 @@ final class SearchOptionsViewModel {
   
   // MARK: - Private
   
-  func fetchRecentShows() -> Observable<[ShowVisited]> {
+  private func fetchRecentShows() -> Observable<[ShowVisited]> {
     return fetchVisitedShowsUseCase.execute(requestValue: FetchVisitedShowsUseCaseRequestValue())
   }
   
@@ -95,37 +84,40 @@ final class SearchOptionsViewModel {
     Observable.combineLatest(recentShowsDidChanged(), fetchGenres())
       .subscribe(onNext: { [weak self] (visited, resultGenre) in
         guard let strongSelf = self else { return }
+        print("rcaos here")
         strongSelf.processFetched(for: resultGenre)
         strongSelf.createSectionModel(showsVisited: visited, genres: resultGenre.genres ?? [])
         
         }, onError: { [weak self] error in
           guard let strongSelf = self else { return }
           print("Error to fetch Case use \(error)")
-          strongSelf.viewStateObservableSubject.onNext( .error(error.localizedDescription) )
+          strongSelf.viewStateObservableSubject.onNext( .error(CustomError.genericError.localizedDescription) )
       })
       .disposed(by: disposeBag)
   }
   
   private func processFetched(for response: GenreListResult) {
-    let fetchedGenres = response.genres ?? []
+    let fetchedGenres = (response.genres ?? [])
     
     if fetchedGenres.isEmpty {
       viewStateObservableSubject.onNext(.empty)
     } else {
-      viewStateObservableSubject.onNext( .populated(fetchedGenres) )
+      viewStateObservableSubject.onNext( .populated )
     }
   }
   
   private func createSectionModel(showsVisited: [ShowVisited], genres: [Genre]) {
     
-    let showsSectionItem = mapRecentShowsToSectionItem(recentsShows: showsVisited)
-    let genresSectionItem = genres.map { SearchSectionItem.genres(items: $0) }
-    
     var dataSource: [SearchOptionsSectionModel] = []
+    
+    let showsSectionItem = mapRecentShowsToSectionItem(recentsShows: showsVisited)
     
     if let recentShowsSection = showsSectionItem {
       dataSource.append(.showsVisited(items: [recentShowsSection]))
     }
+    
+    let genresSectionItem = createSectionFor(genres: genres)
+    
     if !genresSectionItem.isEmpty {
       dataSource.append(.genres(items: genresSectionItem))
     }
@@ -133,22 +125,18 @@ final class SearchOptionsViewModel {
     dataSourceObservableSubject.onNext(dataSource)
   }
   
-  private func mapRecentShowsToSectionItem(recentsShows: [ShowVisited]) -> SearchSectionItem? {
-    return recentsShows.isEmpty ?
-      nil :
-      .showsVisited(items: VisitedShowViewModel(shows: recentsShows))
+  private func createSectionFor(genres: [Genre] ) -> [SearchSectionItem] {
+    return genres
+      .map { GenreViewModel(genre: $0)  }
+      .map { SearchSectionItem.genres(items: $0) }
   }
-}
-
-// MARK: - BaseViewModel
-
-extension SearchOptionsViewModel {
   
-  public struct Input { }
-  
-  public struct Output {
-    let viewState: Observable<SimpleViewState<Genre>>
-    let dataSource: Observable<[SearchOptionsSectionModel]>
+  private func mapRecentShowsToSectionItem(recentsShows: [ShowVisited]) -> SearchSectionItem? {
+    
+    let visitedModel = VisitedShowViewModel(shows: recentsShows)
+    visitedModel.delegate = self
+    
+    return recentsShows.isEmpty ? nil : .showsVisited(items: visitedModel)
   }
 }
 
@@ -156,7 +144,7 @@ extension SearchOptionsViewModel {
 
 extension SearchOptionsViewModel: VisitedShowViewModelDelegate {
   
-  func visitedShowViewModel(_ visitedShowViewModel: VisitedShowViewModel, didSelectRecentlyVisitedShow id: Int) {
+  func visitedShowViewModel(_ visitedShowViewModel: VisitedShowViewModelProtocol, didSelectRecentlyVisitedShow id: Int) {
     delegate?.searchOptionsViewModel(self, didRecentShowPicked: id)
   }
 }

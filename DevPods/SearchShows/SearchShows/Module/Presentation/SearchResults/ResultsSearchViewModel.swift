@@ -10,18 +10,9 @@ import RxSwift
 import Shared
 import Persistence
 
-protocol ResultsSearchViewModelDelegate: class {
+final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
   
-  func resultsSearchViewModel(_ resultsSearchViewModel: ResultsSearchViewModel, didSelectShow idShow: Int)
-  
-  func resultsSearchViewModel(_ resultsSearchViewModel: ResultsSearchViewModel, didSelectRecentSearch query: String)
-}
-
-final class ResultsSearchViewModel {
-  
-  weak var delegate: ResultsSearchViewModelDelegate?
-  
-  private let fetchTVShowsUseCase: SearchTVShowsUseCase
+  private let searchTVShowsUseCase: SearchTVShowsUseCase
   
   private let fetchRecentSearchsUseCase: FetchSearchsUseCase
   
@@ -29,24 +20,27 @@ final class ResultsSearchViewModel {
   
   private var currentSearchSubject = BehaviorSubject<String>(value: "")
   
-  private var viewStateObservableSubject: BehaviorSubject<ViewState> = .init(value: .initial)
+  private let viewStateObservableSubject: BehaviorSubject<ResultViewState> = .init(value: .initial)
   
   private var disposeBag = DisposeBag()
   
-  var input: Input
+  // MARK: - Public Api
   
-  var output: Output
+  let viewState: Observable<ResultViewState>
+  
+  let dataSource: Observable<[ResultSearchSectionModel]>
+  
+  weak var delegate: ResultsSearchViewModelDelegate?
   
   // MARK: - Init
   
-  init(fetchTVShowsUseCase: SearchTVShowsUseCase,
+  init(searchTVShowsUseCase: SearchTVShowsUseCase,
        fetchRecentSearchsUseCase: FetchSearchsUseCase) {
-    self.fetchTVShowsUseCase = fetchTVShowsUseCase
+    self.searchTVShowsUseCase = searchTVShowsUseCase
     self.fetchRecentSearchsUseCase = fetchRecentSearchsUseCase
     
-    self.input = Input()
-    self.output = Output(viewState: viewStateObservableSubject.asObservable(),
-                         dataSource: dataSourceObservableSubject.asObservable())
+    viewState = viewStateObservableSubject.asObservable()
+    dataSource = dataSourceObservableSubject.asObservable()
     
     subscribeToRecentsShowsChange()
     subscribeToSearchInput()
@@ -70,7 +64,7 @@ final class ResultsSearchViewModel {
     delegate?.resultsSearchViewModel(self, didSelectShow: idShow)
   }
   
-  func getViewState() -> ViewState {
+  func getViewState() -> ResultViewState {
     if let viewState = try? viewStateObservableSubject.value() {
       return viewState
     } else {
@@ -115,7 +109,7 @@ final class ResultsSearchViewModel {
     
     let request = SearchTVShowsUseCaseRequestValue(query: query, page: 1)
     
-    fetchTVShowsUseCase.execute(requestValue: request)
+    searchTVShowsUseCase.execute(requestValue: request)
       .subscribe(onNext: { [weak self] result in
         guard let strongSelf = self else { return }
         strongSelf.processFetched(for: result)
@@ -129,20 +123,21 @@ final class ResultsSearchViewModel {
   private func processFetched(for response: TVShowResult) {
     let fetchedShows = response.results ?? []
     
-    let cellShows = fetchedShows.map { TVShowCellViewModel(show: $0) }
-    
-    if cellShows.isEmpty {
+    if fetchedShows.isEmpty {
       viewStateObservableSubject.onNext( .empty )
     } else {
-      viewStateObservableSubject.onNext( .populated(cellShows) )
+      viewStateObservableSubject.onNext( .populated )
     }
     
-    createSectionModel(recentSearchs: [], resultShows: cellShows)
+    createSectionModel(recentSearchs: [], resultShows: fetchedShows)
   }
   
-  private func createSectionModel(recentSearchs: [String], resultShows: [TVShowCellViewModel]) {
+  private func createSectionModel(recentSearchs: [String], resultShows: [TVShow]) {
     let recentSearchsItem = recentSearchs.map { ResultSearchSectionItem.recentSearchs(items: $0) }
-    let resultsShowsItem = resultShows.map { ResultSearchSectionItem.results(items: $0) }
+    
+    let resultsShowsItem = resultShows
+      .map { TVShowCellViewModel(show: $0) }
+      .map { ResultSearchSectionItem.results(items: $0) }
     
     var dataSource: [ResultSearchSectionModel] = []
     
@@ -155,54 +150,5 @@ final class ResultsSearchViewModel {
     }
     
     dataSourceObservableSubject.onNext(dataSource)
-  }
-}
-
-extension ResultsSearchViewModel {
-  
-  public struct Input { }
-  
-  public struct Output {
-    let viewState: Observable<ViewState>
-    let dataSource: Observable<[ResultSearchSectionModel]>
-  }
-}
-
-extension ResultsSearchViewModel {
-  
-  enum ViewState: Equatable {
-    case
-    initial,
-    
-    empty,
-    
-    loading,
-    
-    populated([TVShowCellViewModel]),
-    
-    error(String)
-    
-    static func == (lhs: ResultsSearchViewModel.ViewState, rhs: ResultsSearchViewModel.ViewState) -> Bool {
-      switch (lhs, rhs) {
-        
-      case (.initial, .initial):
-        return true
-        
-      case (.empty, .empty):
-        return true
-        
-      case (.loading, .loading):
-        return true
-        
-      case (let .populated(lhsShows), let .populated(rhsShows)):
-        return lhsShows.map { $0.entity.id } == rhsShows.map { $0.entity.id }
-        
-      case (.error, .error):
-        return true
-        
-      default:
-        return false
-      }
-    }
   }
 }

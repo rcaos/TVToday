@@ -14,7 +14,7 @@ class VisitedShowTableViewCell: UITableViewCell {
   
   @IBOutlet weak var collectionView: UICollectionView!
   
-  var viewModel: VisitedShowViewModel?
+  var viewModel: VisitedShowViewModelProtocol?
   
   private var disposeBag = DisposeBag()
   
@@ -44,7 +44,7 @@ class VisitedShowTableViewCell: UITableViewCell {
     }
   }
   
-  func setupCell(with viewModel: VisitedShowViewModel) {
+  func setupCell(with viewModel: VisitedShowViewModelProtocol) {
     self.viewModel = viewModel
     disposeBag = DisposeBag()
     
@@ -54,7 +54,7 @@ class VisitedShowTableViewCell: UITableViewCell {
     
     let dataSource = RxCollectionViewSectionedReloadDataSource<VisitedShowSectionModel>(configureCell: configureCollectionViewCell())
     
-    viewModel.output
+    viewModel
       .shows
       .map { [VisitedShowSectionModel(header: "Visited", items: $0)] }
       .bind(to: collectionView.rx.items(dataSource: dataSource))
@@ -62,7 +62,7 @@ class VisitedShowTableViewCell: UITableViewCell {
     
     collectionView.rx.modelSelected(ShowVisited.self)
       .map { $0.id }
-      .bind(to: viewModel.input.selectedShow)
+      .bind(to: viewModel.selectedShow)
       .disposed(by: disposeBag)
   }
   

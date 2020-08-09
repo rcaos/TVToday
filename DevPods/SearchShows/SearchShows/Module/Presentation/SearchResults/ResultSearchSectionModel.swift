@@ -8,7 +8,7 @@
 import RxDataSources
 import Shared
 
-enum ResultSearchSectionModel {
+enum ResultSearchSectionModel: Equatable {
   case
   recentSearchs(items: [ResultSearchSectionItem]),
   results(items: [ResultSearchSectionItem])
@@ -23,7 +23,7 @@ enum ResultSearchSectionModel {
   }
 }
 
-enum ResultSearchSectionItem {
+enum ResultSearchSectionItem: Equatable {
   case
   recentSearchs(items: String),
   results(items: TVShowCellViewModel)

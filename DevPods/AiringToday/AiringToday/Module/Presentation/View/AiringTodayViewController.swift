@@ -11,13 +11,13 @@ import RxSwift
 import RxDataSources
 import Shared
 
-class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loadable, PresentableView {
+class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loadable, Retryable, Emptiable {
   
   @IBOutlet weak var collectionView: UICollectionView!
   
-  private var viewModel: AiringTodayViewModel!
+  private var viewModel: AiringTodayViewModelProtocol!
   
-  static func create(with viewModel: AiringTodayViewModel) -> AiringTodayViewController {
+  static func create(with viewModel: AiringTodayViewModelProtocol) -> AiringTodayViewController {
     let controller = AiringTodayViewController.instantiateViewController()
     controller.viewModel = viewModel
     return controller
@@ -31,7 +31,7 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loada
     super.viewDidLoad()
     
     setupUI()
-    viewModel.getShows(for: 1)
+    viewModel.viewDidLoad()
   }
   
   // MARK: - SetupView
@@ -67,7 +67,7 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loada
       configureCell: configureCollectionViewCell,
       configureSupplementaryView: configureSupplementaryView)
     
-    viewModel.output
+    viewModel
       .viewState
       .map { [SectionAiringToday(header: "Shows Today", items: $0.currentEntities) ] }
       .bind(to: collectionView.rx.items(dataSource: dataSource))
@@ -85,7 +85,7 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loada
   }
   
   fileprivate func subscribeToViewState() {
-    viewModel.output
+    viewModel
       .viewState
       .subscribe(onNext: { [weak self] viewstate in
         self?.handleViewState(with: viewstate)
@@ -99,14 +99,17 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loada
     case .loading:
       showLoadingView()
       hideMessageView()
-    
+      
     case .empty:
       hideLoadingView()
-      showMessageView(with: "No Show for Today")
+      showEmptyView(with: "No shows for Today")
       
     case .error(let message):
       hideLoadingView()
-      showMessageView(with: message)
+      showMessageView(with: message,
+                      errorHandler: { [weak self] in
+                        self?.viewModel.refreshView()
+      })
       
     default:
       hideLoadingView()
@@ -130,9 +133,8 @@ extension AiringTodayViewController {
         let cell = collectionView.dequeueReusableCell(with: AiringTodayCollectionViewCell.self, for: indexPath)
         cell.viewModel = item
         
-        if case .paging(_, let nextPage) = strongSelf.viewModel.getCurrentViewState(),
-          let totalItems = dataSource.sectionModels.first?.items.count, indexPath.row == totalItems - 1 {
-          strongSelf.viewModel.getShows(for: nextPage)
+        if let totalItems = dataSource.sectionModels.first?.items.count, indexPath.row == totalItems - 1 {
+          strongSelf.viewModel.didLoadNextPage()
         }
         
         return cell

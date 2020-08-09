@@ -8,7 +8,7 @@
 
 import RxDataSources
 
-enum ProfileSectionModel {
+enum ProfileSectionModel: Equatable {
   case
   userInfo(header: String, items: [ProfilesSectionItem]),
   userLists(header: String, items: [ProfilesSectionItem]),
@@ -42,7 +42,7 @@ extension ProfileSectionModel: SectionModelType {
   }
 }
 
-enum ProfilesSectionItem {
+enum ProfilesSectionItem: Equatable {
   case
   userInfo(number: AccountResult),
   userLists(items: UserListType),

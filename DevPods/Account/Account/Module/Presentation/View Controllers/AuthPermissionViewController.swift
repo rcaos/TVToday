@@ -14,9 +14,9 @@ class AuthPermissionViewController: UIViewController, StoryboardInstantiable {
   
   @IBOutlet weak var webView: WKWebView!
   
-  private var viewModel: AuthPermissionViewModel!
+  private var viewModel: AuthPermissionViewModelProtocol!
   
-  static func create(with viewModel: AuthPermissionViewModel) -> AuthPermissionViewController {
+  static func create(with viewModel: AuthPermissionViewModelProtocol) -> AuthPermissionViewController {
     let controller = AuthPermissionViewController.instantiateViewController(fromStoryBoard: "AccountViewController")
     controller.viewModel = viewModel
     return controller
@@ -31,7 +31,7 @@ class AuthPermissionViewController: UIViewController, StoryboardInstantiable {
   }
   
   deinit {
-    print("deinit AuthPermissionViewController")
+    print("deinit \(Self.self)")
   }
   
   // MARK: - Setup UI
@@ -47,7 +47,7 @@ class AuthPermissionViewController: UIViewController, StoryboardInstantiable {
   }
   
   private func loadURL() {
-    let request = URLRequest(url: viewModel.output.authPermissionURL)
+    let request = URLRequest(url: viewModel.authPermissionURL)
     webView.load(request)
   }
 }
@@ -62,17 +62,17 @@ extension AuthPermissionViewController: WKNavigationDelegate {
     if let response = navigationResponse.response as? HTTPURLResponse,
       let headers = response.allHeaderFields as? [String: Any],
       let _ = headers["authentication-callback"] as? String {
-      viewModel?.input.didSignIn.onNext(true)
+      viewModel?.signIn()
     }
     decisionHandler(.allow)
   }
 }
 
- // MARK: - UIAdaptivePresentationControllerDelegate
+// MARK: - UIAdaptivePresentationControllerDelegate
 
 extension AuthPermissionViewController: UIAdaptivePresentationControllerDelegate {
   
   func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-    viewModel?.input.didSignIn.onNext(true)
+    viewModel?.signIn()
   }
 }

@@ -13,17 +13,11 @@ public class GenericViewCell: UITableViewCell {
   
   @IBOutlet weak public var regularTextLabel: TVRegularLabel!
   
-  public var title: String? {
-    didSet {
-      setupUI()
-    }
-  }
-  
   public override func awakeFromNib() {
     super.awakeFromNib()
   }
   
-  func setupUI() {
+  public func setupUI(with title: String?) {
     regularTextLabel?.text = title
   }
   

@@ -18,13 +18,13 @@ class ResultsSearchViewController: UIViewController {
   
   private var resultView: ResultListView = ResultListView()
   
-  private var viewModel: ResultsSearchViewModel
+  private var viewModel: ResultsSearchViewModelProtocol
   
   private var messageView = MessageView()
   
   // MARK: - Life Cycle
   
-  init(viewModel: ResultsSearchViewModel) {
+  init(viewModel: ResultsSearchViewModelProtocol) {
     self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
   }
@@ -64,7 +64,7 @@ class ResultsSearchViewController: UIViewController {
   
   private func setupViewModel() {
     
-    viewModel.output
+    viewModel
       .viewState
       .subscribe(onNext: { [weak self] state in
         guard let strongSelf = self else { return }
@@ -97,7 +97,7 @@ class ResultsSearchViewController: UIViewController {
       return dataSource.sectionModels[section].getHeader()
     }
     
-    viewModel.output
+    viewModel
       .dataSource
       .bind(to: resultView.tableView.rx.items(dataSource: dataSource))
       .disposed(by: disposeBag)
@@ -127,12 +127,12 @@ class ResultsSearchViewController: UIViewController {
   
   // MARK: - Handle View State
   
-  private func configView(with state: ResultsSearchViewModel.ViewState) {
+  private func configView(with state: ResultViewState) {
     let tableView = resultView.tableView
     
     switch state {
     case .initial :
-      tableView.tableFooterView = nil
+      tableView.tableFooterView = UIView()
       tableView.separatorStyle = .singleLine
     
     case .loading:
@@ -140,8 +140,7 @@ class ResultsSearchViewController: UIViewController {
       tableView.separatorStyle = .none
       
     case .populated :
-      tableView.tableHeaderView = nil
-      tableView.tableFooterView = nil
+      tableView.tableFooterView = UIView()
       tableView.separatorStyle = .singleLine
       
     case .empty :

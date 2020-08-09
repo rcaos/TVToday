@@ -16,11 +16,11 @@ class SignInViewController: UIViewController, StoryboardInstantiable {
   @IBOutlet weak var tvImageView: UIImageView!
   @IBOutlet weak var signInButton: LoadableButton!
   
-  private var viewModel: SignInViewModel!
+  private var viewModel: SignInViewModelProtocol!
   
   private let disposeBag = DisposeBag()
   
-  static func create(with viewModel: SignInViewModel) -> SignInViewController {
+  static func create(with viewModel: SignInViewModelProtocol) -> SignInViewController {
     let controller = SignInViewController.instantiateViewController(fromStoryBoard: "AccountViewController")
     controller.viewModel = viewModel
     return controller
@@ -49,10 +49,10 @@ class SignInViewController: UIViewController, StoryboardInstantiable {
     
     signInButton.rx
       .tap
-      .bind(to: viewModel.input.tapButton)
+      .bind(to: viewModel.tapButton)
       .disposed(by: disposeBag)
     
-    viewModel.output
+    viewModel
       .viewState
       .subscribe(onNext: { [weak self] state in
         self?.setupView(with: state)
@@ -60,12 +60,15 @@ class SignInViewController: UIViewController, StoryboardInstantiable {
       .disposed(by: disposeBag)
   }
   
-  fileprivate func setupView(with state: SignInViewModel.ViewState) {
+  fileprivate func setupView(with state: SignInViewState) {
     switch state {
     case .initial:
       signInButton.defaultHideLoadingView()
     case .loading:
       signInButton.defaultShowLoadingView()
+    case .error:
+      signInButton.defaultHideLoadingView()
+      // MARk: - Todo, show a label with error or something
     }
   }
 }

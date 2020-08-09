@@ -6,70 +6,59 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import Foundation
 import RxSwift
+import Shared
 
-protocol SignInViewModelDelegate: class {
+class SignInViewModel: SignInViewModelProtocol {
   
-  func signInViewModel(_ signInViewModel: SignInViewModel, didTapSignInButton tapped: Bool)
-}
-
-class SignInViewModel {
+  private let createTokenUseCase: CreateTokenUseCase
   
-  weak var delegate: SignInViewModelDelegate?
-  
-  private let viewStateSubject: BehaviorSubject<ViewState> = .init(value: .initial)
-  
-  var input: Input
-  
-  var output: Output
+  private let viewStateSubject: BehaviorSubject<SignInViewState> = .init(value: .initial)
   
   private let disposeBag = DisposeBag()
   
+  weak var delegate: SignInViewModelDelegate?
+  
+  let tapButton = PublishSubject<Void>()
+  
+  let viewState: Observable<SignInViewState>
+  
   // MARK: - Initializers
   
-  init() {
-    input = Input()
-    output = Output(viewState: viewStateSubject.asObservable())
-    
+  init(createTokenUseCase: CreateTokenUseCase) {
+    self.createTokenUseCase = createTokenUseCase
+    viewState = viewStateSubject.asObservable()
     subscribe()
   }
   
   // MARK: - Public
   
-  public func changeState(with state: SignInViewModel.ViewState) {
+  public func changeState(with state: SignInViewState) {
     viewStateSubject.onNext(state)
   }
   
   // MARK: - Private
   
   fileprivate func subscribe() {
-    input.tapButton.asObserver()
-      .subscribe(onNext: { [weak self] in
-        guard let strongSelf = self else { return }
-        strongSelf.viewStateSubject.onNext(.loading)
-        strongSelf.delegate?.signInViewModel(strongSelf, didTapSignInButton: true)
-      })
+    // MARK: - TODO, test handle several taps
+    tapButton
+      .flatMap { [weak self] () -> Observable<URL> in
+        guard let strongSelf = self else { return Observable.error(CustomError.genericError)}
+        self?.viewStateSubject.onNext(.loading)
+        return strongSelf.requestCreateToken()
+    }
+    .subscribe(onNext: { [weak self] url in
+      guard let strongSelf = self else { return }
+      strongSelf.delegate?.signInViewModel(strongSelf, didTapSignInButton: url)
+      
+      }, onError: { [weak self] error in
+        print("error to request token: \(error)")
+        self?.viewStateSubject.onNext(.loading)
+    })
       .disposed(by: disposeBag)
   }
-}
-
-extension SignInViewModel {
   
-  public struct Input {
-    let tapButton = PublishSubject<Void>()
-  }
-  
-  public struct Output {
-    let viewState: Observable<ViewState>
-  }
-}
-
-extension SignInViewModel {
-  
-  enum ViewState {
-    case initial,
-    
-    loading
+  fileprivate func requestCreateToken() -> Observable<URL> {
+    return createTokenUseCase.execute()
   }
 }

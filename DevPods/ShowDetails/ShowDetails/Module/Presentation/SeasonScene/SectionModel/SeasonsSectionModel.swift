@@ -9,7 +9,7 @@
 import Foundation
 import RxDataSources
 
-enum SeasonsSectionModel {
+enum SeasonsSectionModel: Equatable {
   case
   seasons(header: String, items: [SeasonsSectionItem]),
   episodes(header: String, items: [SeasonsSectionItem])

@@ -33,3 +33,10 @@ public final class TVShowCellViewModel {
     posterPathURL = show.posterPathURL
   }
 }
+
+extension TVShowCellViewModel: Equatable {
+  
+  public static func == (lhs: TVShowCellViewModel, rhs: TVShowCellViewModel) -> Bool {
+    return lhs.entity.id == rhs.entity.id
+  }
+}

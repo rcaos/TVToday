@@ -13,9 +13,9 @@ import Shared
 
 class ProfileViewController: UIViewController, StoryboardInstantiable {
   
-  private var viewModel: ProfileViewModel!
+  private var viewModel: ProfileViewModelProtocol!
   
-  static func create(with viewModel: ProfileViewModel) -> ProfileViewController {
+  static func create(with viewModel: ProfileViewModelProtocol) -> ProfileViewController {
     let controller = ProfileViewController.instantiateViewController(fromStoryBoard: "AccountViewController")
     controller.viewModel = viewModel
     return controller
@@ -42,7 +42,7 @@ class ProfileViewController: UIViewController, StoryboardInstantiable {
     tableView.registerNib(cellType: ProfileTableViewCell.self)
     tableView.registerNib(cellType: GenericViewCell.self)
     tableView.registerCell(cellType: LogoutTableViewCell.self)
-  
+    
     tableView.tableFooterView = UIView()
     tableView.rowHeight = UITableView.automaticDimension
   }
@@ -64,20 +64,20 @@ class ProfileViewController: UIViewController, StoryboardInstantiable {
       }
     })
     
-    viewModel.output
-    .sections
-    .bind(to: tableView.rx.items(dataSource: dataSource))
-    .disposed(by: disposeBag)
+    viewModel
+      .dataSource
+      .bind(to: tableView.rx.items(dataSource: dataSource))
+      .disposed(by: disposeBag)
   }
   
   fileprivate func setupBindables() {
-    viewModel.output
+    viewModel
       .presentSignOutAlert
       .filter { $0 == true }
       .subscribe(onNext: { [weak self] _ in
         self?.showSignOutActionSheet()
       })
-    .disposed(by: disposeBag)
+      .disposed(by: disposeBag)
     
     tableView.rx
       .setDelegate(self)
@@ -90,14 +90,14 @@ class ProfileViewController: UIViewController, StoryboardInstantiable {
       .disposed(by: disposeBag)
     
     tableView.rx.modelSelected(ProfilesSectionItem.self)
-      .bind(to: viewModel.input.tapCellAction)
+      .bind(to: viewModel.tapCellAction)
       .disposed(by: disposeBag)
   }
   
   private func showSignOutActionSheet() {
     let signOutAction = UIAlertAction(title: "Sign out",
                                       style: .destructive) { [weak self] _ in
-                                        self?.viewModel.input.tapLogoutAction.onNext(())
+                                        self?.viewModel.didTapLogoutButton()
     }
     
     let actionSheet = UIAlertController(title: "Are you sure you want to Sign out?",
@@ -125,7 +125,7 @@ extension ProfileViewController {
   
   fileprivate func buildCellForUserLists(at indexPath: IndexPath, element: UserListType) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: GenericViewCell.self, for: indexPath)
-    cell.title = element.rawValue
+    cell.setupUI(with: element.rawValue)
     return cell
   }
   

@@ -9,7 +9,7 @@ def networking_pod
 end
 
 def account_pod
-  pod 'AccountTV', :path =>  'DevPods/Account'
+  pod 'AccountTV', :path =>  'DevPods/Account', :testspecs => ['Tests']
 end
 
 def shared_pod

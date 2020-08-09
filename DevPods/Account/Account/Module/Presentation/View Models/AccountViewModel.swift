@@ -10,9 +10,17 @@ import Foundation
 import RxSwift
 import Shared
 
-final class AccountViewModel {
-  
-  private let requestToken: CreateTokenUseCase
+enum AccountViewState: Equatable {
+   case login,
+   
+   profile
+ }
+
+protocol AccountViewModelProtocol: AuthPermissionViewModelDelegate {
+  var viewState: Observable<AccountViewState> { get }
+}
+
+final class AccountViewModel: AccountViewModelProtocol {
   
   private let createNewSession: CreateSessionUseCase
   
@@ -22,31 +30,29 @@ final class AccountViewModel {
   
   private let deleteLoguedUser: DeleteLoguedUserUseCase
   
-  private let viewStateSubject: BehaviorSubject<ViewState> = .init(value: .login)
+  private let viewStateSubject: BehaviorSubject<AccountViewState> = .init(value: .login)
   
-  var input: Input
+  private var signInViewModel: SignInViewModelProtocol
   
-  var output: Output
-  
-  private var signInViewModel: SignInViewModel
-  
-  private var profileViewModel: ProfileViewModel
+  private var profileViewModel: ProfileViewModelProtocol
   
   private weak var coordinator: AccountCoordinatorProtocol?
   
   private let disposeBag = DisposeBag()
   
+  // MARK: - Public Api
+  
+  let viewState: Observable<AccountViewState>
+  
   // MARK: - Initializers
   
-  init(requestToken: CreateTokenUseCase,
-       createNewSession: CreateSessionUseCase,
+  init(createNewSession: CreateSessionUseCase,
        fetchAccountDetails: FetchAccountDetailsUseCase,
        fetchLoggedUser: FetchLoggedUser,
        deleteLoguedUser: DeleteLoguedUserUseCase,
-       signInViewModel: SignInViewModel,
-       profileViewMoel: ProfileViewModel,
+       signInViewModel: SignInViewModelProtocol,
+       profileViewMoel: ProfileViewModelProtocol,
        coordinator: AccountCoordinatorProtocol?) {
-    self.requestToken = requestToken
     self.createNewSession = createNewSession
     self.fetchAccountDetails = fetchAccountDetails
     self.fetchLoggedUser = fetchLoggedUser
@@ -55,8 +61,7 @@ final class AccountViewModel {
     self.profileViewModel = profileViewMoel
     self.coordinator = coordinator
     
-    input = Input()
-    output = Output(viewState: viewStateSubject.asObservable())
+    viewState = viewStateSubject.asObservable()
     
     checkIsLogued()
   }
@@ -76,22 +81,6 @@ final class AccountViewModel {
         self?.profileViewModel.createSectionModel(account: accountDetails)
         }, onError: { [weak self] _ in
           self?.viewStateSubject.onNext(.login)
-      })
-      .disposed(by: disposeBag)
-  }
-  
-  fileprivate func requestCreateToken() {
-    // TODO, test Error from Network
-    
-    requestToken.execute()
-      .subscribe(onNext: { [weak self] url in
-        guard let strongSelf = self else { return }
-        strongSelf.coordinator?.navigate(to: .signInIsPicked(url: url, delegate: strongSelf))
-        
-        }, onError: { [weak self] error in
-          print("error to request token: \(error)")
-          self?.viewStateSubject.onNext(.login)
-          self?.signInViewModel.changeState(with: .initial)
       })
       .disposed(by: disposeBag)
   }
@@ -133,14 +122,16 @@ final class AccountViewModel {
 // MARK: - SignInViewModelDelegate
 
 extension AccountViewModel: SignInViewModelDelegate {
-  func signInViewModel(_ signInViewModel: SignInViewModel, didTapSignInButton tapped: Bool) {
-    requestCreateToken()
+  
+  func signInViewModel(_ signInViewModel: SignInViewModel, didTapSignInButton url: URL) {
+    navigateTo(step: .signInIsPicked(url: url, delegate: self))
   }
 }
 
 // MARK: - AuthPermissionViewModelDelegate
 
 extension AccountViewModel: AuthPermissionViewModelDelegate {
+  
   func authPermissionViewModel(didSignedIn signedIn: Bool) {
     createSession()
     navigateTo(step: .authorizationIsComplete)
@@ -162,23 +153,5 @@ extension AccountViewModel: ProfileViewModelDelegate {
     case .watchList:
       navigateTo(step: .watchListIsPicked)
     }
-  }
-}
-
-extension AccountViewModel: BaseViewModel {
-  
-  public struct Input { }
-  
-  public struct Output {
-    let viewState: Observable<ViewState>
-  }
-}
-
-extension AccountViewModel {
-  
-  enum ViewState: Equatable {
-    case login,
-    
-    profile
   }
 }

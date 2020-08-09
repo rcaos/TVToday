@@ -310,8 +310,8 @@ class EpisodesListViewModelTests: QuickSpec {
         }
       }
       
-      fcontext("When Ask for Diferent Season And UseCase returns Episodes") {
-        fit("Should ViewModel contains List of Episodes") {
+      context("When Ask for Diferent Season And UseCase returns Episodes") {
+        it("Should ViewModel contains List of Episodes") {
           // given
           
           let episodesObserver = scheduler.createObserver([SeasonsSectionModel].self)
@@ -377,23 +377,4 @@ class EpisodesListViewModelTests: QuickSpec {
       }
     }
   }
-}
-
-class SeasonListViewModelMock: SeasonListViewModelProtocol {
-  var inputSelectedSeason: BehaviorSubject<Int> = BehaviorSubject(value: 0)
-  
-  func selectSeason(_ season: Int) { }
-  
-  var seasons: Observable<[Int]> = Observable.just([])
-  
-  var seasonSelected: Observable<Int> = Observable.just(0)
-  
-  // why?
-  func getModel(for season: Int) -> SeasonEpisodeViewModel {
-    return SeasonEpisodeViewModel(seasonNumber: season)
-  }
-  
-  var disposeBag = DisposeBag()
-  
-  weak var delegate: SeasonListViewModelDelegate?
 }

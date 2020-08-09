@@ -258,6 +258,20 @@
                ReferencedContainer = "container:Pods/Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A032B1EDA1D77C15517F43BA4F912178"
+               BuildableName = "AccountTV-Unit-Tests.xctest"
+               BlueprintName = "AccountTV-Unit-Tests"
+               ReferencedContainer = "container:Pods/Pods.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -301,6 +315,13 @@
             BlueprintIdentifier = "5A8F4C9DE575CFEA9835DBCAEF05CE87"
             BuildableName = "SearchShows.framework"
             BlueprintName = "SearchShows"
+            ReferencedContainer = "container:Pods/Pods.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "3D551C9688CDB9DA661D0796DF18E5A3"
+            BuildableName = "AccountTV.framework"
+            BlueprintName = "AccountTV"
             ReferencedContainer = "container:Pods/Pods.xcodeproj">
          </BuildableReference>
       </CodeCoverageTargets>
@@ -352,6 +373,16 @@
                BlueprintIdentifier = "D24597419BFF790EC91CC4423ABD9840"
                BuildableName = "SearchShows-Unit-Tests.xctest"
                BlueprintName = "SearchShows-Unit-Tests"
+               ReferencedContainer = "container:Pods/Pods.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A032B1EDA1D77C15517F43BA4F912178"
+               BuildableName = "AccountTV-Unit-Tests.xctest"
+               BlueprintName = "AccountTV-Unit-Tests"
                ReferencedContainer = "container:Pods/Pods.xcodeproj">
             </BuildableReference>
          </TestableReference>

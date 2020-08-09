@@ -9,33 +9,31 @@
 import RxSwift
 import RxDataSources
 
-protocol ProfileViewModelDelegate: class {
-  
-  func profileViewModel(didTapLogoutButton tapped: Bool)
-  
-  func profileViewModel(didUserList tapped: UserListType)
-}
-
-class ProfileViewModel {
+class ProfileViewModel: ProfileViewModelProtocol {
   
   weak var delegate: ProfileViewModelDelegate?
   
-  private var sectionsSubject = BehaviorSubject<[ProfileSectionModel]>(value: [])
+  private let sectionsSubject = BehaviorSubject<[ProfileSectionModel]>(value: [])
   
-  private var presentSignOutAlertSubject = PublishSubject<Bool>()
+  private let presentSignOutAlertSubject = PublishSubject<Bool>()
   
-  var input: Input
-  
-  var output: Output
+  private let tapLogoutAction = PublishSubject<Void>()
   
   private let disposeBag = DisposeBag()
   
-  // MARK: - Initializers
+  // MARK: - Public Api
+  
+  let tapCellAction = PublishSubject<ProfilesSectionItem>()
+  
+  let dataSource: Observable<[ProfileSectionModel]>
+  
+  let presentSignOutAlert: Observable<Bool>
+  
+  // MARK: - Initializer
   
   init() {
-    input = Input()
-    output = Output(sections: sectionsSubject.asObservable(),
-                    presentSignOutAlert: presentSignOutAlertSubject.asObservable())
+    dataSource = sectionsSubject.asObservable()
+    presentSignOutAlert = presentSignOutAlertSubject.asObservable()
     
     subscribe()
   }
@@ -57,15 +55,19 @@ class ProfileViewModel {
     sectionsSubject.onNext(sectionProfile)
   }
   
+  func didTapLogoutButton() {
+    tapLogoutAction.onNext(())
+  }
+  
   fileprivate func subscribe() {
-    input.tapLogoutAction.asObserver()
+    tapLogoutAction.asObserver()
       .subscribe(onNext: { [weak self] in
         guard let strongSelf = self else { return }
         strongSelf.delegate?.profileViewModel(didTapLogoutButton: true)
       })
       .disposed(by: disposeBag)
     
-    input.tapCellAction.asObserver()
+    tapCellAction.asObserver()
       .subscribe(onNext: { [weak self] model in
         self?.didSelectedCell(model)
       })
@@ -81,18 +83,5 @@ class ProfileViewModel {
     default:
       break
     }
-  }
-}
-
-extension ProfileViewModel {
-  
-  public struct Input {
-    let tapLogoutAction = PublishSubject<Void>()
-    let tapCellAction = PublishSubject<ProfilesSectionItem>()
-  }
-  
-  public struct Output {
-    let sections: Observable<[ProfileSectionModel]>
-    let presentSignOutAlert: Observable<Bool>
   }
 }

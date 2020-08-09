@@ -8,44 +8,32 @@
 
 import RxSwift
 
-public protocol AuthPermissionViewModelDelegate: class {
-  
-  func authPermissionViewModel(didSignedIn signedIn: Bool)
-}
-
-final class AuthPermissionViewModel {
+final class AuthPermissionViewModel: AuthPermissionViewModelProtocol {
   
   weak var delegate: AuthPermissionViewModelDelegate?
   
-  var input: Input
+  let didSignIn = PublishSubject<Bool>()
   
-  var output: Output
+  let authPermissionURL: URL
   
   private let disposeBag = DisposeBag()
   
+  // MARK: - Initializer
+  
   init(url: URL) {
-    input = Input()
-    output = Output(authPermissionURL: url)
-    
+    authPermissionURL = url
     subscribe()
   }
   
+  func signIn() {
+    didSignIn.onNext(true)
+  }
+  
   fileprivate func subscribe() {
-    input.didSignIn.asObserver()
+    didSignIn.asObserver()
       .subscribe(onNext: { [weak self] signedIn in
         self?.delegate?.authPermissionViewModel(didSignedIn: signedIn)
       })
       .disposed(by: disposeBag)
-  }
-}
-
-extension AuthPermissionViewModel {
-  
-  public struct Input {
-    let didSignIn = PublishSubject<Bool>()
-  }
-  
-  public struct Output {
-    let authPermissionURL: URL
   }
 }

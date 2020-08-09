@@ -8,6 +8,20 @@ PODS:
     - Shared
     - TVShowsList
     - UI
+  - AccountTV/Tests (0.1.0):
+    - iOSSnapshotTestCase
+    - Networking
+    - Nimble
+    - Persistence
+    - Quick
+    - RxBlocking
+    - RxCocoa (~> 5.0.0)
+    - RxDataSources (~> 4.0.0)
+    - RxSwift (~> 5.0.0)
+    - RxTest
+    - Shared
+    - TVShowsList
+    - UI
   - AiringToday (0.1.0):
     - Networking
     - Persistence
@@ -166,6 +180,7 @@ PODS:
 
 DEPENDENCIES:
   - AccountTV (from `DevPods/Account`)
+  - AccountTV/Tests (from `DevPods/Account`)
   - AiringToday (from `DevPods/AiringToday`)
   - AiringToday/Tests (from `DevPods/AiringToday`)
   - KeyChainStorage (from `DevPods/KeyChainStorage`)
@@ -227,7 +242,7 @@ EXTERNAL SOURCES:
     :path: DevPods/UI
 
 SPEC CHECKSUMS:
-  AccountTV: 71158ccdc7de8494ef869776a3fc2894d0416f62
+  AccountTV: 304bb9e895099abed2af3e86f013640b9293031b
   AiringToday: 096d38ed792775c962715780b0ea12b6ad287a87
   Differentiator: 886080237d9f87f322641dedbc5be257061b0602
   iOSSnapshotTestCase: 9ab44cb5aa62b84d31847f40680112e15ec579a6
@@ -254,6 +269,6 @@ SPEC CHECKSUMS:
   TVShowsList: 9f6a74844f1fd1cf1e6410706f79aefef0bd5545
   UI: e4bb340d016186906a94c1acf88a4c3e630e3051
 
-PODFILE CHECKSUM: 666a5ccdd464a87ce0418f7f4677cbb69221d786
+PODFILE CHECKSUM: ac4a3ba1121fb18a4d31f73cccf3aef7610dc5ca
 
 COCOAPODS: 1.9.1

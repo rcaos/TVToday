@@ -97,10 +97,12 @@ class EpisodesListViewModelTests: QuickSpec {
         it("Should ViewModel contains List of Episodes") {
           // given
           
+          let headerViewModel = SeasonHeaderViewModel(showDetail: self.detailResult)
           let numberOfSeasons = 9
           let episodesSection = self.episodes.map { EpisodeSectionModelType(episode: $0)}
             .map { SeasonsSectionItem.episodes(items: $0) }
           let dataExpected: [SeasonsSectionModel] = [
+            .headerShow(header: "Header", items: [.headerShow(viewModel: headerViewModel)]),
             .seasons(header: "Seasons", items: [.seasons(number: numberOfSeasons)]),
             .episodes(header: "Episodes", items: episodesSection)
           ]
@@ -214,8 +216,8 @@ class EpisodesListViewModelTests: QuickSpec {
           
           // when
           let expected: [Recorded<Event<EpisodesListViewModel.ViewState>>] = [
-            .next(0, .loading),
-            .next(0, .populated),
+            .next(0, .loading) ,
+            .next(0, .populated) ,
             .next(0, .loadingSeason)
           ]
           
@@ -320,12 +322,16 @@ class EpisodesListViewModelTests: QuickSpec {
           
           let firstEpisodes = self.episodes.map { EpisodeSectionModelType(episode: $0)}
             .map { SeasonsSectionItem.episodes(items: $0) }
+          let headerViewModel = SeasonHeaderViewModel(showDetail: self.detailResult)
+          
           let firstSeason: [SeasonsSectionModel] = [
+            .headerShow(header: "Header", items: [.headerShow(viewModel: headerViewModel)]),
             .seasons(header: "Seasons", items: [.seasons(number: numberOfSeasons)]),
             .episodes(header: "Episodes", items: firstEpisodes)
           ]
           
           let loadingSection: [SeasonsSectionModel] = [
+            .headerShow(header: "Header", items: [.headerShow(viewModel: headerViewModel)]),
             .seasons(header: "Seasons", items: [.seasons(number: numberOfSeasons)]),
             .episodes(header: "Episodes", items: [])
           ]
@@ -333,6 +339,7 @@ class EpisodesListViewModelTests: QuickSpec {
           let secondEpisodes = self.episodes.map { EpisodeSectionModelType(episode: $0)}
             .map { SeasonsSectionItem.episodes(items: $0) }
           let secondSeason: [SeasonsSectionModel] = [
+            .headerShow(header: "Header", items: [.headerShow(viewModel: headerViewModel)]),
             .seasons(header: "Seasons", items: [.seasons(number: numberOfSeasons)]),
             .episodes(header: "Episodes", items: secondEpisodes)
           ]

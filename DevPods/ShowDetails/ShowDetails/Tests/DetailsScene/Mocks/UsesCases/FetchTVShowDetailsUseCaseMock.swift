@@ -18,12 +18,10 @@ class FetchTVShowDetailsUseCaseMock: FetchTVShowDetailsUseCase {
   
   func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> Observable<Response> {
     if let error = error {
-      print("--ask for Error")
       return Observable.just( .failure(error) )
     }
     
     if let result = result {
-      print("--ask for Result")
       return Observable.just( .success(result) )
     }
     

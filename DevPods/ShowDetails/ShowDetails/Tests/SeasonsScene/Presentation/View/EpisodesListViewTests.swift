@@ -19,7 +19,7 @@ class EpisodesListViewTests: FBSnapshotTestCase {
     super.setUp()
     //self.recordMode = true
     
-    headerViewModel = SeasonHeaderViewModelMock(showName: "Dragon Ball Z (19987 - 1992)")
+    headerViewModel = SeasonHeaderViewModelMock(showName: "Dragon Ball Z (1987 - 1992)")
   }
   
   func test_WhenViewIsLoading_thenShow_LoadingScreen() {

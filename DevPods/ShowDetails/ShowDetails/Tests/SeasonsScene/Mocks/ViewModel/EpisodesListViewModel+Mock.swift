@@ -22,10 +22,6 @@ class EpisodesListViewModelMock: EpisodesListViewModelProtocol {
   
   func refreshView() { }
   
-  func buildHeaderViewModel() -> SeasonHeaderViewModelProtocol? {
-    return headerViewModel
-  }
-  
   func buildModelForSeasons(with numberOfSeasons: Int) -> SeasonListViewModelProtocol? {
     return seasonListViewModel
   }
@@ -44,8 +40,6 @@ class EpisodesListViewModelMock: EpisodesListViewModelProtocol {
   
   private var viewStateObservableSubject: BehaviorSubject<EpisodesListViewModel.ViewState>
   
-  private let headerViewModel: SeasonHeaderViewModelProtocol?
-  
   private var seasonListViewModel: SeasonListViewModel?
   
   init(state: EpisodesListViewModel.ViewState,
@@ -60,26 +54,32 @@ class EpisodesListViewModelMock: EpisodesListViewModelProtocol {
     dataSubject = BehaviorSubject(value: [])
     data = dataSubject.asObservable()
     
-    self.headerViewModel = headerViewModel
-    
     buildSeasonViewModel(for: numberOfSeasons)
     seasonListViewModel?.selectSeason(seasonSelected)
     
-    createSectionModel(with: numberOfSeasons, and: episodes)
+    createSectionModel(headerViewModel, with: numberOfSeasons, and: episodes)
     
     viewStateObservableSubject.onNext(.populated)
     viewStateObservableSubject.onNext(state)
   }
   
-  fileprivate func createSectionModel(with numberOfSeasons: Int,
+  fileprivate func createSectionModel(_ headerViewModel: SeasonHeaderViewModelProtocol?,
+                                      with numberOfSeasons: Int,
                                       and episodes: [Episode]) {
+    var dataSourceSections: [SeasonsSectionModel] = []
+    
+    if let viewModel = headerViewModel {
+      dataSourceSections.append(.headerShow(header: "Header", items: [.headerShow(viewModel: viewModel )]))
+    }
+    
+    dataSourceSections.append(.seasons(header: "Seasons", items: [.seasons(number: numberOfSeasons)]))
+    
     let episodesSectioned = episodes.map {
       EpisodeSectionModelType(episode: $0) }.map { SeasonsSectionItem.episodes(items: $0) }
     
-    dataSubject.onNext([
-      .seasons(header: "Seasons", items: [.seasons(number: numberOfSeasons)]),
-      .episodes(header: "Episodes", items: episodesSectioned )
-    ])
+    dataSourceSections.append(.episodes(header: "Episodes", items: episodesSectioned))
+    
+    dataSubject.onNext(dataSourceSections)
   }
   
   fileprivate func buildSeasonViewModel(for numberOfSeasons: Int) {

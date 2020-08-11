@@ -17,8 +17,6 @@ protocol EpisodesListViewModelProtocol: SeasonListViewModelDelegate {
   func refreshView()
   
   // MARK: - Output
-  
-  func buildHeaderViewModel() -> SeasonHeaderViewModelProtocol?
   func buildModelForSeasons(with numberOfSeasons: Int) -> SeasonListViewModelProtocol?
   func getModel(for episode: EpisodeSectionModelType) -> EpisodeItemViewModel?
   
@@ -93,7 +91,7 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
       .subscribe(onNext: { [weak self] (season, allEpisodes) in
         guard let strongSelf = self else { return }
         
-        if let episodes = allEpisodes[season] as? [Episode], episodes.count > 1 {
+        if let episodes = allEpisodes[season] as? [Episode], episodes.count >= 1 {
           strongSelf.changeToSeason(number: season, episodes: episodes)
         } else {
           strongSelf.fetchEpisodesFor(season: season)
@@ -177,7 +175,6 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
     let ordered = fetchedEpisodes.sorted(by: { $0.episodeNumber < $1.episodeNumber })
     allEpisodesSubject.onNext([seasonFetched: ordered])
     
-    // Populated State
     createSectionModel(state: .populated, with: totalSeasons, seasonSelected: seasonFetched, and: ordered)
   }
   
@@ -215,11 +212,6 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
   
   func refreshView() {
     fetchShowDetailsAndFirstSeason(showLoader: false)
-  }
-  
-  func buildHeaderViewModel() -> SeasonHeaderViewModelProtocol? {
-    guard let show = showDetailResult else { return nil }
-    return SeasonHeaderViewModel(showDetail: show)
   }
   
   func buildModelForSeasons(with numberOfSeasons: Int) -> SeasonListViewModelProtocol? {

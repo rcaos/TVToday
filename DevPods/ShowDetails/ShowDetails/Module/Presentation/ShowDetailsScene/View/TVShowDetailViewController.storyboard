@@ -42,25 +42,25 @@
                                                 <rect key="frame" x="0.0" y="260" width="414" height="160"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="7Kr-l9-jq2">
-                                                        <rect key="frame" x="10" y="0.0" width="404" height="29"/>
+                                                        <rect key="frame" x="10" y="0.0" width="404" height="120"/>
                                                         <subviews>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TV Show Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hFo-L9-2Vp" customClass="TVBoldLabel" customModule="UI">
-                                                                <rect key="frame" x="0.0" y="0.0" width="404" height="8"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="404" height="33.5"/>
                                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <view contentMode="scaleToFill" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="UkU-ld-ael">
-                                                                <rect key="frame" x="0.0" y="16" width="404" height="0.0"/>
+                                                                <rect key="frame" x="0.0" y="41.5" width="404" height="50"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2008 - 2013" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Cl-GX-Lsd" customClass="TVRegularLabel" customModule="UI">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="95.5" height="0.0"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="95.5" height="50"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="49 min" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4OH-Ij-b9K" customClass="TVRegularLabel" customModule="UI">
-                                                                        <rect key="frame" x="135.5" y="0.0" width="53.5" height="0.0"/>
+                                                                        <rect key="frame" x="135.5" y="0.0" width="53.5" height="50"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
@@ -77,7 +77,7 @@
                                                                 </constraints>
                                                             </view>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cine, Drama, Triller" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61s-WD-Bku" customClass="TVRegularLabel" customModule="UI">
-                                                                <rect key="frame" x="0.0" y="24" width="404" height="5"/>
+                                                                <rect key="frame" x="0.0" y="99.5" width="404" height="20.5"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -96,7 +96,7 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bex-lh-aAK" userLabel="SeparatorView">
                                                 <rect key="frame" x="0.0" y="430" width="414" height="128"/>
                                                 <subviews>
-                                                    <view alpha="0.10000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DwP-r1-q42">
+                                                    <view alpha="0.20000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DwP-r1-q42">
                                                         <rect key="frame" x="10" y="0.0" width="404" height="128"/>
                                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </view>
@@ -139,7 +139,7 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Oa4-vc-mBe" userLabel="SeparatorView">
                                                 <rect key="frame" x="0.0" y="706" width="414" height="128"/>
                                                 <subviews>
-                                                    <view alpha="0.10000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yIi-EZ-LQC">
+                                                    <view alpha="0.20000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yIi-EZ-LQC">
                                                         <rect key="frame" x="10" y="0.0" width="404" height="128"/>
                                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </view>
@@ -187,7 +187,7 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7d9-5j-cpr" userLabel="SeparatorView">
                                                 <rect key="frame" x="0.0" y="982" width="414" height="128"/>
                                                 <subviews>
-                                                    <view alpha="0.10000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rCP-OA-V1l">
+                                                    <view alpha="0.20000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rCP-OA-V1l">
                                                         <rect key="frame" x="10" y="0.0" width="404" height="128"/>
                                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </view>

@@ -51,20 +51,10 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable, Load
     print("deinit \(Self.self)")
   }
   
-  override func viewDidLayoutSubviews() {
-    super.viewDidLayoutSubviews()
-    updateHeaderViewLayout()
-  }
-  
   private func configureTable() {
-    tableView.registerNib(cellType: EpisodeItemTableViewCell.self)
+    tableView.registerNib(cellType: HeaderSeasonsTableViewCell.self)
     tableView.registerNib(cellType: SeasonListTableViewCell.self)
-  }
-  
-  private func setupTableHeaderView() {
-    let headerView = SeasonHeaderView.loadFromNib()
-    headerView.viewModel = viewModel.buildHeaderViewModel()
-    tableView.tableHeaderView = headerView
+    tableView.registerNib(cellType: EpisodeItemTableViewCell.self)
   }
   
   private func setupBindables() {
@@ -80,6 +70,8 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable, Load
       configureCell: { [weak self] (_, _, indexPath, element) -> UITableViewCell in
         guard let strongSelf = self else { fatalError() }
         switch element {
+        case .headerShow(viewModel: let viewModel):
+          return strongSelf.makeCellForHeaderShow(at: indexPath, viewModel: viewModel)
         case .seasons(number: let numberOfSeasons):
           return strongSelf.makeCellForSeasonNumber(at: indexPath, element: numberOfSeasons)
         case .episodes(items: let episode):
@@ -107,21 +99,18 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable, Load
       
     case .populated :
       hideLoadingView()
-      setupTableHeaderView()
       tableView.tableFooterView = UIView()
-      tableView.separatorStyle = .singleLine
+      tableView.separatorStyle = .none
       hideMessageView()
       
     case .loadingSeason:
       hideLoadingView()
-      setupTableHeaderView()
       tableView.tableFooterView = loadingView
       tableView.separatorStyle = .none
       hideMessageView()
       
     case .empty :
       hideLoadingView()
-      setupTableHeaderView()
       tableView.tableFooterView = emptyView
       tableView.separatorStyle = .none
       
@@ -136,21 +125,9 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable, Load
       
     case .errorSeason:
       hideLoadingView()
-      setupTableHeaderView()
       tableView.tableFooterView = errorView
       tableView.separatorStyle = .none
       hideMessageView()
-    }
-  }
-  
-  private func updateHeaderViewLayout() {
-    guard let headerView = tableView.tableHeaderView else { return }
-    let size = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-    
-    if headerView.frame.size.height != size.height {
-      headerView.frame.size.height = size.height
-      tableView.tableHeaderView = headerView
-      tableView.layoutIfNeeded()
     }
   }
 }
@@ -158,6 +135,14 @@ class EpisodesListViewController: UIViewController, StoryboardInstantiable, Load
 // MARK: - Confgure Cells
 
 extension EpisodesListViewController {
+  
+  private func makeCellForHeaderShow(at indexPath: IndexPath, viewModel: SeasonHeaderViewModelProtocol) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCell(with: HeaderSeasonsTableViewCell.self, for: indexPath)
+    if cell.viewModel == nil {
+      cell.viewModel = viewModel
+    }
+    return cell
+  }
   
   private func makeCellForSeasonNumber(at indexPath: IndexPath, element: Int) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: SeasonListTableViewCell.self, for: indexPath)
@@ -182,8 +167,15 @@ extension EpisodesListViewController {
 extension EpisodesListViewController: UITableViewDelegate {
   
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    let height: CGFloat = (indexPath.section == 0) ? 65.0 : 110.0
-    return height
+    
+    switch indexPath.section {
+    case 0:
+      return UITableView.automaticDimension
+    case 1:
+      return 65.0
+    default:
+      return 110.0
+    }
   }
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

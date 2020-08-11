@@ -182,15 +182,29 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
   }
   
   fileprivate func createSectionModel(state: ViewState, with numberOfSeasons: Int, seasonSelected: Int, and episodes: [Episode]) {
-    let episodesSectioned = episodes.map {
-      EpisodeSectionModelType(episode: $0) }.map { SeasonsSectionItem.episodes(items: $0) }
     
-    dataObservableSubject.onNext(
-      [
-        .seasons(header: "Seasons", items: [.seasons(number:numberOfSeasons)]),
-        .episodes(header: "Episodes", items:  episodesSectioned )
-    ])
+    var dataSourceSections: [SeasonsSectionModel] = []
+    
+    if let headerSection = createModelForheader() {
+      dataSourceSections.append(headerSection)
+    }
+    
+    dataSourceSections.append(.seasons(header: "Seasons", items: [.seasons(number:numberOfSeasons)]) )
+    
+    let episodesSectioned = episodes.map { EpisodeSectionModelType(episode: $0) }
+      .map { SeasonsSectionItem.episodes(items: $0) }
+    
+    dataSourceSections.append(.episodes(header: "Episodes", items:  episodesSectioned) )
+    
+    dataObservableSubject.onNext( dataSourceSections )
     viewStateObservableSubject.onNext( state )
+  }
+  
+  fileprivate func createModelForheader() -> SeasonsSectionModel? {
+    if let detailShow = showDetailResult {
+      return .headerShow(header: "Header", items: [.headerShow(viewModel: SeasonHeaderViewModel(showDetail: detailShow))])
+    }
+    return nil
   }
   
   // MARK: - Public Api

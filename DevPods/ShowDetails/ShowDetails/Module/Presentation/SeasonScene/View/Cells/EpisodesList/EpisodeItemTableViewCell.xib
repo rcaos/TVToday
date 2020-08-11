@@ -18,14 +18,21 @@
                 <rect key="frame" x="0.0" y="0.0" width="606" height="277"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
+                    <view alpha="0.20000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i1n-CJ-7Nh" userLabel="SeparatorView">
+                        <rect key="frame" x="16" y="0.0" width="590" height="1"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="oS9-54-IoM"/>
+                        </constraints>
+                    </view>
                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="eG4-K3-DOx">
-                        <rect key="frame" x="8" y="0.0" width="590" height="277"/>
+                        <rect key="frame" x="8" y="6" width="590" height="271"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vzc-rs-kyS">
-                                <rect key="frame" x="0.0" y="8" width="147.5" height="261"/>
+                                <rect key="frame" x="0.0" y="8" width="147.5" height="255"/>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="ueg-Qw-H9Q">
-                                <rect key="frame" x="155.5" y="97.5" width="434.5" height="82"/>
+                                <rect key="frame" x="155.5" y="94.5" width="434.5" height="82"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="CZt-Ak-nq5">
                                         <rect key="frame" x="0.0" y="0.0" width="139.5" height="20.5"/>
@@ -91,8 +98,11 @@
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="eG4-K3-DOx" secondAttribute="trailing" constant="8" id="8fI-Pg-kQn"/>
+                    <constraint firstItem="i1n-CJ-7Nh" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="Q5w-Hr-6fX"/>
+                    <constraint firstItem="i1n-CJ-7Nh" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="awm-HM-ITY"/>
                     <constraint firstItem="eG4-K3-DOx" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="8" id="hJZ-N7-TX6"/>
-                    <constraint firstItem="eG4-K3-DOx" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="lcb-FC-1dW"/>
+                    <constraint firstAttribute="trailing" secondItem="i1n-CJ-7Nh" secondAttribute="trailing" id="inq-Wh-q5W"/>
+                    <constraint firstItem="eG4-K3-DOx" firstAttribute="top" secondItem="i1n-CJ-7Nh" secondAttribute="bottom" constant="5" id="lcb-FC-1dW"/>
                     <constraint firstAttribute="bottom" secondItem="eG4-K3-DOx" secondAttribute="bottom" id="tGb-zB-9vI"/>
                 </constraints>
             </tableViewCellContentView>

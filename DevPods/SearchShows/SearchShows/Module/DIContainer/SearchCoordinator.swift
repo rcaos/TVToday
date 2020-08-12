@@ -6,26 +6,9 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import UIKit
 import ShowDetails
 import TVShowsList
 import Shared
-
-protocol SearchCoordinatorDependencies {
-  
-  func buildSearchViewController(coordinator: SearchCoordinatorProtocol?) -> UIViewController
-  
-  func buildTVShowListCoordinator(navigationController: UINavigationController,
-                                  delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinator
-  
-  func buildTVShowDetailCoordinator(navigationController: UINavigationController,
-                                    delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinator
-}
-
-protocol SearchCoordinatorProtocol: class {
-  
-  func navigate(to step: SearchStep)
-}
 
 class SearchCoordinator: NavigationCoordinator, SearchCoordinatorProtocol {
   
@@ -103,27 +86,4 @@ extension SearchCoordinator: TVShowDetailCoordinatorDelegate {
   public func tvShowDetailCoordinatorDidFinish() {
     childCoordinators[.detailShow] = nil
   }
-}
-
-// MARK: - Steps
-
-public enum SearchStep: Step {
-  
-  case
-  
-  searchFeatureInit,
-  
-  genreIsPicked(withId: Int, title: String?),
-  
-  showIsPicked(withId: Int)
-}
-
-// MARK: - ChildCoordinators
-
-public enum SearchChildCoordinator {
-  case
-  
-  detailShow,
-  
-  genreList
 }

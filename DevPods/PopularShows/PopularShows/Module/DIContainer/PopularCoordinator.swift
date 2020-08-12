@@ -6,24 +6,8 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import UIKit
 import ShowDetails
 import Shared
-
-protocol PopularCoordinatorDependencies {
-  
-  func buildPopularViewController(coordinator: PopularCoordinatorProtocol?) -> UIViewController
-  
-  func buildTVShowDetailCoordinator(navigationController: UINavigationController,
-                                    delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinator
-}
-
-protocol PopularCoordinatorProtocol: class {
-  
-  func navigate(to step: PopularStep)
-}
-
-// MARK: - Default Implementation
 
 class PopularCoordinator: NavigationCoordinator, PopularCoordinatorProtocol {
   
@@ -84,19 +68,4 @@ extension PopularCoordinator: TVShowDetailCoordinatorDelegate {
   func tvShowDetailCoordinatorDidFinish() {
     childCoordinators[.detailShow] = nil
   }
-}
-
-// MARK: - Steps
-
-public enum PopularStep: Step {
-  
-  case popularFeatureInit,
-  
-  showIsPicked(Int)
-}
-
-// MARK: - ChildCoordinators
-
-public enum PopularChildCoordinator {
-  case detailShow
 }

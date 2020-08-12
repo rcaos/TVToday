@@ -6,25 +6,8 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import UIKit
-import Networking
 import ShowDetails
 import Shared
-
-protocol AiringTodayCoordinatorDependencies {
-  
-  func buildAiringTodayViewController(coordinator: AiringTodayCoordinatorProtocol?) -> UIViewController
-  
-  func buildTVShowDetailCoordinator(navigationController: UINavigationController,
-                                    delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinator
-}
-
-protocol AiringTodayCoordinatorProtocol: class {
-  
-  func navigate(to step: AiringTodayStep)
-}
-
-// MARK: - Default Implementation
 
 class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinatorProtocol {
   
@@ -87,19 +70,4 @@ extension AiringTodayCoordinator: TVShowDetailCoordinatorDelegate {
   public func tvShowDetailCoordinatorDidFinish() {
     childCoordinators[.detailShow] = nil
   }
-}
-
-// MARK: - Steps
-
-public enum AiringTodayStep: Step {
-  
-  case todayFeatureInit,
-  
-  showIsPicked(Int)
-}
-
-// MARK: - ChildCoordinators
-
-public enum AiringTodayChildCoordinator {
-  case detailShow
 }

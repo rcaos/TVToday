@@ -10,10 +10,6 @@ import RxSwift
 import Shared
 import ShowDetails
 
-public struct TVShowListViewModelClosures {
-  let showTVShowDetails: (@escaping (_ updated: TVShowUpdated) -> Void) -> Void
-}
-
 protocol TVShowListViewModelProtocol {
   
   // MARK: - Input

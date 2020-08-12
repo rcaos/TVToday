@@ -6,25 +6,8 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import Foundation
-import Networking
 import Shared
 import TVShowsList
-
-protocol AccountCoordinatorDependencies {
-  
-  func buildAccountViewController(coordinator: AccountCoordinatorProtocol?) -> UIViewController
-  
-  func buildAuthPermissionViewController(url: URL, delegate: AuthPermissionViewModelDelegate?) -> UIViewController
-  
-  func buildTVShowListCoordinator(navigationController: UINavigationController,
-                                  delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinator
-}
-
-protocol AccountCoordinatorProtocol: class {
-  
-  func navigate(to step: AccountStep)
-}
 
 class AccountCoordinator: NavigationCoordinator, AccountCoordinatorProtocol {
   
@@ -85,7 +68,6 @@ class AccountCoordinator: NavigationCoordinator, AccountCoordinatorProtocol {
   
   fileprivate func navigateToFavorites() {
     let coordinator = dependencies.buildTVShowListCoordinator(navigationController: navigationController, delegate: self)
-    coordinator.delegate = self
     childCoordinators[.tvShowList] = coordinator
     coordinator.start(with: .favoriteList)
   }
@@ -94,7 +76,6 @@ class AccountCoordinator: NavigationCoordinator, AccountCoordinatorProtocol {
   
   fileprivate func navigateToWatchList() {
     let coordinator = dependencies.buildTVShowListCoordinator(navigationController: navigationController, delegate: self)
-    coordinator.delegate = self
     childCoordinators[.tvShowList] = coordinator
     coordinator.start(with: .watchList)
   }
@@ -107,29 +88,4 @@ extension AccountCoordinator: TVShowListCoordinatorDelegate {
   func tvShowListCoordinatorDidFinish() {
     childCoordinators[.tvShowList] = nil
   }
-}
-
-// MARK: - Steps
-
-public enum AccountStep: Step {
-  
-  case
-  
-  accountFeatureInit,
-  
-  signInIsPicked(url: URL, delegate: AuthPermissionViewModelDelegate?),
-  
-  authorizationIsComplete,
-  
-  favoritesIsPicked,
-  
-  watchListIsPicked
-}
-
-// MARK: - Child Coordinators
-
-public enum AccountChildCoordinator {
-  case
-  
-  tvShowList
 }

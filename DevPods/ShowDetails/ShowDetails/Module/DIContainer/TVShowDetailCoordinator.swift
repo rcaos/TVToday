@@ -6,29 +6,7 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import UIKit
-import Networking
 import Shared
-import Persistence
-
-protocol TVShowDetailCoordinatorDependencies {
-  
-  func buildShowDetailsViewController(with showId: Int,
-                                      coordinator: TVShowDetailCoordinatorProtocol?,
-                                      closures: TVShowDetailViewModelClosures?) -> UIViewController
-  
-  func buildEpisodesViewController(with showId: Int) -> UIViewController
-}
-
-public protocol TVShowDetailCoordinatorProtocol: class {
-  
-  func navigate(to step: ShowDetailsStep)
-}
-
-public protocol TVShowDetailCoordinatorDelegate: class {
-  
-  func tvShowDetailCoordinatorDidFinish()
-}
 
 public class TVShowDetailCoordinator: NavigationCoordinator, TVShowDetailCoordinatorProtocol {
   
@@ -83,17 +61,4 @@ public class TVShowDetailCoordinator: NavigationCoordinator, TVShowDetailCoordin
     let seasonsVC = dependencies.buildEpisodesViewController(with: showId)
     navigationController.pushViewController(seasonsVC, animated: true)
   }
-}
-
-// MARK: - Steps
-
-public enum ShowDetailsStep: Step {
-  
-  case
-  
-  showDetailsIsRequired(withId: Int, closures: TVShowDetailViewModelClosures? = nil),
-  
-  seasonsAreRequired(withId: Int),
-  
-  detailViewDidFinish
 }

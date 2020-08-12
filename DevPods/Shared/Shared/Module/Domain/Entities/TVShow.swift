@@ -21,6 +21,8 @@ public struct TVShow {
   public var overview: String!
   public var originCountry: [String]!
   public var voteCount: Int!
+  
+  public var isActive: Bool = true
 }
 
 extension TVShow {

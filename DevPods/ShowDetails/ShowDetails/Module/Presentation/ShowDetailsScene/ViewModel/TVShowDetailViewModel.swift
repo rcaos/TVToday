@@ -9,6 +9,23 @@
 import RxSwift
 import Shared
 
+public struct TVShowUpdated {
+  public let showId: Int
+  public let isActive: Bool
+}
+
+public struct TVShowDetailViewModelClosures {
+  
+  let updateFavoritesShows: ( (_ updated: TVShowUpdated) -> Void )?
+  let updateWatchListShows: ( (_ updated: TVShowUpdated) -> Void )?
+   
+  public init (updateFavoritesShows: ( (_ updated: TVShowUpdated) -> Void )? = nil ,
+               updateWatchListShows: ( (_ updated: TVShowUpdated) -> Void )? = nil) {
+    self.updateFavoritesShows = updateFavoritesShows
+    self.updateWatchListShows = updateWatchListShows
+  }
+}
+
 protocol TVShowDetailViewModelProtocol {
   
   // MARK: - Input
@@ -58,6 +75,8 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   
   private var isLoadingWatchList = BehaviorSubject<Bool>(value: false)
   
+  private let closures: TVShowDetailViewModelClosures?
+  
   private let disposeBag = DisposeBag()
   
   // MARK: - Public Api
@@ -80,7 +99,8 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
        fetchTvShowState: FetchTVAccountStates,
        markAsFavoriteUseCase: MarkAsFavoriteUseCase,
        saveToWatchListUseCase: SaveToWatchListUseCase,
-       coordinator: TVShowDetailCoordinatorProtocol?) {
+       coordinator: TVShowDetailCoordinatorProtocol?,
+       closures: TVShowDetailViewModelClosures? = nil) {
     self.showId = showId
     self.fetchLoggedUser = fetchLoggedUser
     self.fetchDetailShowUseCase = fetchDetailShowUseCase
@@ -88,6 +108,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
     self.markAsFavoriteUseCase = markAsFavoriteUseCase
     self.saveToWatchListUseCase = saveToWatchListUseCase
     self.coordinator = coordinator
+    self.closures = closures
     
     tapFavoriteButton = PublishSubject<Void>()
     tapWatchedButton = PublishSubject<Void>()
@@ -164,9 +185,11 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
     
     requestFavorite
       .subscribe(onNext: { [weak self] (response) in
+        guard let strongSelf = self else { return }
         switch response {
         case .success(let newState):
-          self?.isFavoriteSubject.onNext(newState)
+          strongSelf.isFavoriteSubject.onNext(newState)
+          strongSelf.closures?.updateFavoritesShows?( TVShowUpdated(showId: strongSelf.showId, isActive: newState) )
         default:
           break
         }
@@ -197,9 +220,11 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
     
     requestFavorite
       .subscribe(onNext: { [weak self] (response) in
+        guard let strongSelf = self else { return }
         switch response {
         case .success(let newState):
-          self?.isWatchListSubject.onNext(newState)
+          strongSelf.isWatchListSubject.onNext(newState)
+          strongSelf.closures?.updateWatchListShows?( TVShowUpdated(showId: strongSelf.showId, isActive: newState))
         default:
           break
         }
@@ -250,7 +275,6 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
       }.share()
     
     responses
-      .debug()
       .flatMap { (resultDetails, resultState ) -> Observable<ViewState> in
         
         switch (resultDetails, resultState) {

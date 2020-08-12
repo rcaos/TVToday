@@ -27,6 +27,7 @@ public class TVShowDetailCoordinator: NavigationCoordinator, TVShowDetailCoordin
   
   public weak var delegate: TVShowDetailCoordinatorDelegate?
   
+  // MARK: TODO, refactor dependencies
   private let dependencies: ShowDetailsDependencies
   
   // MARK: - Repositories
@@ -72,9 +73,8 @@ public class TVShowDetailCoordinator: NavigationCoordinator, TVShowDetailCoordin
   
   public func navigate(to step: ShowDetailsStep) {
     switch step {
-      
-    case .showDetailsIsRequired(let showId):
-      showDetailsFeature(with: showId)
+    case .showDetailsIsRequired(let showId, let closures):
+      showDetailsFeature(with: showId, closures: closures)
       
     case .seasonsAreRequired(let showId):
       navigateToSeasonsScreen(with: showId)
@@ -86,14 +86,16 @@ public class TVShowDetailCoordinator: NavigationCoordinator, TVShowDetailCoordin
   
   // MARK: - Navigate to Show Details
   
-  fileprivate func showDetailsFeature(with showId: Int) {
+  fileprivate func showDetailsFeature(with showId: Int, closures: TVShowDetailViewModelClosures? = nil) {
+    
     let viewModel = TVShowDetailViewModel(showId,
                                           fetchLoggedUser: makeFetchLoggedUserUseCase(),
                                           fetchDetailShowUseCase: makeFetchShowDetailsUseCase(),
                                           fetchTvShowState: makeTVAccountStatesUseCase(),
                                           markAsFavoriteUseCase: makeMarkAsFavoriteUseCase(),
                                           saveToWatchListUseCase: makeSaveToWatchListUseCase(),
-                                          coordinator: self)
+                                          coordinator: self,
+                                          closures: closures)
     let detailVC = TVShowDetailViewController.create(with: viewModel)
     navigationController.pushViewController(detailVC, animated: true)
   }
@@ -151,7 +153,7 @@ public enum ShowDetailsStep: Step {
   
   case
   
-  showDetailsIsRequired(withId: Int),
+  showDetailsIsRequired(withId: Int, closures: TVShowDetailViewModelClosures? = nil),
   
   seasonsAreRequired(withId: Int),
   

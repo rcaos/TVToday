@@ -27,6 +27,7 @@ public class TVShowListCoordinator: NavigationCoordinator, TVShowListCoordinator
   
   public weak var delegate: TVShowListCoordinatorDelegate?
   
+   // MARK: TODO, refactor dependencies
   private let dependencies: ShowListDependencies
   
   private var childCoordinators = [TVShowListChildCoordinator: Coordinator]()
@@ -85,8 +86,8 @@ public class TVShowListCoordinator: NavigationCoordinator, TVShowListCoordinator
     case .favoriteList:
       navigateToFavorites()
       
-    case .showIsPicked(let showId):
-      navigateToShowDetailScreen(with: showId)
+    case .showIsPicked(let showId, let stepOrigin, let closure):
+        navigateToShowDetailScreen(with: showId, stepOrigin: stepOrigin, closure: closure)
       
     case .showListDidFinish:
       delegate?.tvShowListCoordinatorDidFinish()
@@ -107,7 +108,7 @@ public class TVShowListCoordinator: NavigationCoordinator, TVShowListCoordinator
   
   fileprivate func navigateToFavorites() {
     let viewModel = TVShowListViewModel(fetchTVShowsUseCase: makeFavoriteListUseCase(),
-                                        coordinator: self)
+                                        coordinator: self, stepOrigin: .favoriteList)
     let showList = TVShowListViewController.create(with: viewModel)
     showList.title = "Favorites"
     navigationController.pushViewController(showList, animated: true)
@@ -117,7 +118,7 @@ public class TVShowListCoordinator: NavigationCoordinator, TVShowListCoordinator
   
   fileprivate func navigateToWatchList() {
     let viewModel = TVShowListViewModel(fetchTVShowsUseCase: makeWatchListUseCase(),
-                                        coordinator: self)
+                                        coordinator: self, stepOrigin: .watchList)
     let showList = TVShowListViewController.create(with: viewModel)
     showList.title = "Watch List"
     navigationController.pushViewController(showList, animated: true)
@@ -125,13 +126,28 @@ public class TVShowListCoordinator: NavigationCoordinator, TVShowListCoordinator
   
   // MARK: - Navigate to Detail TVShow
   
-  fileprivate func navigateToShowDetailScreen(with id: Int) {
+  fileprivate func navigateToShowDetailScreen(with id: Int,
+                                              stepOrigin: TVShowListStepOrigin?,
+                                              closure: ((_ updated: TVShowUpdated) -> Void)? ) {
+    let closures = makeClosures(with: stepOrigin, closure: closure)
   
     let tvDetailCoordinator = TVShowDetailCoordinator(navigationController: navigationController, dependencies: showDetailsDependencies)
     
     childCoordinators[.detailShow] = tvDetailCoordinator
     tvDetailCoordinator.delegate = self
-    tvDetailCoordinator.start(with: .showDetailsIsRequired(withId: id))
+    let detailStep = ShowDetailsStep.showDetailsIsRequired(withId: id, closures: closures)
+    tvDetailCoordinator.start(with: detailStep)
+  }
+  
+  fileprivate func makeClosures(with stepOrigin: TVShowListStepOrigin?, closure: ((_ updated: TVShowUpdated) -> Void)? ) -> TVShowDetailViewModelClosures?{
+    switch stepOrigin {
+    case .favoriteList:
+      return TVShowDetailViewModelClosures(updateFavoritesShows: closure)
+    case .watchList:
+      return TVShowDetailViewModelClosures(updateWatchListShows: closure)
+    default:
+      return nil
+    }
   }
   
   // MARK: - Build Uses Cases
@@ -173,7 +189,9 @@ public enum TVShowListStep: Step {
   
   watchList,
   
-  showIsPicked(showId: Int),
+  showIsPicked(showId: Int,
+    stepOrigin: TVShowListStepOrigin?,
+    closure: (_ updated: TVShowUpdated) -> Void),
   
   showListDidFinish
 }
@@ -182,4 +200,14 @@ public enum TVShowListStep: Step {
 
 public enum TVShowListChildCoordinator {
   case detailShow
+}
+
+// MARK: - Steps Origin
+
+public enum TVShowListStepOrigin {
+  case
+  
+  favoriteList ,
+  
+  watchList
 }

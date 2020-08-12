@@ -8,6 +8,11 @@
 
 import RxSwift
 import Shared
+import ShowDetails
+
+public struct TVShowListViewModelClosures {
+  let showTVShowDetails: (@escaping (_ updated: TVShowUpdated) -> Void) -> Void
+}
 
 protocol TVShowListViewModelProtocol {
   
@@ -41,12 +46,17 @@ final class TVShowListViewModel: TVShowListViewModelProtocol, ShowsViewModel {
   
   var disposeBag = DisposeBag()
   
+  let stepOrigin: TVShowListStepOrigin?
+  
   // MARK: - Initializers
   
-  init(fetchTVShowsUseCase: FetchTVShowsUseCase, coordinator: TVShowListCoordinatorProtocol?) {
+  init(fetchTVShowsUseCase: FetchTVShowsUseCase,
+       coordinator: TVShowListCoordinatorProtocol?,
+       stepOrigin: TVShowListStepOrigin? = nil) {
     self.fetchTVShowsUseCase = fetchTVShowsUseCase
     self.coordinator = coordinator
     self.shows = []
+    self.stepOrigin = stepOrigin
     viewState = viewStateObservableSubject.asObservable()
   }
   
@@ -55,7 +65,9 @@ final class TVShowListViewModel: TVShowListViewModelProtocol, ShowsViewModel {
   }
   
   func mapToCell(entites: [TVShow]) -> [TVShowCellViewModel] {
-    return entites.map { TVShowCellViewModel(show: $0) }
+    return entites
+      .filter { $0.isActive }
+      .map { TVShowCellViewModel(show: $0) }
   }
   
   // MARK: - Input
@@ -84,7 +96,8 @@ final class TVShowListViewModel: TVShowListViewModelProtocol, ShowsViewModel {
   // MARK: - Navigation
   
   public func showIsPicked(with id: Int) {
-    navigateTo(step: .showIsPicked(showId: id))
+    let step = TVShowListStep.showIsPicked(showId: id, stepOrigin: stepOrigin, closure: updateTVShow)
+    navigateTo(step: step)
   }
   
   public func viewDidFinish() {
@@ -93,5 +106,34 @@ final class TVShowListViewModel: TVShowListViewModelProtocol, ShowsViewModel {
   
   private func navigateTo(step: TVShowListStep) {
     coordinator?.navigate(to: step)
+  }
+  
+  // MARK: - Updated List from Show Details (Deleted Favorite, Delete WatchList)
+  
+  private func updateTVShow(_ updated: TVShowUpdated) {
+    for index in shows.indices where shows[index].id == updated.showId {
+      shows[index].isActive = updated.isActive
+    }
+    refreshCells()
+  }
+  
+  private func refreshCells() {
+    let cells = mapToCell(entites: shows)
+    
+    if cells.isEmpty {
+      viewStateObservableSubject.onNext(.empty)
+      return
+    }
+    
+    guard let lastViewState = try? viewStateObservableSubject.value() else { return }
+    
+    switch lastViewState {
+    case .paging(_, let nextPage):
+      viewStateObservableSubject.onNext( .paging(cells, next: nextPage) )
+    case .populated:
+      viewStateObservableSubject.onNext(.populated(cells))
+    default:
+      break
+    }
   }
 }

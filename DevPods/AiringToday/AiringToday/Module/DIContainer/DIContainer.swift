@@ -18,8 +18,8 @@ final class DIContainer {
       basePath: dependencies.imagesBaseURL)
   }()
   
-  private lazy var showDetailsDependencies: ShowDetailsDependencies = {
-    return ShowDetailsDependencies(apiDataTransferService: dependencies.apiDataTransferService,
+  private lazy var showDetailsDependencies: ShowDetails.ModuleDependencies = {
+    return ShowDetails.ModuleDependencies(apiDataTransferService: dependencies.apiDataTransferService,
                                    imagesBaseURL: dependencies.imagesBaseURL,
                                    showsPersistenceRepository: dependencies.showsPersistence)
   }()
@@ -54,9 +54,11 @@ extension DIContainer: AiringTodayCoordinatorDependencies {
     return todayVC
   }
   
-  // TODO, move to Another Module
-  func buildTVShowDetailCoordinator(navigationController: UINavigationController) -> TVShowDetailCoordinator {
-    return TVShowDetailCoordinator(navigationController: navigationController,
-                                   dependencies: showDetailsDependencies)
+  func buildTVShowDetailCoordinator(navigationController: UINavigationController,
+                                    delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinator {
+    
+    let module = ShowDetails.Module(dependencies: showDetailsDependencies)
+    let coordinator = module.buildModuleCoordinator(in: navigationController, delegate: delegate)
+    return coordinator
   }
 }

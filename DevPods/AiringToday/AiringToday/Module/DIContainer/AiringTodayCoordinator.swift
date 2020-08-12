@@ -15,7 +15,8 @@ protocol AiringTodayCoordinatorDependencies {
   
   func buildAiringTodayViewController(coordinator: AiringTodayCoordinatorProtocol?) -> UIViewController
   
-  func buildTVShowDetailCoordinator(navigationController: UINavigationController) -> TVShowDetailCoordinator
+  func buildTVShowDetailCoordinator(navigationController: UINavigationController,
+                                    delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinator
 }
 
 protocol AiringTodayCoordinatorProtocol: class {
@@ -71,10 +72,11 @@ class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinatorProto
   // MARK: - Navigate to Show Detail
   
   fileprivate func showDetailIsPicked(for showId: Int) {
-    let tvDetailCoordinator = dependencies.buildTVShowDetailCoordinator(navigationController: navigationController)
-    tvDetailCoordinator.delegate = self
+    let tvDetailCoordinator = dependencies.buildTVShowDetailCoordinator(navigationController: navigationController, delegate: self)
     childCoordinators[.detailShow] = tvDetailCoordinator
-    tvDetailCoordinator.start(with: .showDetailsIsRequired(withId: showId))
+    
+    let nextStep = ShowDetailsStep.showDetailsIsRequired(withId: showId)
+    tvDetailCoordinator.start(with: nextStep)
   }
 }
 

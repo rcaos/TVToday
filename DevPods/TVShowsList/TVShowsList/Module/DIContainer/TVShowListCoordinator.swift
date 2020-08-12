@@ -52,8 +52,8 @@ public class TVShowListCoordinator: NavigationCoordinator, TVShowListCoordinator
   
   // MARK: - Dependencies
   
-  private lazy var showDetailsDependencies: ShowDetailsDependencies = {
-    return ShowDetailsDependencies(apiDataTransferService: dependencies.apiDataTransferService,
+  private lazy var showDetailsDependencies: ShowDetails.ModuleDependencies = {
+    return ShowDetails.ModuleDependencies(apiDataTransferService: dependencies.apiDataTransferService,
                                    imagesBaseURL: dependencies.imagesBaseURL,
                                    showsPersistenceRepository: dependencies.showsPersistence)
   }()
@@ -131,10 +131,11 @@ public class TVShowListCoordinator: NavigationCoordinator, TVShowListCoordinator
                                               closure: ((_ updated: TVShowUpdated) -> Void)? ) {
     let closures = makeClosures(with: stepOrigin, closure: closure)
   
-    let tvDetailCoordinator = TVShowDetailCoordinator(navigationController: navigationController, dependencies: showDetailsDependencies)
+    let module = ShowDetails.Module(dependencies: showDetailsDependencies)
     
+    let tvDetailCoordinator = module.buildModuleCoordinator(in: navigationController, delegate: self)
     childCoordinators[.detailShow] = tvDetailCoordinator
-    tvDetailCoordinator.delegate = self
+    
     let detailStep = ShowDetailsStep.showDetailsIsRequired(withId: id, closures: closures)
     tvDetailCoordinator.start(with: detailStep)
   }

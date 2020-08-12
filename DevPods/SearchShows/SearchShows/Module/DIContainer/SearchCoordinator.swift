@@ -17,7 +17,8 @@ protocol SearchCoordinatorDependencies {
   
   func buildTVShowListCoordinator(navigationController: UINavigationController) -> TVShowListCoordinator
   
-  func buildTVShowDetailCoordinator(navigationController: UINavigationController) -> TVShowDetailCoordinator
+  func buildTVShowDetailCoordinator(navigationController: UINavigationController,
+                                    delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinator
 }
 
 protocol SearchCoordinatorProtocol: class {
@@ -77,11 +78,11 @@ class SearchCoordinator: NavigationCoordinator, SearchCoordinatorProtocol {
   
   // MARK: - Navigate to Detail TVShow
   
-  fileprivate func navigateToShowDetailScreen(with id: Int) {
-    let coordinator = dependencies.buildTVShowDetailCoordinator(navigationController: navigationController)
-    coordinator.delegate = self
+  fileprivate func navigateToShowDetailScreen(with showId: Int) {
+    let coordinator = dependencies.buildTVShowDetailCoordinator(navigationController: navigationController, delegate: self)
     childCoordinators[.detailShow] = coordinator
-    coordinator.start(with: .showDetailsIsRequired(withId: id))
+    let nextStep = ShowDetailsStep.showDetailsIsRequired(withId: showId)
+    coordinator.start(with: nextStep)
   }
 }
 

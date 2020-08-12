@@ -14,7 +14,8 @@ protocol PopularCoordinatorDependencies {
   
   func buildPopularViewController(coordinator: PopularCoordinatorProtocol?) -> UIViewController
   
-  func buildTVShowDetailCoordinator(navigationController: UINavigationController) -> TVShowDetailCoordinator
+  func buildTVShowDetailCoordinator(navigationController: UINavigationController,
+                                    delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinator
 }
 
 protocol PopularCoordinatorProtocol: class {
@@ -69,10 +70,10 @@ class PopularCoordinator: NavigationCoordinator, PopularCoordinatorProtocol {
   // MARK: - Navigate to Show Detail
   
   fileprivate func navigateToShowDetailScreen(with showId: Int) {
-    let tvDetailCoordinator = dependencies.buildTVShowDetailCoordinator(navigationController: navigationController)
-    tvDetailCoordinator.delegate = self
+    let tvDetailCoordinator = dependencies.buildTVShowDetailCoordinator(navigationController: navigationController, delegate: self)
     childCoordinators[.detailShow] = tvDetailCoordinator
-    tvDetailCoordinator.start(with: .showDetailsIsRequired(withId: showId))
+    let nextStep = ShowDetailsStep.showDetailsIsRequired(withId: showId)
+    tvDetailCoordinator.start(with: nextStep)
   }
 }
 

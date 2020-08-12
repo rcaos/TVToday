@@ -11,6 +11,15 @@ import Networking
 import Shared
 import Persistence
 
+protocol TVShowDetailCoordinatorDependencies {
+  
+  func buildShowDetailsViewController(with showId: Int,
+                                      coordinator: TVShowDetailCoordinatorProtocol?,
+                                      closures: TVShowDetailViewModelClosures?) -> UIViewController
+  
+  func buildEpisodesViewController(with showId: Int) -> UIViewController
+}
+
 public protocol TVShowDetailCoordinatorProtocol: class {
   
   func navigate(to step: ShowDetailsStep)
@@ -23,39 +32,16 @@ public protocol TVShowDetailCoordinatorDelegate: class {
 
 public class TVShowDetailCoordinator: NavigationCoordinator, TVShowDetailCoordinatorProtocol {
   
-  public var navigationController: UINavigationController
-  
   public weak var delegate: TVShowDetailCoordinatorDelegate?
   
-  // MARK: TODO, refactor dependencies
-  private let dependencies: ShowDetailsDependencies
+  public let navigationController: UINavigationController
   
-  // MARK: - Repositories
-  
-  private lazy var tvShowsRepository: TVShowsRepository = {
-    return DefaultTVShowsRepository(
-      dataTransferService: dependencies.apiDataTransferService,
-      basePath: dependencies.imagesBaseURL)
-  }()
-  
-  private lazy var accountShowsRepository: AccountTVShowsRepository = {
-    return DefaultAccountTVShowsRepository(dataTransferService: dependencies.apiDataTransferService,
-                                           basePath: dependencies.imagesBaseURL)
-  }()
-  
-  private lazy var keychainRepository: KeychainRepository = {
-    return DefaultKeychainRepository()
-  }()
-  
-  private lazy var episodesRepository: TVEpisodesRepository = {
-    return DefaultTVEpisodesRepository(
-      dataTransferService: dependencies.apiDataTransferService,
-      basePath: dependencies.imagesBaseURL)
-  }()
+  private let dependencies: TVShowDetailCoordinatorDependencies
   
   // MARK: - Life Cycle
   
-  public init(navigationController: UINavigationController, dependencies: ShowDetailsDependencies) {
+  init(navigationController: UINavigationController,
+       dependencies: TVShowDetailCoordinatorDependencies) {
     
     self.navigationController = navigationController
     self.dependencies = dependencies
@@ -87,64 +73,16 @@ public class TVShowDetailCoordinator: NavigationCoordinator, TVShowDetailCoordin
   // MARK: - Navigate to Show Details
   
   fileprivate func showDetailsFeature(with showId: Int, closures: TVShowDetailViewModelClosures? = nil) {
-    
-    let viewModel = TVShowDetailViewModel(showId,
-                                          fetchLoggedUser: makeFetchLoggedUserUseCase(),
-                                          fetchDetailShowUseCase: makeFetchShowDetailsUseCase(),
-                                          fetchTvShowState: makeTVAccountStatesUseCase(),
-                                          markAsFavoriteUseCase: makeMarkAsFavoriteUseCase(),
-                                          saveToWatchListUseCase: makeSaveToWatchListUseCase(),
-                                          coordinator: self,
-                                          closures: closures)
-    let detailVC = TVShowDetailViewController.create(with: viewModel)
+    let detailVC = dependencies.buildShowDetailsViewController(with: showId, coordinator: self, closures: closures)
     navigationController.pushViewController(detailVC, animated: true)
   }
   
   // MARK: - Navigate Seasons List
   
-  fileprivate func navigateToSeasonsScreen(with id: Int) {
-    let viewModel = EpisodesListViewModel(
-      tvShowId: id,
-      fetchDetailShowUseCase: makeFetchShowDetailsUseCase(),
-      fetchEpisodesUseCase: makeFetchEpisodesUseCase())
-    let seasonsVC = EpisodesListViewController.create(with: viewModel)
-    
+  fileprivate func navigateToSeasonsScreen(with showId: Int) {
+    let seasonsVC = dependencies.buildEpisodesViewController(with: showId)
     navigationController.pushViewController(seasonsVC, animated: true)
   }
-  
-  // MARK: - Uses Cases for Show Details
-  
-  private func makeFetchShowDetailsUseCase() -> FetchTVShowDetailsUseCase {
-    return DefaultFetchTVShowDetailsUseCase(tvShowsRepository: tvShowsRepository,
-                                            keychainRepository: keychainRepository,
-                                            tvShowsVisitedRepository: dependencies.showsPersistenceRepository)
-  }
-  
-  private func makeMarkAsFavoriteUseCase() -> MarkAsFavoriteUseCase {
-    return DefaultMarkAsFavoriteUseCase(accountShowsRepository: accountShowsRepository,
-                                        keychainRepository: keychainRepository)
-  }
-  
-  private func makeSaveToWatchListUseCase() -> SaveToWatchListUseCase {
-    return DefaultSaveToWatchListUseCase(accountShowsRepository: accountShowsRepository,
-                                         keychainRepository: keychainRepository)
-  }
-  
-  private func makeTVAccountStatesUseCase() -> FetchTVAccountStates {
-    return DefaultFetchTVAccountStates(accountShowsRepository: accountShowsRepository,
-                                       keychainRepository: keychainRepository)
-  }
-  
-  private func makeFetchLoggedUserUseCase() -> FetchLoggedUser {
-    return DefaultFetchLoggedUser(keychainRepository: keychainRepository)
-  }
-  
-  // MARK: - Uses Cases for Seasons
-  
-  private func makeFetchEpisodesUseCase() -> FetchEpisodesUseCase {
-    return DefaultFetchEpisodesUseCase(episodesRepository: episodesRepository)
-  }
-  
 }
 
 // MARK: - Steps

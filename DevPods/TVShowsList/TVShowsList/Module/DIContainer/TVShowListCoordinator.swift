@@ -19,6 +19,22 @@ public protocol TVShowListCoordinatorDelegate: class {
   func tvShowListCoordinatorDidFinish()
 }
 
+protocol TVShowListCoordinatorDependencies {
+  
+  func buildShowListViewController_ForGenres(with genreId: Int,
+                                             coordinator: TVShowListCoordinatorProtocol,
+                                             stepOrigin: TVShowListStepOrigin?) -> UIViewController
+  
+  func buildShowListViewController_ForFavorites(coordinator: TVShowListCoordinatorProtocol,
+                                                stepOrigin: TVShowListStepOrigin?) -> UIViewController
+  
+  func buildShowListViewController_ForWatchList(coordinator: TVShowListCoordinatorProtocol,
+                                                stepOrigin: TVShowListStepOrigin?) -> UIViewController
+  
+  func buildShowDetailCoordinator(navigationController: UINavigationController,
+                                  delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinator
+}
+
 // MARK: - Default Implementation
 
 public class TVShowListCoordinator: NavigationCoordinator, TVShowListCoordinatorProtocol {
@@ -27,40 +43,14 @@ public class TVShowListCoordinator: NavigationCoordinator, TVShowListCoordinator
   
   public weak var delegate: TVShowListCoordinatorDelegate?
   
-   // MARK: TODO, refactor dependencies
-  private let dependencies: ShowListDependencies
+  private let dependencies: TVShowListCoordinatorDependencies
   
   private var childCoordinators = [TVShowListChildCoordinator: Coordinator]()
   
-  // MARK: - Repositories
-  
-  private lazy var showsRepository: TVShowsRepository = {
-    return DefaultTVShowsRepository(
-      dataTransferService: dependencies.apiDataTransferService,
-      basePath: dependencies.imagesBaseURL)
-  }()
-  
-  private lazy var accountShowsRepository: AccountTVShowsRepository = {
-    return DefaultAccountTVShowsRepository(
-      dataTransferService: dependencies.apiDataTransferService,
-      basePath: dependencies.imagesBaseURL)
-  }()
-  
-  private lazy var keychainRepository: KeychainRepository = {
-    return DefaultKeychainRepository()
-  }()
-  
-  // MARK: - Dependencies
-  
-  private lazy var showDetailsDependencies: ShowDetails.ModuleDependencies = {
-    return ShowDetails.ModuleDependencies(apiDataTransferService: dependencies.apiDataTransferService,
-                                   imagesBaseURL: dependencies.imagesBaseURL,
-                                   showsPersistenceRepository: dependencies.showsPersistence)
-  }()
-  
   // MARK: - Life Cycle
   
-  public init(navigationController: UINavigationController, dependencies: ShowListDependencies) {
+  init(navigationController: UINavigationController,
+       dependencies: TVShowListCoordinatorDependencies) {
     self.navigationController = navigationController
     self.dependencies = dependencies
   }
@@ -87,7 +77,7 @@ public class TVShowListCoordinator: NavigationCoordinator, TVShowListCoordinator
       navigateToFavorites()
       
     case .showIsPicked(let showId, let stepOrigin, let closure):
-        navigateToShowDetailScreen(with: showId, stepOrigin: stepOrigin, closure: closure)
+      navigateToShowDetailScreen(with: showId, stepOrigin: stepOrigin, closure: closure)
       
     case .showListDidFinish:
       delegate?.tvShowListCoordinatorDidFinish()
@@ -96,32 +86,26 @@ public class TVShowListCoordinator: NavigationCoordinator, TVShowListCoordinator
   
   // MARK: - Navigate to Genre List
   
-  fileprivate func navigateToGenreList(with id: Int, title: String?) {
-    let viewModel = TVShowListViewModel(fetchTVShowsUseCase: makeShowListByGenreUseCase(genreId: id),
-                                        coordinator: self)
-    let showList = TVShowListViewController.create(with: viewModel)
-    showList.title = title
-    navigationController.pushViewController(showList, animated: true)
+  fileprivate func navigateToGenreList(with genreId: Int, title: String?) {
+    let viewController = dependencies.buildShowListViewController_ForGenres(with: genreId, coordinator: self, stepOrigin: nil)
+    viewController.title = title
+    navigationController.pushViewController(viewController, animated: true)
   }
   
   // MARK: - Navigate to Favorites User
   
   fileprivate func navigateToFavorites() {
-    let viewModel = TVShowListViewModel(fetchTVShowsUseCase: makeFavoriteListUseCase(),
-                                        coordinator: self, stepOrigin: .favoriteList)
-    let showList = TVShowListViewController.create(with: viewModel)
-    showList.title = "Favorites"
-    navigationController.pushViewController(showList, animated: true)
+    let viewController = dependencies.buildShowListViewController_ForFavorites(coordinator: self, stepOrigin: .favoriteList)
+    viewController.title = "Favorites"
+    navigationController.pushViewController(viewController, animated: true)
   }
   
   // MARK: - Navigate to WatchList User
   
   fileprivate func navigateToWatchList() {
-    let viewModel = TVShowListViewModel(fetchTVShowsUseCase: makeWatchListUseCase(),
-                                        coordinator: self, stepOrigin: .watchList)
-    let showList = TVShowListViewController.create(with: viewModel)
-    showList.title = "Watch List"
-    navigationController.pushViewController(showList, animated: true)
+    let viewController = dependencies.buildShowListViewController_ForWatchList(coordinator: self, stepOrigin: .watchList)
+    viewController.title = "Watch List"
+    navigationController.pushViewController(viewController, animated: true)
   }
   
   // MARK: - Navigate to Detail TVShow
@@ -129,18 +113,16 @@ public class TVShowListCoordinator: NavigationCoordinator, TVShowListCoordinator
   fileprivate func navigateToShowDetailScreen(with id: Int,
                                               stepOrigin: TVShowListStepOrigin?,
                                               closure: ((_ updated: TVShowUpdated) -> Void)? ) {
-    let closures = makeClosures(with: stepOrigin, closure: closure)
-  
-    let module = ShowDetails.Module(dependencies: showDetailsDependencies)
-    
-    let tvDetailCoordinator = module.buildModuleCoordinator(in: navigationController, delegate: self)
+    let tvDetailCoordinator = dependencies.buildShowDetailCoordinator(navigationController: navigationController, delegate: self)
     childCoordinators[.detailShow] = tvDetailCoordinator
     
+    let closures = makeClosures(with: stepOrigin, closure: closure)
     let detailStep = ShowDetailsStep.showDetailsIsRequired(withId: id, closures: closures)
     tvDetailCoordinator.start(with: detailStep)
   }
   
-  fileprivate func makeClosures(with stepOrigin: TVShowListStepOrigin?, closure: ((_ updated: TVShowUpdated) -> Void)? ) -> TVShowDetailViewModelClosures?{
+  fileprivate func makeClosures(with stepOrigin: TVShowListStepOrigin?,
+                                closure: ((_ updated: TVShowUpdated) -> Void)? ) -> TVShowDetailViewModelClosures? {
     switch stepOrigin {
     case .favoriteList:
       return TVShowDetailViewModelClosures(updateFavoritesShows: closure)
@@ -149,23 +131,6 @@ public class TVShowListCoordinator: NavigationCoordinator, TVShowListCoordinator
     default:
       return nil
     }
-  }
-  
-  // MARK: - Build Uses Cases
-  
-  private func makeShowListByGenreUseCase(genreId: Int) -> FetchTVShowsUseCase {
-    return DefaultFetchShowsByGenreTVShowsUseCase(genreId: genreId,
-                                                  tvShowsRepository: showsRepository)
-  }
-  
-  private func makeWatchListUseCase() -> FetchTVShowsUseCase {
-    return DefaultUserWatchListShowsUseCase(accountShowsRepository: accountShowsRepository,
-                                            keychainRepository: keychainRepository)
-  }
-  
-  private func makeFavoriteListUseCase() -> FetchTVShowsUseCase {
-    return DefaultUserFavoritesShowsUseCase(accountShowsRepository: accountShowsRepository,
-                                            keychainRepository: keychainRepository)
   }
 }
 

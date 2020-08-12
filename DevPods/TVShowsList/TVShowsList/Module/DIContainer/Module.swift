@@ -9,7 +9,7 @@ import Foundation
 import Networking
 import Persistence
 
-public struct ShowListDependencies {
+public struct ModuleDependencies {
   
   let apiDataTransferService: DataTransferService
   let imagesBaseURL: String
@@ -21,5 +21,21 @@ public struct ShowListDependencies {
     self.apiDataTransferService = apiDataTransferService
     self.imagesBaseURL = imagesBaseURL
     self.showsPersistence = showsPersistence
+  }
+}
+
+// MARK: - Entry to Module
+
+public struct Module {
+  
+  private let diContainer: DIContainer
+  
+  public init(dependencies: ModuleDependencies) {
+    self.diContainer = DIContainer(dependencies: dependencies)
+  }
+  
+  public func buildModuleCoordinator(in navigationController: UINavigationController,
+                                     delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinator {
+    return diContainer.buildModuleCoordinator(navigationController: navigationController)
   }
 }

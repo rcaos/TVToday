@@ -15,7 +15,8 @@ protocol SearchCoordinatorDependencies {
   
   func buildSearchViewController(coordinator: SearchCoordinatorProtocol?) -> UIViewController
   
-  func buildTVShowListCoordinator(navigationController: UINavigationController) -> TVShowListCoordinator
+  func buildTVShowListCoordinator(navigationController: UINavigationController,
+                                  delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinator
   
   func buildTVShowDetailCoordinator(navigationController: UINavigationController,
                                     delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinator
@@ -70,8 +71,8 @@ class SearchCoordinator: NavigationCoordinator, SearchCoordinatorProtocol {
   // MARK: - Navigate to List by Genre
   
   fileprivate func navigateToGenreListScreen(with id: Int, title: String?) {
-    let listCoordinator = dependencies.buildTVShowListCoordinator(navigationController: navigationController)
-    listCoordinator.delegate = self
+    let listCoordinator = dependencies.buildTVShowListCoordinator(navigationController: navigationController,
+                                                                  delegate: self)
     childCoordinators[.genreList] = listCoordinator
     listCoordinator.start(with: .genreList(genreId: id, title: title))
   }

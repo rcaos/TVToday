@@ -17,7 +17,8 @@ protocol AccountCoordinatorDependencies {
   
   func buildAuthPermissionViewController(url: URL, delegate: AuthPermissionViewModelDelegate?) -> UIViewController
   
-  func buildTVShowListCoordinator(navigationController: UINavigationController) -> TVShowListCoordinator
+  func buildTVShowListCoordinator(navigationController: UINavigationController,
+                                  delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinator
 }
 
 protocol AccountCoordinatorProtocol: class {
@@ -83,7 +84,7 @@ class AccountCoordinator: NavigationCoordinator, AccountCoordinatorProtocol {
   // MARK: - Navigate to Favorites User
   
   fileprivate func navigateToFavorites() {
-    let coordinator = dependencies.buildTVShowListCoordinator(navigationController: navigationController)
+    let coordinator = dependencies.buildTVShowListCoordinator(navigationController: navigationController, delegate: self)
     coordinator.delegate = self
     childCoordinators[.tvShowList] = coordinator
     coordinator.start(with: .favoriteList)
@@ -92,7 +93,7 @@ class AccountCoordinator: NavigationCoordinator, AccountCoordinatorProtocol {
   // MARK: - Navigate to WatchList User
   
   fileprivate func navigateToWatchList() {
-    let coordinator = dependencies.buildTVShowListCoordinator(navigationController: navigationController)
+    let coordinator = dependencies.buildTVShowListCoordinator(navigationController: navigationController, delegate: self)
     coordinator.delegate = self
     childCoordinators[.tvShowList] = coordinator
     coordinator.start(with: .watchList)

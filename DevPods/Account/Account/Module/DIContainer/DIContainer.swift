@@ -34,8 +34,8 @@ final class DIContainer {
   
   // MARK: - Dependencies
   
-  private lazy var showListDependencies: ShowListDependencies = {
-    return ShowListDependencies(apiDataTransferService: dependencies.apiDataTransferService,
+  private lazy var showListDependencies: TVShowsList.ModuleDependencies = {
+    return TVShowsList.ModuleDependencies(apiDataTransferService: dependencies.apiDataTransferService,
                                 imagesBaseURL: dependencies.imagesBaseURL,
                                 showsPersistence: dependencies.showsPersistence)
   }()
@@ -109,8 +109,10 @@ extension DIContainer: AccountCoordinatorDependencies {
     return AuthPermissionViewController.create(with: authViewModel)
   }
   
-  func buildTVShowListCoordinator(navigationController: UINavigationController) -> TVShowListCoordinator {
-    return TVShowListCoordinator(navigationController: navigationController,
-                                 dependencies: showListDependencies)
+  func buildTVShowListCoordinator(navigationController: UINavigationController,
+                                  delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinator {
+    let module = TVShowsList.Module(dependencies: showListDependencies)
+    let coordinator = module.buildModuleCoordinator(in: navigationController, delegate: delegate)
+    return coordinator
   }
 }

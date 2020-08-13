@@ -1,6 +1,6 @@
 //
 //  PopularViewModelTests.swift
-//  AiringToday-Unit-Tests
+//  PopularShows-Unit-Tests
 //
 //  Created by Jeans Ruiz on 7/28/20.
 //

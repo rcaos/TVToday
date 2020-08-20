@@ -41,7 +41,7 @@ extension ShowsViewModel {
     fetchTVShowsUseCase.execute(requestValue: request)
       .subscribe(onNext: { [weak self] result in
         guard let strongSelf = self else { return }
-        strongSelf.processFetched(for: result)
+        strongSelf.processFetched(for: result, currentPage: page)
         }, onError: { [weak self] error in
           guard let strongSelf = self else { return }
           strongSelf.viewStateObservableSubject.onNext(.error(error.localizedDescription))
@@ -49,7 +49,11 @@ extension ShowsViewModel {
       .disposed(by: disposeBag)
   }
   
-  private func processFetched(for response: TVShowResult) {
+  private func processFetched(for response: TVShowResult, currentPage: Int) {
+    if currentPage == 1 {
+      shows.removeAll()
+    }
+    
     let fetchedShows = response.results ?? []
     
     self.shows.append(contentsOf: fetchedShows)

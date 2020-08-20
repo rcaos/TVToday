@@ -31,7 +31,7 @@ class PopularsViewController: UIViewController, StoryboardInstantiable, Loadable
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    setupUI()
+    setupTable()
     setupViewModel()
     viewModel.viewDidLoad()
   }
@@ -43,16 +43,15 @@ class PopularsViewController: UIViewController, StoryboardInstantiable, Loadable
   
   // MARK: - Setup UI
   
-  func setupUI() {
-    navigationItem.title = "Popular TV Shows"
-    setupTable()
-  }
-  
   func setupTable() {
     tableView.registerNib(cellType: TVShowViewCell.self)
     
     tableView.tableFooterView = nil
     tableView.rowHeight = UITableView.automaticDimension
+    
+    tableView.refreshControl = DefaultRefreshControl(refreshHandler: { [weak self] in
+      self?.viewModel.refreshView()
+    })
     
     tableView.rx
       .setDelegate(self)
@@ -89,6 +88,8 @@ class PopularsViewController: UIViewController, StoryboardInstantiable, Loadable
   }
   
   fileprivate func handleTableState(with state: SimpleViewState<TVShowCellViewModel>) {
+    
+    tableView.refreshControl?.endRefreshing(with: 0.5)
     
     switch state {
     case .loading:

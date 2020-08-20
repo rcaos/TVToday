@@ -10,6 +10,7 @@ import UIKit
 import RxSwift
 import RxDataSources
 import Shared
+import UI
 
 class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loadable, Retryable, Emptiable {
   
@@ -37,8 +38,6 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loada
   // MARK: - SetupView
   
   func setupUI() {
-    navigationItem.title = "Today on TV"
-    
     setupCollectionView()
     setupDataSource()
     handleSelectionItems()
@@ -58,6 +57,10 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loada
     collectionView.rx
       .setDelegate(self)
       .disposed(by: disposeBag)
+    
+    collectionView.refreshControl = DefaultRefreshControl(refreshHandler: { [weak self] in
+      self?.viewModel.refreshView()
+    })
   }
   
   fileprivate func setupDataSource() {
@@ -94,6 +97,7 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loada
   }
   
   fileprivate func handleViewState(with state: SimpleViewState<AiringTodayCollectionViewModel>) {
+    collectionView.refreshControl?.endRefreshing(with: 0.5)
     
     switch state {
     case .loading:

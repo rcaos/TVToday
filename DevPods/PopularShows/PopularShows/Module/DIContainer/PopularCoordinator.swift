@@ -48,6 +48,7 @@ class PopularCoordinator: NavigationCoordinator, PopularCoordinatorProtocol {
   
   fileprivate func navigateToPopularFeature() {
     let popularController = dependencies.buildPopularViewController(coordinator: self)
+    popularController.navigationItem.title = "Popular TV Shows"
     navigationController.pushViewController(popularController, animated: true)
   }
   

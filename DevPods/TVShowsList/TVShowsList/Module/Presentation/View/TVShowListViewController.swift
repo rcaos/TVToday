@@ -46,6 +46,10 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable, Loadab
   func setupTable() {
     tableView.registerNib(cellType: TVShowViewCell.self)
     
+    tableView.refreshControl = DefaultRefreshControl(refreshHandler: { [weak self] in
+      self?.viewModel.refreshView()
+    })
+    
     tableView.rx
       .setDelegate(self)
       .disposed(by: disposeBag)
@@ -91,6 +95,8 @@ class TVShowListViewController: UIViewController, StoryboardInstantiable, Loadab
   }
   
   private func configView(with state: SimpleViewState<TVShowCellViewModel>) {
+    
+    tableView.refreshControl?.endRefreshing(with: 0.5)
     
     switch state {
     case .loading:

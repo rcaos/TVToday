@@ -49,6 +49,7 @@ class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinatorProto
   
   fileprivate func navigateToTodayFeature() {
     let airingTodayController = dependencies.buildAiringTodayViewController(coordinator: self)
+    airingTodayController.navigationItem.title = "Today on TV"
     navigationController.pushViewController(airingTodayController, animated: true)
   }
   

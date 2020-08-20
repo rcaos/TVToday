@@ -36,17 +36,11 @@ class AccountViewModelTests: QuickSpec {
           // given
           fetchLoggedUserMock.account = nil
           
-          let signInViewModel = SignInViewModelMock(state: .initial)
-          let profileViewModel = ProfileViewModelMock(account: AccountResult.stub())
-          
           let viewModel: AccountViewModelProtocol =
             AccountViewModel(createNewSession: createSessionUseCaseMock,
                              fetchAccountDetails: fetchAccountDetailsUseCaseMock,
                              fetchLoggedUser: fetchLoggedUserMock,
-                             deleteLoguedUser: deleteLoguedUserUseCaseMock,
-                             signInViewModel: signInViewModel,
-                             profileViewMoel: profileViewModel,
-                             coordinator: nil)
+                             deleteLoguedUser: deleteLoguedUserUseCaseMock)
           
           // then
           let viewState = try? viewModel.viewState.toBlocking(timeout: 1).first()
@@ -66,17 +60,11 @@ class AccountViewModelTests: QuickSpec {
           fetchLoggedUserMock.account = Account(id: 1, sessionId: "1")
           fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
           
-          let signInViewModel = SignInViewModelMock(state: .initial)
-          let profileViewModel = ProfileViewModelMock(account: AccountResult.stub())
-          
           let viewModel: AccountViewModelProtocol =
             AccountViewModel(createNewSession: createSessionUseCaseMock,
                              fetchAccountDetails: fetchAccountDetailsUseCaseMock,
                              fetchLoggedUser: fetchLoggedUserMock,
-                             deleteLoguedUser: deleteLoguedUserUseCaseMock,
-                             signInViewModel: signInViewModel,
-                             profileViewMoel: profileViewModel,
-                             coordinator: nil)
+                             deleteLoguedUser: deleteLoguedUserUseCaseMock)
           
           // then
           let viewState = try? viewModel.viewState.toBlocking(timeout: 1).first()
@@ -84,7 +72,7 @@ class AccountViewModelTests: QuickSpec {
             fail("It should emit a View State")
             return
           }
-          let expected = AccountViewState.profile
+          let expected = AccountViewState.profile(account: AccountResult.stub())
           
           expect(currentViewState).toEventually(equal(expected))
         }
@@ -98,17 +86,12 @@ class AccountViewModelTests: QuickSpec {
           createSessionUseCaseMock.result = ()
           fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
           
-          let signInViewModel = SignInViewModelMock(state: .initial)
-          let profileViewModel = ProfileViewModelMock(account: AccountResult.stub())
-          
           let viewModel: AccountViewModelProtocol =
             AccountViewModel(createNewSession: createSessionUseCaseMock,
                              fetchAccountDetails: fetchAccountDetailsUseCaseMock,
                              fetchLoggedUser: fetchLoggedUserMock,
-                             deleteLoguedUser: deleteLoguedUserUseCaseMock,
-                             signInViewModel: signInViewModel,
-                             profileViewMoel: profileViewModel,
-                             coordinator: nil)
+                             deleteLoguedUser: deleteLoguedUserUseCaseMock)
+          
           authPermission.delegate = viewModel
           
           // when
@@ -120,7 +103,7 @@ class AccountViewModelTests: QuickSpec {
             fail("It should emit a View State")
             return
           }
-          let expected = AccountViewState.profile
+          let expected = AccountViewState.profile(account: AccountResult.stub())
           
           expect(currentViewState).toEventually(equal(expected))
         }
@@ -134,17 +117,12 @@ class AccountViewModelTests: QuickSpec {
           createSessionUseCaseMock.error = CustomError.genericError
           fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
           
-          let signInViewModel = SignInViewModelMock(state: .initial)
-          let profileViewModel = ProfileViewModelMock(account: AccountResult.stub())
-          
           let viewModel: AccountViewModelProtocol =
             AccountViewModel(createNewSession: createSessionUseCaseMock,
                              fetchAccountDetails: fetchAccountDetailsUseCaseMock,
                              fetchLoggedUser: fetchLoggedUserMock,
-                             deleteLoguedUser: deleteLoguedUserUseCaseMock,
-                             signInViewModel: signInViewModel,
-                             profileViewMoel: profileViewModel,
-                             coordinator: nil)
+                             deleteLoguedUser: deleteLoguedUserUseCaseMock)
+          
           authPermission.delegate = viewModel
           
           // when

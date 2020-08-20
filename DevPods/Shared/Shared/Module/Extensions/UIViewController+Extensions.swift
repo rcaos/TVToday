@@ -32,7 +32,8 @@ extension UIViewController {
     viewController.didMove(toParent: self)
   }
   
-  public func remove(asChildViewController viewController: UIViewController) {
+  public func remove(asChildViewController viewController: UIViewController?) {
+    guard let viewController = viewController else { return }
     viewController.willMove(toParent: nil)
     viewController.view.removeFromSuperview()
     viewController.removeFromParent()

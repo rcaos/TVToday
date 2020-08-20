@@ -22,37 +22,36 @@ class AccountViewTests: FBSnapshotTestCase {
     // given
     let accountViewModel = AccountViewModelMock(state: .login)
     
-    let signInViewModel = SignInViewModelMock(state: .initial)
+    let factory = AccountViewControllerFactoryMock()
     
-    let profileViewModel = ProfileViewModelMock(account: AccountResult.stub())
-    
-    let signInVC = SignInViewController.create(with: signInViewModel)
-    
-    let profileVC = ProfileViewController.create(with: profileViewModel)
-    
-    let viewController = AccountViewController.create(with: accountViewModel,
-                                                      signInViewController: signInVC,
-                                                      profileViewController: profileVC)
+    let viewController = AccountViewController.create(with: accountViewModel, viewControllersFactory: factory)
     
     FBSnapshotVerifyView(viewController.view)
   }
   
   func test_WhenViewIsLogged_thenShowProfileScreen() {
     // given
-    let accountViewModel = AccountViewModelMock(state: .profile)
     
-    let signInViewModel = SignInViewModelMock(state: .initial)
+    let accountViewModel = AccountViewModelMock(state: .profile(account: AccountResult.stub()))
     
-    let profileViewModel = ProfileViewModelMock(account: AccountResult.stub())
+    let factory = AccountViewControllerFactoryMock()
     
-    let signInVC = SignInViewController.create(with: signInViewModel)
-    
-    let profileVC = ProfileViewController.create(with: profileViewModel)
-    
-    let viewController = AccountViewController.create(with: accountViewModel,
-                                                      signInViewController: signInVC,
-                                                      profileViewController: profileVC)
+    let viewController = AccountViewController.create(with: accountViewModel, viewControllersFactory: factory)
     
     FBSnapshotVerifyView(viewController.view)
+  }
+}
+
+// MARK: - AccountViewControllerFactory
+
+class AccountViewControllerFactoryMock: AccountViewControllerFactory {
+  func makeSignInViewController() -> UIViewController {
+    let viewModel = SignInViewModelMock(state: .initial)
+    return SignInViewController.create(with: viewModel)
+  }
+  
+  func makeProfileViewController(with account: AccountResult) -> UIViewController {
+    let viewModel =  ProfileViewModelMock(account: account)
+    return ProfileViewController.create(with: viewModel)
   }
 }

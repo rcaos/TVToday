@@ -11,10 +11,10 @@ import RxSwift
 import Shared
 
 enum AccountViewState: Equatable {
-   case login,
-   
-   profile
- }
+  case login,
+  
+  profile(account: AccountResult)
+}
 
 protocol AccountViewModelProtocol: AuthPermissionViewModelDelegate {
   var viewState: Observable<AccountViewState> { get }
@@ -32,11 +32,7 @@ final class AccountViewModel: AccountViewModelProtocol {
   
   private let viewStateSubject: BehaviorSubject<AccountViewState> = .init(value: .login)
   
-  private var signInViewModel: SignInViewModelProtocol
-  
-  private var profileViewModel: ProfileViewModelProtocol
-  
-  private weak var coordinator: AccountCoordinatorProtocol?
+  weak var coordinator: AccountCoordinatorProtocol?
   
   private let disposeBag = DisposeBag()
   
@@ -49,17 +45,11 @@ final class AccountViewModel: AccountViewModelProtocol {
   init(createNewSession: CreateSessionUseCase,
        fetchAccountDetails: FetchAccountDetailsUseCase,
        fetchLoggedUser: FetchLoggedUser,
-       deleteLoguedUser: DeleteLoguedUserUseCase,
-       signInViewModel: SignInViewModelProtocol,
-       profileViewMoel: ProfileViewModelProtocol,
-       coordinator: AccountCoordinatorProtocol?) {
+       deleteLoguedUser: DeleteLoguedUserUseCase) {
     self.createNewSession = createNewSession
     self.fetchAccountDetails = fetchAccountDetails
     self.fetchLoggedUser = fetchLoggedUser
     self.deleteLoguedUser = deleteLoguedUser
-    self.signInViewModel = signInViewModel
-    self.profileViewModel = profileViewMoel
-    self.coordinator = coordinator
     
     viewState = viewStateSubject.asObservable()
     
@@ -77,8 +67,7 @@ final class AccountViewModel: AccountViewModelProtocol {
   fileprivate func fetchUserDetails() {
     fetchDetailsAccount()
       .subscribe(onNext: { [weak self] accountDetails in
-        self?.viewStateSubject.onNext(.profile)
-        self?.profileViewModel.createSectionModel(account: accountDetails)
+        self?.viewStateSubject.onNext(.profile(account: accountDetails))
         }, onError: { [weak self] _ in
           self?.viewStateSubject.onNext(.login)
       })
@@ -92,13 +81,9 @@ final class AccountViewModel: AccountViewModelProtocol {
         return strongSelf.fetchDetailsAccount()
     }
     .subscribe(onNext: { [weak self] accountDetails in
-      self?.viewStateSubject.onNext(.profile)
-      self?.signInViewModel.changeState(with: .initial)
-      self?.profileViewModel.createSectionModel(account: accountDetails)
-      
+      self?.viewStateSubject.onNext(.profile(account: accountDetails))
       }, onError: { [weak self] _ in
         self?.viewStateSubject.onNext(.login)
-        self?.signInViewModel.changeState(with: .initial)
     })
       .disposed(by: disposeBag)
   }

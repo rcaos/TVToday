@@ -14,17 +14,15 @@ class AccountViewController: UIViewController, StoryboardInstantiable {
   
   private var viewModel: AccountViewModelProtocol!
   
-  private var signInViewController: SignInViewController!
+  private var currentChildViewController: UIViewController?
   
-  private var profileViewController: ProfileViewController!
+  private var viewControllersFactory: AccountViewControllerFactory!
   
   static func create(with viewModel: AccountViewModelProtocol,
-                     signInViewController: SignInViewController,
-                     profileViewController: ProfileViewController) -> AccountViewController {
+                     viewControllersFactory: AccountViewControllerFactory) -> AccountViewController {
     let controller = AccountViewController.instantiateViewController()
     controller.viewModel = viewModel
-    controller.signInViewController = signInViewController
-    controller.profileViewController = profileViewController
+    controller.viewControllersFactory = viewControllersFactory
     return controller
   }
   
@@ -51,13 +49,23 @@ class AccountViewController: UIViewController, StoryboardInstantiable {
   fileprivate func setupUI(with state: AccountViewState) {
     switch state {
     case .login:
-      remove(asChildViewController: profileViewController)
-      add(asChildViewController: signInViewController)
-      title = "Login"
-    case .profile:
-      remove(asChildViewController: signInViewController)
-      add(asChildViewController: profileViewController)
-      title = "Account"
+      let loginVC = viewControllersFactory.makeSignInViewController()
+      transition(to: loginVC, with: "Login")
+    case .profile(let account):
+      let profileVC = viewControllersFactory.makeProfileViewController(with: account)
+      transition(to: profileVC, with: "Account")
     }
   }
+  
+  func transition(to viewController: UIViewController, with newTitle: String) {
+    remove(asChildViewController: currentChildViewController)
+    add(asChildViewController: viewController)
+    title = newTitle
+    currentChildViewController = viewController
+  }
+}
+
+protocol AccountViewControllerFactory {
+  func makeSignInViewController() -> UIViewController
+  func makeProfileViewController(with account: AccountResult) -> UIViewController
 }

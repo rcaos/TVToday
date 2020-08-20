@@ -36,14 +36,41 @@ final class DIContainer {
   
   private lazy var showListDependencies: TVShowsList.ModuleDependencies = {
     return TVShowsList.ModuleDependencies(apiDataTransferService: dependencies.apiDataTransferService,
-                                imagesBaseURL: dependencies.imagesBaseURL,
-                                showsPersistence: dependencies.showsPersistence)
+                                          imagesBaseURL: dependencies.imagesBaseURL,
+                                          showsPersistence: dependencies.showsPersistence)
   }()
+  
+  private var accountViewModel: AccountViewModel?
   
   // MARK: - Initializer
   
   init(dependencies: ModuleDependencies) {
     self.dependencies = dependencies
+    
+    // This init methods are Ok, because acountViewModel its a Long-Lived dependency
+    
+    func makeCreateSessionUseCase() -> CreateSessionUseCase {
+      return DefaultCreateSessionUseCase(authRepository: authRepository,
+                                         keyChainRepository: keychainRepository)
+    }
+    
+    func makeFetchAccountDetailsUseCase() -> FetchAccountDetailsUseCase {
+      return DefaultFetchAccountDetailsUseCase(accountRepository: accountRepository,
+                                               keychainRepository: keychainRepository)
+    }
+    
+    func makeFetchLoggedUserUseCase() -> FetchLoggedUser {
+      return DefaultFetchLoggedUser(keychainRepository: keychainRepository)
+    }
+    
+    func makeDeleteLoguedUserUseCase() -> DeleteLoguedUserUseCase {
+      return DefaultDeleteLoguedUserUseCase(keychainRepository: keychainRepository)
+    }
+    
+    accountViewModel = AccountViewModel(createNewSession: makeCreateSessionUseCase(),
+                                        fetchAccountDetails: makeFetchAccountDetailsUseCase(),
+                                        fetchLoggedUser: makeFetchLoggedUserUseCase(),
+                                        deleteLoguedUser: makeDeleteLoguedUserUseCase())
   }
   
   // MARK: - Build Module Coordinator
@@ -58,24 +85,6 @@ final class DIContainer {
     return DefaultCreateTokenUseCase(authRepository: authRepository,
                                      keyChainRepository: keychainRepository)
   }
-  
-  fileprivate func makeCreateSessionUseCase() -> CreateSessionUseCase {
-    return DefaultCreateSessionUseCase(authRepository: authRepository,
-                                       keyChainRepository: keychainRepository)
-  }
-  
-  fileprivate func makeFetchAccountDetailsUseCase() -> FetchAccountDetailsUseCase {
-    return DefaultFetchAccountDetailsUseCase(accountRepository: accountRepository,
-                                             keychainRepository: keychainRepository)
-  }
-  
-  fileprivate func makeFetchLoggedUserUseCase() -> FetchLoggedUser {
-    return DefaultFetchLoggedUser(keychainRepository: keychainRepository)
-  }
-  
-  fileprivate func makeDeleteLoguedUserUseCase() -> DeleteLoguedUserUseCase {
-    return DefaultDeleteLoguedUserUseCase(keychainRepository: keychainRepository)
-  }
 }
 
 // MARK: - AccountCoordinatorDependencies
@@ -83,24 +92,9 @@ final class DIContainer {
 extension DIContainer: AccountCoordinatorDependencies {
   
   func buildAccountViewController(coordinator: AccountCoordinatorProtocol?) -> UIViewController {
-    let signViewModel = SignInViewModel(createTokenUseCase: makeCreateTokenUseCase())
-    let signInViewController = SignInViewController.create(with: signViewModel)
-    
-    let profileViewModel = ProfileViewModel()
-    let profileViewController = ProfileViewController.create(with: profileViewModel)
-    
-    let accountViewModel = AccountViewModel(createNewSession: makeCreateSessionUseCase(),
-                                            fetchAccountDetails: makeFetchAccountDetailsUseCase(),
-                                            fetchLoggedUser: makeFetchLoggedUserUseCase(),
-                                            deleteLoguedUser: makeDeleteLoguedUserUseCase(),
-                                            signInViewModel: signViewModel,
-                                            profileViewMoel: profileViewModel,
-                                            coordinator: coordinator)
-    signViewModel.delegate = accountViewModel
-    profileViewModel.delegate = accountViewModel
-    return AccountViewController.create(with: accountViewModel,
-                                                             signInViewController: signInViewController,
-                                                             profileViewController: profileViewController)
+    guard let accountViewModel = accountViewModel else { return UIViewController(nibName: nil, bundle: nil) }
+    accountViewModel.coordinator = coordinator
+    return AccountViewController.create(with: accountViewModel, viewControllersFactory: self)
   }
   
   func buildAuthPermissionViewController(url: URL, delegate: AuthPermissionViewModelDelegate?) -> UIViewController {
@@ -114,5 +108,22 @@ extension DIContainer: AccountCoordinatorDependencies {
     let module = TVShowsList.Module(dependencies: showListDependencies)
     let coordinator = module.buildModuleCoordinator(in: navigationController, delegate: delegate)
     return coordinator
+  }
+}
+
+// MARK: - AccountViewControllerFactory
+
+extension DIContainer: AccountViewControllerFactory {
+  
+  func makeSignInViewController() -> UIViewController {
+    let signViewModel = SignInViewModel(createTokenUseCase: makeCreateTokenUseCase())
+    signViewModel.delegate = accountViewModel
+    return SignInViewController.create(with: signViewModel)
+  }
+  
+  func makeProfileViewController(with account: AccountResult) -> UIViewController {
+    let profileViewModel = ProfileViewModel(account: account)
+    profileViewModel.delegate = accountViewModel
+    return ProfileViewController.create(with: profileViewModel)
   }
 }

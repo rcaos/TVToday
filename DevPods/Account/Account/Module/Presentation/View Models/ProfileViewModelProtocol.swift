@@ -14,8 +14,6 @@ protocol ProfileViewModelDelegate: class {
   func profileViewModel(didUserList tapped: UserListType)
 }
 
-// MARK: - Move to another file
-
 protocol ProfileViewModelProtocol {
   
   // MARK: - Input
@@ -23,8 +21,6 @@ protocol ProfileViewModelProtocol {
   var tapCellAction: PublishSubject<ProfilesSectionItem> { get }
   
   func didTapLogoutButton()
-  
-  func createSectionModel(account: AccountResult)
   
   var delegate: ProfileViewModelDelegate? { get set }
   

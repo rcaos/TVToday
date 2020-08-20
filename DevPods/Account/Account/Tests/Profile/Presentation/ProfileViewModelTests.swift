@@ -32,20 +32,16 @@ class ProfileViewModelTests: QuickSpec {
           let dataSourceObserver = scheduler.createObserver([ProfileSectionModel].self)
           
           let accountResult = AccountResult.stub(hash: "", id: 1, userName: "UserName")
-          let viewModel: ProfileViewModelProtocol = ProfileViewModel()
+          let viewModel: ProfileViewModelProtocol = ProfileViewModel(account: accountResult)
           
           // when
           viewModel.dataSource
-          .bind(to: dataSourceObserver)
-          .disposed(by: disposeBag)
-          
-          viewModel.createSectionModel(account: accountResult)
+            .bind(to: dataSourceObserver)
+            .disposed(by: disposeBag)
           
           // then
           let sectionExpected = ProfileViewModelTests.createSectionModel(with: accountResult)
-          let expected: [Recorded<Event<[ProfileSectionModel]>>] =
-            [.next(0, []),
-             .next(0, sectionExpected)]
+          let expected: [Recorded<Event<[ProfileSectionModel]>>] = [.next(0, sectionExpected)]
           
           expect(dataSourceObserver.events).toEventually(equal(expected))
         }

@@ -31,16 +31,23 @@ class ProfileViewModel: ProfileViewModelProtocol {
   
   // MARK: - Initializer
   
-  init() {
+  init(account: AccountResult) {
     dataSource = sectionsSubject.asObservable()
     presentSignOutAlert = presentSignOutAlertSubject.asObservable()
     
+    createSectionModel(account: account)
     subscribe()
   }
   
   // MARK: - Public
   
-  func createSectionModel(account: AccountResult) {
+  func didTapLogoutButton() {
+    tapLogoutAction.onNext(())
+  }
+  
+  // MARK: - Private
+  
+  fileprivate func createSectionModel(account: AccountResult) {
     
     let items: [ProfilesSectionItem] = [
       .userLists(items: .favorites),
@@ -53,10 +60,6 @@ class ProfileViewModel: ProfileViewModelProtocol {
     ]
     
     sectionsSubject.onNext(sectionProfile)
-  }
-  
-  func didTapLogoutButton() {
-    tapLogoutAction.onNext(())
   }
   
   fileprivate func subscribe() {

@@ -20,8 +20,7 @@ protocol SearchCoordinatorDependencies {
   
   func buildSearchViewController(coordinator: SearchCoordinatorProtocol?) -> UIViewController
   
-  func buildTVShowListCoordinator(navigationController: UINavigationController,
-                                  delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinator
+  func buildTVShowListCoordinator(navigationController: UINavigationController) -> TVShowListCoordinator
   
   func buildTVShowDetailCoordinator(navigationController: UINavigationController,
                                     delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinator

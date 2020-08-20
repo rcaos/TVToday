@@ -121,10 +121,9 @@ extension DIContainer: SearchCoordinatorDependencies {
     return searchVC
   }
   
-  func buildTVShowListCoordinator(navigationController: UINavigationController,
-                                  delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinator {
+  func buildTVShowListCoordinator(navigationController: UINavigationController) -> TVShowListCoordinator {
     let module = TVShowsList.Module(dependencies: showListDependencies)
-    let coordinator = module.buildModuleCoordinator(in: navigationController, delegate: delegate)
+    let coordinator = module.buildModuleCoordinator(in: navigationController)
     return coordinator
   }
   

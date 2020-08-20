@@ -33,8 +33,7 @@ public struct Module {
     self.diContainer = DIContainer(dependencies: dependencies)
   }
   
-  public func buildModuleCoordinator(in navigationController: UINavigationController,
-                                     delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinator {
+  public func buildModuleCoordinator(in navigationController: UINavigationController) -> TVShowListCoordinator {
     return diContainer.buildModuleCoordinator(navigationController: navigationController)
   }
 }

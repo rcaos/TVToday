@@ -54,8 +54,8 @@ class SearchCoordinator: NavigationCoordinator, SearchCoordinatorProtocol {
   // MARK: - Navigate to List by Genre
   
   fileprivate func navigateToGenreListScreen(with id: Int, title: String?) {
-    let listCoordinator = dependencies.buildTVShowListCoordinator(navigationController: navigationController,
-                                                                  delegate: self)
+    let listCoordinator = dependencies.buildTVShowListCoordinator(navigationController: navigationController)
+    listCoordinator.delegate = self
     childCoordinators[.genreList] = listCoordinator
     listCoordinator.start(with: .genreList(genreId: id, title: title))
   }

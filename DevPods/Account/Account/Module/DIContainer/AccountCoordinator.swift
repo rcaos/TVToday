@@ -67,7 +67,8 @@ class AccountCoordinator: NavigationCoordinator, AccountCoordinatorProtocol {
   // MARK: - Navigate to Favorites User
   
   fileprivate func navigateToFavorites() {
-    let coordinator = dependencies.buildTVShowListCoordinator(navigationController: navigationController, delegate: self)
+    let coordinator = dependencies.buildTVShowListCoordinator(navigationController: navigationController)
+    coordinator.delegate = self
     childCoordinators[.tvShowList] = coordinator
     coordinator.start(with: .favoriteList)
   }
@@ -75,7 +76,8 @@ class AccountCoordinator: NavigationCoordinator, AccountCoordinatorProtocol {
   // MARK: - Navigate to WatchList User
   
   fileprivate func navigateToWatchList() {
-    let coordinator = dependencies.buildTVShowListCoordinator(navigationController: navigationController, delegate: self)
+    let coordinator = dependencies.buildTVShowListCoordinator(navigationController: navigationController)
+    coordinator.delegate = self
     childCoordinators[.tvShowList] = coordinator
     coordinator.start(with: .watchList)
   }

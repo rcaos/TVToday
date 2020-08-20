@@ -22,8 +22,7 @@ protocol AccountCoordinatorDependencies {
   
   func buildAuthPermissionViewController(url: URL, delegate: AuthPermissionViewModelDelegate?) -> UIViewController
   
-  func buildTVShowListCoordinator(navigationController: UINavigationController,
-                                  delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinator
+  func buildTVShowListCoordinator(navigationController: UINavigationController) -> TVShowListCoordinator
 }
 
 // MARK: - Steps

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="qWO-kO-FZY">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="qWO-kO-FZY">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -11,7 +11,7 @@
         <!--Sign In View Controller-->
         <scene sceneID="ijw-Hi-WD9">
             <objects>
-                <viewController storyboardIdentifier="SignInViewController" id="lTR-e6-oJn" customClass="SignInViewController" customModule="Account" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SignInViewController" id="lTR-e6-oJn" customClass="SignInViewController" customModule="AccountTV" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Mat-8W-g0y">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -54,10 +54,10 @@
             </objects>
             <point key="canvasLocation" x="550.72463768115949" y="-728.57142857142856"/>
         </scene>
-        <!--Profile View Controller-->
+        <!--View Controller-->
         <scene sceneID="EOn-zO-EtL">
             <objects>
-                <viewController storyboardIdentifier="ProfileViewController" id="XJm-Lb-yok" customClass="ProfileViewController" customModule="Account" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ProfileViewController" id="XJm-Lb-yok" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="znq-J1-jlq">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -84,10 +84,10 @@
             </objects>
             <point key="canvasLocation" x="1345" y="-729"/>
         </scene>
-        <!--Account View Controller-->
+        <!--View Controller-->
         <scene sceneID="hk1-8P-ZaY">
             <objects>
-                <viewController id="qWO-kO-FZY" customClass="AccountViewController" customModule="Account" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="qWO-kO-FZY" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BxQ-vx-bxX">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -102,7 +102,7 @@
         <!--Auth Permission View Controller-->
         <scene sceneID="1Yp-xU-4kw">
             <objects>
-                <viewController storyboardIdentifier="AuthPermissionViewController" id="rTE-vL-Tcl" customClass="AuthPermissionViewController" customModule="Account" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AuthPermissionViewController" id="rTE-vL-Tcl" customClass="AuthPermissionViewController" customModule="AccountTV" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4Bg-Y6-c5w">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

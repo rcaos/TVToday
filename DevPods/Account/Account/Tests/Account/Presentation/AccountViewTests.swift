@@ -13,9 +13,13 @@ import RxSwift
 
 class AccountViewTests: FBSnapshotTestCase {
   
+  private var rootWindow: UIWindow!
+  
   override func setUp() {
     super.setUp()
     //self.recordMode = true
+    rootWindow = UIWindow(frame: UIScreen.main.bounds)
+    rootWindow.isHidden = false
   }
   
   func test_WhenViewIsLogin_thenShowLoginScreen() {
@@ -24,19 +28,20 @@ class AccountViewTests: FBSnapshotTestCase {
     
     let factory = AccountViewControllerFactoryMock()
     
-    let viewController = AccountViewController.create(with: accountViewModel, viewControllersFactory: factory)
+    let viewController = AccountViewController(viewModel: accountViewModel, viewControllersFactory: factory)
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
   
   func test_WhenViewIsLogged_thenShowProfileScreen() {
     // given
-    
     let accountViewModel = AccountViewModelMock(state: .profile(account: AccountResult.stub()))
     
     let factory = AccountViewControllerFactoryMock()
     
-    let viewController = AccountViewController.create(with: accountViewModel, viewControllersFactory: factory)
+    let viewController = AccountViewController(viewModel: accountViewModel, viewControllersFactory: factory)
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
@@ -52,6 +57,6 @@ class AccountViewControllerFactoryMock: AccountViewControllerFactory {
   
   func makeProfileViewController(with account: AccountResult) -> UIViewController {
     let viewModel =  ProfileViewModelMock(account: account)
-    return ProfileViewController.create(with: viewModel)
+    return ProfileViewController(viewModel: viewModel)
   }
 }

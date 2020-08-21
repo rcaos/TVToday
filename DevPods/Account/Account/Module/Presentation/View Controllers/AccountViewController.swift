@@ -6,29 +6,30 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import UIKit
 import RxSwift
 import Shared
 
-class AccountViewController: UIViewController, StoryboardInstantiable {
+class AccountViewController: NiblessViewController {
   
-  private var viewModel: AccountViewModelProtocol!
+  private let viewModel: AccountViewModelProtocol
+  
+  private let viewControllersFactory: AccountViewControllerFactory
   
   private var currentChildViewController: UIViewController?
   
-  private var viewControllersFactory: AccountViewControllerFactory!
-  
-  static func create(with viewModel: AccountViewModelProtocol,
-                     viewControllersFactory: AccountViewControllerFactory) -> AccountViewController {
-    let controller = AccountViewController.instantiateViewController()
-    controller.viewModel = viewModel
-    controller.viewControllersFactory = viewControllersFactory
-    return controller
-  }
-  
   private let disposeBag = DisposeBag()
   
+  init(viewModel: AccountViewModelProtocol, viewControllersFactory: AccountViewControllerFactory) {
+    self.viewModel = viewModel
+    self.viewControllersFactory = viewControllersFactory
+    super.init()
+  }
+  
   // MARK: - Life Cycle
+  
+  override func loadView() {
+    view = UIView()
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -64,6 +65,8 @@ class AccountViewController: UIViewController, StoryboardInstantiable {
     currentChildViewController = viewController
   }
 }
+
+// MARK: - AccountViewControllerFactory
 
 protocol AccountViewControllerFactory {
   func makeSignInViewController() -> UIViewController

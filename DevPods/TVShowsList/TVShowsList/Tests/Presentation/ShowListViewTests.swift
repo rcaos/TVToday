@@ -30,16 +30,20 @@ class TVShowListViewTests: FBSnapshotTestCase {
                                           totalResults: 3,
                                           totalPages: 2)
   
-  let emptyPage = TVShowResult.stub(page: 1, results: [], totalResults: 0, totalPages: 1)
+  private var rootWindow: UIWindow!
   
   override func setUp() {
     super.setUp()
     //self.recordMode = true
+    rootWindow = UIWindow(frame: UIScreen.main.bounds)
+    rootWindow.isHidden = false
   }
   
   func test_WhenViewIsLoading_thenShowLoadingScreen() {
     // given
-    let viewController = TVShowListViewController.create(with: TVShowListViewModelMock(state: .loading) )
+    let viewModel = TVShowListViewModelMock(state: .loading)
+    let viewController = TVShowListViewController(viewModel: viewModel)
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
@@ -49,7 +53,9 @@ class TVShowListViewTests: FBSnapshotTestCase {
     let firsPageCells = firstPage.results!.map { TVShowCellViewModel(show: $0) }
     
     // given
-    let viewController = TVShowListViewController.create(with: TVShowListViewModelMock(state: .paging(firsPageCells, next: 2) ) )
+    let viewModel = TVShowListViewModelMock(state: .paging(firsPageCells, next: 2) )
+    let viewController = TVShowListViewController(viewModel: viewModel)
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
@@ -60,21 +66,27 @@ class TVShowListViewTests: FBSnapshotTestCase {
                .map { TVShowCellViewModel(show: $0) }
     
     // given
-    let viewController = TVShowListViewController.create(with: TVShowListViewModelMock(state: .populated(totalCells) ) )
+    let viewModel = TVShowListViewModelMock(state: .populated(totalCells) )
+    let viewController = TVShowListViewController(viewModel: viewModel)
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
   
   func test_WhenViewIsEmpty_thenShowEmptyScreen() {
     // given
-    let viewController = TVShowListViewController.create(with: TVShowListViewModelMock(state: .empty ) )
+    let viewModel = TVShowListViewModelMock(state: .empty)
+    let viewController = TVShowListViewController(viewModel: viewModel)
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
   
   func test_WhenViewIsError_thenShowErrorScreen() {
     // given
-    let viewController = TVShowListViewController.create(with: TVShowListViewModelMock(state: .error("Error to Fetch Shows") ) )
+    let viewModel = TVShowListViewModelMock(state: .error("Error to Fetch Shows") )
+    let viewController = TVShowListViewController(viewModel: viewModel)
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }

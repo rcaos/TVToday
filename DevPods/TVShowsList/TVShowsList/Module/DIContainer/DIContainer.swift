@@ -57,21 +57,21 @@ final class DIContainer {
                                              stepOrigin: TVShowListStepOrigin? = nil) -> UIViewController {
     let viewModel = TVShowListViewModel(fetchTVShowsUseCase: makeShowListByGenreUseCase(genreId: genreId),
                                         coordinator: coordinator)
-    let showListVC = TVShowListViewController.create(with: viewModel)
+    let showListVC = TVShowListViewController(viewModel: viewModel)
     return showListVC
   }
   
   func buildShowListViewController_ForFavorites(coordinator: TVShowListCoordinatorProtocol, stepOrigin: TVShowListStepOrigin?) -> UIViewController {
     let viewModel = TVShowListViewModel(fetchTVShowsUseCase: makeFavoriteListUseCase(),
                                         coordinator: coordinator, stepOrigin: stepOrigin)
-    let showListVC = TVShowListViewController.create(with: viewModel)
+    let showListVC = TVShowListViewController(viewModel: viewModel)
     return showListVC
   }
   
   func buildShowListViewController_ForWatchList(coordinator: TVShowListCoordinatorProtocol, stepOrigin: TVShowListStepOrigin?) -> UIViewController {
     let viewModel = TVShowListViewModel(fetchTVShowsUseCase: makeWatchListUseCase(),
                                         coordinator: coordinator, stepOrigin: stepOrigin)
-    let showListVC = TVShowListViewController.create(with: viewModel)
+    let showListVC = TVShowListViewController(viewModel: viewModel)
     return showListVC
   }
   

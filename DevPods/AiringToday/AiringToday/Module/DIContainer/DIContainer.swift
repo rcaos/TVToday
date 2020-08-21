@@ -50,7 +50,7 @@ extension DIContainer: AiringTodayCoordinatorDependencies {
   func buildAiringTodayViewController(coordinator: AiringTodayCoordinatorProtocol?) -> UIViewController {
     let viewModel = AiringTodayViewModel(fetchTVShowsUseCase: makeFetchTodayShowsUseCase(),
                                          coordinator: coordinator)
-    let todayVC = AiringTodayViewController.create(with: viewModel)
+    let todayVC = AiringTodayViewController(viewModel: viewModel)
     return todayVC
   }
   

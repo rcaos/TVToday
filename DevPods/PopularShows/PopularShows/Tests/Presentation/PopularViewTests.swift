@@ -27,17 +27,20 @@ class PopularViewTests: FBSnapshotTestCase {
                                           totalResults: 3,
                                           totalPages: 2)
   
-  let emptyPage = TVShowResult.stub(page: 1, results: [], totalResults: 0, totalPages: 1)
+  private var rootWindow: UIWindow!
   
   override func setUp() {
     super.setUp()
     //self.recordMode = true
+    rootWindow = UIWindow(frame: UIScreen.main.bounds)
+    rootWindow.isHidden = false
   }
   
   func test_WhenViewIsLoading_thenShowLoadingScreen() {
     // given
     let viewModel = PopularViewModelMock(state: .loading)
-    let viewController = PopularsViewController.create(with: viewModel)
+    let viewController = PopularsViewController(viewModel: viewModel)
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
@@ -48,7 +51,8 @@ class PopularViewTests: FBSnapshotTestCase {
     
     // given
     let viewModel = PopularViewModelMock(state: .paging(firsPageCells, next: 2) )
-    let viewController = PopularsViewController.create(with: viewModel)
+    let viewController = PopularsViewController(viewModel: viewModel)
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
@@ -60,7 +64,8 @@ class PopularViewTests: FBSnapshotTestCase {
     
     // given
     let viewModel = PopularViewModelMock(state: .populated(totalCells) )
-    let viewController = PopularsViewController.create(with: viewModel)
+    let viewController = PopularsViewController(viewModel: viewModel)
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
@@ -68,7 +73,8 @@ class PopularViewTests: FBSnapshotTestCase {
   func test_WhenViewIsEmpty_thenShowEmptyScreen() {
     // given
     let viewModel = PopularViewModelMock(state: .empty)
-    let viewController = PopularsViewController.create(with: viewModel)
+    let viewController = PopularsViewController(viewModel: viewModel)
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
@@ -76,7 +82,8 @@ class PopularViewTests: FBSnapshotTestCase {
   func test_WhenViewIsError_thenShowErrorScreen() {
     // given
     let viewModel = PopularViewModelMock(state: .error("Error to Fetch Shows") )
-    let viewController = PopularsViewController.create(with: viewModel)
+    let viewController = PopularsViewController(viewModel: viewModel)
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }

@@ -14,7 +14,7 @@ class AiringTodayRootView: NiblessView {
   
   private var viewModel: AiringTodayViewModelProtocol
   
-  let collectionView: UICollectionView = {
+  private let collectionView: UICollectionView = {
     let flowLayout = UICollectionViewFlowLayout()
     flowLayout.scrollDirection = .vertical
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
@@ -89,7 +89,6 @@ class AiringTodayRootView: NiblessView {
      super.layoutSubviews()
      collectionView.frame = bounds
    }
-  
 }
 
 // MARK: - Configure CollectionView Views

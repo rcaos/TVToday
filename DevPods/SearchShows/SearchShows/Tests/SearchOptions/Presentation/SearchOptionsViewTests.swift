@@ -25,14 +25,19 @@ class SearchOptionsViewTests: FBSnapshotTestCase {
     Genre.stub(id: 2, name: "Genre 2")
   ]
   
+  private var rootWindow: UIWindow!
+  
   override func setUp() {
     super.setUp()
     //self.recordMode = true
+    rootWindow = UIWindow(frame: UIScreen.main.bounds)
+    rootWindow.isHidden = false
   }
   
   func test_WhenViewIsLoading_thenShowLoadingScreen() {
     // given
-    let viewController = SearchOptionsViewController.create(with: SearchOptionsViewModelMock(state: .loading) )
+    let viewController = SearchOptionsViewController(viewModel: SearchOptionsViewModelMock(state: .loading) )
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
@@ -42,7 +47,9 @@ class SearchOptionsViewTests: FBSnapshotTestCase {
     let sections = createSectionModel(showsVisited: showsVisited, genres: genres)
     
     let viewModel = SearchOptionsViewModelMock(state: .populated, sections: sections)
-    let viewController = SearchOptionsViewController.create(with: viewModel)
+    let viewController = SearchOptionsViewController(viewModel: viewModel)
+    
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
@@ -51,7 +58,9 @@ class SearchOptionsViewTests: FBSnapshotTestCase {
     // given
     let viewModel = SearchOptionsViewModelMock(state: .empty, sections: [])
     
-    let viewController = SearchOptionsViewController.create(with: viewModel)
+    let viewController = SearchOptionsViewController(viewModel: viewModel)
+    
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
@@ -60,7 +69,9 @@ class SearchOptionsViewTests: FBSnapshotTestCase {
     // given
     let viewModel = SearchOptionsViewModelMock(state: .error("Error to Fetch Genres"), sections: [])
     
-    let viewController = SearchOptionsViewController.create(with: viewModel)
+    let viewController = SearchOptionsViewController(viewModel: viewModel)
+    
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }

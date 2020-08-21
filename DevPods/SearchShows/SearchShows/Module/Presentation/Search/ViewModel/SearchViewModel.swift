@@ -7,52 +7,37 @@
 //
 
 import RxSwift
-import Shared
 
 final class SearchViewModel {
   
-  private var resultsViewModel: ResultsSearchViewModelProtocol
+  var resultsViewModel: ResultsSearchViewModelProtocol?
   
-  private var searchBarTextSubject: BehaviorSubject<String> = .init(value: "")
+  weak var coordinator: SearchCoordinatorProtocol?
   
-  private weak var coordinator: SearchCoordinatorProtocol?
+  private let searchBarTextSubject: BehaviorSubject<String> = .init(value: "")
   
-  var input: Input
-  
-  var output: Output
+  let searchBarText: Observable<String>
   
   // MARK: - Initializer
   
-  init(resultsViewModel: ResultsSearchViewModelProtocol, coordinator: SearchCoordinatorProtocol?) {
-    self.resultsViewModel = resultsViewModel
-    self.coordinator = coordinator
-    self.input = Input()
-    self.output = Output(searchBarText: searchBarTextSubject.asObservable())
+  init() {
+    searchBarText = searchBarTextSubject.asObservable()
   }
   
   // MARK: - Public
   
   func startSearch(with text: String) {
-    resultsViewModel.searchShows(with: text)
+    resultsViewModel?.searchShows(with: text)
   }
   
   func resetSearch() {
-    resultsViewModel.resetSearch()
+    resultsViewModel?.resetSearch()
   }
   
   // MARK: - Navigation
   
   fileprivate func navigateTo(step: SearchStep) {
     coordinator?.navigate(to: step)
-  }
-}
-
-extension SearchViewModel: BaseViewModel {
-  
-  public struct Input { }
-  
-  public struct Output {
-    let searchBarText: Observable<String>
   }
 }
 

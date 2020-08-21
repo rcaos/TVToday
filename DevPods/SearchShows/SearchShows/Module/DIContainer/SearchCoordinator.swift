@@ -48,6 +48,7 @@ class SearchCoordinator: NavigationCoordinator, SearchCoordinatorProtocol {
   
   fileprivate func navigateToSearchFeature() {
     let searchVC = dependencies.buildSearchViewController(coordinator: self)
+    searchVC.title = "Search TV Shows"
     navigationController.pushViewController(searchVC, animated: true)
   }
   

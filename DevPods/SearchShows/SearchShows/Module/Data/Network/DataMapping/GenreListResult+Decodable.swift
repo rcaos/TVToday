@@ -6,18 +6,17 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import Foundation
 import Shared
 
 extension GenreListResult: Decodable {
+  
+  enum CodingKeys: String, CodingKey {
+    case genres
+  }
+  
+  public init(from decoder: Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
     
-    enum CodingKeys: String, CodingKey {
-        case genres
-    }
-    
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        self.genres = try container.decode([Genre].self, forKey: .genres)
-    }
+    self.genres = try container.decode([Genre].self, forKey: .genres)
+  }
 }

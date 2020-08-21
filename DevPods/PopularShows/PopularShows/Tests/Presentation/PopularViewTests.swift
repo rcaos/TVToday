@@ -6,7 +6,6 @@
 //
 
 import FBSnapshotTestCase
-import RxSwift
 
 @testable import PopularShows
 @testable import Shared

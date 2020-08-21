@@ -6,7 +6,6 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
-import UIKit
 import Shared
 import UI
 

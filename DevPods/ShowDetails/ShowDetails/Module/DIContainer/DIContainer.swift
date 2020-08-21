@@ -71,7 +71,7 @@ final class DIContainer {
       fetchDetailShowUseCase: makeFetchShowDetailsUseCase(),
       fetchEpisodesUseCase: makeFetchEpisodesUseCase())
     
-    let seasonsVC = EpisodesListViewController.create(with: viewModel)
+    let seasonsVC = EpisodesListViewController(viewModel: viewModel)
     
     return seasonsVC
   }

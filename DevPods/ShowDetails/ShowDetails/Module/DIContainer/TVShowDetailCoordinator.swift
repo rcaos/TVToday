@@ -59,6 +59,7 @@ public class TVShowDetailCoordinator: NavigationCoordinator, TVShowDetailCoordin
   
   fileprivate func navigateToSeasonsScreen(with showId: Int) {
     let seasonsVC = dependencies.buildEpisodesViewController(with: showId)
+    seasonsVC.title = "All Episodes"
     navigationController.pushViewController(seasonsVC, animated: true)
   }
 }

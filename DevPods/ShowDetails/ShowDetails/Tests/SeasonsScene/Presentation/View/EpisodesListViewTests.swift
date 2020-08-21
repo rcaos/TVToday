@@ -6,26 +6,30 @@
 //
 
 import FBSnapshotTestCase
-import RxSwift
 
 @testable import ShowDetails
 @testable import Shared
 
 class EpisodesListViewTests: FBSnapshotTestCase {
   
-  var headerViewModel: SeasonHeaderViewModelMock!
+  private var headerViewModel: SeasonHeaderViewModelMock!
+  
+  private var rootWindow: UIWindow!
   
   override func setUp() {
     super.setUp()
     //self.recordMode = true
-    
     headerViewModel = SeasonHeaderViewModelMock(showName: "Dragon Ball Z (1987 - 1992)")
+    
+    rootWindow = UIWindow(frame: UIScreen.main.bounds)
+    rootWindow.isHidden = false
   }
   
   func test_WhenViewIsLoading_thenShow_LoadingScreen() {
     // given
     let initialState = EpisodesListViewModelMock(state: .loading)
-    let viewController = EpisodesListViewController.create(with: initialState)
+    let viewController = EpisodesListViewController(viewModel: initialState)
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
@@ -42,7 +46,8 @@ class EpisodesListViewTests: FBSnapshotTestCase {
                                                  seasonSelected: 1,
                                                  episodes: episodes,
                                                  headerViewModel: headerViewModel)
-    let viewController = EpisodesListViewController.create(with: initialState)
+    let viewController = EpisodesListViewController(viewModel: initialState)
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
@@ -50,7 +55,8 @@ class EpisodesListViewTests: FBSnapshotTestCase {
   func test_WhenViewModelReturnsError_thenShow_ErrorScreen() {
     // given
     let initialState = EpisodesListViewModelMock(state: .error("Error to Fetch Show"))
-    let viewController = EpisodesListViewController.create(with: initialState)
+    let viewController = EpisodesListViewController(viewModel: initialState)
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
@@ -59,7 +65,8 @@ class EpisodesListViewTests: FBSnapshotTestCase {
     // given
     let initialState = EpisodesListViewModelMock(state: .loadingSeason,
                                                  headerViewModel: headerViewModel)
-    let viewController = EpisodesListViewController.create(with: initialState)
+    let viewController = EpisodesListViewController(viewModel: initialState)
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
@@ -68,7 +75,8 @@ class EpisodesListViewTests: FBSnapshotTestCase {
     // given
     let initialState = EpisodesListViewModelMock(state: .empty,
                                                  headerViewModel: headerViewModel)
-    let viewController = EpisodesListViewController.create(with: initialState)
+    let viewController = EpisodesListViewController(viewModel: initialState)
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
@@ -77,7 +85,8 @@ class EpisodesListViewTests: FBSnapshotTestCase {
     // given
     let initialState = EpisodesListViewModelMock(state: .errorSeason(""),
                                                  headerViewModel: headerViewModel)
-    let viewController = EpisodesListViewController.create(with: initialState)
+    let viewController = EpisodesListViewController(viewModel: initialState)
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }

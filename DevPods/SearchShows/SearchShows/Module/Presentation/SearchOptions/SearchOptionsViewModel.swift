@@ -84,7 +84,6 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
     Observable.combineLatest(recentShowsDidChanged(), fetchGenres())
       .subscribe(onNext: { [weak self] (visited, resultGenre) in
         guard let strongSelf = self else { return }
-        print("rcaos here")
         strongSelf.processFetched(for: resultGenre)
         strongSelf.createSectionModel(showsVisited: visited, genres: resultGenre.genres ?? [])
         

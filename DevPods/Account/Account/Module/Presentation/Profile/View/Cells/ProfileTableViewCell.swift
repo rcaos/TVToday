@@ -15,8 +15,6 @@ class ProfileTableViewCell: UITableViewCell {
   @IBOutlet weak var nameLabel: TVRegularLabel!
   @IBOutlet weak var avatarImageView: UIImageView!
   
-  public static let identifier = "ProfileTableViewCell"
-  
   override func awakeFromNib() {
     super.awakeFromNib()
     nameLabel.tvSize = .custom(25)

@@ -97,10 +97,10 @@ extension DIContainer: AccountCoordinatorDependencies {
     return AccountViewController(viewModel: accountViewModel, viewControllersFactory: self)
   }
   
-  func buildAuthPermissionViewController(url: URL, delegate: AuthPermissionViewModelDelegate?) -> UIViewController {
+  func buildAuthPermissionViewController(url: URL, delegate: AuthPermissionViewModelDelegate?) -> AuthPermissionViewController {
     let authViewModel = AuthPermissionViewModel(url: url)
     authViewModel.delegate = delegate
-    return AuthPermissionViewController.create(with: authViewModel)
+    return AuthPermissionViewController(viewModel: authViewModel)
   }
   
   func buildTVShowListCoordinator(navigationController: UINavigationController) -> TVShowListCoordinator {

@@ -52,7 +52,7 @@ class AccountViewTests: FBSnapshotTestCase {
 class AccountViewControllerFactoryMock: AccountViewControllerFactory {
   func makeSignInViewController() -> UIViewController {
     let viewModel = SignInViewModelMock(state: .initial)
-    return SignInViewController.create(with: viewModel)
+    return SignInViewController(viewModel: viewModel)
   }
   
   func makeProfileViewController(with account: AccountResult) -> UIViewController {

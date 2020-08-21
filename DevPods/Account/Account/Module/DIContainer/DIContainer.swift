@@ -117,7 +117,7 @@ extension DIContainer: AccountViewControllerFactory {
   func makeSignInViewController() -> UIViewController {
     let signViewModel = SignInViewModel(createTokenUseCase: makeCreateTokenUseCase())
     signViewModel.delegate = accountViewModel
-    return SignInViewController.create(with: signViewModel)
+    return SignInViewController(viewModel: signViewModel)
   }
   
   func makeProfileViewController(with account: AccountResult) -> UIViewController {

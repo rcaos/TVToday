@@ -8,10 +8,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Sign In View Controller-->
+        <!--View Controller-->
         <scene sceneID="ijw-Hi-WD9">
             <objects>
-                <viewController storyboardIdentifier="SignInViewController" id="lTR-e6-oJn" customClass="SignInViewController" customModule="AccountTV" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SignInViewController" id="lTR-e6-oJn" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Mat-8W-g0y">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

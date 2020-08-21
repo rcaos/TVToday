@@ -6,52 +6,35 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import UIKit
 import RxSwift
-import RxCocoa
 import Shared
 
-class SignInViewController: UIViewController, StoryboardInstantiable {
+class SignInViewController: NiblessViewController {
   
-  @IBOutlet weak var tvImageView: UIImageView!
-  @IBOutlet weak var signInButton: LoadableButton!
+  private let viewModel: SignInViewModelProtocol
   
-  private var viewModel: SignInViewModelProtocol!
+  private var rootView: SignInRootView?
   
   private let disposeBag = DisposeBag()
   
-  static func create(with viewModel: SignInViewModelProtocol) -> SignInViewController {
-    let controller = SignInViewController.instantiateViewController(fromStoryBoard: "AccountViewController")
-    controller.viewModel = viewModel
-    return controller
+  init(viewModel: SignInViewModelProtocol) {
+    self.viewModel = viewModel
+    super.init()
   }
   
   // MARK: - Lifecycle
   
+  override func loadView() {
+    rootView = SignInRootView(viewModel: viewModel)
+    view = rootView
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    setupImage()
-    setupButton()
+    subscribe()
   }
   
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-  }
-  
-  fileprivate func setupImage() {
-    tvImageView.image = UIImage(name: "newTV")
-  }
-  
-  fileprivate func setupButton() {
-    signInButton.setBackgroundImage(UIImage(name: "loginbackground"), for: .normal)
-    signInButton.defaultTitle = "Sign in with TheMovieDB"
-    
-    signInButton.rx
-      .tap
-      .bind(to: viewModel.tapButton)
-      .disposed(by: disposeBag)
-    
+  fileprivate func subscribe() {
     viewModel
       .viewState
       .subscribe(onNext: { [weak self] state in
@@ -63,12 +46,12 @@ class SignInViewController: UIViewController, StoryboardInstantiable {
   fileprivate func setupView(with state: SignInViewState) {
     switch state {
     case .initial:
-      signInButton.defaultHideLoadingView()
+      rootView?.signInButton.defaultHideLoadingView()
     case .loading:
-      signInButton.defaultShowLoadingView()
+      rootView?.signInButton.defaultShowLoadingView()
     case .error:
-      signInButton.defaultHideLoadingView()
-      // MARk: - Todo, show a label with error or something
+      rootView?.signInButton.defaultHideLoadingView()
+      // MARK: - TODO, show a label with error or something
     }
   }
 }

@@ -12,16 +12,20 @@ import RxSwift
 
 class SignInViewTests: FBSnapshotTestCase {
   
+  private var rootWindow: UIWindow!
+  
   override func setUp() {
     super.setUp()
     //self.recordMode = true
+    rootWindow = UIWindow(frame: UIScreen.main.bounds)
+    rootWindow.isHidden = false
   }
   
   func test_WhenViewIsInitial_thenShowInitialScreen() {
     // given
     let signInViewModel = SignInViewModelMock(state: .initial)
-    
-    let viewController = SignInViewController.create(with: signInViewModel)
+    let viewController = SignInViewController(viewModel: signInViewModel)
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
@@ -29,8 +33,8 @@ class SignInViewTests: FBSnapshotTestCase {
   func test_WhenViewIsLoading_thenShowLoadingScreen() {
     // given
     let signInViewModel = SignInViewModelMock(state: .loading)
-    
-    let viewController = SignInViewController.create(with: signInViewModel)
+    let viewController = SignInViewController(viewModel: signInViewModel)
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
@@ -38,8 +42,8 @@ class SignInViewTests: FBSnapshotTestCase {
   func test_WhenViewIsError_thenShowErrorScreen() {
     // given
     let signInViewModel = SignInViewModelMock(state: .error)
-    
-    let viewController = SignInViewController.create(with: signInViewModel)
+    let viewController = SignInViewController(viewModel: signInViewModel)
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }

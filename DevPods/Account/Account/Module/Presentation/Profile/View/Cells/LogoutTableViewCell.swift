@@ -10,8 +10,6 @@ import UIKit
 
 class LogoutTableViewCell: UITableViewCell {
   
-  public static let identifier = "LogoutTableViewCell"
-  
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
     setupUI()

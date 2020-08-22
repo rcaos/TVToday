@@ -6,33 +6,31 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
-import UIKit
 import RxSwift
-import RxCocoa
-import RxDataSources
 import Shared
 
-class SearchViewController: UIViewController, StoryboardInstantiable {
+class SearchViewController: NiblessViewController {
   
-  @IBOutlet weak var containerView: UIView!
-  
-  private var viewModel: SearchViewModel!
-  private var searchController: UISearchController!
-  private var searchOptionsViewController: UIViewController!
+  private let viewModel: SearchViewModel
+  private let searchController: UISearchController
+  private let searchControllerFactory: SearchViewControllerFactory
   
   private let disposeBag = DisposeBag()
   
-  static func create(with viewModel: SearchViewModel,
-                     searchController: UISearchController,
-                     searchOptionsViewController: UIViewController) -> SearchViewController {
-    let controller = SearchViewController.instantiateViewController(fromStoryBoard: "SearchViewController")
-    controller.viewModel = viewModel
-    controller.searchController = searchController
-    controller.searchOptionsViewController = searchOptionsViewController
-    return controller
+  init(viewModel: SearchViewModel,
+       searchController: UISearchController,
+       searchControllerFactory: SearchViewControllerFactory) {
+    self.viewModel = viewModel
+    self.searchController = searchController
+    self.searchControllerFactory = searchControllerFactory
+    super.init()
   }
   
   // MARK: - Life Cycle
+  
+  override func loadView() {
+    view = UIView()
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -42,17 +40,14 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
   // MARK: - SetupView
   
   private func setupUI() {
-    navigationController?.navigationBar.prefersLargeTitles = false
-    navigationItem.title = "Search TV Shows"
-    
     setupContainerView()
     setupSearchBar()
     bindSearchBarText()
   }
   
   private func setupContainerView() {
-    add(asChildViewController: searchOptionsViewController,
-        containerView: containerView)
+    let optionsViewController = searchControllerFactory.buildSearchOptionsController()
+    add(asChildViewController: optionsViewController)
   }
   
   private func setupSearchBar() {
@@ -70,7 +65,7 @@ class SearchViewController: UIViewController, StoryboardInstantiable {
   }
   
   private func bindSearchBarText() {
-    viewModel.output.searchBarText
+    viewModel.searchBarText
       .bind(to: searchController.searchBar.rx.text)
       .disposed(by: disposeBag)
   }
@@ -102,4 +97,10 @@ extension SearchViewController: UISearchBarDelegate {
   func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
     viewModel.resetSearch()
   }
+}
+
+// MARK: - SearchController Factory
+
+protocol SearchViewControllerFactory {
+  func buildSearchOptionsController() -> UIViewController
 }

@@ -8,83 +8,30 @@
 
 import UIKit
 import RxSwift
-import RxDataSources
 import Shared
-import UI
 
-class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loadable, Retryable, Emptiable {
+class AiringTodayViewController: NiblessViewController, Loadable, Retryable, Emptiable {
   
-  @IBOutlet weak var collectionView: UICollectionView!
+  private var viewModel: AiringTodayViewModelProtocol
   
-  private var viewModel: AiringTodayViewModelProtocol!
+  private let disposeBag = DisposeBag()
   
-  static func create(with viewModel: AiringTodayViewModelProtocol) -> AiringTodayViewController {
-    let controller = AiringTodayViewController.instantiateViewController()
-    controller.viewModel = viewModel
-    return controller
+  init(viewModel: AiringTodayViewModelProtocol) {
+    self.viewModel = viewModel
+    super.init()
   }
   
-  fileprivate let disposeBag = DisposeBag()
-  
   // MARK: - Life Cycle
+  
+  override func loadView() {
+    view = AiringTodayRootView(viewModel: viewModel)
+  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    setupUI()
-    viewModel.viewDidLoad()
-  }
-  
-  // MARK: - SetupView
-  
-  func setupUI() {
-    setupCollectionView()
-    setupDataSource()
-    handleSelectionItems()
     subscribeToViewState()
-  }
-  
-  // MARK: - Setup CollectionView
-  
-  fileprivate func setupCollectionView() {
-    collectionView.registerNib(cellType: AiringTodayCollectionViewCell.self)
-    
-    collectionView.register(FooterReusableView.self,
-                            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
-                            withReuseIdentifier: "FooterReusableView")
-    collectionView.backgroundColor = UIColor.groupTableViewBackground
-    
-    collectionView.rx
-      .setDelegate(self)
-      .disposed(by: disposeBag)
-    
-    collectionView.refreshControl = DefaultRefreshControl(refreshHandler: { [weak self] in
-      self?.viewModel.refreshView()
-    })
-  }
-  
-  fileprivate func setupDataSource() {
-    let (configureCollectionViewCell, configureSupplementaryView) = configureCollectionViewDataSource()
-    
-    let dataSource = RxCollectionViewSectionedReloadDataSource<SectionAiringToday>(
-      configureCell: configureCollectionViewCell,
-      configureSupplementaryView: configureSupplementaryView)
-    
-    viewModel
-      .viewState
-      .map { [SectionAiringToday(header: "Shows Today", items: $0.currentEntities) ] }
-      .bind(to: collectionView.rx.items(dataSource: dataSource))
-      .disposed(by: disposeBag)
-  }
-  
-  fileprivate func handleSelectionItems() {
-    collectionView.rx
-      .modelSelected( AiringTodayCollectionViewModel.self)
-      .subscribe(onNext: { [weak self] item in
-        guard let strongSelf = self else { return }
-        strongSelf.viewModel.showIsPicked(with: item.show.id)
-      })
-      .disposed(by: disposeBag)
+    viewModel.viewDidLoad()
   }
   
   fileprivate func subscribeToViewState() {
@@ -97,7 +44,7 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loada
   }
   
   fileprivate func handleViewState(with state: SimpleViewState<AiringTodayCollectionViewModel>) {
-    collectionView.refreshControl?.endRefreshing(with: 0.5)
+    stopRefresh()
     
     switch state {
     case .loading:
@@ -120,64 +67,8 @@ class AiringTodayViewController: UIViewController, StoryboardInstantiable, Loada
       hideMessageView()
     }
   }
-}
-
-// MARK: - Configure CollectionView Views
-
-extension AiringTodayViewController {
   
-  func configureCollectionViewDataSource() -> (
-    CollectionViewSectionedDataSource<SectionAiringToday>.ConfigureCell,
-    CollectionViewSectionedDataSource<SectionAiringToday>.ConfigureSupplementaryView
-    ) {
-      let configureCell: CollectionViewSectionedDataSource<SectionAiringToday>.ConfigureCell = {
-        [weak self] dataSource, collectionView, indexPath, item in
-        guard let strongSelf = self else { fatalError() }
-        
-        let cell = collectionView.dequeueReusableCell(with: AiringTodayCollectionViewCell.self, for: indexPath)
-        cell.viewModel = item
-        
-        if let totalItems = dataSource.sectionModels.first?.items.count, indexPath.row == totalItems - 1 {
-          strongSelf.viewModel.didLoadNextPage()
-        }
-        
-        return cell
-      }
-      
-      let configureFooterView: CollectionViewSectionedDataSource<SectionAiringToday>.ConfigureSupplementaryView = {
-        dataSource, collectionView, kindOfView, indexPath in
-        let footerView = collectionView.dequeueReusableSupplementaryView(
-          ofKind: kindOfView,
-          withReuseIdentifier: "FooterReusableView", for: indexPath) as! FooterReusableView
-        return footerView
-      }
-      
-      return (configureCell, configureFooterView)
-  }
-  
-}
-
-// MARK: - UICollectionViewDelegateFlowLayout
-
-extension AiringTodayViewController: UICollectionViewDelegateFlowLayout {
-  
-  public func collectionView(_ collectionView: UICollectionView,
-                             layout collectionViewLayout: UICollectionViewLayout,
-                             sizeForItemAt indexPath: IndexPath) -> CGSize {
-    let width = collectionView.frame.width
-    return CGSize(width: width, height: 275)
-  }
-  
-  public func collectionView(_ collectionView: UICollectionView,
-                             layout collectionViewLayout: UICollectionViewLayout,
-                             referenceSizeForFooterInSection section: Int) -> CGSize {
-    let viewState = viewModel.getCurrentViewState()
-    
-    switch viewState {
-    case .paging:
-      return CGSize(width: collectionView.frame.width, height: 100)
-    default:
-      return .zero
-    }
+  fileprivate func stopRefresh() {
+    (view as! AiringTodayRootView).stopRefresh()
   }
 }

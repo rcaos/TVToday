@@ -2,43 +2,18 @@
 //  TVShowDetailViewController.swift
 //  ShowDetails
 //
-//  Created by Jeans Ruiz on 8/4/20.
+//  Created by Jeans Ruiz on 8/21/20.
 //
 
-import UIKit
 import RxSwift
-import RxCocoa
-import RxDataSources
 import Shared
 import UI
 
-class TVShowDetailViewController: UIViewController, StoryboardInstantiable, Loadable, Retryable, Emptiable {
+class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Emptiable {
   
-  var viewModel: TVShowDetailViewModelProtocol!
+  let viewModel: TVShowDetailViewModelProtocol
   
-  @IBOutlet weak private var backDropImage: UIImageView!
-  @IBOutlet weak private var nameLabel: TVBoldLabel!
-  @IBOutlet weak private var yearsRelease: TVRegularLabel!
-  @IBOutlet weak private var durationLabel: TVRegularLabel!
-  @IBOutlet weak private var genreLabel: TVRegularLabel!
-  @IBOutlet weak private var episodesView: UIView!
-  @IBOutlet weak private var episodeGuide: TVRegularLabel!
-  @IBOutlet weak private var numberOfEpisodes: TVRegularLabel!
-  @IBOutlet weak private var posterImage: UIImageView!
-  @IBOutlet weak private var overViewText: UITextView!
-  @IBOutlet weak private var starImageView: UIImageView!
-  @IBOutlet weak private var scoreLabel: TVBoldLabel!
-  @IBOutlet weak private var maxScoreLabel: TVRegularLabel!
-  @IBOutlet weak private var countVoteLabel: TVRegularLabel!
-  @IBOutlet weak private var criticReviews: TVRegularLabel!
-  
-  static func create(with viewModel: TVShowDetailViewModelProtocol) -> TVShowDetailViewController {
-    let controller = TVShowDetailViewController.instantiateViewController()
-    controller.viewModel = viewModel
-    return controller
-  }
-  
-  let disposeBag = DisposeBag()
+  var rootView: TVShowDetailRootView?
   
   lazy var favoriteButton: UIBarButtonItem = {
     let barButtonItem = UIBarButtonItem(image: UIImage(name: "favorite"),
@@ -54,17 +29,32 @@ class TVShowDetailViewController: UIViewController, StoryboardInstantiable, Load
     return bookmarkButton
   }()
   
+  let disposeBag = DisposeBag()
+  
+  // MARK: - Initializer
+  
+  init(viewModel: TVShowDetailViewModelProtocol) {
+    self.viewModel = viewModel
+    super.init()
+  }
+  
+  override func loadView() {
+    rootView = TVShowDetailRootView(viewModel: viewModel)
+    view = rootView
+  }
+  
   // MARK: - Life Cycle
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    navigationController?.navigationBar.prefersLargeTitles = false
-    setupUIAttributes()
-    setupGestures()
     setupNavigationBar()
     setupViewModel()
     viewModel.viewDidLoad()
+  }
+  
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
   }
   
   deinit {
@@ -72,7 +62,7 @@ class TVShowDetailViewController: UIViewController, StoryboardInstantiable, Load
     print("deinit \(Self.self)")
   }
   
-  private func setupNavigationBar() {
+  fileprivate func setupNavigationBar() {
     if viewModel.isUserLogged() {
       navigationItem.rightBarButtonItems = [favoriteButton, watchListButton]
     } else {
@@ -80,35 +70,16 @@ class TVShowDetailViewController: UIViewController, StoryboardInstantiable, Load
     }
   }
   
-  private func setupUIAttributes() {
-    nameLabel.tvSize = .custom(24)
-    scoreLabel.tvSize = .custom(20)
-    maxScoreLabel.tvSize = .custom(22)
-    overViewText.textColor = Colors.electricBlue.color
-    overViewText.font = Font.sanFrancisco.of(type: .regular, with: .normal)
-    starImageView.image = UIImage(name: "star")
-  }
-  
-  private func setupGestures() {
-    episodesView.isUserInteractionEnabled = true
-    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleEpisodesGesture))
-    episodesView.addGestureRecognizer(tapGesture)
-  }
-  
-  @objc func handleEpisodesGesture(_ sender: UITapGestureRecognizer) {
-    viewModel.navigateToSeasons()
-  }
-  
-  private func setupViewModel() {
+  fileprivate func setupViewModel() {
     setupBindables()
   }
   
-  private func setupBindables() {
+  fileprivate func setupBindables() {
     if viewModel.isUserLogged() {
       setupBindablesForUserLogged()
     }
     
-    viewModel?.viewState
+    viewModel.viewState
       .subscribe(onNext: { [weak self] state in
         guard let strongSelf = self else { return }
         strongSelf.configView(with: state)
@@ -116,7 +87,7 @@ class TVShowDetailViewController: UIViewController, StoryboardInstantiable, Load
       .disposed(by: disposeBag)
   }
   
-  private func setupBindablesForUserLogged() {
+  fileprivate func setupBindablesForUserLogged() {
     favoriteButton.rx
       .tap
       .bind(to: viewModel.tapFavoriteButton)
@@ -142,7 +113,7 @@ class TVShowDetailViewController: UIViewController, StoryboardInstantiable, Load
       .disposed(by: disposeBag)
   }
   
-  private func configView(with state: TVShowDetailViewModel.ViewState) {
+  fileprivate func configView(with state: TVShowDetailViewModel.ViewState) {
     switch state {
     case .loading:
       showLoadingView()
@@ -152,7 +123,7 @@ class TVShowDetailViewController: UIViewController, StoryboardInstantiable, Load
       hideLoadingView()
       hideMessageView()
       
-      setupUI(with: tvShowDetail)
+      rootView?.setupView(with: tvShowDetail)
       
     case .error(let message):
       hideLoadingView()
@@ -163,20 +134,4 @@ class TVShowDetailViewController: UIViewController, StoryboardInstantiable, Load
     }
   }
   
-  private func setupUI(with show: TVShowDetailInfo) {
-    nameLabel.text = show.nameShow
-    yearsRelease.text = show.yearsRelease
-    
-    durationLabel.text = show.duration
-    genreLabel.text = show.genre
-    
-    numberOfEpisodes.text = show.numberOfEpisodes
-    overViewText.text = show.overView
-    scoreLabel.text = show.score
-    countVoteLabel.text = show.countVote
-    maxScoreLabel.text = show.maxScore
-    
-    backDropImage.setImage(with: show.backDropPath)
-    posterImage.setImage(with: show.posterPath)
-  }
 }

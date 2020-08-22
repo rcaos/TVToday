@@ -5,7 +5,6 @@
 //  Created by Jeans Ruiz on 8/11/20.
 //
 
-import UIKit
 import UI
 
 class HeaderSeasonsTableViewCell: UITableViewCell {

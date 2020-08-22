@@ -60,8 +60,11 @@ class AccountCoordinator: NavigationCoordinator, AccountCoordinatorProtocol {
   
   fileprivate func navigateToAuthPermission(url: URL, delegate: AuthPermissionViewModelDelegate?) {
     let authViewController = dependencies.buildAuthPermissionViewController(url: url, delegate: delegate)
-    let navController = UINavigationController(rootViewController: authViewController)
-    navigationController.present(navController, animated: true)
+    
+    let embedNavController = UINavigationController(rootViewController: authViewController)
+    embedNavController.presentationController?.delegate = authViewController
+    
+    navigationController.present(embedNavController, animated: true)
   }
   
   // MARK: - Navigate to Favorites User

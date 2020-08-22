@@ -34,20 +34,26 @@ final class DIContainer {
   
   private lazy var showListDependencies: TVShowsList.ModuleDependencies = {
     return TVShowsList.ModuleDependencies(apiDataTransferService: dependencies.apiDataTransferService,
-                                imagesBaseURL: dependencies.imagesBaseURL,
-                                showsPersistence: dependencies.showsPersistence)
+                                          imagesBaseURL: dependencies.imagesBaseURL,
+                                          showsPersistence: dependencies.showsPersistence)
   }()
   
   private lazy var showDetailsDependencies: ShowDetails.ModuleDependencies = {
     return ShowDetails.ModuleDependencies(apiDataTransferService: dependencies.apiDataTransferService,
-                                   imagesBaseURL: dependencies.imagesBaseURL,
-                                   showsPersistenceRepository: dependencies.showsPersistence)
+                                          imagesBaseURL: dependencies.imagesBaseURL,
+                                          showsPersistenceRepository: dependencies.showsPersistence)
   }()
+  
+  // MARK: - Long-Lived dependencies
+  
+  private let searchViewModel: SearchViewModel
   
   // MARK: - Initializer
   
   init(dependencies: ModuleDependencies) {
     self.dependencies = dependencies
+    
+    searchViewModel = SearchViewModel()
   }
   
   // MARK: - Module Coordinator
@@ -69,25 +75,27 @@ final class DIContainer {
                                       keychainRepository: keychainRepository)
   }
   
-  private func makeFetchGenresUseCase() -> FetchGenresUseCase {
+  fileprivate func makeFetchGenresUseCase() -> FetchGenresUseCase {
     return DefaultFetchGenresUseCase(genresRepository: genresRepository)
   }
   
-  private func makeFetchVisitedShowsUseCase() -> FetchVisitedShowsUseCase {
+  fileprivate func makeFetchVisitedShowsUseCase() -> FetchVisitedShowsUseCase {
     return DefaultFetchVisitedShowsUseCase(
       showsVisitedLocalRepository: dependencies.showsPersistence,
       keychainRepository: keychainRepository)
   }
   
-  private func makeRecentShowsDidChangedUseCase() -> RecentVisitedShowDidChangeUseCase {
+  fileprivate func makeRecentShowsDidChangedUseCase() -> RecentVisitedShowDidChangeUseCase {
     return DefaultRecentVisitedShowDidChangeUseCase(showsVisitedLocalRepository: dependencies.showsPersistence)
   }
   
   // MARK: - Search Feature View Models
   
-  fileprivate func buildResultsViewModel() -> ResultsSearchViewModelProtocol {
-    return ResultsSearchViewModel(searchTVShowsUseCase: makeSearchShowsUseCase(),
-                                  fetchRecentSearchsUseCase: makeFetchSearchsUseCase())
+  fileprivate func buildResultsViewModel(with delegate: ResultsSearchViewModelDelegate?) -> ResultsSearchViewModelProtocol {
+    let resultsViewModel = ResultsSearchViewModel(searchTVShowsUseCase: makeSearchShowsUseCase(),
+                                                  fetchRecentSearchsUseCase: makeFetchSearchsUseCase())
+    resultsViewModel.delegate = searchViewModel
+    return resultsViewModel
   }
   
   fileprivate func buildSearchController(with viewModel: ResultsSearchViewModelProtocol) -> UISearchController {
@@ -96,12 +104,14 @@ final class DIContainer {
     return searchController
   }
   
-  fileprivate func buildSearchOptionsController(with delegate: SearchOptionsViewModelDelegate) -> UIViewController {
+  // MARK: - SearchViewControllerFactory
+  
+  func buildSearchOptionsController() -> UIViewController {
     let viewModel = SearchOptionsViewModel(fetchGenresUseCase: makeFetchGenresUseCase(),
                                            fetchVisitedShowsUseCase: makeFetchVisitedShowsUseCase(),
                                            recentVisitedShowsDidChange: makeRecentShowsDidChangedUseCase())
-    viewModel.delegate = delegate
-    let viewController = SearchOptionsViewController.create(with: viewModel)
+    viewModel.delegate = searchViewModel
+    let viewController = SearchOptionsViewController(viewModel: viewModel)
     return viewController
   }
 }
@@ -111,13 +121,14 @@ final class DIContainer {
 extension DIContainer: SearchCoordinatorDependencies {
   
   func buildSearchViewController(coordinator: SearchCoordinatorProtocol?) -> UIViewController {
-    var resultsSearchViewModel = buildResultsViewModel()
-    let viewModel = SearchViewModel(resultsViewModel: resultsSearchViewModel,
-                                    coordinator: coordinator)
-    resultsSearchViewModel.delegate = viewModel
-    let searchVC = SearchViewController.create(with: viewModel,
-                                               searchController: buildSearchController(with: resultsSearchViewModel),
-                                               searchOptionsViewController: buildSearchOptionsController(with: viewModel))
+    let resultsViewModel = buildResultsViewModel(with: searchViewModel)
+    
+    searchViewModel.coordinator = coordinator
+    searchViewModel.resultsViewModel = resultsViewModel
+    
+    let searchVC = SearchViewController(viewModel: searchViewModel,
+                                        searchController: buildSearchController(with: resultsViewModel),
+                                        searchControllerFactory: self)
     return searchVC
   }
   
@@ -134,3 +145,5 @@ extension DIContainer: SearchCoordinatorDependencies {
     return coordinator
   }
 }
+
+extension DIContainer: SearchViewControllerFactory { }

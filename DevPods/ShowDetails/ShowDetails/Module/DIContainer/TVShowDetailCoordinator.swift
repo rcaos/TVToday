@@ -52,6 +52,7 @@ public class TVShowDetailCoordinator: NavigationCoordinator, TVShowDetailCoordin
   
   fileprivate func showDetailsFeature(with showId: Int, closures: TVShowDetailViewModelClosures? = nil) {
     let detailVC = dependencies.buildShowDetailsViewController(with: showId, coordinator: self, closures: closures)
+    detailVC.hidesBottomBarWhenPushed = true
     navigationController.pushViewController(detailVC, animated: true)
   }
   
@@ -59,6 +60,7 @@ public class TVShowDetailCoordinator: NavigationCoordinator, TVShowDetailCoordin
   
   fileprivate func navigateToSeasonsScreen(with showId: Int) {
     let seasonsVC = dependencies.buildEpisodesViewController(with: showId)
+    seasonsVC.title = "All Episodes"
     navigationController.pushViewController(seasonsVC, animated: true)
   }
 }

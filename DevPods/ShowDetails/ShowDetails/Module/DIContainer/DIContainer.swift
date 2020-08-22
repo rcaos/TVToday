@@ -61,7 +61,7 @@ final class DIContainer {
                                           saveToWatchListUseCase: makeSaveToWatchListUseCase(),
                                           coordinator: coordinator,
                                           closures: closures)
-    let detailVC = TVShowDetailViewController.create(with: viewModel)
+    let detailVC = TVShowDetailViewController(viewModel: viewModel)
     return detailVC
   }
   
@@ -71,7 +71,7 @@ final class DIContainer {
       fetchDetailShowUseCase: makeFetchShowDetailsUseCase(),
       fetchEpisodesUseCase: makeFetchEpisodesUseCase())
     
-    let seasonsVC = EpisodesListViewController.create(with: viewModel)
+    let seasonsVC = EpisodesListViewController(viewModel: viewModel)
     
     return seasonsVC
   }

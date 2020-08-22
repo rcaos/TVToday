@@ -94,13 +94,13 @@ extension DIContainer: AccountCoordinatorDependencies {
   func buildAccountViewController(coordinator: AccountCoordinatorProtocol?) -> UIViewController {
     guard let accountViewModel = accountViewModel else { return UIViewController(nibName: nil, bundle: nil) }
     accountViewModel.coordinator = coordinator
-    return AccountViewController.create(with: accountViewModel, viewControllersFactory: self)
+    return AccountViewController(viewModel: accountViewModel, viewControllersFactory: self)
   }
   
-  func buildAuthPermissionViewController(url: URL, delegate: AuthPermissionViewModelDelegate?) -> UIViewController {
+  func buildAuthPermissionViewController(url: URL, delegate: AuthPermissionViewModelDelegate?) -> AuthPermissionViewController {
     let authViewModel = AuthPermissionViewModel(url: url)
     authViewModel.delegate = delegate
-    return AuthPermissionViewController.create(with: authViewModel)
+    return AuthPermissionViewController(viewModel: authViewModel)
   }
   
   func buildTVShowListCoordinator(navigationController: UINavigationController) -> TVShowListCoordinator {
@@ -117,12 +117,12 @@ extension DIContainer: AccountViewControllerFactory {
   func makeSignInViewController() -> UIViewController {
     let signViewModel = SignInViewModel(createTokenUseCase: makeCreateTokenUseCase())
     signViewModel.delegate = accountViewModel
-    return SignInViewController.create(with: signViewModel)
+    return SignInViewController(viewModel: signViewModel)
   }
   
   func makeProfileViewController(with account: AccountResult) -> UIViewController {
     let profileViewModel = ProfileViewModel(account: account)
     profileViewModel.delegate = accountViewModel
-    return ProfileViewController.create(with: profileViewModel)
+    return ProfileViewController(viewModel: profileViewModel)
   }
 }

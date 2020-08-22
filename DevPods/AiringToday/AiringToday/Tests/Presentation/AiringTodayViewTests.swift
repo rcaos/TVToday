@@ -30,16 +30,19 @@ class AiringTodayViewTests: FBSnapshotTestCase {
                                           totalResults: 3,
                                           totalPages: 2)
   
-  let emptyPage = TVShowResult.stub(page: 1, results: [], totalResults: 0, totalPages: 1)
+  private var rootWindow: UIWindow!
   
   override func setUp() {
     super.setUp()
     //self.recordMode = true
+    rootWindow = UIWindow(frame: UIScreen.main.bounds)
+    rootWindow.isHidden = false
   }
   
   func test_WhenViewIsLoading_thenShowLoadingScreen() {
     // given
-    let viewController = AiringTodayViewController.create(with: AiringTodayViewModelMock(state: .loading) )
+    let viewController = AiringTodayViewController(viewModel: AiringTodayViewModelMock(state: .loading) )
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
@@ -49,7 +52,8 @@ class AiringTodayViewTests: FBSnapshotTestCase {
     let firsPageCells = firstPage.results!.map { AiringTodayCollectionViewModel(show: $0) }
     
     // given
-    let viewController = AiringTodayViewController.create(with: AiringTodayViewModelMock(state: .paging(firsPageCells, next: 2) ) )
+    let viewController = AiringTodayViewController(viewModel: AiringTodayViewModelMock(state: .paging(firsPageCells, next: 2) ) )
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
@@ -60,21 +64,24 @@ class AiringTodayViewTests: FBSnapshotTestCase {
                .map { AiringTodayCollectionViewModel(show: $0) }
     
     // given
-    let viewController = AiringTodayViewController.create(with: AiringTodayViewModelMock(state: .populated(totalCells) ) )
+    let viewController = AiringTodayViewController(viewModel: AiringTodayViewModelMock(state: .populated(totalCells) ))
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
   
   func test_WhenViewIsEmpty_thenShowEmptyScreen() {
     // given
-    let viewController = AiringTodayViewController.create(with: AiringTodayViewModelMock(state: .empty ) )
+    let viewController = AiringTodayViewController(viewModel: AiringTodayViewModelMock(state: .empty ) )
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }
   
   func test_WhenViewIsError_thenShowErrorScreen() {
     // given
-    let viewController = AiringTodayViewController.create(with: AiringTodayViewModelMock(state: .error("Error to Fetch Shows") ) )
+    let viewController = AiringTodayViewController(viewModel: AiringTodayViewModelMock(state: .error("Error to Fetch Shows") ) )
+    rootWindow.rootViewController = viewController
     
     FBSnapshotVerifyView(viewController.view)
   }

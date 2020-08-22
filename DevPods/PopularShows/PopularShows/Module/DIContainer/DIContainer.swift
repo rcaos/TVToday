@@ -53,7 +53,7 @@ extension DIContainer: PopularCoordinatorDependencies {
   func buildPopularViewController(coordinator: PopularCoordinatorProtocol?) -> UIViewController {
     let viewModel = PopularViewModel(fetchTVShowsUseCase: makeFetchPopularShowsUseCase(),
                                      coordinator: coordinator)
-    let popularVC = PopularsViewController.create(with: viewModel)
+    let popularVC = PopularsViewController(viewModel: viewModel)
     return popularVC
   }
   

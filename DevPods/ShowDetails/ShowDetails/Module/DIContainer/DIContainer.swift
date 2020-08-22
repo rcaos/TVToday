@@ -61,7 +61,7 @@ final class DIContainer {
                                           saveToWatchListUseCase: makeSaveToWatchListUseCase(),
                                           coordinator: coordinator,
                                           closures: closures)
-    let detailVC = TVShowDetailViewController.create(with: viewModel)
+    let detailVC = TVShowDetailViewController(viewModel: viewModel)
     return detailVC
   }
   

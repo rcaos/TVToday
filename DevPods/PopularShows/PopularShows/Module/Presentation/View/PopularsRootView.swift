@@ -6,7 +6,6 @@
 //
 
 import Shared
-import UIKit
 import RxSwift
 import RxDataSources
 

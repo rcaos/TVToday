@@ -52,6 +52,7 @@ public class TVShowDetailCoordinator: NavigationCoordinator, TVShowDetailCoordin
   
   fileprivate func showDetailsFeature(with showId: Int, closures: TVShowDetailViewModelClosures? = nil) {
     let detailVC = dependencies.buildShowDetailsViewController(with: showId, coordinator: self, closures: closures)
+    detailVC.hidesBottomBarWhenPushed = true
     navigationController.pushViewController(detailVC, animated: true)
   }
   

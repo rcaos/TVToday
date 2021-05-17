@@ -39,5 +39,6 @@ TODO: Add long description of the pod here.
 
   # Third Party Frameworks
   s.dependency 'RxSwift', '~> 5.0.0'
+  s.dependency 'Realm'
   s.dependency 'RealmSwift'
 end

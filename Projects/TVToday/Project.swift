@@ -23,7 +23,7 @@ let project = Project.app(
   features: [
     "UI",
     "KeyChainStorage",
-    //    "SosafeUI",
+    "Persistence",
     //    "Feed"
   ],
   

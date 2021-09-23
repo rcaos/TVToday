@@ -8,6 +8,8 @@
 
 import Foundation
 
+// MARK: - TODO, Don't read from info.plist
+
 final class AppConfigurations {
   
   lazy var apiKey: String = {

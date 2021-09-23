@@ -17,10 +17,10 @@ let project = Project.app(
     "Resources/**"
   ],
   features: [
-//    "Networking",
-//    "Shared",
-//    "SosafeUI",
-//    "Feed"
+    "UI",
+    //    "Shared",
+    //    "SosafeUI",
+    //    "Feed"
   ],
   
   dependencies: [

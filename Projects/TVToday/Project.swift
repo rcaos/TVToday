@@ -34,7 +34,8 @@ let project = Project.app(
     "Persistence",
     "Networking",
     "Shared",
-    "RealmPersistence"
+    "RealmPersistence",
+    "ShowDetails"
   ],
   
   dependencies: [

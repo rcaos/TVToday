@@ -4,6 +4,6 @@ import ProjectDescriptionHelpers
 let project = Project.framework(
   name: "ReactiveKit",
   dependencies: [
-    .package(product: "RxSwift")
+    //.package(product: "RxSwift")
   ]
 )

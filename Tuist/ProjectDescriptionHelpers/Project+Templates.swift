@@ -49,6 +49,7 @@ extension Project {
 
   public static func framework(
     name: String,
+    product: Product = .framework,
     platform: Platform = platform,
     //resources: [FileElement]? = nil,
     resources: ResourceFileElements? = nil,
@@ -58,7 +59,8 @@ extension Project {
   ) -> Project {
     return project(
       name: name,
-      product: .framework,
+      product: product,
+      //product: .framework,
       platform: platform,
       resources: resources,
       actions: actions,

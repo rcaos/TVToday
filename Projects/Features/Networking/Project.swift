@@ -3,10 +3,12 @@ import ProjectDescriptionHelpers
 
 let project = Project.framework(
   name: "Networking",
+  product: .framework,
   dependencies: [
-    .project(
-      target: "ReactiveKit",
-      path: .relativeToRoot("Projects/ReactiveKit")
-    )
+    .package(product: "RxSwift")
+//    .project(
+//      target: "ReactiveKit",
+//      path: .relativeToRoot("Projects/ReactiveKit")
+//    )
   ]
 )

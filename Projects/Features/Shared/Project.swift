@@ -6,14 +6,15 @@ let project = Project.framework(
   resources: ["Resources/**"],
   dependencies: [
     .package(product: "Kingfisher"),
+    .package(product: "RxSwift"),
     .project(
       target: "UI",
       path: .relativeToRoot("Projects/Features/UI")
     ),
-    .project(
-      target: "ReactiveKit",
-      path: .relativeToRoot("Projects/ReactiveKit")
-    ),
+//    .project(
+//      target: "ReactiveKit",
+//      path: .relativeToRoot("Projects/ReactiveKit")
+//    ),
     .project(
       target: "Networking",
       path: .relativeToRoot("Projects/Features/Networking")

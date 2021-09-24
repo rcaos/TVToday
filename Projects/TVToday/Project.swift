@@ -44,13 +44,13 @@ let project = Project.app(
   ],
   
   dependencies: [
-    .project(
-      target: "ReactiveKit",
-      path: .relativeToRoot("Projects/ReactiveKit")
-    ),
-    .project(
-      target: "ReactiveKitUI",
-      path: .relativeToRoot("Projects/ReactiveKitUI")
-    )
+//    .project(
+//      target: "ReactiveKit",
+//      path: .relativeToRoot("Projects/ReactiveKit")
+//    ),
+//    .project(
+//      target: "ReactiveKitUI",
+//      path: .relativeToRoot("Projects/ReactiveKitUI")
+//    )
   ]
 )

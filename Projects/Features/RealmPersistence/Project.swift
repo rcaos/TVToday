@@ -2,15 +2,17 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.framework(
-  name: "Persistence",
+  name: "RealmPersistence",
   dependencies: [
+    .package(product: "Realm"),
+    .package(product: "RealmSwift"),
     .project(
       target: "ReactiveKit",
       path: .relativeToRoot("Projects/ReactiveKit")
     ),
     .project(
-      target: "Shared",
-      path: .relativeToRoot("Projects/Features/Shared")
+      target: "Persistence",
+      path: .relativeToRoot("Projects/Features/Persistence")
     )
   ]
 )

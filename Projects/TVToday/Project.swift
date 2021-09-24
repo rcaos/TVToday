@@ -19,6 +19,10 @@ let project = Project.app(
     .remote(
       url: "https://github.com/onevcat/Kingfisher.git",
       requirement: .upToNextMajor(from: "7.0.0")
+    ),
+    .remote(
+      url: "https://github.com/realm/realm-cocoa.git",
+      requirement: .upToNextMajor(from: "10.5.2")
     )
   ],
   resources: [
@@ -29,7 +33,8 @@ let project = Project.app(
     "KeyChainStorage",
     "Persistence",
     "Networking",
-    "Shared"
+    "Shared",
+    "RealmPersistence"
   ],
   
   dependencies: [

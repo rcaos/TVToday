@@ -37,7 +37,8 @@ let project = Project.app(
     "RealmPersistence",
     "ShowDetails",
     "PopularShows",
-    "AiringToday"
+    "AiringToday",
+    "TVShowsList"
   ],
   
   dependencies: [

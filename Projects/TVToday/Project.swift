@@ -38,7 +38,8 @@ let project = Project.app(
     "ShowDetails",
     "PopularShows",
     "AiringToday",
-    "TVShowsList"
+    "TVShowsList",
+    "SearchShows"
   ],
   
   dependencies: [

@@ -23,7 +23,8 @@ let project = Project.app(
   features: [
     "UI",
     "KeyChainStorage",
-    "Persistence"
+    "Persistence",
+    "Networking"
   ],
   
   dependencies: [

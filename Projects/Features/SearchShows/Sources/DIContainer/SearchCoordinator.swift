@@ -6,6 +6,7 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
+import UIKit
 import ShowDetails
 import TVShowsList
 import Shared

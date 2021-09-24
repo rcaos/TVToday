@@ -5,6 +5,7 @@
 //  Created by Jeans Ruiz on 8/12/20.
 //
 
+import UIKit
 import Shared
 import ShowDetails
 

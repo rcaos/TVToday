@@ -5,6 +5,8 @@
 //  Created by Jeans Ruiz on 8/21/20.
 //
 
+import UIKit
+import CoreGraphics
 import Shared
 import RxSwift
 import RxDataSources

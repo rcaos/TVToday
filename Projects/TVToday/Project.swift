@@ -42,15 +42,7 @@ let project = Project.app(
     "SearchShows",
     "Account"
   ],
-  
   dependencies: [
-//    .project(
-//      target: "ReactiveKit",
-//      path: .relativeToRoot("Projects/ReactiveKit")
-//    ),
-//    .project(
-//      target: "ReactiveKitUI",
-//      path: .relativeToRoot("Projects/ReactiveKitUI")
-//    )
+    // MARK: - TODO, should include dependencies here??
   ]
 )

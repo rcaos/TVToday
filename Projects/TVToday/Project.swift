@@ -15,6 +15,10 @@ let project = Project.app(
     .remote(
       url: "https://github.com/evgenyneu/keychain-swift.git",
       requirement: .upToNextMajor(from: "14.0.0")
+    ),
+    .remote(
+      url: "https://github.com/onevcat/Kingfisher.git",
+      requirement: .upToNextMajor(from: "7.0.0")
     )
   ],
   resources: [
@@ -24,7 +28,8 @@ let project = Project.app(
     "UI",
     "KeyChainStorage",
     "Persistence",
-    "Networking"
+    "Networking",
+    "Shared"
   ],
   
   dependencies: [

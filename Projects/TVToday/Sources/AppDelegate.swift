@@ -28,12 +28,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     appCoordinator = AppCoordinator(window: window!, appDIContainer: appDIContainer)
     appCoordinator?.start()
 
-    // MARk: - TODO, temp, remove 
-    let viewController = UIViewController()
-    viewController.view.backgroundColor = .blue
-    window?.rootViewController = viewController
-    window?.makeKeyAndVisible()
-    
     return true
   }
 }

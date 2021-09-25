@@ -48,11 +48,11 @@ public class SignedCoordinator: Coordinator {
     let popularNavigation = UINavigationController()
     popularNavigation.tabBarItem = UITabBarItem(title: "Popular", image: UIImage(name: "popular"), tag: 1)
     buildPopularScene(in: popularNavigation)
-    
+
     let searchNavigation = UINavigationController()
     searchNavigation.tabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 2)
     buildSearchScene(in: searchNavigation)
-    
+
     let accountNavigation = UINavigationController()
     accountNavigation.tabBarItem = UITabBarItem(title: "Account", image: UIImage(name: "accountTab"), tag: 3)
     buildAccountCoordinator(in: accountNavigation)

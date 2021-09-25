@@ -49,7 +49,7 @@ extension Project {
 
   public static func framework(
     name: String,
-    product: Product = .framework,
+    product: Product = .staticLibrary,
     platform: Platform = platform,
     //resources: [FileElement]? = nil,
     resources: ResourceFileElements? = nil,

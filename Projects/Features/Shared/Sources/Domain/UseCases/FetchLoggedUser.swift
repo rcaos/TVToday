@@ -10,7 +10,7 @@ import RxSwift
 
 public protocol FetchLoggedUser {
   
-  func execute() -> Account?
+  func execute() -> AccountDomain?
 }
 
 public final class DefaultFetchLoggedUser: FetchLoggedUser {
@@ -21,7 +21,7 @@ public final class DefaultFetchLoggedUser: FetchLoggedUser {
     self.keychainRepository = keychainRepository
   }
   
-  public func execute() -> Account? {
+  public func execute() -> AccountDomain? {
     return keychainRepository.fetchLoguedUser()
   }
 }

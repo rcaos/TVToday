@@ -42,9 +42,9 @@ extension DefaultKeychainRepository: KeychainRepository {
     keyChainStorage.saveLoguedUser(accountId, sessionId)
   }
   
-  public func fetchLoguedUser() -> Account? {
+  public func fetchLoguedUser() -> AccountDomain? {
     return keyChainStorage.fetchLoguedUser().map {
-      Account(id: $0.id, sessionId: $0.sessionId)
+      AccountDomain(id: $0.id, sessionId: $0.sessionId)
     }
   }
   

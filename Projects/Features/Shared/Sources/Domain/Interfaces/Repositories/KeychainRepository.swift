@@ -26,7 +26,7 @@ public protocol KeychainRepository {
   
   func saveLoguedUser(_ accountId: Int, _ sessionId: String)
   
-  func fetchLoguedUser() -> Account?
+  func fetchLoguedUser() -> AccountDomain?
   
   func deleteLoguedUser()
 }

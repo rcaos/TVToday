@@ -38,7 +38,7 @@ class VisitedShowTableViewCell: UITableViewCell {
   
   private func setupUI() {
     collectionView.allowsMultipleSelection = false
-    collectionView.registerNib(cellType: VisitedShowCollectionViewCell.self)
+    collectionView.registerNib(cellType: VisitedShowCollectionViewCell.self, bundle: Bundle.module)
     if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
       layout.scrollDirection = .horizontal
     }

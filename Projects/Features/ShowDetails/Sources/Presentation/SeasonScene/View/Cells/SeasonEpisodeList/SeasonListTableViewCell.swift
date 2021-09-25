@@ -31,7 +31,7 @@ class SeasonListTableViewCell: UITableViewCell {
   
   func setupUI() {
     collectionView.allowsMultipleSelection = false
-    collectionView.registerNib(cellType: SeasonEpisodeCollectionViewCell.self)
+    collectionView.registerNib(cellType: SeasonEpisodeCollectionViewCell.self, bundle: Bundle.module)
     
     collectionView.rx
       .setDelegate(self)

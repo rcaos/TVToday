@@ -19,7 +19,8 @@ class AiringTodayRootView: NiblessView {
     flowLayout.scrollDirection = .vertical
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
     collectionView.translatesAutoresizingMaskIntoConstraints = false
-    collectionView.registerNib(cellType: AiringTodayCollectionViewCell.self)
+    collectionView.registerNib(cellType: AiringTodayCollectionViewCell.self, bundle: AiringTodayResources.bundle)
+
     collectionView.register(FooterReusableView.self,
                             forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
                             withReuseIdentifier: "FooterReusableView")

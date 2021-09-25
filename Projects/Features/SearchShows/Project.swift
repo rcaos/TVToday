@@ -20,10 +20,6 @@ let project = Project.framework(
       target: "TVShowsList",
       path: .relativeToRoot("Projects/Features/TVShowsList")
     ),
-//    .project(
-//      target: "ReactiveKitUI",
-//      path: .relativeToRoot("Projects/ReactiveKitUI")
-//    ),
     .package(product: "RxCocoa"),
     .package(product: "RxDataSources"),
     .package(product: "RxSwift"),

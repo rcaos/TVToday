@@ -20,10 +20,6 @@ let project = Project.framework(
       target: "ShowDetails",
       path: .relativeToRoot("Projects/Features/ShowDetails")
     ),
-//    .project(
-//      target: "ReactiveKitUI",
-//      path: .relativeToRoot("Projects/ReactiveKitUI")
-//    ),
     .package(product: "RxCocoa"),
     .package(product: "RxDataSources"),
     .package(product: "RxSwift"),

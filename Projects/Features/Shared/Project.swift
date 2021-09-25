@@ -11,10 +11,6 @@ let project = Project.framework(
       target: "UI",
       path: .relativeToRoot("Projects/Features/UI")
     ),
-//    .project(
-//      target: "ReactiveKit",
-//      path: .relativeToRoot("Projects/ReactiveKit")
-//    ),
     .project(
       target: "Networking",
       path: .relativeToRoot("Projects/Features/Networking")

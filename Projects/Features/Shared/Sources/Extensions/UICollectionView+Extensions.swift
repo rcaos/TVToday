@@ -18,9 +18,9 @@ extension UICollectionView {
   
   // MARK: - Register Nib
   
-  public func registerNib<T: UICollectionViewCell>(cellType: T.Type) {
+  public func registerNib<T: UICollectionViewCell>(cellType: T.Type, bundle: Bundle) {
     let identifier = cellType.dequeuIdentifier
-    let nib = UINib(nibName: identifier, bundle: Bundle(for: T.self))
+    let nib = UINib(nibName: identifier, bundle: bundle)
     register(nib, forCellWithReuseIdentifier: identifier)
   }
   

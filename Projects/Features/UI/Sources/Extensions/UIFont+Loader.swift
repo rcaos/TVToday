@@ -8,7 +8,7 @@
 import UIKit
 
 public extension UIFont {
-  
+
   static func loadFonts() {
     Font.allCases
       .filter { $0 != .sanFrancisco }
@@ -18,9 +18,9 @@ public extension UIFont {
         }
     }
   }
-  
+
   fileprivate static func loadFont(with name: String) {
-    let bundle = UIModule.bundle
+    let bundle = Bundle.module
     let pathForResourceString = bundle.path(forResource: name, ofType: "otf")
     let fontData = NSData(contentsOfFile: pathForResourceString!)
     let dataProvider = CGDataProvider(data: fontData!)

@@ -10,6 +10,6 @@ import UIKit
 public extension UIImage {
   
   convenience init?(name: String) {
-    self.init(named: name, in: SharedModule.bundle, compatibleWith: .none)
+    self.init(named: name, in: Bundle.module, compatibleWith: .none)
   }
 }

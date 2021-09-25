@@ -8,9 +8,7 @@
 import UIKit
 
 extension UIColor {
-  
   convenience init(name: String) {
-    self.init(named: name, in: UIModule.bundle, compatibleWith: nil)!
+    self.init(named: name, in: UIResources.bundle, compatibleWith: nil)!
   }
-  
 }

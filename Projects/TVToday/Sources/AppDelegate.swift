@@ -7,26 +7,26 @@
 //
 
 import UIKit
-//import UI
+import UI
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
   
   var window: UIWindow?
   
-//  let appDIContainer = AppDIContainer()
+  let appDIContainer = AppDIContainer()
   
-//  var appCoordinator: AppCoordinator?
+  var appCoordinator: AppCoordinator?
   
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     
 //    UIFont.loadFonts()
-//    UINavigationController.replaceAppearance()
+    UINavigationController.replaceAppearance()
     
     window = UIWindow(frame: UIScreen.main.bounds)
 
-//    appCoordinator = AppCoordinator(window: window!, appDIContainer: appDIContainer)
-//    appCoordinator?.start()
+    appCoordinator = AppCoordinator(window: window!, appDIContainer: appDIContainer)
+    appCoordinator?.start()
 
     // MARk: - TODO, temp, remove 
     let viewController = UIViewController()

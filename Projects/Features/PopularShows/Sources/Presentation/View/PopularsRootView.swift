@@ -17,7 +17,7 @@ class PopularsRootView: NiblessView {
   
   let tableView: UITableView = {
     let tableView = UITableView(frame: .zero, style: .plain)
-    tableView.registerNib(cellType: TVShowViewCell.self)
+    tableView.registerNib(cellType: TVShowViewCell.self, bundle: SharedResources.bundle)
     tableView.rowHeight = UITableView.automaticDimension
     tableView.tableFooterView = UIView()
     tableView.contentInsetAdjustmentBehavior = .automatic

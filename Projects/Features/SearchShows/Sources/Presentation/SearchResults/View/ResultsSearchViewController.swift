@@ -52,8 +52,8 @@ class ResultsSearchViewController: UIViewController {
   }
   
   private func setupTableView() {
-    resultView.tableView.registerNib(cellType: TVShowViewCell.self)
-    resultView.tableView.registerNib(cellType: RecentSearchTableViewCell.self)
+    resultView.tableView.registerNib(cellType: TVShowViewCell.self, bundle: SharedResources.bundle)
+    resultView.tableView.registerNib(cellType: RecentSearchTableViewCell.self, bundle: Bundle.module)
     
     resultView.tableView.rx
       .setDelegate(self)

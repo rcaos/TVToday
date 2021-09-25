@@ -57,8 +57,8 @@ class ProfileRootView: NiblessView {
   }
   
   fileprivate func registerCells() {
-    tableView.registerNib(cellType: ProfileTableViewCell.self)
-    tableView.registerNib(cellType: GenericViewCell.self)
+    tableView.registerNib(cellType: ProfileTableViewCell.self, bundle: Bundle.module)
+    tableView.registerNib(cellType: GenericViewCell.self, bundle: SharedResources.bundle)
     tableView.registerCell(cellType: LogoutTableViewCell.self)
   }
   

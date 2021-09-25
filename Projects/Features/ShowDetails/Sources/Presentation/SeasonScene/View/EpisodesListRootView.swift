@@ -16,9 +16,9 @@ class EpisodesListRootView: NiblessView {
   
   let tableView: UITableView = {
     let tableView = UITableView(frame: .zero, style: .plain)
-    tableView.registerNib(cellType: HeaderSeasonsTableViewCell.self)
-    tableView.registerNib(cellType: SeasonListTableViewCell.self)
-    tableView.registerNib(cellType: EpisodeItemTableViewCell.self)
+    tableView.registerNib(cellType: HeaderSeasonsTableViewCell.self, bundle: Bundle.module)
+    tableView.registerNib(cellType: SeasonListTableViewCell.self, bundle: Bundle.module)
+    tableView.registerNib(cellType: EpisodeItemTableViewCell.self, bundle: Bundle.module)
     
     tableView.rowHeight = UITableView.automaticDimension
     tableView.tableFooterView = UIView()

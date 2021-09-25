@@ -18,9 +18,9 @@ extension UITableView {
   
   // MARK: - Register Nib
   
-  public func registerNib<T: UITableViewCell>(cellType: T.Type) {
+  public func registerNib<T: UITableViewCell>(cellType: T.Type, bundle: Bundle) {
     let identifier = cellType.dequeuIdentifier
-    let nib = UINib(nibName: identifier, bundle: Bundle(for: T.self))
+    let nib = UINib(nibName: identifier, bundle: bundle)
     register(nib, forCellReuseIdentifier: identifier)
   }
   

@@ -16,6 +16,7 @@ import AiringToday
 import PopularShows
 import SearchShows
 import Account
+import ShowDetails
 
 public class AppDIContainer {
   
@@ -48,16 +49,13 @@ public class AppDIContainer {
   }()
   
   // MARK: - Airing Today Module
-  
   func buildAiringTodayModule() -> AiringToday.Module {
     let dependencies = AiringToday.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                      imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                      showsPersistence: showsPersistence)
+                                                      imagesBaseURL: appConfigurations.imagesBaseURL)
     return AiringToday.Module(dependencies: dependencies)
   }
   
   // MARK: - Popular Module
-  
   func buildPopularModule() -> PopularShows.Module {
     let dependencies = PopularShows.ModuleDependencies(apiDataTransferService: apiDataTransferService,
                                                        imagesBaseURL: appConfigurations.imagesBaseURL,
@@ -66,7 +64,6 @@ public class AppDIContainer {
   }
   
   // MARK: - Search Module
-  
   func buildSearchModule() -> SearchShows.Module {
     let dependencies = SearchShows.ModuleDependencies(apiDataTransferService: apiDataTransferService,
                                                       imagesBaseURL: appConfigurations.imagesBaseURL,
@@ -76,11 +73,18 @@ public class AppDIContainer {
   }
   
   // MARK: - Account Module
-  
   func buildAccountModule() -> Account.Module {
     let dependencies = Account.ModuleDependencies(apiDataTransferService: apiDataTransferService,
                                                     imagesBaseURL: appConfigurations.imagesBaseURL,
                                                     showsPersistence: showsPersistence)
     return Account.Module(dependencies: dependencies)
+  }
+
+  // MARK: - Build TVShowDetails Module
+  func buildTVShowDetailModule() -> ShowDetails.Module {
+    let dependencies = ShowDetails.ModuleDependencies(apiDataTransferService: apiDataTransferService,
+                                                      imagesBaseURL: appConfigurations.imagesBaseURL,
+                                                      showsPersistenceRepository: showsPersistence)
+    return ShowDetails.Module(dependencies: dependencies)
   }
 }

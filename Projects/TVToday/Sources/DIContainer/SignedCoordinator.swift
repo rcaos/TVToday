@@ -8,6 +8,8 @@
 
 import UIKit
 import Shared
+import ShowDetails
+import AiringToday
 
 public enum SignedChildCoordinator {
   case
@@ -18,19 +20,20 @@ public enum SignedChildCoordinator {
   
   search,
   
-  account
+  account,
+
+  tvdetails
 }
 
 public class SignedCoordinator: Coordinator {
   
   private var tabBarController: UITabBarController
-  
+
   private var childCoordinators = [SignedChildCoordinator: Coordinator]()
-  
+
   private let appDIContainer: AppDIContainer
-  
+
   // MARK: - Life Cycle
-  
   public init(tabBarController: UITabBarController, appDIContainer: AppDIContainer) {
     self.tabBarController = tabBarController
     self.appDIContainer = appDIContainer
@@ -64,16 +67,14 @@ public class SignedCoordinator: Coordinator {
   }
   
   // MARK: - Build Airing Today Scene
-  
   fileprivate func buildTodayScene(in navigation: UINavigationController) {
     let todayModule = appDIContainer.buildAiringTodayModule()
-    let airingCoordinator = todayModule.buildAiringTodayCoordinator(in: navigation)
+    let airingCoordinator = todayModule.buildAiringTodayCoordinator(in: navigation, delegate: self)
     airingCoordinator.start()
     childCoordinators[.airingToday] = airingCoordinator
   }
   
   // MARK: - Build Popular Scene
-  
   fileprivate func buildPopularScene(in navigation: UINavigationController) {
     let popularModule = appDIContainer.buildPopularModule()
     let coordinator = popularModule.buildPopularCoordinator(in: navigation)
@@ -83,7 +84,6 @@ public class SignedCoordinator: Coordinator {
   }
   
   // MARK: - Build Search Scene
-  
   fileprivate func buildSearchScene(in navigation: UINavigationController) {
     let searchModule = appDIContainer.buildSearchModule()
     let coordinator = searchModule.buildSearchCoordinator(in: navigation)
@@ -93,12 +93,33 @@ public class SignedCoordinator: Coordinator {
   }
   
   // MARK: - Build Account Scene
-  
   fileprivate func buildAccountCoordinator(in navigation: UINavigationController) {
     let accountModule = appDIContainer.buildAccountModule()
     let coordinator = accountModule.buildAccountCoordinator(in: navigation)
     
     coordinator.start()
     childCoordinators[.account] = coordinator
+  }
+
+  // MARK: - Navigate to Show Details
+  fileprivate func showDetailIsPicked(for showId: Int, navigation: UINavigationController) {
+    let module = appDIContainer.buildTVShowDetailModule()
+    let tvDetailCoordinator = module.buildModuleCoordinator(in: navigation, delegate: self)
+    childCoordinators[.tvdetails] = tvDetailCoordinator
+
+    let nextStep = ShowDetailsStep.showDetailsIsRequired(withId: showId)
+    tvDetailCoordinator.start(with: nextStep)
+  }
+}
+
+extension SignedCoordinator: AiringTodayCoordinatorDelegate {
+  public func tvShowDetailIsPicked(showId: Int, navigation: UINavigationController) {
+    showDetailIsPicked(for: showId, navigation: navigation)
+  }
+}
+
+extension SignedCoordinator: TVShowDetailCoordinatorDelegate {
+  public func tvShowDetailCoordinatorDidFinish() {
+    childCoordinators[.tvdetails] = nil
   }
 }

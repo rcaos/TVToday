@@ -11,7 +11,7 @@ import RxSwift
 import RxBlocking
 import RxTest
 
-@testable import AccountTV
+@testable import Account
 @testable import Shared
 
 class SignInViewModelTests: QuickSpec {

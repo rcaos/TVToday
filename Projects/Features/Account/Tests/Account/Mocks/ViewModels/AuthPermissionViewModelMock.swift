@@ -6,7 +6,7 @@
 //
 
 import RxSwift
-@testable import AccountTV
+@testable import Account
 
 class AuthPermissionViewModelMock: AuthPermissionViewModelProtocol {
   func signIn() {

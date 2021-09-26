@@ -6,7 +6,7 @@
 //
 
 import RxSwift
-@testable import AccountTV
+@testable import Account
 
 final class FetchAccountDetailsUseCaseMock: FetchAccountDetailsUseCase {
   var result: AccountResult?

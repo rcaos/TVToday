@@ -11,7 +11,7 @@ import Nimble
 import RxSwift
 import RxBlocking
 
-@testable import AccountTV
+@testable import Account
 @testable import Shared
 
 class AccountViewModelTests: QuickSpec {

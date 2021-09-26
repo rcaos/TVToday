@@ -58,8 +58,7 @@ public class AppDIContainer {
   // MARK: - Popular Module
   func buildPopularModule() -> PopularShows.Module {
     let dependencies = PopularShows.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                       imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                       showsPersistence: showsPersistence)
+                                                       imagesBaseURL: appConfigurations.imagesBaseURL)
     return PopularShows.Module(dependencies: dependencies)
   }
   

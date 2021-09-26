@@ -10,6 +10,7 @@ import UIKit
 import Shared
 import ShowDetails
 import AiringToday
+import PopularShows
 
 public enum SignedChildCoordinator {
   case
@@ -22,7 +23,7 @@ public enum SignedChildCoordinator {
   
   account,
 
-  tvdetails
+  tvdetails // MARk: - TODO, to test, what if I'm routing from Today and Popular at the same time ?
 }
 
 public class SignedCoordinator: Coordinator {
@@ -77,8 +78,7 @@ public class SignedCoordinator: Coordinator {
   // MARK: - Build Popular Scene
   fileprivate func buildPopularScene(in navigation: UINavigationController) {
     let popularModule = appDIContainer.buildPopularModule()
-    let coordinator = popularModule.buildPopularCoordinator(in: navigation)
-    
+    let coordinator = popularModule.buildPopularCoordinator(in: navigation, delegate: self)
     coordinator.start()
     childCoordinators[.popularShows] = coordinator
   }
@@ -114,6 +114,12 @@ public class SignedCoordinator: Coordinator {
 
 extension SignedCoordinator: AiringTodayCoordinatorDelegate {
   public func tvShowDetailIsPicked(showId: Int, navigation: UINavigationController) {
+    showDetailIsPicked(for: showId, navigation: navigation)
+  }
+}
+
+extension SignedCoordinator: PopularCoordinatorDelegate {
+  public func tvShowDetailIsPickedFromPopular(showId: Int, navigation: UINavigationController) {
     showDetailIsPicked(for: showId, navigation: navigation)
   }
 }

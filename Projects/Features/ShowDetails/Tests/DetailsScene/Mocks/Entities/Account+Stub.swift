@@ -7,10 +7,10 @@
 
 @testable import Shared
 
-extension Account {
+extension AccountDomain {
   
   static func stub(id: Int = 1,
                    sessionId: String = "session") -> Self {
-    return Account(id: id, sessionId: sessionId)
+    return AccountDomain(id: id, sessionId: sessionId)
   }
 }

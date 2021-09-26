@@ -28,7 +28,7 @@ class TVShowDetailViewModelTapsTests: QuickSpec {
       
       beforeEach {
         fetchLoggedUserMock = FetchLoggedUserMock()
-        fetchLoggedUserMock.account = Account.stub(id: 1, sessionId: "")
+        fetchLoggedUserMock.account = AccountDomain.stub(id: 1, sessionId: "")
         
         fetchTVShowDetailsUseCaseMock = FetchTVShowDetailsUseCaseMock()
         fetchTVAccountStateMock = FetchTVAccountStateMock()
@@ -78,9 +78,9 @@ class TVShowDetailViewModelTapsTests: QuickSpec {
             [.next(0, false),
              .next(0, initialFavoriteState),
              .next(10, !initialFavoriteState)]
-          
+
           expect(favoriteObserver.events)
-            .toEventually(equal(expected), timeout: 0.5)
+            .toEventually(equal(expected), timeout: .milliseconds(500))
         }
       }
       
@@ -128,7 +128,7 @@ class TVShowDetailViewModelTapsTests: QuickSpec {
              .next(10, !initialStateWatched)]
           
           expect(watchedObserver.events)
-            .toEventually(equal(expected), timeout: 0.5)
+            .toEventually(equal(expected), timeout: .milliseconds(500))
         }
       }
     }

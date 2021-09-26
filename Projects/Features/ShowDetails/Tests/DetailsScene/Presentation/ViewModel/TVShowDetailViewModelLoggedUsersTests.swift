@@ -28,7 +28,7 @@ class TVShowDetailViewModelLoggedUsersTests: QuickSpec {
       
       beforeEach {
         fetchLoggedUserMock = FetchLoggedUserMock()
-        fetchLoggedUserMock.account = Account.stub(id: 1, sessionId: "")
+        fetchLoggedUserMock.account = AccountDomain.stub(id: 1, sessionId: "")
         
         fetchTVShowDetailsUseCaseMock = FetchTVShowDetailsUseCaseMock()
         fetchTVAccountStateMock = FetchTVAccountStateMock()

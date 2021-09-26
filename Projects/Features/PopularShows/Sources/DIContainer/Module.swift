@@ -8,21 +8,17 @@
 import Foundation
 import UIKit
 import Networking
-import Persistence
 import Shared
 
 public struct ModuleDependencies {
   
   let apiDataTransferService: DataTransferService
   let imagesBaseURL: String
-  let showsPersistence: ShowsVisitedLocalRepository
-  
+
   public init(apiDataTransferService: DataTransferService,
-              imagesBaseURL: String,
-              showsPersistence: ShowsVisitedLocalRepository) {
+              imagesBaseURL: String) {
     self.apiDataTransferService = apiDataTransferService
     self.imagesBaseURL = imagesBaseURL
-    self.showsPersistence = showsPersistence
   }
 }
 
@@ -36,7 +32,7 @@ public struct Module {
     self.diContainer = DIContainer(dependencies: dependencies)
   }
   
-  public func buildPopularCoordinator(in navigationController: UINavigationController) -> Coordinator {
-    return diContainer.buildPopularCoordinator(navigationController: navigationController)
+  public func buildPopularCoordinator(in navigationController: UINavigationController, delegate: PopularCoordinatorDelegate?) -> Coordinator {
+    return diContainer.buildPopularCoordinator(navigationController: navigationController, delegate: delegate)
   }
 }

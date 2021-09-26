@@ -18,7 +18,8 @@ extension Project {
     actions: [TargetAction] = [],
     features: [String] = [],
     dependencies: [TargetDependency] = [],
-    testFolder: String? = nil
+    testFolder: String? = nil,
+    testDependencies: [TargetDependency] = []
   ) -> Project {
     return project(
       name: name,
@@ -55,7 +56,8 @@ extension Project {
     resources: ResourceFileElements? = nil,
     actions: [TargetAction] = [],
     dependencies: [TargetDependency] = [],
-    testFolder: String? = nil
+    testFolder: String? = nil,
+    testDependencies: [TargetDependency] = []
   ) -> Project {
     return project(
       name: name,
@@ -65,7 +67,8 @@ extension Project {
       resources: resources,
       actions: actions,
       dependencies: dependencies,
-      testFolder: testFolder
+      testFolder: testFolder,
+      testDependencies: testDependencies
     )
   }
 
@@ -79,7 +82,8 @@ extension Project {
     actions: [TargetAction] = [],
     dependencies: [TargetDependency] = [],
     infoPlist: [String: InfoPlist.Value] = [:],
-    testFolder: String? = nil
+    testFolder: String? = nil,
+    testDependencies: [TargetDependency] = []
   ) -> Project {
 
     let targets = buildAppTargets(name: name,
@@ -89,7 +93,8 @@ extension Project {
                                   resources: resources,
                                   actions: actions,
                                   dependencies: dependencies,
-                                  testFolder: testFolder)
+                                  testFolder: testFolder,
+                                  testDependencies: testDependencies)
     return Project(
       name: name,
       packages: packages,
@@ -106,7 +111,8 @@ extension Project {
                                       resources: ResourceFileElements? = nil,
                                       actions: [TargetAction] = [],
                                       dependencies: [TargetDependency] = [],
-                                      testFolder: String? = nil
+                                      testFolder: String? = nil,
+                                      testDependencies: [TargetDependency] = []
   ) -> [Target] {
     var targets: [Target] = []
 
@@ -139,6 +145,7 @@ extension Project {
           dependencies: [
             .target(name: "\(name)")
           ]
+          + testDependencies
         )
       )
     }

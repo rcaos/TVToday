@@ -23,7 +23,12 @@ let project = Project.framework(
     .package(product: "RxCocoa"),
     .package(product: "RxDataSources"),
     .package(product: "RxSwift"),
+  ],
+  testFolder: "Tests",
+  testDependencies: [
+    .package(product: "RxBlocking"),
+    .package(product: "RxTest"),
+    .package(product: "Quick"),
+    .package(product: "Nimble")
   ]
-  // MARK: - TODO
-  //,testFolder: "Tests"
 )

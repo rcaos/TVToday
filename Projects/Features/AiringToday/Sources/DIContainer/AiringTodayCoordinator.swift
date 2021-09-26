@@ -7,19 +7,17 @@
 //
 
 import UIKit
-import ShowDetails
 import Shared
 
 class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinatorProtocol {
-  
+
   public var navigationController: UINavigationController
-  
-  private var childCoordinators = [AiringTodayChildCoordinator: Coordinator]()
-  
+
   private let dependencies: AiringTodayCoordinatorDependencies
-  
+
+  public var delegate: AiringTodayCoordinatorDelegate?
+
   // MARK: - Initializer
-  
   public init(navigationController: UINavigationController,
               dependencies: AiringTodayCoordinatorDependencies) {
     self.navigationController = navigationController
@@ -57,19 +55,6 @@ class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinatorProto
   // MARK: - Navigate to Show Detail
   
   fileprivate func showDetailIsPicked(for showId: Int) {
-    let tvDetailCoordinator = dependencies.buildTVShowDetailCoordinator(navigationController: navigationController, delegate: self)
-    childCoordinators[.detailShow] = tvDetailCoordinator
-    
-    let nextStep = ShowDetailsStep.showDetailsIsRequired(withId: showId)
-    tvDetailCoordinator.start(with: nextStep)
-  }
-}
-
-// MARK: - TVShowDetailCoordinatorDelegate
-
-extension AiringTodayCoordinator: TVShowDetailCoordinatorDelegate {
-  
-  public func tvShowDetailCoordinatorDidFinish() {
-    childCoordinators[.detailShow] = nil
+    delegate?.tvShowDetailIsPicked(showId: showId, navigation: navigationController)
   }
 }

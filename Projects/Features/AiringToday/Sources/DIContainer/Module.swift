@@ -15,19 +15,15 @@ public struct ModuleDependencies {
   
   let apiDataTransferService: DataTransferService
   let imagesBaseURL: String
-  let showsPersistence: ShowsVisitedLocalRepository
   
   public init(apiDataTransferService: DataTransferService,
-              imagesBaseURL: String,
-              showsPersistence: ShowsVisitedLocalRepository) {
+              imagesBaseURL: String) {
     self.apiDataTransferService = apiDataTransferService
     self.imagesBaseURL = imagesBaseURL
-    self.showsPersistence = showsPersistence
   }
 }
 
 // MARK: - Entry to Module
-
 public struct Module {
   
   private let diContainer: DIContainer
@@ -36,7 +32,7 @@ public struct Module {
     self.diContainer = DIContainer(dependencies: dependencies)
   }
   
-  public func buildAiringTodayCoordinator(in navigationController: UINavigationController) -> Coordinator {
-    return diContainer.buildModuleCoordinator(navigationController: navigationController)
+  public func buildAiringTodayCoordinator(in navigationController: UINavigationController, delegate: AiringTodayCoordinatorDelegate?) -> Coordinator {
+    return diContainer.buildModuleCoordinator(navigationController: navigationController, delegate: delegate)
   }
 }

@@ -51,6 +51,6 @@ class PopularCoordinator: NavigationCoordinator, PopularCoordinatorProtocol {
   
   // MARK: - Navigate to Show Detail
   fileprivate func navigateToShowDetailScreen(with showId: Int) {
-    delegate?.tvShowDetailIsPicked(showId: showId, navigation: navigationController)
+    delegate?.tvShowDetailIsPickedFromPopular(showId: showId, navigation: navigationController)
   }
 }

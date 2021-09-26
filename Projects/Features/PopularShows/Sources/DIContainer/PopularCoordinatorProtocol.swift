@@ -18,7 +18,7 @@ protocol PopularCoordinatorDependencies {
 }
 
 public protocol PopularCoordinatorDelegate {
-  func tvShowDetailIsPicked(showId: Int, navigation: UINavigationController)
+  func tvShowDetailIsPickedFromPopular(showId: Int, navigation: UINavigationController)
 }
 
 // MARK: - Steps

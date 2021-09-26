@@ -5,10 +5,6 @@ let project = Project.framework(
   name: "PopularShows",
   dependencies: [
     .project(
-      target: "ShowDetails",
-      path: .relativeToRoot("Projects/Features/ShowDetails")
-    ),
-    .project(
       target: "Networking",
       path: .relativeToRoot("Projects/Features/Networking")
     ),
@@ -16,14 +12,15 @@ let project = Project.framework(
       target: "Shared",
       path: .relativeToRoot("Projects/Features/Shared")
     ),
-    .project(
-      target: "Persistence",
-      path: .relativeToRoot("Projects/Features/Persistence")
-    ),
     .package(product: "RxCocoa"),
     .package(product: "RxDataSources"),
     .package(product: "RxSwift"),
+  ],
+  testFolder: "Tests",
+  testDependencies: [
+    .package(product: "RxBlocking"),
+    .package(product: "RxTest"),
+    .package(product: "Quick"),
+    .package(product: "Nimble")
   ]
-  // MARK: - TODO
-  //,testFolder: "Tests"
 )

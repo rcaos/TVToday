@@ -17,6 +17,10 @@ let project = Project.framework(
       target: "Networking",
       path: .relativeToRoot("Projects/Features/Networking")
     ),
+    .project(
+      target: "ShowDetailsInterface",
+      path: .relativeToRoot("Projects/Features/ShowDetails")
+    ),
     .package(product: "RxCocoa"),
     .package(product: "RxDataSources"),
     .package(product: "RxSwift"),

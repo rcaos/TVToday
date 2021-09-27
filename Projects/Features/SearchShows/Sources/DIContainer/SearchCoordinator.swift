@@ -7,9 +7,9 @@
 //
 
 import UIKit
-import ShowDetails
-import TVShowsList
 import Shared
+import ShowDetailsInterface
+import TVShowsListInterface
 
 class SearchCoordinator: NavigationCoordinator, SearchCoordinatorProtocol {
   
@@ -56,10 +56,10 @@ class SearchCoordinator: NavigationCoordinator, SearchCoordinatorProtocol {
   // MARK: - Navigate to List by Genre
   
   fileprivate func navigateToGenreListScreen(with id: Int, title: String?) {
-    let listCoordinator = dependencies.buildTVShowListCoordinator(navigationController: navigationController)
-    listCoordinator.delegate = self
+    let listCoordinator = dependencies.buildTVShowListCoordinator(navigationController: navigationController, delegate: self)
     childCoordinators[.genreList] = listCoordinator
-    listCoordinator.start(with: .genreList(genreId: id, title: title))
+    let nextStep = TVShowListStep.genreList(genreId: id, title: title)
+    listCoordinator.navigate(to: nextStep)
   }
   
   // MARK: - Navigate to Detail TVShow
@@ -68,12 +68,11 @@ class SearchCoordinator: NavigationCoordinator, SearchCoordinatorProtocol {
     let coordinator = dependencies.buildTVShowDetailCoordinator(navigationController: navigationController, delegate: self)
     childCoordinators[.detailShow] = coordinator
     let nextStep = ShowDetailsStep.showDetailsIsRequired(withId: showId)
-    coordinator.start(with: nextStep)
+    coordinator.navigate(to: nextStep)
   }
 }
 
 // MARK: - TVShowListCoordinatorDelegate
-
 extension SearchCoordinator: TVShowListCoordinatorDelegate {
   
   public func tvShowListCoordinatorDidFinish() {
@@ -82,9 +81,8 @@ extension SearchCoordinator: TVShowListCoordinatorDelegate {
 }
 
 // MARK: - TVShowDetailCoordinatorDelegate
-
 extension SearchCoordinator: TVShowDetailCoordinatorDelegate {
-  
+
   public func tvShowDetailCoordinatorDidFinish() {
     childCoordinators[.detailShow] = nil
   }

@@ -8,15 +8,14 @@
 import UIKit
 import Shared
 import Persistence
-import TVShowsList
-import ShowDetails
+import ShowDetailsInterface
+import TVShowsListInterface
 
 final class DIContainer {
   
   private let dependencies: ModuleDependencies
   
   // MARK: - Repositories
-  
   private lazy var showsRepository: TVShowsRepository = {
     return DefaultTVShowsRepository(
       dataTransferService: dependencies.apiDataTransferService,
@@ -30,27 +29,11 @@ final class DIContainer {
   private lazy var keychainRepository: KeychainRepository = {
     return DefaultKeychainRepository()
   }()
-  
-  // MARK: - Dependencies
-  
-  private lazy var showListDependencies: TVShowsList.ModuleDependencies = {
-    return TVShowsList.ModuleDependencies(apiDataTransferService: dependencies.apiDataTransferService,
-                                          imagesBaseURL: dependencies.imagesBaseURL,
-                                          showsPersistence: dependencies.showsPersistence)
-  }()
-  
-  private lazy var showDetailsDependencies: ShowDetails.ModuleDependencies = {
-    return ShowDetails.ModuleDependencies(apiDataTransferService: dependencies.apiDataTransferService,
-                                          imagesBaseURL: dependencies.imagesBaseURL,
-                                          showsPersistenceRepository: dependencies.showsPersistence)
-  }()
-  
+
   // MARK: - Long-Lived dependencies
-  
   private let searchViewModel: SearchViewModel
   
   // MARK: - Initializer
-  
   init(dependencies: ModuleDependencies) {
     self.dependencies = dependencies
     
@@ -58,13 +41,11 @@ final class DIContainer {
   }
   
   // MARK: - Module Coordinator
-  
   func buildModuleCoordinator(navigationController: UINavigationController) -> Coordinator {
     return SearchCoordinator(navigationController: navigationController, dependencies: self)
   }
   
   // MARK: - Search Feature Uses Cases
-  
   fileprivate func makeSearchShowsUseCase() -> SearchTVShowsUseCase {
     return DefaultSearchTVShowsUseCase(tvShowsRepository: showsRepository,
                                        keychainRepository: keychainRepository,
@@ -91,7 +72,6 @@ final class DIContainer {
   }
   
   // MARK: - Search Feature View Models
-  
   fileprivate func buildResultsViewModel(with delegate: ResultsSearchViewModelDelegate?) -> ResultsSearchViewModelProtocol {
     let resultsViewModel = ResultsSearchViewModel(searchTVShowsUseCase: makeSearchShowsUseCase(),
                                                   fetchRecentSearchsUseCase: makeFetchSearchsUseCase())
@@ -106,7 +86,6 @@ final class DIContainer {
   }
   
   // MARK: - SearchViewControllerFactory
-  
   func buildSearchOptionsController() -> UIViewController {
     let viewModel = SearchOptionsViewModel(fetchGenresUseCase: makeFetchGenresUseCase(),
                                            fetchVisitedShowsUseCase: makeFetchVisitedShowsUseCase(),
@@ -118,7 +97,6 @@ final class DIContainer {
 }
 
 // MARK: - SearchCoordinatorDependencies
-
 extension DIContainer: SearchCoordinatorDependencies {
   
   func buildSearchViewController(coordinator: SearchCoordinatorProtocol?) -> UIViewController {
@@ -132,18 +110,13 @@ extension DIContainer: SearchCoordinatorDependencies {
                                         searchControllerFactory: self)
     return searchVC
   }
-  
-  func buildTVShowListCoordinator(navigationController: UINavigationController) -> TVShowListCoordinator {
-    let module = TVShowsList.Module(dependencies: showListDependencies)
-    let coordinator = module.buildModuleCoordinator(in: navigationController)
-    return coordinator
+
+  func buildTVShowDetailCoordinator(navigationController: UINavigationController, delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinatorProtocol {
+    return dependencies.showDetailsBuilder.buildModuleCoordinator(in: navigationController, delegate: delegate)
   }
   
-  func buildTVShowDetailCoordinator(navigationController: UINavigationController,
-                                    delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinator {
-    let module = ShowDetails.Module(dependencies: showDetailsDependencies)
-    let coordinator = module.buildModuleCoordinator(in: navigationController, delegate: delegate)
-    return coordinator
+  func buildTVShowListCoordinator(navigationController: UINavigationController, delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinatorProtocol {
+    return dependencies.showListBuilder.buildModuleCoordinator(in: navigationController, delegate: delegate)
   }
 }
 

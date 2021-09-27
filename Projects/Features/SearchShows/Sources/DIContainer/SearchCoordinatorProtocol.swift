@@ -6,46 +6,33 @@
 //
 
 import UIKit
-import ShowDetails
-import TVShowsList
+import ShowDetailsInterface
+import TVShowsListInterface
 import Shared
 
-protocol SearchCoordinatorProtocol: class {
-  
+protocol SearchCoordinatorProtocol: AnyObject {
   func navigate(to step: SearchStep)
 }
 
 // MARK: - Coordinator Dependencies
-
 protocol SearchCoordinatorDependencies {
-  
   func buildSearchViewController(coordinator: SearchCoordinatorProtocol?) -> UIViewController
-  
-  func buildTVShowListCoordinator(navigationController: UINavigationController) -> TVShowListCoordinator
-  
-  func buildTVShowDetailCoordinator(navigationController: UINavigationController,
-                                    delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinator
+
+  func buildTVShowDetailCoordinator(navigationController: UINavigationController, delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinatorProtocol
+
+  func buildTVShowListCoordinator(navigationController: UINavigationController, delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinatorProtocol
 }
 
 // MARK: - Steps
-
 public enum SearchStep: Step {
-  
-  case
-  
-  searchFeatureInit,
-  
-  genreIsPicked(withId: Int, title: String?),
-  
-  showIsPicked(withId: Int)
+  case searchFeatureInit
+  case genreIsPicked(withId: Int, title: String?)
+  case showIsPicked(withId: Int)
 }
 
 // MARK: - ChildCoordinators
 
 public enum SearchChildCoordinator {
-  case
-  
-  detailShow,
-  
-  genreList
+  case detailShow
+  case genreList
 }

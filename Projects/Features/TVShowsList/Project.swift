@@ -17,7 +17,7 @@ let project = Project.framework(
       path: .relativeToRoot("Projects/Features/Persistence")
     ),
     .project(
-      target: "ShowDetails",
+      target: "ShowDetailsInterface",
       path: .relativeToRoot("Projects/Features/ShowDetails")
     ),
     .package(product: "RxCocoa"),

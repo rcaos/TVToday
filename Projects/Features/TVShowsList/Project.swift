@@ -4,6 +4,12 @@ import ProjectDescriptionHelpers
 let project = Project.framework(
   name: "TVShowsList",
   dependencies: [
+    .package(product: "RxCocoa"),
+    .package(product: "RxDataSources"),
+    .package(product: "RxSwift"),
+  ],
+  interfaceFolder: "Interface",
+  interfaceDependencies: [
     .project(
       target: "Networking",
       path: .relativeToRoot("Projects/Features/Networking")
@@ -20,9 +26,6 @@ let project = Project.framework(
       target: "ShowDetailsInterface",
       path: .relativeToRoot("Projects/Features/ShowDetails")
     ),
-    .package(product: "RxCocoa"),
-    .package(product: "RxDataSources"),
-    .package(product: "RxSwift"),
   ],
   testFolder: "Tests",
   testDependencies: [

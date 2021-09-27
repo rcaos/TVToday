@@ -8,10 +8,6 @@
 
 import UIKit
 import Shared
-import ShowDetails
-import AiringToday
-import PopularShows
-import ShowDetailsInterface
 
 public enum SignedChildCoordinator {
   case
@@ -88,7 +84,6 @@ public class SignedCoordinator: Coordinator {
   fileprivate func buildSearchScene(in navigation: UINavigationController) {
     let searchModule = appDIContainer.buildSearchModule()
     let coordinator = searchModule.buildSearchCoordinator(in: navigation)
-    
     coordinator.start()
     childCoordinators[.search] = coordinator
   }

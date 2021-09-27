@@ -16,7 +16,7 @@ import Shared
 
 import AiringToday
 import PopularShows
-//import SearchShows
+import SearchShows
 import Account
 import ShowDetails
 import ShowDetailsInterface
@@ -70,13 +70,15 @@ public class AppDIContainer {
   }
   
   // MARK: - Search Module
-//  func buildSearchModule() -> SearchShows.Module {
-//    let dependencies = SearchShows.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-//                                                      imagesBaseURL: appConfigurations.imagesBaseURL,
-//                                                      showsPersistence: showsPersistence,
-//                                                      searchsPersistence: searchPersistence)
-//    return SearchShows.Module(dependencies: dependencies)
-//  }
+  func buildSearchModule() -> SearchShows.Module {
+    let dependencies = SearchShows.ModuleDependencies(apiDataTransferService: apiDataTransferService,
+                                                      imagesBaseURL: appConfigurations.imagesBaseURL,
+                                                      showsPersistence: showsPersistence,
+                                                      searchsPersistence: searchPersistence,
+                                                      showDetailsBuilder: self,
+                                                      showListBuilder: self)
+    return SearchShows.Module(dependencies: dependencies)
+  }
   
   // MARK: - Account Module
   func buildAccountModule() -> Account.Module {

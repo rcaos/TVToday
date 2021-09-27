@@ -34,7 +34,7 @@ public protocol TVShowListCoordinatorProtocol: NavigationCoordinator {
   func navigate(to step: TVShowListStep)
 }
 
-public protocol TVShowListCoordinatorDelegate {
+public protocol TVShowListCoordinatorDelegate: AnyObject {
   func tvShowListCoordinatorDidFinish()
 }
 

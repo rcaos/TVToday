@@ -9,9 +9,9 @@
 
 class FetchLoggedUserMock: FetchLoggedUser {
   
-  var account: Account?
+  var account: AccountDomain?
   
-  func execute() -> Account? {
+  func execute() -> AccountDomain? {
     return account
   }
 }

@@ -57,7 +57,7 @@ class AccountViewModelTests: QuickSpec {
       context("When FetcLoggedUser UseCase respond With Account") {
         it("Should ViewModel contanins Profile State") {
           // given
-          fetchLoggedUserMock.account = Account(id: 1, sessionId: "1")
+          fetchLoggedUserMock.account = AccountDomain(id: 1, sessionId: "1")
           fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
           
           let viewModel: AccountViewModelProtocol =

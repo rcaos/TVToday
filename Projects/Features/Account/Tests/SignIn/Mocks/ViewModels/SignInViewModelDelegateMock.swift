@@ -5,6 +5,7 @@
 //  Created by Jeans Ruiz on 8/8/20.
 //
 
+import Foundation
 @testable import Account
 
 final class SignInViewModelDelegateMock: SignInViewModelDelegate {

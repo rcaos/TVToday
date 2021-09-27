@@ -79,7 +79,7 @@ public class SignedCoordinator: Coordinator {
   // MARK: - Build Popular Scene
   fileprivate func buildPopularScene(in navigation: UINavigationController) {
     let popularModule = appDIContainer.buildPopularModule()
-    let coordinator = popularModule.buildPopularCoordinator(in: navigation, delegate: self)
+    let coordinator = popularModule.buildPopularCoordinator(in: navigation)
     coordinator.start()
     childCoordinators[.popularShows] = coordinator
   }
@@ -100,12 +100,5 @@ public class SignedCoordinator: Coordinator {
     
     coordinator.start()
     childCoordinators[.account] = coordinator
-  }
-}
-
-// MARK: - Delete this
-extension SignedCoordinator: PopularCoordinatorDelegate {
-  public func tvShowDetailIsPickedFromPopular(showId: Int, navigation: UINavigationController) {
-//    showDetailIsPicked(for: showId, navigation: navigation)
   }
 }

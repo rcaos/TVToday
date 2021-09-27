@@ -71,7 +71,7 @@ public class SignedCoordinator: Coordinator {
   // MARK: - Build Airing Today Scene
   fileprivate func buildTodayScene(in navigation: UINavigationController) {
     let todayModule = appDIContainer.buildAiringTodayModule()
-    let airingCoordinator = todayModule.buildAiringTodayCoordinator(in: navigation, delegate: self)
+    let airingCoordinator = todayModule.buildAiringTodayCoordinator(in: navigation)
     airingCoordinator.start()
     childCoordinators[.airingToday] = airingCoordinator
   }
@@ -101,32 +101,11 @@ public class SignedCoordinator: Coordinator {
     coordinator.start()
     childCoordinators[.account] = coordinator
   }
-
-  // MARK: - Navigate to Show Details
-  fileprivate func showDetailIsPicked(for showId: Int, navigation: UINavigationController) {
-    let module = appDIContainer.buildTVShowDetailModule()
-    let tvDetailCoordinator = module.buildModuleCoordinator(in: navigation, delegate: self)
-    childCoordinators[.tvdetails] = tvDetailCoordinator
-
-    let nextStep = ShowDetailsStep.showDetailsIsRequired(withId: showId)
-    tvDetailCoordinator.start(with: nextStep)
-  }
 }
 
-extension SignedCoordinator: AiringTodayCoordinatorDelegate {
-  public func tvShowDetailIsPicked(showId: Int, navigation: UINavigationController) {
-    showDetailIsPicked(for: showId, navigation: navigation)
-  }
-}
-
+// MARK: - Delete this
 extension SignedCoordinator: PopularCoordinatorDelegate {
   public func tvShowDetailIsPickedFromPopular(showId: Int, navigation: UINavigationController) {
-    showDetailIsPicked(for: showId, navigation: navigation)
-  }
-}
-
-extension SignedCoordinator: TVShowDetailCoordinatorDelegate {
-  public func tvShowDetailCoordinatorDidFinish() {
-    childCoordinators[.tvdetails] = nil
+//    showDetailIsPicked(for: showId, navigation: navigation)
   }
 }

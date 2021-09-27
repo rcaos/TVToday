@@ -8,6 +8,7 @@
 
 import UIKit
 import Shared
+import ShowDetailsInterface
 
 class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinatorProtocol {
 
@@ -15,7 +16,7 @@ class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinatorProto
 
   private let dependencies: AiringTodayCoordinatorDependencies
 
-  public var delegate: AiringTodayCoordinatorDelegate?
+  private var childCoordinators = [AiringTodayChildCoordinator: NavigationCoordinator]()
 
   // MARK: - Initializer
   public init(navigationController: UINavigationController,
@@ -43,18 +44,26 @@ class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinatorProto
       showDetailIsPicked(for: showId)
     }
   }
-  
-  // MARK: - Default Step
-  
-  fileprivate func navigateToTodayFeature() {
+
+  private func navigateToTodayFeature() {
     let airingTodayController = dependencies.buildAiringTodayViewController(coordinator: self)
     airingTodayController.navigationItem.title = "Today on TV"
     navigationController.pushViewController(airingTodayController, animated: true)
   }
   
   // MARK: - Navigate to Show Detail
-  
-  fileprivate func showDetailIsPicked(for showId: Int) {
-    delegate?.tvShowDetailIsPicked(showId: showId, navigation: navigationController)
+  private func showDetailIsPicked(for showId: Int) {
+    let tvDetailCoordinator = dependencies.buildTVShowDetailCoordinator(navigationController: navigationController, delegate: self)
+    childCoordinators[.detailShow] = tvDetailCoordinator
+
+    let nextStep = ShowDetailsStep.showDetailsIsRequired(withId: showId)
+    tvDetailCoordinator.navigate(to: nextStep)
+  }
+}
+
+extension AiringTodayCoordinator: TVShowDetailCoordinatorDelegate {
+
+  public func tvShowDetailCoordinatorDidFinish() {
+    childCoordinators[.detailShow] = nil
   }
 }

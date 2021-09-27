@@ -7,6 +7,7 @@
 
 import UIKit
 import Shared
+import ShowDetailsInterface
 
 final class DIContainer {
 
@@ -24,9 +25,8 @@ final class DIContainer {
   }
 
   // MARK: - Module Coordinator
-  func buildModuleCoordinator(navigationController: UINavigationController, delegate: AiringTodayCoordinatorDelegate?) -> Coordinator {
+  func buildModuleCoordinator(navigationController: UINavigationController) -> Coordinator {
     let coordinator =  AiringTodayCoordinator(navigationController: navigationController, dependencies: self)
-    coordinator.delegate = delegate
     return coordinator
   }
   
@@ -44,5 +44,10 @@ extension DIContainer: AiringTodayCoordinatorDependencies {
                                          coordinator: coordinator)
     let todayVC = AiringTodayViewController(viewModel: viewModel)
     return todayVC
+  }
+
+  func buildTVShowDetailCoordinator(navigationController: UINavigationController,
+                                    delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinatorProtocol {
+    return dependencies.showDetailsBuilder.buildModuleCoordinator(in: navigationController, delegate: delegate)
   }
 }

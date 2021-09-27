@@ -17,6 +17,7 @@ import PopularShows
 import SearchShows
 import Account
 import ShowDetails
+import ShowDetailsInterface
 
 public class AppDIContainer {
   
@@ -81,9 +82,9 @@ public class AppDIContainer {
 
   // MARK: - Build TVShowDetails Module
   func buildTVShowDetailModule() -> ShowDetails.Module {
-    let dependencies = ShowDetails.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                      imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                      showsPersistenceRepository: showsPersistence)
+    let dependencies = ShowDetailsInterface.ModuleDependencies(apiDataTransferService: apiDataTransferService,
+                                                               imagesBaseURL: appConfigurations.imagesBaseURL,
+                                                               showsPersistenceRepository: showsPersistence)
     return ShowDetails.Module(dependencies: dependencies)
   }
 }

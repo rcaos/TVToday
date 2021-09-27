@@ -11,6 +11,7 @@ import Shared
 import ShowDetails
 import AiringToday
 import PopularShows
+import ShowDetailsInterface
 
 public enum SignedChildCoordinator {
   case

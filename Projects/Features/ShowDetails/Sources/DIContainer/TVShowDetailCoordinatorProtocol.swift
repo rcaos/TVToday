@@ -13,10 +13,10 @@ public protocol TVShowDetailCoordinatorProtocol: class {
   func navigate(to step: ShowDetailsStep)
 }
 
-public protocol TVShowDetailCoordinatorDelegate: class {
-  
-  func tvShowDetailCoordinatorDidFinish()
-}
+//public protocol TVShowDetailCoordinatorDelegate: class {
+//  
+//  func tvShowDetailCoordinatorDidFinish()
+//}
 
 // MARK: - Coordinator Dependencies
 

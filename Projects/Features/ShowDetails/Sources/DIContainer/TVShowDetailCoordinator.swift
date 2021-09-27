@@ -8,6 +8,7 @@
 
 import UIKit
 import Shared
+import ShowDetailsInterface
 
 public class TVShowDetailCoordinator: NavigationCoordinator, TVShowDetailCoordinatorProtocol {
   

@@ -18,10 +18,6 @@ let project = Project.framework(
       path: .relativeToRoot("Projects/Features/Networking")
     ),
     .project(
-      target: "Persistence",
-      path: .relativeToRoot("Projects/Features/Persistence")
-    ),
-    .project(
       target: "TVShowsListInterface",
       path: .relativeToRoot("Projects/Features/TVShowsList")
     ),

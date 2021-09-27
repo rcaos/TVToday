@@ -84,7 +84,6 @@ public class AppDIContainer {
   func buildAccountModule() -> Account.Module {
     let dependencies = Account.ModuleDependencies(apiDataTransferService: apiDataTransferService,
                                                   imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                  showsPersistence: showsPersistence,
                                                   showListBuilder: self)
     return Account.Module(dependencies: dependencies)
   }

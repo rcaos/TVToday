@@ -56,6 +56,8 @@ extension Project {
     resources: ResourceFileElements? = nil,
     actions: [TargetAction] = [],
     dependencies: [TargetDependency] = [],
+    interfaceFolder: String? = nil,
+    interfaceDependencies: [TargetDependency] = [],
     testFolder: String? = nil,
     testDependencies: [TargetDependency] = []
   ) -> Project {
@@ -67,6 +69,8 @@ extension Project {
       resources: resources,
       actions: actions,
       dependencies: dependencies,
+      interfaceFolder: interfaceFolder,
+      interfaceDependencies: interfaceDependencies,
       testFolder: testFolder,
       testDependencies: testDependencies
     )
@@ -82,6 +86,8 @@ extension Project {
     actions: [TargetAction] = [],
     dependencies: [TargetDependency] = [],
     infoPlist: [String: InfoPlist.Value] = [:],
+    interfaceFolder: String? = nil,
+    interfaceDependencies: [TargetDependency] = [],
     testFolder: String? = nil,
     testDependencies: [TargetDependency] = []
   ) -> Project {
@@ -93,6 +99,8 @@ extension Project {
                                   resources: resources,
                                   actions: actions,
                                   dependencies: dependencies,
+                                  interfaceFolder: interfaceFolder,
+                                  interfaceDependencies: interfaceDependencies,
                                   testFolder: testFolder,
                                   testDependencies: testDependencies)
     return Project(
@@ -111,10 +119,35 @@ extension Project {
                                       resources: ResourceFileElements? = nil,
                                       actions: [TargetAction] = [],
                                       dependencies: [TargetDependency] = [],
+                                      interfaceFolder: String? = nil,
+                                      interfaceDependencies: [TargetDependency] = [],
                                       testFolder: String? = nil,
                                       testDependencies: [TargetDependency] = []
   ) -> [Target] {
     var targets: [Target] = []
+
+    var mainDependencies: [TargetDependency] = dependencies
+
+    if let interfaceFolder = interfaceFolder {
+      targets.append (
+        Target(
+          name: "\(name)Interface",
+          platform: platform,
+          product: product,
+          bundleId: "home.rcaos.\(name.lowercased()).interface",
+          deploymentTarget: deploymentTarget,
+          infoPlist: .extendingDefault(with: infoPlist),
+          sources: ["\(interfaceFolder)/**"],
+          resources: nil,  //???
+          actions: [],
+          dependencies: interfaceDependencies
+        )
+      )
+
+      mainDependencies.append(
+        .target(name: "\(name)Interface")
+      )
+    }
 
     targets.append (
       Target(
@@ -128,7 +161,8 @@ extension Project {
         resources: resources,  //???
         //resources: ["Resources/**"],
         actions: actions,
-        dependencies: dependencies
+        //dependencies: dependencies
+        dependencies: mainDependencies
       )
     )
 

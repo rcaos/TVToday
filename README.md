@@ -1,3 +1,7 @@
+- 👷‍♂️ Currently working with Swift Package Manager + Tuist in this branch: https://github.com/rcaos/TVToday/tree/spm-initial
+- Old version with CocoaPods: https://github.com/rcaos/TVToday/releases/tag/v.0.4.0
+
+
 ## TVToday app
 
 - TVToday es una app para iOS que consulta TVShows

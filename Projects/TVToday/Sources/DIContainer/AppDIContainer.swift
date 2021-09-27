@@ -16,10 +16,12 @@ import Shared
 
 import AiringToday
 import PopularShows
-import SearchShows
+//import SearchShows
 import Account
 import ShowDetails
 import ShowDetailsInterface
+import TVShowsList
+import TVShowsListInterface
 
 public class AppDIContainer {
   
@@ -68,19 +70,20 @@ public class AppDIContainer {
   }
   
   // MARK: - Search Module
-  func buildSearchModule() -> SearchShows.Module {
-    let dependencies = SearchShows.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                      imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                      showsPersistence: showsPersistence,
-                                                      searchsPersistence: searchPersistence)
-    return SearchShows.Module(dependencies: dependencies)
-  }
+//  func buildSearchModule() -> SearchShows.Module {
+//    let dependencies = SearchShows.ModuleDependencies(apiDataTransferService: apiDataTransferService,
+//                                                      imagesBaseURL: appConfigurations.imagesBaseURL,
+//                                                      showsPersistence: showsPersistence,
+//                                                      searchsPersistence: searchPersistence)
+//    return SearchShows.Module(dependencies: dependencies)
+//  }
   
   // MARK: - Account Module
   func buildAccountModule() -> Account.Module {
     let dependencies = Account.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                    imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                    showsPersistence: showsPersistence)
+                                                  imagesBaseURL: appConfigurations.imagesBaseURL,
+                                                  showsPersistence: showsPersistence,
+                                                  showListBuilder: self)
     return Account.Module(dependencies: dependencies)
   }
 
@@ -94,12 +97,23 @@ public class AppDIContainer {
 }
 
 extension AppDIContainer: ModuleShowDetailsBuilder {
-
   public func buildModuleCoordinator(in navigationController: UINavigationController, delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinatorProtocol {
     let dependencies = ShowDetailsInterface.ModuleDependencies(apiDataTransferService: apiDataTransferService,
                                                                imagesBaseURL: appConfigurations.imagesBaseURL,
                                                                showsPersistenceRepository: showsPersistence)
     let module =  ShowDetails.Module(dependencies: dependencies)
+    return module.buildModuleCoordinator(in: navigationController, delegate: delegate)
+  }
+}
+
+extension AppDIContainer: ModuleShowListDetailsBuilder {
+
+  public func buildModuleCoordinator(in navigationController: UINavigationController,
+                                     delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinatorProtocol {
+    let dependencies = TVShowsListInterface.ModuleDependencies(apiDataTransferService: apiDataTransferService,
+                                                               imagesBaseURL: appConfigurations.imagesBaseURL,
+                                                               showDetailsBuilder: self)
+    let module = TVShowsList.Module(dependencies: dependencies)
     return module.buildModuleCoordinator(in: navigationController, delegate: delegate)
   }
 }

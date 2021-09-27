@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import UIKit
+
 import Networking
 import Persistence
 import RealmPersistence
@@ -52,7 +54,8 @@ public class AppDIContainer {
   // MARK: - Airing Today Module
   func buildAiringTodayModule() -> AiringToday.Module {
     let dependencies = AiringToday.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                      imagesBaseURL: appConfigurations.imagesBaseURL)
+                                                      imagesBaseURL: appConfigurations.imagesBaseURL,
+                                                      showDetailsBuilder: self)
     return AiringToday.Module(dependencies: dependencies)
   }
   
@@ -86,5 +89,16 @@ public class AppDIContainer {
                                                                imagesBaseURL: appConfigurations.imagesBaseURL,
                                                                showsPersistenceRepository: showsPersistence)
     return ShowDetails.Module(dependencies: dependencies)
+  }
+}
+
+extension AppDIContainer: ModuleShowDetailsBuilder {
+
+  public func buildModuleCoordinator(in navigationController: UINavigationController, delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinatorProtocol {
+    let dependencies = ShowDetailsInterface.ModuleDependencies(apiDataTransferService: apiDataTransferService,
+                                                               imagesBaseURL: appConfigurations.imagesBaseURL,
+                                                               showsPersistenceRepository: showsPersistence)
+    let module =  ShowDetails.Module(dependencies: dependencies)
+    return module.buildModuleCoordinator(in: navigationController, delegate: delegate)
   }
 }

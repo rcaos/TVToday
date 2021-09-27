@@ -8,23 +8,7 @@
 
 import RxSwift
 import Shared
-
-public struct TVShowUpdated {
-  public let showId: Int
-  public let isActive: Bool
-}
-
-public struct TVShowDetailViewModelClosures {
-  
-  let updateFavoritesShows: ( (_ updated: TVShowUpdated) -> Void )?
-  let updateWatchListShows: ( (_ updated: TVShowUpdated) -> Void )?
-   
-  public init (updateFavoritesShows: ( (_ updated: TVShowUpdated) -> Void )? = nil ,
-               updateWatchListShows: ( (_ updated: TVShowUpdated) -> Void )? = nil) {
-    self.updateFavoritesShows = updateFavoritesShows
-    self.updateWatchListShows = updateWatchListShows
-  }
-}
+import ShowDetailsInterface
 
 protocol TVShowDetailViewModelProtocol {
   

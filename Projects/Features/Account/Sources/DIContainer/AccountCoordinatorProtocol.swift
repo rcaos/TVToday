@@ -8,45 +8,32 @@
 import UIKit
 import Shared
 import ShowDetails
-import TVShowsList
+import TVShowsListInterface
 
-protocol AccountCoordinatorProtocol: class {
-  
+protocol AccountCoordinatorProtocol: AnyObject {
   func navigate(to step: AccountStep)
 }
 
 // MARK: - Coordinator Dependencies
-
 protocol AccountCoordinatorDependencies {
   
   func buildAccountViewController(coordinator: AccountCoordinatorProtocol?) -> UIViewController
   
   func buildAuthPermissionViewController(url: URL, delegate: AuthPermissionViewModelDelegate?) -> AuthPermissionViewController
   
-  func buildTVShowListCoordinator(navigationController: UINavigationController) -> TVShowListCoordinator
+  func buildTVShowListCoordinator(navigationController: UINavigationController, delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinatorProtocol
 }
 
 // MARK: - Steps
-
 public enum AccountStep: Step {
-  
-  case
-  
-  accountFeatureInit,
-  
-  signInIsPicked(url: URL, delegate: AuthPermissionViewModelDelegate?),
-  
-  authorizationIsComplete,
-  
-  favoritesIsPicked,
-  
-  watchListIsPicked
+  case accountFeatureInit
+  case signInIsPicked(url: URL, delegate: AuthPermissionViewModelDelegate?)
+  case authorizationIsComplete
+  case favoritesIsPicked
+  case watchListIsPicked
 }
 
 // MARK: - Child Coordinators
-
 public enum AccountChildCoordinator {
-  case
-  
-  tvShowList
+  case tvShowList
 }

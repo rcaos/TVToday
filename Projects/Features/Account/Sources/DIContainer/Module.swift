@@ -10,24 +10,27 @@ import UIKit
 import Networking
 import Persistence
 import Shared
+import TVShowsListInterface
 
 public struct ModuleDependencies {
   
   let apiDataTransferService: DataTransferService
   let imagesBaseURL: String
   let showsPersistence: ShowsVisitedLocalRepository
+  let showListBuilder: ModuleShowListDetailsBuilder
   
   public init(apiDataTransferService: DataTransferService,
               imagesBaseURL: String,
-              showsPersistence: ShowsVisitedLocalRepository) {
+              showsPersistence: ShowsVisitedLocalRepository,
+              showListBuilder: ModuleShowListDetailsBuilder) {
     self.apiDataTransferService = apiDataTransferService
     self.imagesBaseURL = imagesBaseURL
     self.showsPersistence = showsPersistence
+    self.showListBuilder = showListBuilder
   }
 }
 
 // MARK: - Entry to Module
-
 public struct Module {
   
   private let diContainer: DIContainer

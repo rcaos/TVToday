@@ -8,7 +8,7 @@
 
 import UIKit
 import Shared
-import TVShowsList
+import TVShowsListInterface
 
 class AccountCoordinator: NavigationCoordinator, AccountCoordinatorProtocol {
   
@@ -69,26 +69,22 @@ class AccountCoordinator: NavigationCoordinator, AccountCoordinatorProtocol {
   }
   
   // MARK: - Navigate to Favorites User
-  
   fileprivate func navigateToFavorites() {
-    let coordinator = dependencies.buildTVShowListCoordinator(navigationController: navigationController)
-    coordinator.delegate = self
+    let coordinator = dependencies.buildTVShowListCoordinator(navigationController: navigationController, delegate: self)
     childCoordinators[.tvShowList] = coordinator
-    coordinator.start(with: .favoriteList)
+    coordinator.navigate(to: TVShowListStep.favoriteList)
   }
   
   // MARK: - Navigate to WatchList User
   
   fileprivate func navigateToWatchList() {
-    let coordinator = dependencies.buildTVShowListCoordinator(navigationController: navigationController)
-    coordinator.delegate = self
+    let coordinator = dependencies.buildTVShowListCoordinator(navigationController: navigationController, delegate: self)
     childCoordinators[.tvShowList] = coordinator
-    coordinator.start(with: .watchList)
+    coordinator.navigate(to: TVShowListStep.watchList)
   }
 }
 
 // MARK: - TVShowListCoordinatorDelegate
-
 extension AccountCoordinator: TVShowListCoordinatorDelegate {
   
   func tvShowListCoordinatorDidFinish() {

@@ -6,8 +6,8 @@
 //
 
 import UIKit
-import TVShowsList
 import Shared
+import TVShowsListInterface
 
 final class DIContainer {
   
@@ -32,15 +32,7 @@ final class DIContainer {
   private lazy var keychainRepository: KeychainRepository = {
     return DefaultKeychainRepository()
   }()
-  
-  // MARK: - Dependencies
-  
-  private lazy var showListDependencies: TVShowsList.ModuleDependencies = {
-    return TVShowsList.ModuleDependencies(apiDataTransferService: dependencies.apiDataTransferService,
-                                          imagesBaseURL: dependencies.imagesBaseURL,
-                                          showsPersistence: dependencies.showsPersistence)
-  }()
-  
+
   private var accountViewModel: AccountViewModel?
   
   // MARK: - Initializer
@@ -104,10 +96,8 @@ extension DIContainer: AccountCoordinatorDependencies {
     return AuthPermissionViewController(viewModel: authViewModel)
   }
   
-  func buildTVShowListCoordinator(navigationController: UINavigationController) -> TVShowListCoordinator {
-    let module = TVShowsList.Module(dependencies: showListDependencies)
-    let coordinator = module.buildModuleCoordinator(in: navigationController)
-    return coordinator
+  func buildTVShowListCoordinator(navigationController: UINavigationController, delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinatorProtocol {
+    return dependencies.showListBuilder.buildModuleCoordinator(in: navigationController, delegate: delegate)
   }
 }
 

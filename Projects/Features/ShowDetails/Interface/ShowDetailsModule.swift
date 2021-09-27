@@ -27,9 +27,43 @@ public struct ModuleDependencies {
 
 public protocol ModuleShowDetailsBuilder {
   func buildModuleCoordinator(in navigationController: UINavigationController,
-                               delegate: TVShowDetailCoordinatorDelegate?) -> NavigationCoordinator
+                               delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinatorProtocol
 }
 
 public protocol TVShowDetailCoordinatorDelegate: AnyObject {
   func tvShowDetailCoordinatorDidFinish()
+}
+
+public protocol TVShowDetailCoordinatorProtocol: NavigationCoordinator {
+  func navigate(to step: ShowDetailsStep)
+}
+
+public enum ShowDetailsStep: Step {
+  case showDetailsIsRequired(withId: Int, closures: TVShowDetailViewModelClosures? = nil)
+  case seasonsAreRequired(withId: Int)
+  case detailViewDidFinish
+}
+
+
+// MARK: - TODO, Move this 👇
+public struct TVShowUpdated {
+  public let showId: Int
+  public let isActive: Bool
+
+  public init(showId: Int, isActive: Bool) {
+    self.showId = showId
+    self.isActive = isActive
+  }
+}
+
+public struct TVShowDetailViewModelClosures {
+
+  public let updateFavoritesShows: ( (_ updated: TVShowUpdated) -> Void )?
+  public let updateWatchListShows: ( (_ updated: TVShowUpdated) -> Void )?
+
+  public init (updateFavoritesShows: ( (_ updated: TVShowUpdated) -> Void )? = nil ,
+               updateWatchListShows: ( (_ updated: TVShowUpdated) -> Void )? = nil) {
+    self.updateFavoritesShows = updateFavoritesShows
+    self.updateWatchListShows = updateWatchListShows
+  }
 }

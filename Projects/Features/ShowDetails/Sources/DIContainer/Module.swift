@@ -39,8 +39,7 @@ public struct Module: ModuleShowDetailsBuilder {
   }
 
   public func buildModuleCoordinator(in navigationController: UINavigationController,
-                                     delegate: TVShowDetailCoordinatorDelegate?) -> NavigationCoordinator {
-                                     //delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinator {
+                                     delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinatorProtocol {
     return diContainer.buildModuleCoordinator(navigationController: navigationController, delegate: delegate)
   }
 }

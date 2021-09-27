@@ -10,7 +10,7 @@ import UIKit
 import Shared
 import ShowDetailsInterface
 
-public class TVShowDetailCoordinator: NavigationCoordinator, TVShowDetailCoordinatorProtocol {
+public class TVShowDetailCoordinator: TVShowDetailCoordinatorProtocol {
   
   public weak var delegate: TVShowDetailCoordinatorDelegate?
   
@@ -19,10 +19,8 @@ public class TVShowDetailCoordinator: NavigationCoordinator, TVShowDetailCoordin
   private let dependencies: TVShowDetailCoordinatorDependencies
   
   // MARK: - Life Cycle
-  
   init(navigationController: UINavigationController,
        dependencies: TVShowDetailCoordinatorDependencies) {
-    
     self.navigationController = navigationController
     self.dependencies = dependencies
   }
@@ -51,7 +49,6 @@ public class TVShowDetailCoordinator: NavigationCoordinator, TVShowDetailCoordin
   }
   
   // MARK: - Navigate to Show Details
-  
   fileprivate func showDetailsFeature(with showId: Int, closures: TVShowDetailViewModelClosures? = nil) {
     let detailVC = dependencies.buildShowDetailsViewController(with: showId, coordinator: self, closures: closures)
     detailVC.hidesBottomBarWhenPushed = true
@@ -59,7 +56,6 @@ public class TVShowDetailCoordinator: NavigationCoordinator, TVShowDetailCoordin
   }
   
   // MARK: - Navigate Seasons List
-  
   fileprivate func navigateToSeasonsScreen(with showId: Int) {
     let seasonsVC = dependencies.buildEpisodesViewController(with: showId)
     seasonsVC.title = "All Episodes"

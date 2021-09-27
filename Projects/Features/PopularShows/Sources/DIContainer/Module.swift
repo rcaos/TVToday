@@ -9,21 +9,24 @@ import Foundation
 import UIKit
 import Networking
 import Shared
+import ShowDetailsInterface
 
 public struct ModuleDependencies {
   
   let apiDataTransferService: DataTransferService
   let imagesBaseURL: String
+  let showDetailsBuilder: ModuleShowDetailsBuilder
 
   public init(apiDataTransferService: DataTransferService,
-              imagesBaseURL: String) {
+              imagesBaseURL: String,
+              showDetailsBuilder: ModuleShowDetailsBuilder) {
     self.apiDataTransferService = apiDataTransferService
     self.imagesBaseURL = imagesBaseURL
+    self.showDetailsBuilder = showDetailsBuilder
   }
 }
 
 // MARK: - Entry to Module
-
 public struct Module {
   
   private let diContainer: DIContainer
@@ -32,7 +35,7 @@ public struct Module {
     self.diContainer = DIContainer(dependencies: dependencies)
   }
   
-  public func buildPopularCoordinator(in navigationController: UINavigationController, delegate: PopularCoordinatorDelegate?) -> Coordinator {
-    return diContainer.buildPopularCoordinator(navigationController: navigationController, delegate: delegate)
+  public func buildPopularCoordinator(in navigationController: UINavigationController) -> Coordinator {
+    return diContainer.buildPopularCoordinator(navigationController: navigationController)
   }
 }

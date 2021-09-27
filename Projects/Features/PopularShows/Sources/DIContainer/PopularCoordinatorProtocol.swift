@@ -7,6 +7,7 @@
 
 import UIKit
 import Shared
+import ShowDetailsInterface
 
 protocol PopularCoordinatorProtocol: class {
   func navigate(to step: PopularStep)
@@ -15,14 +16,18 @@ protocol PopularCoordinatorProtocol: class {
 // MARK: - Coordinator Dependencies
 protocol PopularCoordinatorDependencies {
   func buildPopularViewController(coordinator: PopularCoordinatorProtocol?) -> UIViewController
-}
 
-public protocol PopularCoordinatorDelegate {
-  func tvShowDetailIsPickedFromPopular(showId: Int, navigation: UINavigationController)
+  func buildTVShowDetailCoordinator(navigationController: UINavigationController,
+                                    delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinatorProtocol
 }
 
 // MARK: - Steps
 public enum PopularStep: Step {
   case popularFeatureInit
   case showIsPicked(Int)
+}
+
+// MARK: - ChildCoordinators
+public enum PopularChildCoordinator {
+  case detailShow
 }

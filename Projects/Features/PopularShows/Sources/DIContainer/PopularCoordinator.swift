@@ -8,6 +8,7 @@
 
 import UIKit
 import Shared
+import ShowDetailsInterface
 
 class PopularCoordinator: NavigationCoordinator, PopularCoordinatorProtocol {
 
@@ -15,7 +16,7 @@ class PopularCoordinator: NavigationCoordinator, PopularCoordinatorProtocol {
 
   private let dependencies: PopularCoordinatorDependencies
 
-  public var delegate: PopularCoordinatorDelegate?
+  private var childCoordinators = [PopularChildCoordinator: NavigationCoordinator]()
 
   // MARK: - Life Cycle  
   init(navigationController: UINavigationController, dependencies: PopularCoordinatorDependencies) {
@@ -51,6 +52,17 @@ class PopularCoordinator: NavigationCoordinator, PopularCoordinatorProtocol {
   
   // MARK: - Navigate to Show Detail
   fileprivate func navigateToShowDetailScreen(with showId: Int) {
-    delegate?.tvShowDetailIsPickedFromPopular(showId: showId, navigation: navigationController)
+    let tvDetailCoordinator = dependencies.buildTVShowDetailCoordinator(navigationController: navigationController, delegate: self)
+    childCoordinators[.detailShow] = tvDetailCoordinator
+
+    let nextStep = ShowDetailsStep.showDetailsIsRequired(withId: showId)
+    tvDetailCoordinator.navigate(to: nextStep)
+  }
+}
+
+extension PopularCoordinator: TVShowDetailCoordinatorDelegate {
+
+  public func tvShowDetailCoordinatorDidFinish() {
+    childCoordinators[.detailShow] = nil
   }
 }

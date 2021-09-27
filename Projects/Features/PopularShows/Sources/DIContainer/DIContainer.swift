@@ -8,6 +8,7 @@
 import UIKit
 import Networking
 import Shared
+import ShowDetailsInterface
 
 final class DIContainer {
 
@@ -26,9 +27,8 @@ final class DIContainer {
   }
   
   // MARK: - Module Coordinator
-  func buildPopularCoordinator(navigationController: UINavigationController, delegate: PopularCoordinatorDelegate?) -> Coordinator {
+  func buildPopularCoordinator(navigationController: UINavigationController) -> Coordinator {
     let coordinator = PopularCoordinator(navigationController: navigationController, dependencies: self)
-    coordinator.delegate = delegate
     return coordinator
   }
   
@@ -45,5 +45,10 @@ extension DIContainer: PopularCoordinatorDependencies {
                                      coordinator: coordinator)
     let popularVC = PopularsViewController(viewModel: viewModel)
     return popularVC
+  }
+
+  func buildTVShowDetailCoordinator(navigationController: UINavigationController,
+                                    delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinatorProtocol {
+    return dependencies.showDetailsBuilder.buildModuleCoordinator(in: navigationController, delegate: delegate)
   }
 }

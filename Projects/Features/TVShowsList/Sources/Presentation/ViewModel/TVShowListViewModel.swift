@@ -9,6 +9,7 @@
 import RxSwift
 import Shared
 import ShowDetailsInterface
+import TVShowsListInterface
 
 protocol TVShowListViewModelProtocol {
   

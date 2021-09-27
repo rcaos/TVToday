@@ -8,10 +8,11 @@
 import UIKit
 import Shared
 import ShowDetailsInterface
+import TVShowsListInterface
 
 final class DIContainer {
   
-  private let dependencies: ModuleDependencies
+  private let dependencies: TVShowsListInterface.ModuleDependencies
   
   // MARK: - Repositories
   private lazy var showsRepository: TVShowsRepository = {
@@ -31,12 +32,12 @@ final class DIContainer {
   }()
 
   // MARK: - Initializer
-  init(dependencies: ModuleDependencies) {
+  init(dependencies: TVShowsListInterface.ModuleDependencies) {
     self.dependencies = dependencies
   }
   
   // MARK: - Module Coordinator
-  func buildModuleCoordinator(navigationController: UINavigationController) -> TVShowListCoordinator {
+  func buildModuleCoordinator(navigationController: UINavigationController, delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinatorProtocol {
     return TVShowListCoordinator(navigationController: navigationController, dependencies: self)
   }
   

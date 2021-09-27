@@ -38,7 +38,9 @@ final class DIContainer {
   
   // MARK: - Module Coordinator
   func buildModuleCoordinator(navigationController: UINavigationController, delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinatorProtocol {
-    return TVShowListCoordinator(navigationController: navigationController, dependencies: self)
+    let coordinator =  TVShowListCoordinator(navigationController: navigationController, dependencies: self)
+    coordinator.delegate = delegate
+    return coordinator
   }
   
   // MARK: - Build View Controllers

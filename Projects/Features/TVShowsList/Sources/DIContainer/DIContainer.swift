@@ -6,15 +6,14 @@
 //
 
 import UIKit
-import ShowDetails
 import Shared
+import ShowDetailsInterface
 
 final class DIContainer {
   
   private let dependencies: ModuleDependencies
   
   // MARK: - Repositories
-  
   private lazy var showsRepository: TVShowsRepository = {
     return DefaultTVShowsRepository(
       dataTransferService: dependencies.apiDataTransferService,
@@ -30,29 +29,18 @@ final class DIContainer {
   private lazy var keychainRepository: KeychainRepository = {
     return DefaultKeychainRepository()
   }()
-  
-  // MARK: - Dependencies
-  
-  private lazy var showDetailsDependencies: ShowDetails.ModuleDependencies = {
-    return ShowDetails.ModuleDependencies(apiDataTransferService: dependencies.apiDataTransferService,
-                                          imagesBaseURL: dependencies.imagesBaseURL,
-                                          showsPersistenceRepository: dependencies.showsPersistence)
-  }()
-  
+
   // MARK: - Initializer
-  
   init(dependencies: ModuleDependencies) {
     self.dependencies = dependencies
   }
   
   // MARK: - Module Coordinator
-  
   func buildModuleCoordinator(navigationController: UINavigationController) -> TVShowListCoordinator {
     return TVShowListCoordinator(navigationController: navigationController, dependencies: self)
   }
   
   // MARK: - Build View Controllers
-  
   func buildShowListViewController_ForGenres(with genreId: Int,
                                              coordinator: TVShowListCoordinatorProtocol,
                                              stepOrigin: TVShowListStepOrigin? = nil) -> UIViewController {
@@ -75,16 +63,13 @@ final class DIContainer {
     let showListVC = TVShowListViewController(viewModel: viewModel)
     return showListVC
   }
-  
-  func buildShowDetailCoordinator(navigationController: UINavigationController,
-                                  delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinator {
-    let module = ShowDetails.Module(dependencies: showDetailsDependencies)
-    let coordinator = module.buildModuleCoordinator(in: navigationController, delegate: delegate)
-    return coordinator
+
+  func buildTVShowDetailCoordinator(navigationController: UINavigationController,
+                                    delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinatorProtocol {
+    return dependencies.showDetailsBuilder.buildModuleCoordinator(in: navigationController, delegate: delegate)
   }
   
   // MARK: - Build Uses Cases
-  
   private func makeShowListByGenreUseCase(genreId: Int) -> FetchTVShowsUseCase {
     return DefaultFetchShowsByGenreTVShowsUseCase(genreId: genreId,
                                                   tvShowsRepository: showsRepository)
@@ -101,4 +86,5 @@ final class DIContainer {
   }
 }
 
+// MARK: - TODO
 extension DIContainer: TVShowListCoordinatorDependencies { }

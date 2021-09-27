@@ -8,7 +8,7 @@
 
 import RxSwift
 import Shared
-import ShowDetails
+import ShowDetailsInterface
 
 protocol TVShowListViewModelProtocol {
   
@@ -105,7 +105,6 @@ final class TVShowListViewModel: TVShowListViewModelProtocol, ShowsViewModel {
   }
   
   // MARK: - Updated List from Show Details (Deleted Favorite, Delete WatchList)
-  
   private func updateTVShow(_ updated: TVShowUpdated) {
     for index in shows.indices where shows[index].id == updated.showId {
       shows[index].isActive = updated.isActive

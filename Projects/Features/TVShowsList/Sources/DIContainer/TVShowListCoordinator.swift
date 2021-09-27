@@ -7,7 +7,7 @@
 
 import UIKit
 import Shared
-import ShowDetails
+import ShowDetailsInterface
 
 public class TVShowListCoordinator: NavigationCoordinator, TVShowListCoordinatorProtocol {
   
@@ -20,7 +20,6 @@ public class TVShowListCoordinator: NavigationCoordinator, TVShowListCoordinator
   private var childCoordinators = [TVShowListChildCoordinator: Coordinator]()
   
   // MARK: - Life Cycle
-  
   init(navigationController: UINavigationController,
        dependencies: TVShowListCoordinatorDependencies) {
     self.navigationController = navigationController
@@ -36,7 +35,6 @@ public class TVShowListCoordinator: NavigationCoordinator, TVShowListCoordinator
   }
   
   // MARK: - Navigation
-  
   public func navigate(to step: TVShowListStep) {
     switch step {
     case .genreList(let genreId, let title):
@@ -57,7 +55,6 @@ public class TVShowListCoordinator: NavigationCoordinator, TVShowListCoordinator
   }
   
   // MARK: - Navigate to Genre List
-  
   fileprivate func navigateToGenreList(with genreId: Int, title: String?) {
     let viewController = dependencies.buildShowListViewController_ForGenres(with: genreId, coordinator: self, stepOrigin: nil)
     viewController.title = title
@@ -81,16 +78,15 @@ public class TVShowListCoordinator: NavigationCoordinator, TVShowListCoordinator
   }
   
   // MARK: - Navigate to Detail TVShow
-  
   fileprivate func navigateToShowDetailScreen(with id: Int,
                                               stepOrigin: TVShowListStepOrigin?,
                                               closure: ((_ updated: TVShowUpdated) -> Void)? ) {
-    let tvDetailCoordinator = dependencies.buildShowDetailCoordinator(navigationController: navigationController, delegate: self)
+    let tvDetailCoordinator = dependencies.buildTVShowDetailCoordinator(navigationController: navigationController, delegate: self)
     childCoordinators[.detailShow] = tvDetailCoordinator
-    
+
     let closures = makeClosures(with: stepOrigin, closure: closure)
     let detailStep = ShowDetailsStep.showDetailsIsRequired(withId: id, closures: closures)
-    tvDetailCoordinator.start(with: detailStep)
+    tvDetailCoordinator.navigate(to: detailStep)
   }
   
   fileprivate func makeClosures(with stepOrigin: TVShowListStepOrigin?,
@@ -107,9 +103,8 @@ public class TVShowListCoordinator: NavigationCoordinator, TVShowListCoordinator
 }
 
 // MARK: - TVShowDetailCoordinatorDelegate
-
 extension TVShowListCoordinator: TVShowDetailCoordinatorDelegate {
-  
+
   public func tvShowDetailCoordinatorDidFinish() {
     childCoordinators[.detailShow] = nil
   }

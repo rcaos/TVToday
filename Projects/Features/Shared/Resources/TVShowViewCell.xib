@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TVShowViewCell" rowHeight="275" id="KGk-i7-Jjw" customClass="TVShowViewCell" customModule="Shared">
+            <rect key="frame" x="0.0" y="0.0" width="477" height="275"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="477" height="275"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tsM-1N-q00">
+                        <rect key="frame" x="8" y="8" width="150" height="259"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="150" id="FMh-8z-5pI"/>
+                        </constraints>
+                    </imageView>
+                    <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="2g6-F9-gpp">
+                        <rect key="frame" x="166" y="79" width="283" height="117"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IFi-qF-s8w">
+                                <rect key="frame" x="0.0" y="0.0" width="132" height="60.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name Show" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mit-EM-Ucs" customClass="TVBoldLabel" customModule="UI">
+                                        <rect key="frame" x="0.0" y="0.0" width="132" height="60.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="mit-EM-Ucs" firstAttribute="top" secondItem="IFi-qF-s8w" secondAttribute="top" id="M6l-J8-h2W"/>
+                                    <constraint firstAttribute="bottom" secondItem="mit-EM-Ucs" secondAttribute="bottom" id="e9o-qP-SMA"/>
+                                    <constraint firstAttribute="trailing" secondItem="mit-EM-Ucs" secondAttribute="trailing" id="eVm-Ng-AMd"/>
+                                    <constraint firstItem="mit-EM-Ucs" firstAttribute="leading" secondItem="IFi-qF-s8w" secondAttribute="leading" id="iEi-en-L3T"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1230 Votes 1999-09-20" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j7h-Ot-hs3" customClass="TVRegularLabel" customModule="UI">
+                                <rect key="frame" x="0.0" y="68.5" width="184.5" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" verticalCompressionResistancePriority="1000" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="rf3-iP-GBv">
+                                <rect key="frame" x="0.0" y="97" width="87.5" height="20"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4e2-7y-Ebu">
+                                        <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="20" id="2k5-6F-7Dc"/>
+                                            <constraint firstAttribute="width" secondItem="4e2-7y-Ebu" secondAttribute="height" multiplier="1:1" id="yu9-kn-1UT"/>
+                                        </constraints>
+                                    </imageView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B3g-tO-nGg">
+                                        <rect key="frame" x="25" y="0.0" width="62.5" height="20"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Average" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d8D-9t-3Of" customClass="TVRegularLabel" customModule="UI">
+                                                <rect key="frame" x="0.0" y="0.0" width="62.5" height="20"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <constraints>
+                                            <constraint firstItem="d8D-9t-3Of" firstAttribute="top" secondItem="B3g-tO-nGg" secondAttribute="top" id="7rt-9E-gFE"/>
+                                            <constraint firstAttribute="trailing" secondItem="d8D-9t-3Of" secondAttribute="trailing" id="RMf-IK-xRT"/>
+                                            <constraint firstItem="d8D-9t-3Of" firstAttribute="leading" secondItem="B3g-tO-nGg" secondAttribute="leading" id="XCu-7L-fjC"/>
+                                            <constraint firstAttribute="bottom" secondItem="d8D-9t-3Of" secondAttribute="bottom" id="uxA-J8-zXk"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                    </stackView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="2g6-F9-gpp" firstAttribute="centerY" secondItem="tsM-1N-q00" secondAttribute="centerY" id="2Bp-TD-i93"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="2g6-F9-gpp" secondAttribute="trailing" constant="8" id="B6s-1d-s75"/>
+                    <constraint firstItem="tsM-1N-q00" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="CY8-wk-z5M"/>
+                    <constraint firstAttribute="bottom" secondItem="tsM-1N-q00" secondAttribute="bottom" constant="8" id="Uoe-xn-ygh"/>
+                    <constraint firstItem="tsM-1N-q00" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="8" id="emo-7f-xma"/>
+                    <constraint firstItem="2g6-F9-gpp" firstAttribute="leading" secondItem="tsM-1N-q00" secondAttribute="trailing" constant="8" id="hQ7-dv-bQK"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="averageLabel" destination="d8D-9t-3Of" id="BjI-1Q-pTe"/>
+                <outlet property="nameLabel" destination="mit-EM-Ucs" id="NZh-Av-Cpy"/>
+                <outlet property="posterImageView" destination="tsM-1N-q00" id="cJd-bs-mtw"/>
+                <outlet property="starImageView" destination="4e2-7y-Ebu" id="gxi-94-8h7"/>
+                <outlet property="startYearLabel" destination="j7h-Ot-hs3" id="wsK-e6-xRT"/>
+            </connections>
+            <point key="canvasLocation" x="109.42028985507247" y="193.86160714285714"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

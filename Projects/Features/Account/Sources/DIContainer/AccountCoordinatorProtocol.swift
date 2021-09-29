@@ -7,7 +7,6 @@
 
 import UIKit
 import Shared
-import ShowDetails
 import TVShowsListInterface
 
 protocol AccountCoordinatorProtocol: AnyObject {

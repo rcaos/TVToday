@@ -1,21 +1,37 @@
-- 👷‍♂️ Currently working with Swift Package Manager + Tuist in this branch: https://github.com/rcaos/TVToday/tree/spm-initial
-- Old version with CocoaPods: https://github.com/rcaos/TVToday/releases/tag/v.0.4.0
+[![Tuist badge](https://img.shields.io/badge/Powered%20by-Tuist-blue)](https://tuist.io)
 
+TVShows app built with RxSwift, using the [TMDb API](https://www.themoviedb.org/).
 
-## TVToday app
-
-- TVToday es una app para iOS que consulta TVShows
-- Usa la API [TheMovieDb](https://www.themoviedb.org/)
-
-## Desarrollo en iOS
+## Built with
 - Swift 5
 - RxSwift, RxDataSources
-- Cordinator Pattern para navegación entre pantallas
-- MVVM
 - Clean + Modular Architecture
-- Kingfisher para caché de imágenes
-- Realm para Persistencia
-- KeychainSwift para manejo de session en el KeyChain
+- Cordinator Pattern.
+- MVVM
+- Dependency Injection
+- Kingfisher
+- Realm
+- KeychainSwift
+
+## Requiriments
+1. Tuist 1.50.0+
+2. Xcode 12.0+
+
+## Getting started
+
+1. Clone this repository.
+2. run `tuist generate`
+3. Open the workspace file and have fun.
+
+
+## Tuist
+This project is setup with [Tuist](https://tuist.io). Therefore no `xcodeproj`/`xcworkspace` is committed to this repo.
+
+
+
+
+
+
 
 ## Screenshots
 <p>
@@ -31,16 +47,8 @@
 <img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen 109.png" width="215" height="466">
 </p>
 
-## Clean Architecture
-- Arquitectura basada en: https://github.com/kudoleh/iOS-Clean-Architecture-MVVM
-<br>
-<center>
-<p>
-<img src="https://github.com/rcaos/TVToday/blob/master/Screens/CleanArchitecture%2BMVVM.png">
-<img src="https://github.com/rcaos/TVToday/blob/master/Screens/CleanArchitectureDependencies.png">
-</p>
-</center>
-<br>
+## CocoaPods branch
+- Old version built with CocoaPods: https://github.com/rcaos/TVToday/releases/tag/v.0.4.0
 
 # Author
 Jeans Ruiz, jeansruiz.c@gmail.com

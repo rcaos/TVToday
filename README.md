@@ -1,6 +1,6 @@
 [![Tuist badge](https://img.shields.io/badge/Powered%20by-Tuist-blue)](https://tuist.io)
 
-TVShows app built with RxSwift, using the [TMDb API](https://www.themoviedb.org/).
+TVShows iOS app built with RxSwift, using the [TMDb API](https://www.themoviedb.org/).
 
 ## Built with
 - Swift 5
@@ -12,6 +12,8 @@ TVShows app built with RxSwift, using the [TMDb API](https://www.themoviedb.org/
 - Kingfisher
 - Realm
 - KeychainSwift
+- Tuist
+- Swift Package Manager
 
 ## Requiriments
 1. Tuist 1.50.0+

@@ -13,26 +13,23 @@ import Foundation
 final class AppConfigurations {
   
   lazy var apiKey: String = {
-    return "06e1a8c1f39b7a033e2efb972625fee2"
-//    guard let apiKey = Bundle.main.object(forInfoDictionaryKey: "ApiKey") as? String else {
-//      fatalError("ApiKey must not be empty in plist")
-//    }
-//    return apiKey
+    guard let apiKey = Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String else {
+      fatalError("ApiKey must not be empty in plist")
+    }
+    return apiKey
   }()
 
   lazy var apiBaseURL: String = {
-    return "https://api.themoviedb.org"
-//    guard let apiBaseURL = Bundle.main.object(forInfoDictionaryKey: "ApiBaseURL") as? String else {
-//      fatalError("ApiBaseURL must not be empty in plist")
-//    }
-//    return apiBaseURL
+    guard let apiBaseURL = Bundle.main.object(forInfoDictionaryKey: "API_BASE_URL") as? String else {
+      fatalError("ApiBaseURL must not be empty in plist")
+    }
+    return apiBaseURL
   }()
   
   lazy var imagesBaseURL: String = {
-    return "https://image.tmdb.org"
-//    guard let imageBaseURL = Bundle.main.object(forInfoDictionaryKey: "ImageBaseURL") as? String else {
-//      fatalError("ApiBaseURL must not be empty in plist")
-//    }
-//    return imageBaseURL
+    guard let imageBaseURL = Bundle.main.object(forInfoDictionaryKey: "IMAGE_BASE_URL") as? String else {
+      fatalError("ApiBaseURL must not be empty in plist")
+    }
+    return imageBaseURL
   }()
 }

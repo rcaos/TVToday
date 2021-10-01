@@ -34,18 +34,35 @@ extension Project {
           path: .relativeToRoot("Projects/Features/\($0)")
         )
       },
-      infoPlist:
-        [
-          "CFBundleShortVersionString": "1.0",
-          "CFBundleVersion": "1",
-          "UIMainStoryboardFile": "",
-          "UILaunchStoryboardName": "LaunchScreen",
-          "UIApplicationSceneManifest": [
-            "UIApplicationSupportsMultipleScenes": false
-          ]
-        ],
+      infoPlist: buildInfoPlist(),
+      settings: buildSettings(),
       testFolder: testFolder
     )
+  }
+
+  private static func buildInfoPlist() -> [String : InfoPlist.Value] {
+    return [
+      "API_KEY": "$(API_KEY)",
+      "API_BASE_URL": "$(API_BASE_URL)",
+      "IMAGE_BASE_URL": "$(IMAGE_BASE_URL)",
+
+      "CFBundleShortVersionString": "1.0",
+      "CFBundleVersion": "1",
+      "UIMainStoryboardFile": "",
+      "UILaunchStoryboardName": "LaunchScreen",
+      "UIApplicationSceneManifest": [
+        "UIApplicationSupportsMultipleScenes": false
+      ]
+    ]
+  }
+
+  private static func buildSettings() -> Settings {
+    let emptyBase: [String: SettingValue] = [:]
+    let configuration: [CustomConfiguration] = [
+      .debug(name: "Debug", xcconfig: Path("Config.xcconfig")),
+      .release(name: "Release", xcconfig: Path("Config.xcconfig"))
+    ]
+    return Settings(base: emptyBase, configurations: configuration, defaultSettings: .recommended)
   }
 
   public static func framework(
@@ -86,6 +103,7 @@ extension Project {
     actions: [TargetAction] = [],
     dependencies: [TargetDependency] = [],
     infoPlist: [String: InfoPlist.Value] = [:],
+    settings: Settings? = nil,
     interfaceFolder: String? = nil,
     interfaceDependencies: [TargetDependency] = [],
     testFolder: String? = nil,
@@ -96,6 +114,7 @@ extension Project {
                                   platform: platform,
                                   product: product,
                                   infoPlist: infoPlist,
+                                  settings: settings,
                                   resources: resources,
                                   actions: actions,
                                   dependencies: dependencies,
@@ -106,6 +125,7 @@ extension Project {
     return Project(
       name: name,
       packages: packages,
+      settings: settings,
       targets: targets,
       // Don't generate Assets.swift
       resourceSynthesizers: []
@@ -116,6 +136,7 @@ extension Project {
                                       platform: Platform,
                                       product: Product,
                                       infoPlist: [String: InfoPlist.Value] = [:],
+                                      settings: Settings? = nil,
                                       resources: ResourceFileElements? = nil,
                                       actions: [TargetAction] = [],
                                       dependencies: [TargetDependency] = [],
@@ -161,8 +182,8 @@ extension Project {
         resources: resources,  //???
         //resources: ["Resources/**"],
         actions: actions,
-        //dependencies: dependencies
-        dependencies: mainDependencies
+        dependencies: mainDependencies,
+        settings: settings
       )
     )
 

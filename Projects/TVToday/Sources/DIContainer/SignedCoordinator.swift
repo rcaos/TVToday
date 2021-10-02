@@ -18,9 +18,7 @@ public enum SignedChildCoordinator {
   
   search,
   
-  account,
-
-  tvdetails // MARk: - TODO, to test, what if I'm routing from Today and Popular at the same time ?
+  account
 }
 
 public class SignedCoordinator: Coordinator {

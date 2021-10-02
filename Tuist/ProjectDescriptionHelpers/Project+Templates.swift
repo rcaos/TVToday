@@ -27,7 +27,7 @@ extension Project {
       product: .app,
       platform: platform,
       resources: resources,
-      actions: actions,
+      actions: actions + buildSwiftLintAction(),
       dependencies: dependencies + features.map {
         .project(
           target: $0,
@@ -81,10 +81,9 @@ extension Project {
     return project(
       name: name,
       product: product,
-      //product: .framework,
       platform: platform,
       resources: resources,
-      actions: actions,
+      actions: actions + buildSwiftLintAction(for: "feature"),
       dependencies: dependencies,
       interfaceFolder: interfaceFolder,
       interfaceDependencies: interfaceDependencies,
@@ -130,6 +129,17 @@ extension Project {
       // Don't generate Assets.swift
       resourceSynthesizers: []
     )
+  }
+
+  // feature or empty for Main Project
+  private static func buildSwiftLintAction(for projectType: String = "") -> [TargetAction] {
+    [
+      .pre(
+        path: .relativeToRoot("Projects/BuildPhases/swiftlint.sh"),
+        arguments: projectType,
+        name: "SwiftLint"
+      )
+    ]
   }
 
   private static func buildAppTargets(name: String,

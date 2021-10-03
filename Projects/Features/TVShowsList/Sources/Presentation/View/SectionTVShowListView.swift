@@ -14,9 +14,8 @@ struct SectionTVShowListView {
 }
 
 extension SectionTVShowListView: SectionModelType {
-  
   typealias Item = TVShowCellViewModel
-  
+
   init(original: SectionTVShowListView, items: [Item]) {
     self = original
     self.items = items

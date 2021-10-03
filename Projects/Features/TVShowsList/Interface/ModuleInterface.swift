@@ -11,11 +11,11 @@ import Shared
 import ShowDetailsInterface
 
 public struct ModuleDependencies {
-  
+
   public let apiDataTransferService: DataTransferService
   public let imagesBaseURL: String
   public let showDetailsBuilder: ModuleShowDetailsBuilder
-  
+
   public init(apiDataTransferService: DataTransferService,
               imagesBaseURL: String,
               showDetailsBuilder: ModuleShowDetailsBuilder) {

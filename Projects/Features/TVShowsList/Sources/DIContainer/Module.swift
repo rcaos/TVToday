@@ -10,9 +10,9 @@ import Shared
 import TVShowsListInterface
 
 public struct Module: ModuleShowListDetailsBuilder {
-  
+
   private let diContainer: DIContainer
-  
+
   public init(dependencies: ModuleDependencies) {
     self.diContainer = DIContainer(dependencies: dependencies)
   }

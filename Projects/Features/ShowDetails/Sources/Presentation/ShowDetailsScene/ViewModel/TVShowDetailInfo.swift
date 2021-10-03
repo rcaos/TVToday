@@ -21,7 +21,7 @@ public struct TVShowDetailInfo {
   var score: String?
   var maxScore: String = "/10"
   var countVote: String?
-  
+
   public init(show: TVShowDetailResult) {
     id = show.id
     backDropPath = show.backDropPathURL

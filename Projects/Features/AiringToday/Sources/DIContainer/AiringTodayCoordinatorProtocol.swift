@@ -9,7 +9,7 @@ import UIKit
 import Shared
 import ShowDetailsInterface
 
-protocol AiringTodayCoordinatorProtocol: class {
+protocol AiringTodayCoordinatorProtocol: AnyObject {
   func navigate(to step: AiringTodayStep)
 }
 

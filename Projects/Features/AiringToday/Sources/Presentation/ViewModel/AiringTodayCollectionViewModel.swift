@@ -10,24 +10,22 @@ import Foundation
 import Shared
 
 final class AiringTodayCollectionViewModel {
-  
   let show: TVShow
-  
+
   var showName: String?
   var average: String?
-  
+
   var posterURL: URL?
-  
+
   // MARK: - Initializers
-  
   public init(show: TVShow) {
     self.show = show
     setup()
   }
-  
+
   fileprivate func setup() {
     showName = show.name ?? ""
-    
+
     if let average = show.voteAverage {
       self.average = String(average)
     } else {
@@ -38,7 +36,6 @@ final class AiringTodayCollectionViewModel {
 }
 
 extension AiringTodayCollectionViewModel: Equatable {
-  
   public static func == (lhs: AiringTodayCollectionViewModel, rhs: AiringTodayCollectionViewModel) -> Bool {
     return lhs.show.id == rhs.show.id
   }

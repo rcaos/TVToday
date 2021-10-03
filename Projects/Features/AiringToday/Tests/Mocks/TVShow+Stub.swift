@@ -8,7 +8,6 @@
 @testable import Shared
 
 extension TVShow {
-  
   static func stub(
     id: Int = 1,
     name: String = "title1",
@@ -17,7 +16,7 @@ extension TVShow {
     backDropPath: String? = "/back1",
     overview: String = "overview1"
   ) -> Self {
-    
+
     TVShow(id: id,
            name: name,
            voteAverage: voteAverage,

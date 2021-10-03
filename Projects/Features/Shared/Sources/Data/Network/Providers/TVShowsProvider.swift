@@ -10,18 +10,15 @@ import Foundation
 import Networking
 
 public enum TVShowsProvider {
-  
   case getAiringTodayShows(Int)
   case getPopularTVShows(Int)
   case getTVShowDetail(Int)
   case getEpisodesFor(Int, Int)
   case searchTVShow(String, Int)
   case listTVShowsBy(Int, Int)
-  
 }
 
 extension TVShowsProvider: EndPoint {
-  
   public var path: String {
     switch self {
     case .getAiringTodayShows:
@@ -38,10 +35,10 @@ extension TVShowsProvider: EndPoint {
       return "/3/discover/tv"
     }
   }
-  
+
   public var queryParameters: [String: Any]? {
     var parameters: [String: Any] = [:]
-    
+
     switch self {
     case .getAiringTodayShows(let page):
       parameters["page"] = page
@@ -63,11 +60,11 @@ extension TVShowsProvider: EndPoint {
     }
     return parameters
   }
-  
+
   public var method: ServiceMethod {
     return .get
   }
-  
+
   public var parameterEncoding: ParameterEnconding {
     return .defaultEncoding
   }

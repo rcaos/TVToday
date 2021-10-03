@@ -9,10 +9,7 @@
 import Foundation
 
 public struct TVShowAccountStateResult {
-  
   public let id: Int
-  
   public let isFavorite: Bool
-  
   public let isWatchList: Bool
 }

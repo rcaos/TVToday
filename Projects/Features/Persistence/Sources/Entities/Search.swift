@@ -9,11 +9,10 @@
 import Foundation
 
 public struct Search {
-  
+
   public let query: String
-  
+
   public init(query: String) {
     self.query = query
   }
-  
 }

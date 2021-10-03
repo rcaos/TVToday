@@ -10,8 +10,7 @@ import RxSwift
 import Persistence
 
 public protocol SearchLocalStorage {
-  
   func saveSearch(query: String, userId: Int) -> Observable<Void>
-  
+
   func fetchSearchs(userId: Int) -> Observable<[Search]>
 }

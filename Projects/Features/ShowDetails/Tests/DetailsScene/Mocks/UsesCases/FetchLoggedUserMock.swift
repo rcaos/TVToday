@@ -9,9 +9,8 @@
 @testable import Shared
 
 class FetchLoggedUserMock: FetchLoggedUser {
-
   var account: AccountDomain?
-  
+
   func execute() -> AccountDomain? {
     return account
   }

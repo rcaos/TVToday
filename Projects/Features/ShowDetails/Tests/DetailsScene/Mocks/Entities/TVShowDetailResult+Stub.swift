@@ -9,7 +9,7 @@
 @testable import ShowDetails
 
 extension TVShowDetailResult {
-  
+
   static func stub(
     id: Int = 1,
     name: String = "Dragon Ball Z",
@@ -31,7 +31,7 @@ extension TVShowDetailResult {
     voteCount: Int = 1147,
     status: String = "Ended"
   ) -> Self {
-    
+
     return TVShowDetailResult(id: id,
                               name: name,
                               firstAirDate: firstAirDate,

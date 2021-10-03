@@ -9,6 +9,5 @@
 import RxSwift
 
 protocol TVEpisodesRepository {
-  
   func fetchEpisodesList(for show: Int, season: Int) -> Observable<SeasonResult>
 }

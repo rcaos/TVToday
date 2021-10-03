@@ -11,11 +11,10 @@ import Networking
 import Shared
 
 public final class DefaultTVEpisodesRepository {
-  
   private let dataTransferService: DataTransferService
-  
+
   private let basePath: String?
-  
+
   public init(dataTransferService: DataTransferService,
               basePath: String? = nil) {
     self.dataTransferService = dataTransferService
@@ -24,9 +23,8 @@ public final class DefaultTVEpisodesRepository {
 }
 
 // MARK: - TVEpisodesRepository
-
 extension DefaultTVEpisodesRepository: TVEpisodesRepository {
-  
+
   func fetchEpisodesList(for show: Int, season: Int) -> Observable<SeasonResult> {
     let endPoint = TVShowsProvider.getEpisodesFor(show, season)
     return dataTransferService.request(endPoint, SeasonResult.self)
@@ -34,10 +32,12 @@ extension DefaultTVEpisodesRepository: TVEpisodesRepository {
           Observable.just( self.mapEpisodesWithBasePath(response: response) )
       }
   }
-  
+
   fileprivate func mapEpisodesWithBasePath(response: SeasonResult) -> SeasonResult {
-    guard let basePath = basePath else { return response }
-    
+    guard let basePath = basePath else {
+      return response
+    }
+
     var newResponse = response
 
     newResponse.episodes  = response.episodes?.map { (episode: Episode) -> Episode in
@@ -45,7 +45,7 @@ extension DefaultTVEpisodesRepository: TVEpisodesRepository {
       mutableEpisode.posterPath = basePath + "/t/p/w342" + ( episode.posterPath ?? "" )
       return mutableEpisode
     }
-    
+
     return newResponse
   }
 }

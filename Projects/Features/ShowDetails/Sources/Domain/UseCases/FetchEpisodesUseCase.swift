@@ -18,17 +18,15 @@ struct FetchEpisodesUseCaseRequestValue {
 }
 
 // MARK: - DefaultFetchEpisodesUseCase
-
 final class DefaultFetchEpisodesUseCase: FetchEpisodesUseCase {
-  
+
   private let episodesRepository: TVEpisodesRepository
-  
+
   init(episodesRepository: TVEpisodesRepository) {
     self.episodesRepository = episodesRepository
   }
-  
+
   func execute(requestValue: FetchEpisodesUseCaseRequestValue) -> Observable<SeasonResult> {
-    
     return episodesRepository.fetchEpisodesList(
       for: requestValue.showIdentifier,
       season: requestValue.seasonNumber)

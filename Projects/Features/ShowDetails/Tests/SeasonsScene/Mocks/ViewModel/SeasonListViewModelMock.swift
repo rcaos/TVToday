@@ -10,18 +10,18 @@ import RxSwift
 
 class SeasonListViewModelMock: SeasonListViewModelProtocol {
   var inputSelectedSeason: BehaviorSubject<Int> = BehaviorSubject(value: 0)
-  
+
   func selectSeason(_ season: Int) { }
-  
+
   var seasons: Observable<[Int]> = Observable.just([])
-  
+
   var seasonSelected: Observable<Int> = Observable.just(0)
-  
+
   func getModel(for season: Int) -> SeasonEpisodeViewModel {
     return SeasonEpisodeViewModel(seasonNumber: season)
   }
-  
+
   var disposeBag = DisposeBag()
-  
+
   weak var delegate: SeasonListViewModelDelegate?
 }

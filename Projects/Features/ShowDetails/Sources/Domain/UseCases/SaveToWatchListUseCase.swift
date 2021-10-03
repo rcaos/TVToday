@@ -19,23 +19,22 @@ public struct SaveToWatchListUseCaseRequestValue {
 }
 
 final class DefaultSaveToWatchListUseCase: SaveToWatchListUseCase {
-  
+
   private let accountShowsRepository: AccountTVShowsRepository
-  
+
   private let keychainRepository: KeychainRepository
-  
+
   init(accountShowsRepository: AccountTVShowsRepository,
        keychainRepository: KeychainRepository) {
     self.accountShowsRepository = accountShowsRepository
     self.keychainRepository = keychainRepository
   }
-  
+
   public func execute(requestValue: SaveToWatchListUseCaseRequestValue) -> Observable<Result<Bool, Error>> {
-    
     guard let account = keychainRepository.fetchLoguedUser() else {
       return Observable.just(Result.failure(CustomError.genericError))
     }
-    
+
     return accountShowsRepository.saveToWatchList(
       session: account.sessionId,
       userId: String(account.id),

@@ -11,41 +11,40 @@ import RxDataSources
 import Shared
 
 class EpisodesListRootView: NiblessView {
-  
+
   private var viewModel: EpisodesListViewModelProtocol
-  
+
   let tableView: UITableView = {
     let tableView = UITableView(frame: .zero, style: .plain)
     tableView.registerNib(cellType: HeaderSeasonsTableViewCell.self, bundle: Bundle.module)
     tableView.registerNib(cellType: SeasonListTableViewCell.self, bundle: Bundle.module)
     tableView.registerNib(cellType: EpisodeItemTableViewCell.self, bundle: Bundle.module)
-    
+
     tableView.rowHeight = UITableView.automaticDimension
     tableView.tableFooterView = UIView()
     tableView.contentInsetAdjustmentBehavior = .automatic
     return tableView
   }()
-  
+
   private let disposeBag = DisposeBag()
-  
+
   init(frame: CGRect = .zero, viewModel: EpisodesListViewModelProtocol) {
     self.viewModel = viewModel
     super.init(frame: frame)
-    
     addSubview(tableView)
     setupView()
   }
-  
+
   fileprivate func setupView() {
     setupTable()
     setupDataSource()
   }
-  
+
   fileprivate func setupTable() {
     tableView.rx.setDelegate(self)
       .disposed(by: disposeBag)
   }
-  
+
   fileprivate func setupDataSource() {
     let dataSource = RxTableViewSectionedAnimatedDataSource<SeasonsSectionModel>(
       configureCell: { [weak self] (_, _, indexPath, element) -> UITableViewCell in
@@ -59,13 +58,13 @@ class EpisodesListRootView: NiblessView {
           return strongSelf.makeCellForEpisode(at: indexPath, element: episode)
         }
     })
-    
+
     viewModel
       .data
       .bind(to: tableView.rx.items(dataSource: dataSource) )
       .disposed(by: disposeBag)
   }
-  
+
   override func layoutSubviews() {
     super.layoutSubviews()
     tableView.frame = bounds
@@ -73,9 +72,7 @@ class EpisodesListRootView: NiblessView {
 }
 
 // MARK: - Configure Cells
-
 extension EpisodesListRootView {
-  
   private func makeCellForHeaderShow(at indexPath: IndexPath, viewModel: SeasonHeaderViewModelProtocol) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: HeaderSeasonsTableViewCell.self, for: indexPath)
     if cell.viewModel == nil {
@@ -83,7 +80,7 @@ extension EpisodesListRootView {
     }
     return cell
   }
-  
+
   private func makeCellForSeasonNumber(at indexPath: IndexPath, element: Int) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: SeasonListTableViewCell.self, for: indexPath)
     if cell.viewModel == nil {
@@ -91,10 +88,9 @@ extension EpisodesListRootView {
     }
     return cell
   }
-  
+
   private func makeCellForEpisode(at indexPath: IndexPath, element: EpisodeSectionModelType) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: EpisodeItemTableViewCell.self, for: indexPath)
-    
     if let model = viewModel.getModel(for: element) {
       cell.viewModel = model
     }
@@ -103,11 +99,9 @@ extension EpisodesListRootView {
 }
 
 // MARK: - UITableViewDelegate
-
 extension EpisodesListRootView: UITableViewDelegate {
-  
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    
+
     switch indexPath.section {
     case 0:
       return UITableView.automaticDimension
@@ -117,7 +111,7 @@ extension EpisodesListRootView: UITableViewDelegate {
       return 110.0
     }
   }
-  
+
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
   }

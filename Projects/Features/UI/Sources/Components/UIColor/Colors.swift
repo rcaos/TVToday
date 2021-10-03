@@ -8,16 +8,13 @@
 import UIKit
 
 public enum Colors {
-  
-  case
-  electricBlue,
-  customYellow,
-  customGreen,
-  davyGrey,
-  clear
-  
+  case electricBlue
+  case customYellow
+  case customGreen
+  case davyGrey
+  case clear
+
   public var color: UIColor {
-    
     switch self {
     case .electricBlue:
       return UIColor(name: "Electric-Blue")
@@ -31,5 +28,4 @@ public enum Colors {
       return UIColor.clear
     }
   }
-  
 }

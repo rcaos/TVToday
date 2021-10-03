@@ -14,7 +14,7 @@ public enum FontType: String, CaseIterable {
   medium = "Medium",
   semiBold = "SemiBold",
   bold = "Bold"
-  
+
   func of(family: Font, size: FontSize = .normal) -> UIFont {
     switch self {
     case .light:
@@ -29,7 +29,7 @@ public enum FontType: String, CaseIterable {
       return buildFont(family: family, name: "\(family.rawValue)-Bold", size: size, weight: .bold)
     }
   }
-  
+
   fileprivate func buildFont(family: Font, name: String, size: FontSize, weight: UIFont.Weight) -> UIFont {
     switch family {
     case .montserrat:

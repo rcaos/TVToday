@@ -11,14 +11,14 @@ import KeychainSwift
 
 @propertyWrapper
 struct KeychainItemStorage {
-  
+
   private let key: String
   private lazy var keychain = KeychainSwift()
-  
+
   init(key: String) {
     self.key = key
   }
-  
+
   var wrappedValue: String? {
     mutating get {
       return keychain.get(key)
@@ -31,5 +31,4 @@ struct KeychainItemStorage {
       }
     }
   }
-  
 }

@@ -9,21 +9,21 @@
 import Foundation
 
 enum APIError: Error {
-  
   case networkProblem
   case requestFailed
   case invalidData
   case unknown(HTTPURLResponse?)
-  
+
   case badRequest
   case notAuthenticaded
   case notFound
-  
+
   init(response: URLResponse?) {
     guard let response = response as? HTTPURLResponse else {
       self = .unknown(nil)
       return
     }
+
     switch response.statusCode {
     case 400:
       self = .badRequest
@@ -38,7 +38,7 @@ enum APIError: Error {
 }
 
 extension APIError: LocalizedError {
-  
+
   public var errorDescription: String? {
     switch self {
     case .notAuthenticaded:
@@ -51,11 +51,11 @@ extension APIError: LocalizedError {
       return ErrorMessages.RequestFailed
     }
   }
-  
+
 }
 
 extension APIError {
-  
+
   struct ErrorMessages {
     static let ServerError = "Server Error, Please, try again later."
     static let NotAuthorized = "This information is not available."

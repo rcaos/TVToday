@@ -16,7 +16,7 @@ class EpisodesListRootView: NiblessView {
 
   let tableView: UITableView = {
     let tableView = UITableView(frame: .zero, style: .plain)
-    tableView.registerNib(cellType: HeaderSeasonsTableViewCell.self, bundle: Bundle.module)
+    tableView.registerCell(cellType: HeaderSeasonsTableViewCell.self)
     tableView.registerCell(cellType: SeasonListTableViewCell.self)
     tableView.registerNib(cellType: EpisodeItemTableViewCell.self, bundle: Bundle.module)
 
@@ -76,7 +76,7 @@ extension EpisodesListRootView {
   private func makeCellForHeaderShow(at indexPath: IndexPath, viewModel: SeasonHeaderViewModelProtocol) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: HeaderSeasonsTableViewCell.self, for: indexPath)
     if cell.viewModel == nil {
-      cell.viewModel = viewModel
+      cell.setModel(viewModel: viewModel)
     }
     return cell
   }

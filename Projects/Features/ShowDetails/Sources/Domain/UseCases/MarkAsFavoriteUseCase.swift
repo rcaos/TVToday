@@ -19,23 +19,22 @@ public struct MarkAsFavoriteUseCaseRequestValue {
 }
 
 public final class DefaultMarkAsFavoriteUseCase: MarkAsFavoriteUseCase {
-  
+
   private let accountShowsRepository: AccountTVShowsRepository
-  
+
   private let keychainRepository: KeychainRepository
-  
+
   public init(accountShowsRepository: AccountTVShowsRepository,
               keychainRepository: KeychainRepository) {
     self.accountShowsRepository = accountShowsRepository
     self.keychainRepository = keychainRepository
   }
-  
+
   public func execute(requestValue: MarkAsFavoriteUseCaseRequestValue) -> Observable<Result<Bool, Error>> {
-    
     guard let account = keychainRepository.fetchLoguedUser() else {
       return Observable.just(Result.failure(CustomError.genericError))
     }
-    
+
     return accountShowsRepository.markAsFavorite(
       session: account.sessionId,
       userId: String(account.id),

@@ -9,7 +9,6 @@
 @testable import ShowDetails
 
 extension TVShowDetailInfo {
-  
   static func stub() -> Self {
     return TVShowDetailInfo(show: TVShowDetailResult.stub())
   }

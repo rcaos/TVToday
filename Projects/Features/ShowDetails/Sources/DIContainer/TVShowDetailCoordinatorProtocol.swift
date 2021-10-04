@@ -10,7 +10,6 @@ import Shared
 import ShowDetailsInterface
 
 protocol TVShowDetailCoordinatorDependencies {
-  
   func buildShowDetailsViewController(with showId: Int,
                                       coordinator: TVShowDetailCoordinatorProtocol?,
                                       closures: TVShowDetailViewModelClosures?) -> UIViewController

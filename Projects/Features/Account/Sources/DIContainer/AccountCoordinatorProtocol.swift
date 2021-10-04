@@ -15,12 +15,12 @@ protocol AccountCoordinatorProtocol: AnyObject {
 
 // MARK: - Coordinator Dependencies
 protocol AccountCoordinatorDependencies {
-  
   func buildAccountViewController(coordinator: AccountCoordinatorProtocol?) -> UIViewController
-  
+
   func buildAuthPermissionViewController(url: URL, delegate: AuthPermissionViewModelDelegate?) -> AuthPermissionViewController
-  
-  func buildTVShowListCoordinator(navigationController: UINavigationController, delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinatorProtocol
+
+  func buildTVShowListCoordinator(navigationController: UINavigationController,
+                                  delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinatorProtocol
 }
 
 // MARK: - Steps

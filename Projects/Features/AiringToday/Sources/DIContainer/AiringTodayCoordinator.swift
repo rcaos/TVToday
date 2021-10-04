@@ -24,22 +24,21 @@ class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinatorProto
     self.navigationController = navigationController
     self.dependencies = dependencies
   }
-  
+
   deinit {
     print("deinit \(Self.self)")
   }
-  
+
   public func start() {
     navigate(to: .todayFeatureInit)
   }
-  
+
   // MARK: - Navigation
-  
   public func navigate(to step: AiringTodayStep) {
     switch step {
     case .todayFeatureInit:
       navigateToTodayFeature()
-      
+
     case .showIsPicked(let showId):
       showDetailIsPicked(for: showId)
     }
@@ -50,7 +49,7 @@ class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinatorProto
     airingTodayController.navigationItem.title = "Today on TV"
     navigationController.pushViewController(airingTodayController, animated: true)
   }
-  
+
   // MARK: - Navigate to Show Detail
   private func showDetailIsPicked(for showId: Int) {
     let tvDetailCoordinator = dependencies.buildTVShowDetailCoordinator(navigationController: navigationController, delegate: self)

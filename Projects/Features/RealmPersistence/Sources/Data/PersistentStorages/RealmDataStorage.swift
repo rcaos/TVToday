@@ -10,7 +10,7 @@ import Foundation
 import RealmSwift
 
 public final class RealmDataStorage {
-  
+
   lazy var realm: Realm? = {
     do {
       let realm = try Realm()
@@ -19,10 +19,8 @@ public final class RealmDataStorage {
       return nil
     }
   }()
-  
   // MARK: - Initializer
-  
   public init() {
-    //print(Realm.Configuration.defaultConfiguration.fileURL!)
+    // print(Realm.Configuration.defaultConfiguration.fileURL!)
   }
 }

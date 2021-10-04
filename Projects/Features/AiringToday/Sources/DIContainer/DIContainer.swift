@@ -29,7 +29,7 @@ final class DIContainer {
     let coordinator =  AiringTodayCoordinator(navigationController: navigationController, dependencies: self)
     return coordinator
   }
-  
+
   // MARK: - Uses Cases
   fileprivate func makeFetchTodayShowsUseCase() -> FetchTVShowsUseCase {
     return DefaultFetchAiringTodayTVShowsUseCase(tvShowsRepository: showsRepository)

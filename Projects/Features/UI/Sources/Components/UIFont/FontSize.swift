@@ -8,13 +8,9 @@
 import UIKit
 
 public enum FontSize {
-  
-  case
-  
-  normal,
-  
-  custom(CGFloat)
-  
+  case normal
+  case custom(CGFloat)
+
   var value: CGFloat {
     switch self {
     case .normal:
@@ -22,6 +18,5 @@ public enum FontSize {
     case .custom(let size):
       return size
     }
-    
   }
 }

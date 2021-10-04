@@ -27,7 +27,7 @@ public struct ModuleDependencies {
 
 public protocol ModuleShowDetailsBuilder {
   func buildModuleCoordinator(in navigationController: UINavigationController,
-                               delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinatorProtocol
+                              delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinatorProtocol
 }
 
 public protocol TVShowDetailCoordinatorDelegate: AnyObject {
@@ -43,7 +43,6 @@ public enum ShowDetailsStep: Step {
   case seasonsAreRequired(withId: Int)
   case detailViewDidFinish
 }
-
 
 // MARK: - TODO, Move this 👇
 public struct TVShowUpdated {

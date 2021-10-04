@@ -10,21 +10,20 @@ import RxSwift
 @testable import Shared
 
 class SaveToWatchListUseCaseMock: SaveToWatchListUseCase {
-  
   typealias Response = Result<Bool, Error>
-  
+
   var error: Error?
   var result: Bool?
-  
+
   func execute(requestValue: SaveToWatchListUseCaseRequestValue) -> Observable<Response> {
     if let error = error {
       return Observable.just(.failure(error))
     }
-    
+
     if let result = result {
       return Observable.just(.success(result))
     }
-    
+
     return Observable.empty()
   }
 }

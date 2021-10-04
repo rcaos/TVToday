@@ -14,9 +14,8 @@ struct SectionPopularView {
 }
 
 extension SectionPopularView: SectionModelType {
-  
   typealias Item = TVShowCellViewModel
-  
+
   init(original: SectionPopularView, items: [Item]) {
     self = original
     self.items = items

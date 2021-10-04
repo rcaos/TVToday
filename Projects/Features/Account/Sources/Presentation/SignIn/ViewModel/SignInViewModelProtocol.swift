@@ -8,32 +8,23 @@
 import Foundation
 import RxSwift
 
-protocol SignInViewModelDelegate: class {
-  
+protocol SignInViewModelDelegate: AnyObject {
   func signInViewModel(_ signInViewModel: SignInViewModel, didTapSignInButton url: URL)
 }
 
 protocol SignInViewModelProtocol {
-  
   // MARK: - Input
-  
   var tapButton: PublishSubject<Void> { get }
-  
   func changeState(with state: SignInViewState)
-  
+
   // MARK: - Output
-  
   var viewState: Observable<SignInViewState> { get }
-  
   var delegate: SignInViewModelDelegate? { get set }
 }
 
 // MARK: - View State
-
 enum SignInViewState: Equatable {
-  case initial,
-  
-  loading,
-  
-  error
+  case initial
+  case loading
+  case error
 }

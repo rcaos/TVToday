@@ -10,18 +10,14 @@ import Networking
 
 enum AccountShowsProvider {
   case favorites(page: Int, userId: String, sessionId: String)
-  
   case watchList(page: Int, userId: String, sessionId: String)
-  
   case getAccountStates(tvShowId: Int, sessionId: String)
-  
   case markAsFavorite(userId: String, tvShowId: Int, sessionId: String, favorite: Bool)
-  
   case savetoWatchList(userId: String, tvShowId: Int, sessionId: String, watchList: Bool)
 }
 
 extension AccountShowsProvider: EndPoint {
-  
+
   var path: String {
     switch self {
     case .favorites(_, let userId, _):
@@ -36,7 +32,7 @@ extension AccountShowsProvider: EndPoint {
       return "/3/account/\(userId)/watchlist"
     }
   }
-  
+
   var queryParameters: [String: Any]? {
     switch self {
     case .favorites(let page, _, let sessionId):
@@ -65,7 +61,7 @@ extension AccountShowsProvider: EndPoint {
       return ["query": queryParams, "body": bodyParams]
     }
   }
-  
+
   var method: ServiceMethod {
     switch self {
     case .favorites, .watchList, .getAccountStates:
@@ -74,7 +70,7 @@ extension AccountShowsProvider: EndPoint {
       return .post
     }
   }
-  
+
   var parameterEncoding: ParameterEnconding {
     switch self {
     case .favorites, .watchList, .getAccountStates:

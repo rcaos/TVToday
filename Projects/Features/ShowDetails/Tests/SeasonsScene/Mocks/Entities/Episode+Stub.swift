@@ -8,7 +8,7 @@
 @testable import ShowDetails
 
 extension Episode {
-  
+
   public static func stub(id: Int = 1,
                           episodeNumber: Int = 1,
                           name: String = "Name 1",

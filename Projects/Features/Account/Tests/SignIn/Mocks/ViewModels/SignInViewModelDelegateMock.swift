@@ -9,9 +9,9 @@ import Foundation
 @testable import Account
 
 final class SignInViewModelDelegateMock: SignInViewModelDelegate {
-  
+
   var url: URL?
-  
+
   func signInViewModel(_ signInViewModel: SignInViewModel,
                        didTapSignInButton url: URL) {
     self.url = url

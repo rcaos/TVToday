@@ -7,18 +7,16 @@
 
 import RxSwift
 
-protocol SearchOptionsViewModelDelegate: class {
-  
+protocol SearchOptionsViewModelDelegate: AnyObject {
   func searchOptionsViewModel(_ searchOptionsViewModel: SearchOptionsViewModel,
                               didGenrePicked idGenre: Int,
                               title: String?)
-  
+
   func searchOptionsViewModel(_ searchOptionsViewModel: SearchOptionsViewModel,
                               didRecentShowPicked idShow: Int)
 }
 
 // MARK: - ViewState
-
 enum SearchViewState: Equatable {
   case loading
   case populated
@@ -27,16 +25,11 @@ enum SearchViewState: Equatable {
 }
 
 protocol SearchOptionsViewModelProtocol: VisitedShowViewModelDelegate {
-  
   // MARK: - Input
-  
   func viewDidLoad()
-  
   func modelIsPicked(with item: SearchOptionsSectionModel.Item)
-  
+
   // MARK: - Output
-  
   var viewState: Observable<SearchViewState> { get }
-  
   var dataSource: Observable<[SearchOptionsSectionModel]> { get }
 }

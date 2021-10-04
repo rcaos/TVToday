@@ -11,18 +11,17 @@ import UIKit
 import Shared
 
 class FooterReusableView: UICollectionReusableView, Loadable {
-  
+
   required init?(coder aDecoder: NSCoder) {
     fatalError()
   }
-  
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
   }
-  
+
   // MARK: - Private
-  
   private func setupUI() {
     (self as Loadable).showLoadingView()
   }

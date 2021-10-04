@@ -9,11 +9,7 @@
 import Foundation
 
 struct CreateTokenResult {
-  
   let success: Bool?
-  
   let expiresAt: String?
-  
   let token: String?
-  
 }

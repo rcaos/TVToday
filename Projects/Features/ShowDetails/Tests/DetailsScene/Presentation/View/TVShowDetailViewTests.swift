@@ -5,6 +5,8 @@
 //  Created by Jeans Ruiz on 7/30/20.
 //
 
+// swiftlint:disable all
+
 //import FBSnapshotTestCase
 //import RxSwift
 //

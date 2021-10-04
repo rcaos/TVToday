@@ -9,8 +9,6 @@
 import Foundation
 
 struct CreateSessionResult {
-  
   let success: Bool?
-  
   let sessionId: String?
 }

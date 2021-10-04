@@ -9,8 +9,6 @@
 import Foundation
 
 public struct Genre {
-  
   public var id: Int!
-  
   public var name: String!
 }

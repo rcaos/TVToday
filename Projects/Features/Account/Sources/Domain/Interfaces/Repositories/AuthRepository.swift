@@ -9,8 +9,6 @@
 import RxSwift
 
 protocol AuthRepository {
-  
   func requestToken() -> Observable<CreateTokenResult>
-  
   func createSession(requestToken: String) -> Observable<CreateSessionResult>
 }

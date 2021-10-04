@@ -11,9 +11,9 @@ import RxSwift
 import RxDataSources
 
 class TVShowListRootView: NiblessView {
-  
+
   private let viewModel: TVShowListViewModelProtocol
-  
+
   let tableView: UITableView = {
     let tableView = UITableView(frame: .zero, style: .plain)
     tableView.registerNib(cellType: TVShowViewCell.self, bundle: SharedResources.bundle)
@@ -22,51 +22,49 @@ class TVShowListRootView: NiblessView {
     tableView.contentInsetAdjustmentBehavior = .automatic
     return tableView
   }()
-  
+
   private let disposeBag = DisposeBag()
-  
+
   // MARK: - Initializer
-  
   init(frame: CGRect = .zero, viewModel: TVShowListViewModelProtocol) {
     self.viewModel = viewModel
     super.init(frame: frame)
-    
+
     addSubview(tableView)
     setupUI()
   }
-  
+
   func stopRefresh() {
     tableView.refreshControl?.endRefreshing(with: 0.5)
   }
-  
+
   fileprivate func setupUI() {
     setupTableView()
     setupDataSource()
     handleSelectionItems()
   }
-  
+
   // MARK: - Setup TableView
-  
   fileprivate func setupTableView() {
     tableView.rx
       .setDelegate(self)
       .disposed(by: disposeBag)
-    
+
     tableView.refreshControl = DefaultRefreshControl(refreshHandler: { [weak self] in
       self?.viewModel.refreshView()
     })
   }
-  
+
   private func setupDataSource() {
     let dataSource = configureTableViewDataSource()
-    
+
     viewModel
       .viewState
       .map {  [SectionTVShowListView(header: "TV Shows List", items: $0.currentEntities)] }
       .bind(to: tableView.rx.items(dataSource: dataSource))
       .disposed(by: disposeBag)
   }
-  
+
   private func handleSelectionItems() {
     Observable
       .zip( tableView.rx.itemSelected, tableView.rx.modelSelected(TVShowCellViewModel.self) )
@@ -77,16 +75,18 @@ class TVShowListRootView: NiblessView {
     }
     .disposed(by: disposeBag)
   }
-  
+
   fileprivate func configureTableViewDataSource() ->
     RxTableViewSectionedReloadDataSource<SectionTVShowListView> {
       let configureCell = RxTableViewSectionedReloadDataSource<SectionTVShowListView>(
         configureCell: { [weak self] dataSource, tableView, indexPath, item in
-          guard let strongSelf = self else { fatalError() }
-          
+          guard let strongSelf = self else {
+            fatalError()
+          }
+
           let cell = tableView.dequeueReusableCell(with: TVShowViewCell.self, for: indexPath)
           cell.viewModel = item
-          
+
           if let totalItems = dataSource.sectionModels.first?.items.count, indexPath.row == totalItems - 1 {
             strongSelf.viewModel.didLoadNextPage()
           }
@@ -94,7 +94,7 @@ class TVShowListRootView: NiblessView {
       })
       return configureCell
   }
-  
+
   override func layoutSubviews() {
     super.layoutSubviews()
     tableView.frame = bounds
@@ -102,9 +102,7 @@ class TVShowListRootView: NiblessView {
 }
 
 // MARK: - UITableViewDelegate
-
 extension TVShowListRootView: UITableViewDelegate {
-  
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 175.0
   }

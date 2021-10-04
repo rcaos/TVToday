@@ -8,7 +8,6 @@
 @testable import Shared
 
 extension Genre {
-  
   static func stub(id: Int = 1,
                    name: String = "") -> Self {
     Genre(id: id, name: name)

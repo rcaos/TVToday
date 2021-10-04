@@ -18,9 +18,11 @@ protocol SearchCoordinatorProtocol: AnyObject {
 protocol SearchCoordinatorDependencies {
   func buildSearchViewController(coordinator: SearchCoordinatorProtocol?) -> UIViewController
 
-  func buildTVShowDetailCoordinator(navigationController: UINavigationController, delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinatorProtocol
+  func buildTVShowDetailCoordinator(navigationController: UINavigationController,
+                                    delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinatorProtocol
 
-  func buildTVShowListCoordinator(navigationController: UINavigationController, delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinatorProtocol
+  func buildTVShowListCoordinator(navigationController: UINavigationController,
+                                  delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinatorProtocol
 }
 
 // MARK: - Steps

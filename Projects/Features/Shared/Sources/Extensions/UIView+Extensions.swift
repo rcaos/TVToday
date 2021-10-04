@@ -8,7 +8,7 @@
 import UIKit
 
 extension UIView {
-  
+
   public func pin(to view: UIView, insets: UIEdgeInsets = .zero) {
     NSLayoutConstraint.activate([
       topAnchor.constraint(equalTo: view.topAnchor, constant: insets.top),

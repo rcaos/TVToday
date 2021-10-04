@@ -9,7 +9,6 @@
 import Foundation
 
 struct Episode {
-  
   var id: Int
   var episodeNumber: Int
   var name: String?
@@ -19,16 +18,17 @@ struct Episode {
 }
 
 extension Episode {
-  
   public var average: String {
     if let voteAverage = self.voteAverage {
       return String(format: "%.1f", voteAverage)
     }
     return ""
   }
-  
+
   public var posterPathURL: URL? {
-    guard let urlString = posterPath else { return nil}
+    guard let urlString = posterPath else {
+      return nil
+    }
     return URL(string: urlString)
   }
 }

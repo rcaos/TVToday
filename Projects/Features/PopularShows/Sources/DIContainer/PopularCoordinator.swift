@@ -23,33 +23,33 @@ class PopularCoordinator: NavigationCoordinator, PopularCoordinatorProtocol {
     self.navigationController = navigationController
     self.dependencies = dependencies
   }
-  
+
   deinit {
     print("deinit \(Self.self)")
   }
-  
+
   func start() {
     navigate(to: .popularFeatureInit)
   }
-  
+
   // MARK: - Navigation
   func navigate(to step: PopularStep) {
     switch step {
     case .popularFeatureInit :
       return navigateToPopularFeature()
-      
+
     case .showIsPicked(let id) :
       return navigateToShowDetailScreen(with: id)
     }
   }
-  
+
   // MARK: - Default Step
   fileprivate func navigateToPopularFeature() {
     let popularController = dependencies.buildPopularViewController(coordinator: self)
     popularController.navigationItem.title = "Popular TV Shows"
     navigationController.pushViewController(popularController, animated: true)
   }
-  
+
   // MARK: - Navigate to Show Detail
   fileprivate func navigateToShowDetailScreen(with showId: Int) {
     let tvDetailCoordinator = dependencies.buildTVShowDetailCoordinator(navigationController: navigationController, delegate: self)

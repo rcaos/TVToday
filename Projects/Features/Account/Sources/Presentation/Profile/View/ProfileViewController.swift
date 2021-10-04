@@ -12,26 +12,25 @@ import RxDataSources
 import Shared
 
 class ProfileViewController: NiblessViewController {
-  
+
   private let viewModel: ProfileViewModelProtocol
   private let disposeBag = DisposeBag()
-  
+
   init(viewModel: ProfileViewModelProtocol) {
     self.viewModel = viewModel
     super.init()
   }
-  
+
   // MARK: - Life Cycle
-  
   override func loadView() {
     view = ProfileRootView(viewModel: viewModel)
   }
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setupBindables()
   }
-  
+
   fileprivate func setupBindables() {
     viewModel
       .presentSignOutAlert
@@ -41,13 +40,13 @@ class ProfileViewController: NiblessViewController {
       })
       .disposed(by: disposeBag)
   }
-  
+
   fileprivate func showSignOutActionSheet() {
     let signOutAction = UIAlertAction(title: "Sign out",
                                       style: .destructive) { [weak self] _ in
                                         self?.viewModel.didTapLogoutButton()
     }
-    
+
     let actionSheet = UIAlertController(title: "Are you sure you want to Sign out?",
                                         message: nil,
                                         preferredStyle: .actionSheet)

@@ -8,7 +8,7 @@
 @testable import Account
 
 extension AccountResult {
-  
+
   static func stub(hash: String? = nil,
                    id: Int = 1,
                    userName: String = "userName") -> Self {

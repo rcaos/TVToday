@@ -8,10 +8,8 @@
 
 import Foundation
 
-// MARK: - TODO, Don't read from info.plist
-
 final class AppConfigurations {
-  
+
   lazy var apiKey: String = {
     guard let apiKey = Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String else {
       fatalError("ApiKey must not be empty in plist")
@@ -25,7 +23,7 @@ final class AppConfigurations {
     }
     return apiBaseURL
   }()
-  
+
   lazy var imagesBaseURL: String = {
     guard let imageBaseURL = Bundle.main.object(forInfoDictionaryKey: "IMAGE_BASE_URL") as? String else {
       fatalError("ApiBaseURL must not be empty in plist")

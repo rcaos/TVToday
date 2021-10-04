@@ -10,17 +10,17 @@ import UIKit
 import UI
 
 public class GenericViewCell: UITableViewCell {
-  
+
   @IBOutlet weak public var regularTextLabel: TVRegularLabel!
-  
+
   public override func awakeFromNib() {
     super.awakeFromNib()
   }
-  
+
   public func setupUI(with title: String?) {
     regularTextLabel?.text = title
   }
-  
+
   deinit {
     print("deinit GenericViewCell")
   }

@@ -9,7 +9,7 @@
 import Foundation
 
 extension Episode: Decodable {
-  
+
   enum CodingKeys: String, CodingKey {
     case id = "id"
     case episodeNumber = "episode_number"
@@ -18,10 +18,10 @@ extension Episode: Decodable {
     case voteAverage =  "vote_average"
     case posterPath = "still_path"
   }
-  
+
   public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
-    
+
     self.id = try container.decode(Int.self, forKey: .id)
     self.episodeNumber = try container.decode(Int.self, forKey: .episodeNumber)
     self.name = try container.decodeIfPresent(String.self, forKey: .name)

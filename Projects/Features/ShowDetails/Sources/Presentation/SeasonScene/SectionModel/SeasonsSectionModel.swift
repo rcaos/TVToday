@@ -16,9 +16,9 @@ enum SeasonsSectionModel: Equatable {
 }
 
 extension SeasonsSectionModel: AnimatableSectionModelType {
-  
+
   typealias Item = SeasonsSectionItem
-  
+
   var items: [SeasonsSectionItem] {
     switch self {
     case .headerShow(_, items: let items):
@@ -29,7 +29,7 @@ extension SeasonsSectionModel: AnimatableSectionModelType {
       return items
     }
   }
-  
+
   typealias Identity = String
   var identity: String {
     switch self {
@@ -41,7 +41,7 @@ extension SeasonsSectionModel: AnimatableSectionModelType {
       return header
     }
   }
-  
+
   init(original: Self, items: [Self.Item]) {
     switch original {
     case .headerShow(header: let header, items: _):
@@ -55,7 +55,6 @@ extension SeasonsSectionModel: AnimatableSectionModelType {
 }
 
 // MARK: - Cell Types
-
 enum SeasonsSectionItem {
   case
   headerShow(viewModel: SeasonHeaderViewModelProtocol),
@@ -65,7 +64,7 @@ enum SeasonsSectionItem {
 
 extension SeasonsSectionItem: IdentifiableType {
   typealias Identity = Int
-  
+
   public var identity: Int {
     switch self {
     case .headerShow(viewModel: let viewModel):

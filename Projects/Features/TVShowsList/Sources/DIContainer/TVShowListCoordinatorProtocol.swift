@@ -10,17 +10,16 @@ import ShowDetailsInterface
 import TVShowsListInterface
 
 protocol TVShowListCoordinatorDependencies {
-  
   func buildShowListViewController_ForGenres(with genreId: Int,
                                              coordinator: TVShowListCoordinatorProtocol,
                                              stepOrigin: TVShowListStepOrigin?) -> UIViewController
-  
+
   func buildShowListViewController_ForFavorites(coordinator: TVShowListCoordinatorProtocol,
                                                 stepOrigin: TVShowListStepOrigin?) -> UIViewController
-  
+
   func buildShowListViewController_ForWatchList(coordinator: TVShowListCoordinatorProtocol,
                                                 stepOrigin: TVShowListStepOrigin?) -> UIViewController
-  
+
   func buildTVShowDetailCoordinator(navigationController: UINavigationController,
                                     delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinatorProtocol
 }

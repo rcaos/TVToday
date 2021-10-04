@@ -9,20 +9,19 @@ import RxSwift
 @testable import Account
 
 final class CreateSessionUseCaseMock: CreateSessionUseCase {
-  
+
   var result: Void?
-  
   var error: Error?
-  
+
   func execute() -> Observable<Void> {
     if let error = error {
       return Observable.error(error)
     }
-    
+
     if let result = result {
       return Observable.just(result)
     }
-    
+
     return Observable.empty()
   }
 }

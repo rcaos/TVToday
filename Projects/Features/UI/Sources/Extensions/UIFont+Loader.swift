@@ -26,8 +26,8 @@ public extension UIFont {
     let dataProvider = CGDataProvider(data: fontData!)
     let fontRef = CGFont(dataProvider!)
     var errorRef: Unmanaged<CFError>?
-    
-    if (CTFontManagerRegisterGraphicsFont(fontRef!, &errorRef) == false) {
+
+    if CTFontManagerRegisterGraphicsFont(fontRef!, &errorRef) == false {
       NSLog("Failed to register font - register graphics font failed - this font may have already been registered in the main bundle.")
     }
   }

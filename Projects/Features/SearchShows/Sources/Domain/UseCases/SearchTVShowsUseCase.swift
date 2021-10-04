@@ -10,7 +10,7 @@ import Shared
 import Persistence
 
 public protocol SearchTVShowsUseCase {
-  
+
   func execute(requestValue: SearchTVShowsUseCaseRequestValue) -> Observable<TVShowResult>
 }
 
@@ -20,13 +20,12 @@ public struct SearchTVShowsUseCaseRequestValue {
 }
 
 // MARK: - SearchTVShowsUseCase
-
 final class DefaultSearchTVShowsUseCase: SearchTVShowsUseCase {
-  
+
   private let tvShowsRepository: TVShowsRepository
   private let searchsLocalRepository: SearchLocalRepository
   private let keychainRepository: KeychainRepository
-  
+
   public init(tvShowsRepository: TVShowsRepository,
               keychainRepository: KeychainRepository,
               searchsLocalRepository: SearchLocalRepository) {
@@ -34,18 +33,18 @@ final class DefaultSearchTVShowsUseCase: SearchTVShowsUseCase {
     self.keychainRepository = keychainRepository
     self.searchsLocalRepository = searchsLocalRepository
   }
-  
+
   func execute(requestValue: SearchTVShowsUseCaseRequestValue) -> Observable<TVShowResult> {
-    
+
     var idLogged = 0
     if let userLogged = keychainRepository.fetchLoguedUser() {
       idLogged = userLogged.id
     }
-    
+
     return tvShowsRepository.searchShowsFor(query: requestValue.query,
                                             page: requestValue.page)
       .flatMap { resultSearch -> Observable<TVShowResult> in
-        
+
         if requestValue.page == 1 {
           return self.searchsLocalRepository.saveSearch(query: requestValue.query, userId: idLogged)
             .flatMap { _ -> Observable<TVShowResult> in
@@ -56,5 +55,4 @@ final class DefaultSearchTVShowsUseCase: SearchTVShowsUseCase {
         }
     }
   }
-  
 }

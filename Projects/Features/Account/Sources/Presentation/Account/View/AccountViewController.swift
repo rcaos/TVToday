@@ -11,34 +11,32 @@ import RxSwift
 import Shared
 
 class AccountViewController: NiblessViewController {
-  
+
   private let viewModel: AccountViewModelProtocol
-  
+
   private let viewControllersFactory: AccountViewControllerFactory
-  
+
   private var currentChildViewController: UIViewController?
-  
+
   private let disposeBag = DisposeBag()
-  
+
   init(viewModel: AccountViewModelProtocol, viewControllersFactory: AccountViewControllerFactory) {
     self.viewModel = viewModel
     self.viewControllersFactory = viewControllersFactory
     super.init()
   }
-  
+
   // MARK: - Life Cycle
-  
   override func loadView() {
     view = UIView()
   }
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     subscribe()
   }
-  
+
   // MARK: - Setup UI
-  
   fileprivate func subscribe() {
     viewModel
       .viewState
@@ -47,7 +45,7 @@ class AccountViewController: NiblessViewController {
       })
       .disposed(by: disposeBag)
   }
-  
+
   fileprivate func setupUI(with state: AccountViewState) {
     switch state {
     case .login:
@@ -58,7 +56,7 @@ class AccountViewController: NiblessViewController {
       transition(to: profileVC, with: "Account")
     }
   }
-  
+
   func transition(to viewController: UIViewController, with newTitle: String) {
     remove(asChildViewController: currentChildViewController)
     add(asChildViewController: viewController)
@@ -68,7 +66,6 @@ class AccountViewController: NiblessViewController {
 }
 
 // MARK: - AccountViewControllerFactory
-
 protocol AccountViewControllerFactory {
   func makeSignInViewController() -> UIViewController
   func makeProfileViewController(with account: AccountResult) -> UIViewController

@@ -15,11 +15,11 @@ protocol DeleteLoguedUserUseCase {
 
 final class DefaultDeleteLoguedUserUseCase: DeleteLoguedUserUseCase {
   private let keychainRepository: KeychainRepository
-  
+
   init(keychainRepository: KeychainRepository) {
     self.keychainRepository = keychainRepository
   }
-  
+
   func execute() {
     return keychainRepository.deleteLoguedUser()
   }

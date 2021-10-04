@@ -9,7 +9,7 @@ import UIKit
 import Shared
 import ShowDetailsInterface
 
-protocol PopularCoordinatorProtocol: class {
+protocol PopularCoordinatorProtocol: AnyObject {
   func navigate(to step: PopularStep)
 }
 

@@ -9,18 +9,17 @@
 import RxSwift
 
 public protocol FetchLoggedUser {
-  
   func execute() -> AccountDomain?
 }
 
 public final class DefaultFetchLoggedUser: FetchLoggedUser {
-  
+
   private let keychainRepository: KeychainRepository
-  
+
   public init(keychainRepository: KeychainRepository) {
     self.keychainRepository = keychainRepository
   }
-  
+
   public func execute() -> AccountDomain? {
     return keychainRepository.fetchLoguedUser()
   }

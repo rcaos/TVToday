@@ -8,7 +8,7 @@
 import UIKit
 
 public extension UIImage {
-  
+
   convenience init?(name: String) {
     self.init(named: name, in: Bundle.module, compatibleWith: .none)
   }

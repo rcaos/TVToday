@@ -9,21 +9,16 @@
 import Foundation
 
 public struct AccountResult: Equatable {
-  
   let avatar: Avatar?
-  
   let id: Int?
-  
   let userName: String?
 }
 
 public struct Avatar: Equatable {
-  
   let gravatar: Gravatar?
 }
 
 public struct Gravatar: Equatable {
-  
   let hash: String?
-  
+
 }

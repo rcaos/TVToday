@@ -13,34 +13,33 @@ import RxDataSources
 import Shared
 
 class TVShowListViewController: NiblessViewController, Loadable, Retryable, Emptiable {
-  
+
   private let viewModel: TVShowListViewModelProtocol
   private var rootView: TVShowListRootView?
   private let disposeBag = DisposeBag()
-  
+
   init(viewModel: TVShowListViewModelProtocol) {
     self.viewModel = viewModel
     super.init()
   }
-  
+
   // MARK: - Life Cycle
-  
   override func loadView() {
     rootView = TVShowListRootView(viewModel: viewModel)
     view = rootView
   }
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     subscribeToViewState()
     viewModel.viewDidLoad()
   }
-  
+
   deinit {
     viewModel.viewDidFinish()
     print("deinit \(Self.self)")
   }
-  
+
   fileprivate func subscribeToViewState() {
     viewModel
       .viewState
@@ -50,36 +49,36 @@ class TVShowListViewController: NiblessViewController, Loadable, Retryable, Empt
       })
       .disposed(by: disposeBag)
   }
-  
+
   fileprivate func configView(with state: SimpleViewState<TVShowCellViewModel>) {
-    
+
     rootView?.tableView.refreshControl?.endRefreshing(with: 0.5)
-    
+
     switch state {
     case .loading:
       showLoadingView()
       rootView?.tableView.tableFooterView = nil
       rootView?.tableView.separatorStyle = .none
       hideMessageView()
-      
+
     case .paging :
       hideLoadingView()
       rootView?.tableView.tableFooterView = LoadingView.defaultView
       rootView?.tableView.separatorStyle = .singleLine
       hideMessageView()
-      
+
     case .populated :
       hideLoadingView()
       rootView?.tableView.tableFooterView = UIView()
       rootView?.tableView.separatorStyle = .singleLine
       hideMessageView()
-      
+
     case .empty:
       hideLoadingView()
       rootView?.tableView.tableFooterView = nil
       rootView?.tableView.separatorStyle = .none
       showEmptyView(with: "No TvShow to see")
-      
+
     case .error(let message):
       hideLoadingView()
       rootView?.tableView.tableFooterView = UIView()

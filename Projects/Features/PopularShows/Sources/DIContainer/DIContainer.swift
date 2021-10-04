@@ -25,13 +25,13 @@ final class DIContainer {
   init(dependencies: ModuleDependencies) {
     self.dependencies = dependencies
   }
-  
+
   // MARK: - Module Coordinator
   func buildPopularCoordinator(navigationController: UINavigationController) -> Coordinator {
     let coordinator = PopularCoordinator(navigationController: navigationController, dependencies: self)
     return coordinator
   }
-  
+
   // MARK: - Uses Cases
   fileprivate func makeFetchPopularShowsUseCase() -> FetchTVShowsUseCase {
     return DefaultFetchPopularTVShowsUseCase(tvShowsRepository: showsRepository)
@@ -39,7 +39,6 @@ final class DIContainer {
 }
 
 extension DIContainer: PopularCoordinatorDependencies {
-  
   func buildPopularViewController(coordinator: PopularCoordinatorProtocol?) -> UIViewController {
     let viewModel = PopularViewModel(fetchTVShowsUseCase: makeFetchPopularShowsUseCase(),
                                      coordinator: coordinator)

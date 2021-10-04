@@ -11,18 +11,16 @@ import Networking
 import Shared
 
 public final class DefaultAccountRepository {
-  
+
   private let dataTransferService: DataTransferService
-  
+
   public init(dataTransferService: DataTransferService) {
     self.dataTransferService = dataTransferService
   }
 }
 
 // MARK: - AuthRepository
-
 extension DefaultAccountRepository: AccountRepository {
-  
   public func getAccountDetails(session: String) -> Observable<AccountResult> {
     let endPoint = AccountProvider.accountDetails(sessionId: session)
     return dataTransferService.request(endPoint, AccountResult.self)

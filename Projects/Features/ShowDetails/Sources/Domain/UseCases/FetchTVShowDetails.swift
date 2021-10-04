@@ -11,9 +11,8 @@ import Shared
 import Persistence
 
 public protocol FetchTVShowDetailsUseCase {
-  
   typealias Response = Result<TVShowDetailResult, Error>
-  
+
   func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> Observable<Response>
 }
 
@@ -22,13 +21,11 @@ public struct FetchTVShowDetailsUseCaseRequestValue {
 }
 
 // MARK: - FetchTVShowDetailsUseCase
-
 public final class DefaultFetchTVShowDetailsUseCase: FetchTVShowDetailsUseCase {
-  
   private let tvShowsRepository: TVShowsRepository
   private let tvShowsVisitedRepository: ShowsVisitedLocalRepository
   private let keychainRepository: KeychainRepository
-  
+
   public init(tvShowsRepository: TVShowsRepository,
               keychainRepository: KeychainRepository,
               tvShowsVisitedRepository: ShowsVisitedLocalRepository) {
@@ -36,14 +33,13 @@ public final class DefaultFetchTVShowDetailsUseCase: FetchTVShowDetailsUseCase {
     self.keychainRepository = keychainRepository
     self.tvShowsVisitedRepository = tvShowsVisitedRepository
   }
-  
+
   public func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> Observable<Response> {
-    
     var idLogged = 0
     if let userLogged = keychainRepository.fetchLoguedUser() {
       idLogged = userLogged.id
     }
-    
+
     return tvShowsRepository
       .fetchTVShowDetails(with: requestValue.identifier)
       .flatMap { details -> Observable<Result<TVShowDetailResult, Error>>  in

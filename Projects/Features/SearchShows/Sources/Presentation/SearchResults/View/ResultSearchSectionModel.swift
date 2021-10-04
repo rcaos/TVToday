@@ -9,10 +9,9 @@ import RxDataSources
 import Shared
 
 enum ResultSearchSectionModel: Equatable {
-  case
-  recentSearchs(items: [ResultSearchSectionItem]),
-  results(items: [ResultSearchSectionItem])
-  
+  case recentSearchs(items: [ResultSearchSectionItem])
+  case results(items: [ResultSearchSectionItem])
+
   func getHeader() -> String? {
     switch self {
     case .recentSearchs:
@@ -24,15 +23,14 @@ enum ResultSearchSectionModel: Equatable {
 }
 
 enum ResultSearchSectionItem: Equatable {
-  case
-  recentSearchs(items: String),
-  results(items: TVShowCellViewModel)
+  case recentSearchs(items: String)
+  case results(items: TVShowCellViewModel)
 }
 
 extension ResultSearchSectionModel: SectionModelType {
-  
+
   typealias Item =  ResultSearchSectionItem
-  
+
   var items: [ResultSearchSectionItem] {
     switch self {
     case .recentSearchs(items: let items):
@@ -41,7 +39,7 @@ extension ResultSearchSectionModel: SectionModelType {
       return items
     }
   }
-  
+
   init(original: Self, items: [Self.Item]) {
     switch original {
     case .recentSearchs:

@@ -9,11 +9,10 @@ import UIKit
 import UI
 
 public class DefaultRefreshControl: UIRefreshControl {
-  
+
   var refreshHandler: () -> Void
-  
+
   // MARK: - Initializer
-  
   public init(tintColor: UIColor = Colors.electricBlue.color,
               attributedTitle: String = "",
               backgroundColor: UIColor? = .clear,
@@ -27,13 +26,12 @@ public class DefaultRefreshControl: UIRefreshControl {
                                                            NSAttributedString.Key.foregroundColor: tintColor])
     addTarget(self, action: #selector(refreshControlAction), for: .valueChanged)
   }
-  
+
   required init?(coder aDecoder: NSCoder) {
     fatalError()
   }
-  
+
   // MARK: - Selectors
-  
   @objc func refreshControlAction() {
     refreshHandler()
   }

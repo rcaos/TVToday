@@ -14,8 +14,10 @@ import RxDataSources
 class SeasonListTableViewCell: NiblessTableViewCell {
 
   private let collectionView: UICollectionView = {
-    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-    collectionView.isScrollEnabled = false
+    let layout = UICollectionViewFlowLayout()
+    layout.scrollDirection = .horizontal
+    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+    collectionView.isScrollEnabled = true
     collectionView.backgroundColor = .white
     return collectionView
   }()
@@ -37,17 +39,17 @@ class SeasonListTableViewCell: NiblessTableViewCell {
   }
 
   private func constructHierarchy() {
-    addSubview(collectionView)
+    contentView.addSubview(collectionView)
   }
 
   private func activateConstraints() {
     collectionView.translatesAutoresizingMaskIntoConstraints = false
-    collectionView.pin(to: self)
+    collectionView.pin(to: contentView)
   }
 
   private func configureViews() {
     collectionView.allowsMultipleSelection = false
-    collectionView.registerNib(cellType: SeasonEpisodeCollectionViewCell.self, bundle: Bundle.module)
+    collectionView.registerCell(cellType: SeasonEpisodeCollectionViewCell.self)
 
     collectionView.rx
       .setDelegate(self)
@@ -98,7 +100,7 @@ class SeasonListTableViewCell: NiblessTableViewCell {
 
       let cell = collectionView.dequeueReusableCell(with: SeasonEpisodeCollectionViewCell.self, for: indexPath)
 
-      cell.viewModel = strongSelf.viewModel?.getModel(for: item)
+      cell.setViewModel(viewModel: strongSelf.viewModel?.getModel(for: item))
       return cell
     }
     return configureCell

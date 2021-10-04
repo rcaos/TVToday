@@ -22,7 +22,7 @@ public class TVShowViewCell: NiblessTableViewCell {
 
   private let startYearLabel = TVRegularLabel(frame: .zero)
 
-  private lazy var leftContainerStackView: UIStackView = {
+  private lazy var rightContainerStackView: UIStackView = {
     let stack = UIStackView(arrangedSubviews: [nameLabel, startYearLabel, averageStackView])
     stack.axis = .vertical
     stack.alignment = .leading
@@ -74,7 +74,7 @@ public class TVShowViewCell: NiblessTableViewCell {
 
   private func constructHierarchy() {
     addSubview(posterImageView)
-    addSubview(leftContainerStackView)
+    addSubview(rightContainerStackView)
   }
 
   private func activateConstraints() {
@@ -86,7 +86,7 @@ public class TVShowViewCell: NiblessTableViewCell {
     posterImageView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
       posterImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-      posterImageView.trailingAnchor.constraint(equalTo: leftContainerStackView.leadingAnchor, constant: -8),
+      posterImageView.trailingAnchor.constraint(equalTo: rightContainerStackView.leadingAnchor, constant: -8),
       posterImageView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
       posterImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
       posterImageView.widthAnchor.constraint(equalToConstant: 150)
@@ -94,10 +94,10 @@ public class TVShowViewCell: NiblessTableViewCell {
   }
 
   private func activateConstraintsForLeftStackView() {
-    leftContainerStackView.translatesAutoresizingMaskIntoConstraints = false
+    rightContainerStackView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
-      leftContainerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-      leftContainerStackView.centerYAnchor.constraint(equalTo: centerYAnchor)
+      rightContainerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+      rightContainerStackView.centerYAnchor.constraint(equalTo: centerYAnchor)
     ])
   }
 }

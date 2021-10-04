@@ -5,6 +5,8 @@
 //  Created by Jeans Ruiz on 8/8/20.
 //
 
+// swiftlint:disable all
+
 // MARK: - TODO, change FBSnapshotTestCase
 
 //import FBSnapshotTestCase

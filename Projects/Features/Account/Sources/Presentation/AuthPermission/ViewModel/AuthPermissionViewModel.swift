@@ -10,26 +10,25 @@ import Foundation
 import RxSwift
 
 final class AuthPermissionViewModel: AuthPermissionViewModelProtocol {
-  
+
   weak var delegate: AuthPermissionViewModelDelegate?
-  
+
   let didSignIn = PublishSubject<Bool>()
-  
+
   let authPermissionURL: URL
-  
+
   private let disposeBag = DisposeBag()
-  
+
   // MARK: - Initializer
-  
   init(url: URL) {
     authPermissionURL = url
     subscribe()
   }
-  
+
   func signIn() {
     didSignIn.onNext(true)
   }
-  
+
   fileprivate func subscribe() {
     didSignIn.asObserver()
       .subscribe(onNext: { [weak self] signedIn in

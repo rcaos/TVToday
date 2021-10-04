@@ -11,9 +11,8 @@ import RxSwift
 import Shared
 
 enum AccountViewState: Equatable {
-  case login,
-  
-  profile(account: AccountResult)
+  case login
+  case profile(account: AccountResult)
 }
 
 protocol AccountViewModelProtocol: AuthPermissionViewModelDelegate {
@@ -21,27 +20,24 @@ protocol AccountViewModelProtocol: AuthPermissionViewModelDelegate {
 }
 
 final class AccountViewModel: AccountViewModelProtocol {
-  
   private let createNewSession: CreateSessionUseCase
-  
+
   private let fetchLoggedUser: FetchLoggedUser
-  
+
   private let fetchAccountDetails: FetchAccountDetailsUseCase
-  
+
   private let deleteLoguedUser: DeleteLoguedUserUseCase
-  
+
   private let viewStateSubject: BehaviorSubject<AccountViewState> = .init(value: .login)
-  
+
   weak var coordinator: AccountCoordinatorProtocol?
-  
+
   private let disposeBag = DisposeBag()
-  
+
   // MARK: - Public Api
-  
   let viewState: Observable<AccountViewState>
-  
+
   // MARK: - Initializers
-  
   init(createNewSession: CreateSessionUseCase,
        fetchAccountDetails: FetchAccountDetailsUseCase,
        fetchLoggedUser: FetchLoggedUser,
@@ -50,12 +46,12 @@ final class AccountViewModel: AccountViewModelProtocol {
     self.fetchAccountDetails = fetchAccountDetails
     self.fetchLoggedUser = fetchLoggedUser
     self.deleteLoguedUser = deleteLoguedUser
-    
+
     viewState = viewStateSubject.asObservable()
-    
+
     checkIsLogued()
   }
-  
+
   fileprivate func checkIsLogued() {
     if fetchLoggedUser.execute() != nil {
       fetchUserDetails()
@@ -63,7 +59,7 @@ final class AccountViewModel: AccountViewModelProtocol {
       viewStateSubject.onNext(.login)
     }
   }
-  
+
   fileprivate func fetchUserDetails() {
     fetchDetailsAccount()
       .subscribe(onNext: { [weak self] accountDetails in
@@ -73,7 +69,7 @@ final class AccountViewModel: AccountViewModelProtocol {
       })
       .disposed(by: disposeBag)
   }
-  
+
   fileprivate func createSession() {
     createNewSession.execute()
       .flatMap { [weak self] () -> Observable<AccountResult> in
@@ -87,36 +83,31 @@ final class AccountViewModel: AccountViewModelProtocol {
     })
       .disposed(by: disposeBag)
   }
-  
+
   fileprivate func fetchDetailsAccount() -> Observable<AccountResult> {
     return fetchAccountDetails.execute()
   }
-  
+
   fileprivate func logoutUser() {
     deleteLoguedUser.execute()
     viewStateSubject.onNext(.login)
   }
-  
+
   // MARK: - Navigation
-  
   fileprivate func navigateTo(step: AccountStep) {
     coordinator?.navigate(to: step)
   }
 }
 
 // MARK: - SignInViewModelDelegate
-
 extension AccountViewModel: SignInViewModelDelegate {
-  
   func signInViewModel(_ signInViewModel: SignInViewModel, didTapSignInButton url: URL) {
     navigateTo(step: .signInIsPicked(url: url, delegate: self))
   }
 }
 
 // MARK: - AuthPermissionViewModelDelegate
-
 extension AccountViewModel: AuthPermissionViewModelDelegate {
-  
   func authPermissionViewModel(didSignedIn signedIn: Bool) {
     createSession()
     navigateTo(step: .authorizationIsComplete)
@@ -124,13 +115,11 @@ extension AccountViewModel: AuthPermissionViewModelDelegate {
 }
 
 // MARK: - ProfileViewModelDelegate
-
 extension AccountViewModel: ProfileViewModelDelegate {
-  
   func profileViewModel(didTapLogoutButton tapped: Bool) {
     logoutUser()
   }
-  
+
   func profileViewModel(didUserList tapped: UserListType) {
     switch tapped {
     case .favorites:

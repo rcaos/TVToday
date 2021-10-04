@@ -15,7 +15,6 @@ enum AuthProvider {
 }
 
 extension AuthProvider: EndPoint {
-  
   var path: String {
     switch self {
     case .createRequestToken:
@@ -24,9 +23,8 @@ extension AuthProvider: EndPoint {
       return "/3/authentication/session/new"
     }
   }
-  
+
   var queryParameters: [String: Any]? {
-    
     switch self {
     case .createRequestToken:
       return nil
@@ -34,7 +32,7 @@ extension AuthProvider: EndPoint {
       return ["request_token": "\(requestToken)"]
     }
   }
-  
+
   var method: ServiceMethod {
     switch self {
     case .createRequestToken:
@@ -43,7 +41,7 @@ extension AuthProvider: EndPoint {
       return .post
     }
   }
-  
+
   var parameterEncoding: ParameterEnconding {
     switch self {
     case .createRequestToken:

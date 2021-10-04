@@ -9,6 +9,5 @@ import RxSwift
 @testable import Account
 
 final class DeleteLoguedUserUseCaseMock: DeleteLoguedUserUseCase {
-  
   func execute() { }
 }

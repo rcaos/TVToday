@@ -14,23 +14,26 @@ protocol CreateSessionUseCase {
 }
 
 final class DefaultCreateSessionUseCase: CreateSessionUseCase {
-  
   private let authRepository: AuthRepository
-  
+
   private let keyChainRepository: KeychainRepository
-  
+
   init(authRepository: AuthRepository, keyChainRepository: KeychainRepository) {
     self.authRepository = authRepository
     self.keyChainRepository = keyChainRepository
   }
-  
+
   func execute() -> Observable<Void> {
-    guard let requestToken = keyChainRepository.fetchRequestToken() else { return Observable.error(CustomError.genericError) }
-    
+    guard let requestToken = keyChainRepository.fetchRequestToken() else {
+      return Observable.error(CustomError.genericError)
+    }
+
     return authRepository.createSession(requestToken: requestToken)
       .flatMap { [weak self] sessionResult -> Observable<Void> in
-        guard let sessionId = sessionResult.sessionId else { throw CustomError.genericError }
-        
+        guard let sessionId = sessionResult.sessionId else {
+          throw CustomError.genericError
+        }
+
         self?.keyChainRepository.saveAccessToken(sessionId)
         return Observable.just(())
     }

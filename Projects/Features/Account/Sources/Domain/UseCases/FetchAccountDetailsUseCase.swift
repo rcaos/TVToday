@@ -14,23 +14,22 @@ protocol FetchAccountDetailsUseCase {
 }
 
 final class DefaultFetchAccountDetailsUseCase: FetchAccountDetailsUseCase {
-  
   private let accountRepository: AccountRepository
-  
+
   private let keychainRepository: KeychainRepository
-  
+
   init(accountRepository: AccountRepository,
        keychainRepository: KeychainRepository) {
     self.accountRepository = accountRepository
     self.keychainRepository = keychainRepository
   }
-  
+
   func execute() -> Observable<AccountResult> {
-    
+
     guard let sessionId = keychainRepository.fetchAccessToken() else {
       return Observable.error(CustomError.genericError)
     }
-    
+
     return accountRepository.getAccountDetails(session: sessionId)
       .flatMap { [weak self] accountResult -> Observable<AccountResult> in
         guard let fetchedAccount = accountResult.id else { throw CustomError.genericError }

@@ -16,9 +16,9 @@ enum ProfileSectionModel: Equatable {
 }
 
 extension ProfileSectionModel: SectionModelType {
-  
+
   typealias Item = ProfilesSectionItem
-  
+
   var items: [ProfilesSectionItem] {
     switch self {
     case .userInfo(_, items: let items):
@@ -29,7 +29,7 @@ extension ProfileSectionModel: SectionModelType {
       return items
     }
   }
-  
+
   init(original: Self, items: [Self.Item]) {
     switch original {
     case .userInfo(header: let header, items: _):

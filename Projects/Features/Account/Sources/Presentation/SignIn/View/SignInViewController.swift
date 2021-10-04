@@ -10,30 +10,29 @@ import RxSwift
 import Shared
 
 class SignInViewController: NiblessViewController {
-  
+
   private let viewModel: SignInViewModelProtocol
-  
+
   private var rootView: SignInRootView?
-  
+
   private let disposeBag = DisposeBag()
-  
+
   init(viewModel: SignInViewModelProtocol) {
     self.viewModel = viewModel
     super.init()
   }
-  
+
   // MARK: - Lifecycle
-  
   override func loadView() {
     rootView = SignInRootView(viewModel: viewModel)
     view = rootView
   }
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     subscribe()
   }
-  
+
   fileprivate func subscribe() {
     viewModel
       .viewState
@@ -42,7 +41,7 @@ class SignInViewController: NiblessViewController {
       })
       .disposed(by: disposeBag)
   }
-  
+
   fileprivate func setupView(with state: SignInViewState) {
     switch state {
     case .initial:
@@ -51,7 +50,6 @@ class SignInViewController: NiblessViewController {
       rootView?.signInButton.defaultShowLoadingView()
     case .error:
       rootView?.signInButton.defaultHideLoadingView()
-      // MARK: - TODO, show a label with error or something
     }
   }
 }

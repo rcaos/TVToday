@@ -10,6 +10,5 @@ import RxSwift
 import Shared
 
 public protocol AccountRepository {
-  
   func getAccountDetails(session: String) -> Observable<AccountResult>
 }

@@ -15,16 +15,16 @@ protocol CreateTokenUseCase {
 }
 
 final class DefaultCreateTokenUseCase: CreateTokenUseCase {
-  
+
   private let authRepository: AuthRepository
-  
+
   private let keyChainRepository: KeychainRepository
-  
+
   init(authRepository: AuthRepository, keyChainRepository: KeychainRepository) {
     self.authRepository = authRepository
     self.keyChainRepository = keyChainRepository
   }
-  
+
   func execute() -> Observable<URL> {
     return
       authRepository.requestToken()

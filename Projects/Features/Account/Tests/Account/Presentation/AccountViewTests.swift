@@ -6,6 +6,8 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
+// swiftlint:disable all
+
 // MARK: - TODO, change FBSnapshotTestCase
 
 //import FBSnapshotTestCase

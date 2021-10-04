@@ -8,22 +8,66 @@
 import UIKit
 import UI
 
-public class EmptyView: UIView, NibLoadable {
+public class EmptyView: NiblessView {
 
-  @IBOutlet weak var imageView: UIImageView!
-  @IBOutlet weak var messageLabel: TVRegularLabel!
+  lazy var mainStackView: UIStackView = {
+    let stack = UIStackView(arrangedSubviews: [imageView, messageLabel])
+    stack.axis = .vertical
+    stack.alignment = .center
+    stack.distribution = .equalSpacing
+    stack.spacing = 30.0
+    return stack
+  }()
 
-  override public func awakeFromNib() {
-    super.awakeFromNib()
-    setupView()
+  private let imageView: UIImageView = {
+    let imageView = UIImageView()
+    imageView.image = UIImage(name: "newTV")
+    imageView.contentMode = .scaleAspectFit
+    return imageView
+  }()
+
+  public let messageLabel = TVRegularLabel(frame: .zero)
+
+  public override init(frame: CGRect) {
+    super.init(frame: frame)
+    setupUI()
   }
 
-  private func setupView() {
+  private func setupUI() {
+    constructHierarchy()
+    activateConstraints()
+    configureViews()
+  }
+
+  private func configureViews() {
     backgroundColor = .white
-
     messageLabel.numberOfLines = 0
-
     // MARK: TODO, rename image
     imageView.image = UIImage(name: "Error009")
+  }
+
+  private func constructHierarchy() {
+    addSubview(mainStackView)
+  }
+
+  private func activateConstraints() {
+    activateConstraintsForStackView()
+    activateConstraintsForImage()
+  }
+
+  private func activateConstraintsForStackView() {
+    mainStackView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      mainStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
+      mainStackView.centerXAnchor.constraint(equalTo: centerXAnchor),
+      mainStackView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.6)
+    ])
+  }
+
+  private func activateConstraintsForImage() {
+    imageView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: 10/8)
+    ])
   }
 }

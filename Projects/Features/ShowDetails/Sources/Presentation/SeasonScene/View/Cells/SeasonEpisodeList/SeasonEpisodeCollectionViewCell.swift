@@ -7,29 +7,12 @@
 //
 
 import UIKit
+import Shared
 import UI
 
-class SeasonEpisodeCollectionViewCell: UICollectionViewCell {
+class SeasonEpisodeCollectionViewCell: NiblessCollectionViewCell {
 
-  @IBOutlet weak var seasonNumber: TVRegularLabel! {
-    didSet {
-      self.seasonNumber.backgroundColor = Colors.clear.color
-      self.seasonNumber.clipsToBounds = true
-      self.seasonNumber.layer.masksToBounds = true
-      self.seasonNumber.layer.cornerRadius = self.seasonNumber.frame.width / 2
-      self.seasonNumber.textAlignment = .center
-    }
-  }
-
-  var viewModel: SeasonEpisodeViewModel? {
-    didSet {
-      setupUI()
-    }
-  }
-
-  override func awakeFromNib() {
-    super.awakeFromNib()
-  }
+  private let seasonNumber = TVRegularLabel()
 
   override var isSelected: Bool {
     didSet {
@@ -37,7 +20,47 @@ class SeasonEpisodeCollectionViewCell: UICollectionViewCell {
     }
   }
 
-  func setupUI() {
+  var viewModel: SeasonEpisodeViewModel?
+
+  // MARK: - Life Cycle
+  public override init(frame: CGRect) {
+    super.init(frame: frame)
+    setupUI()
+  }
+
+  override func layoutSubviews() {
+    super.layoutSubviews()
+    layoutCircularLabel()
+  }
+
+  private func setupUI() {
+    constructHierarchy()
+    activateConstraints()
+    configureViews()
+  }
+
+  private func constructHierarchy() {
+    addSubview(seasonNumber)
+  }
+
+  private func activateConstraints() {
+    seasonNumber.translatesAutoresizingMaskIntoConstraints = false
+    seasonNumber.pin(to: self)
+  }
+
+  private func configureViews() {
+    seasonNumber.backgroundColor = Colors.clear.color
+    seasonNumber.textAlignment = .center
+  }
+
+  private func layoutCircularLabel() {
+    seasonNumber.clipsToBounds = true
+    seasonNumber.layer.masksToBounds = true
+    seasonNumber.layer.cornerRadius = seasonNumber.frame.width / 2
+  }
+
+  func setViewModel(viewModel: SeasonEpisodeViewModel?) {
+    self.viewModel = viewModel
     seasonNumber.text = viewModel?.seasonNumber
   }
 }

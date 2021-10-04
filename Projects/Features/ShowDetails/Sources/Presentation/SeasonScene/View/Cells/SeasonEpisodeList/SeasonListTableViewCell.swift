@@ -8,27 +8,44 @@
 
 import UIKit
 import RxSwift
+import Shared
 import RxDataSources
 
-class SeasonListTableViewCell: UITableViewCell {
+class SeasonListTableViewCell: NiblessTableViewCell {
 
-  @IBOutlet weak var collectionView: UICollectionView!
+  private let collectionView: UICollectionView = {
+    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    collectionView.isScrollEnabled = false
+    collectionView.backgroundColor = .white
+    return collectionView
+  }()
 
-  var viewModel: SeasonListViewModelProtocol? {
-    didSet {
-      setupBindables()
-    }
-  }
+  var viewModel: SeasonListViewModelProtocol?
 
   private var disposeBag = DisposeBag()
 
   // MARK: - Life Cycle
-  override func awakeFromNib() {
-    super.awakeFromNib()
+  public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
     setupUI()
   }
 
-  func setupUI() {
+  private func setupUI() {
+    constructHierarchy()
+    activateConstraints()
+    configureViews()
+  }
+
+  private func constructHierarchy() {
+    addSubview(collectionView)
+  }
+
+  private func activateConstraints() {
+    collectionView.translatesAutoresizingMaskIntoConstraints = false
+    collectionView.pin(to: self)
+  }
+
+  private func configureViews() {
     collectionView.allowsMultipleSelection = false
     collectionView.registerNib(cellType: SeasonEpisodeCollectionViewCell.self, bundle: Bundle.module)
 
@@ -37,7 +54,12 @@ class SeasonListTableViewCell: UITableViewCell {
       .disposed(by: disposeBag)
   }
 
-  func setupBindables() {
+  public func setViewModel(viewModel: SeasonListViewModelProtocol?) {
+    self.viewModel = viewModel
+    setupBindables()
+  }
+
+  private func setupBindables() {
     guard let viewModel = viewModel else {
       return
     }
@@ -63,12 +85,12 @@ class SeasonListTableViewCell: UITableViewCell {
       .disposed(by: disposeBag)
   }
 
-  fileprivate func selectedSeason(at index: Int) {
+  private func selectedSeason(at index: Int) {
     let indexPath = IndexPath(row: index - 1, section: 0)
     collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .top)
   }
 
-  fileprivate func configureCollectionViewCell() -> CollectionViewSectionedDataSource<SectionSeasonsList>.ConfigureCell {
+  private func configureCollectionViewCell() -> CollectionViewSectionedDataSource<SectionSeasonsList>.ConfigureCell {
     let configureCell: CollectionViewSectionedDataSource<SectionSeasonsList>.ConfigureCell = { [weak self] _, collectionView, indexPath, item in
       guard let strongSelf = self else {
         fatalError()

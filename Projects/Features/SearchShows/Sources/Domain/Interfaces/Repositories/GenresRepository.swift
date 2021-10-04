@@ -9,6 +9,5 @@
 import RxSwift
 
 protocol GenresRepository {
-  
   func genresList() -> Observable<GenreListResult>
 }

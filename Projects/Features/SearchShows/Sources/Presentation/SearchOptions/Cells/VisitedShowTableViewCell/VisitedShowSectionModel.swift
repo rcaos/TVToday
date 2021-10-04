@@ -9,16 +9,13 @@ import RxDataSources
 import Persistence
 
 struct VisitedShowSectionModel {
-  
   var header: String
-  
   var items: [Item]
 }
 
 extension VisitedShowSectionModel: SectionModelType {
-  
   typealias Item = ShowVisited
-  
+
   init(original: VisitedShowSectionModel, items: [Item]) {
     self = original
     self.items = items

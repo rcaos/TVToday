@@ -10,7 +10,5 @@ import Foundation
 import Shared
 
 struct GenreListResult {
-    
     var genres: [Genre]!
-    
 }

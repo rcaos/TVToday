@@ -15,7 +15,7 @@ import ShowDetailsInterface
 import TVShowsListInterface
 
 public struct ModuleDependencies {
-  
+
   let apiDataTransferService: DataTransferService
   let imagesBaseURL: String
   let showsPersistence: ShowsVisitedLocalRepository
@@ -23,7 +23,7 @@ public struct ModuleDependencies {
 
   let showDetailsBuilder: ModuleShowDetailsBuilder
   let showListBuilder: ModuleShowListDetailsBuilder
-  
+
   public init(apiDataTransferService: DataTransferService,
               imagesBaseURL: String,
               showsPersistence: ShowsVisitedLocalRepository,
@@ -41,13 +41,12 @@ public struct ModuleDependencies {
 
 // MARK: - Entry to Module
 public struct Module {
-  
   private let diContainer: DIContainer
-  
+
   public init(dependencies: ModuleDependencies) {
     self.diContainer = DIContainer(dependencies: dependencies)
   }
-  
+
   public func buildSearchCoordinator(in navigationController: UINavigationController) -> Coordinator {
     return diContainer.buildModuleCoordinator(navigationController: navigationController)
   }

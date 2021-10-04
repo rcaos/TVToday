@@ -9,10 +9,9 @@ import RxDataSources
 import Shared
 
 enum SearchOptionsSectionModel {
-  case
-  showsVisited(items: [SearchSectionItem]),
-  genres(items: [SearchSectionItem])
-  
+  case showsVisited(items: [SearchSectionItem])
+  case genres(items: [SearchSectionItem])
+
   func getHeader() -> String? {
     switch self {
     case .showsVisited:
@@ -24,14 +23,13 @@ enum SearchOptionsSectionModel {
 }
 
 enum SearchSectionItem {
-  case
-  showsVisited(items: VisitedShowViewModelProtocol),
-  genres(items: GenreViewModelProtocol)
+  case showsVisited(items: VisitedShowViewModelProtocol)
+  case genres(items: GenreViewModelProtocol)
 }
 
 extension SearchOptionsSectionModel: SectionModelType {
   typealias Item = SearchSectionItem
-  
+
   var items: [SearchSectionItem] {
     switch self {
     case .showsVisited(let items):
@@ -40,7 +38,7 @@ extension SearchOptionsSectionModel: SectionModelType {
       return items
     }
   }
-  
+
   init(original: Self, items: [Self.Item]) {
     switch original {
     case .showsVisited:

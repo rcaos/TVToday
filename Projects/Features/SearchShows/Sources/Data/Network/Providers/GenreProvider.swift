@@ -13,22 +13,21 @@ enum GenreProvider {
 }
 
 extension GenreProvider: EndPoint {
-  
   var path: String {
     switch self {
     case .getAll:
       return "/3/genre/tv/list"
     }
   }
-  
+
   var queryParameters: [String: Any]? {
     return nil
   }
-  
+
   var method: ServiceMethod {
     return .get
   }
-  
+
   var parameterEncoding: ParameterEnconding {
     return .defaultEncoding
   }

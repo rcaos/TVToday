@@ -27,7 +27,7 @@ let project = Project.framework(
     ),
     .package(product: "RxCocoa"),
     .package(product: "RxDataSources"),
-    .package(product: "RxSwift"),
+    .package(product: "RxSwift")
   ],
   testFolder: "Tests",
   testDependencies: [

@@ -11,11 +11,11 @@ import RxSwift
 import RxDataSources
 
 class SearchOptionRootView: NiblessView {
-  
+
   private let viewModel: SearchOptionsViewModelProtocol
-  
+
   private let disposeBag = DisposeBag()
-  
+
   let tableView: UITableView = {
     let tableView = UITableView(frame: .zero, style: .plain)
     tableView.registerNib(cellType: TVShowViewCell.self, bundle: SharedResources.bundle)
@@ -24,26 +24,26 @@ class SearchOptionRootView: NiblessView {
     tableView.contentInsetAdjustmentBehavior = .automatic
     return tableView
   }()
-  
+
   init(frame: CGRect = .zero, viewModel: SearchOptionsViewModelProtocol) {
     self.viewModel = viewModel
     super.init(frame: frame)
-    
+
     addSubview(tableView)
     setupUI()
   }
-  
+
   fileprivate func setupUI() {
     registerCells()
     setupDataSource()
     handleSelection()
   }
-  
+
   fileprivate func registerCells() {
     tableView.registerNib(cellType: VisitedShowTableViewCell.self, bundle: Bundle.module)
     tableView.registerNib(cellType: GenreTableViewCell.self, bundle: Bundle.module)
   }
-  
+
   fileprivate func setupDataSource() {
     let dataSource = RxTableViewSectionedReloadDataSource<SearchOptionsSectionModel>(
       configureCell: { [weak self] (_, _, indexPath, element) -> UITableViewCell in
@@ -55,17 +55,17 @@ class SearchOptionRootView: NiblessView {
           return strongSelf.makeCellForGenre(at: indexPath, viewModel: genre)
         }
     })
-    
+
     dataSource.titleForHeaderInSection = { dataSource, section in
       return dataSource.sectionModels[section].getHeader()
     }
-    
+
     viewModel
       .dataSource
       .bind(to: tableView.rx.items(dataSource: dataSource))
       .disposed(by: disposeBag)
   }
-  
+
   fileprivate func handleSelection() {
     Observable
       .zip( tableView.rx.itemSelected, tableView.rx.modelSelected(SearchOptionsSectionModel.Item.self) )
@@ -76,7 +76,7 @@ class SearchOptionRootView: NiblessView {
     }
     .disposed(by: disposeBag)
   }
-  
+
   override func layoutSubviews() {
     super.layoutSubviews()
     tableView.frame = bounds
@@ -84,15 +84,14 @@ class SearchOptionRootView: NiblessView {
 }
 
 // MARK: - Build Cells
-
 extension SearchOptionRootView {
-  
+
   private func makeCellForShowVisited(at indexPath: IndexPath, cellViewModel: VisitedShowViewModelProtocol) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: VisitedShowTableViewCell.self, for: indexPath)
     cell.setupCell(with: cellViewModel)
     return cell
   }
-  
+
   private func makeCellForGenre(at indexPath: IndexPath, viewModel: GenreViewModelProtocol) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: GenreTableViewCell.self, for: indexPath)
     cell.viewModel = viewModel

@@ -11,13 +11,13 @@ import RxSwift
 import Shared
 
 class SearchViewController: NiblessViewController {
-  
+
   private let viewModel: SearchViewModel
   private let searchController: UISearchController
   private let searchControllerFactory: SearchViewControllerFactory
-  
+
   private let disposeBag = DisposeBag()
-  
+
   init(viewModel: SearchViewModel,
        searchController: UISearchController,
        searchControllerFactory: SearchViewControllerFactory) {
@@ -26,45 +26,43 @@ class SearchViewController: NiblessViewController {
     self.searchControllerFactory = searchControllerFactory
     super.init()
   }
-  
+
   // MARK: - Life Cycle
-  
   override func loadView() {
     view = UIView()
   }
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
   }
-  
+
   // MARK: - SetupView
-  
   private func setupUI() {
     setupContainerView()
     setupSearchBar()
     bindSearchBarText()
   }
-  
+
   private func setupContainerView() {
     let optionsViewController = searchControllerFactory.buildSearchOptionsController()
     add(asChildViewController: optionsViewController)
   }
-  
+
   private func setupSearchBar() {
     searchController.obscuresBackgroundDuringPresentation = false
     searchController.hidesNavigationBarDuringPresentation = false
-    
+
     searchController.searchBar.placeholder = "Search TV Show"
     searchController.searchResultsUpdater = self
     searchController.searchBar.delegate = self
-    
+
     navigationItem.searchController = searchController
     navigationItem.hidesSearchBarWhenScrolling = false
-    
+
     definesPresentationContext = true
   }
-  
+
   private func bindSearchBarText() {
     viewModel.searchBarText
       .bind(to: searchController.searchBar.rx.text)
@@ -73,12 +71,10 @@ class SearchViewController: NiblessViewController {
 }
 
 // MARK: - UISearchResultsUpdating
-
 extension SearchViewController: UISearchResultsUpdating {
-  
+
   func updateSearchResults(for searchController: UISearchController) {
     searchController.searchResultsController?.view.isHidden = false
-    
     if let isEmpty = searchController.searchBar.text?.isEmpty, isEmpty {
       viewModel.resetSearch()
     }
@@ -86,22 +82,19 @@ extension SearchViewController: UISearchResultsUpdating {
 }
 
 // MARK: - UISearchBarDelegate
-
 extension SearchViewController: UISearchBarDelegate {
-  
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
     if let query = searchBar.text {
       viewModel.startSearch(with: query)
     }
   }
-  
+
   func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
     viewModel.resetSearch()
   }
 }
 
 // MARK: - SearchController Factory
-
 protocol SearchViewControllerFactory {
   func buildSearchOptionsController() -> UIViewController
 }

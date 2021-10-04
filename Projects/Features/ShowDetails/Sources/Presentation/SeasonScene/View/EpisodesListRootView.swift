@@ -18,7 +18,7 @@ class EpisodesListRootView: NiblessView {
     let tableView = UITableView(frame: .zero, style: .plain)
     tableView.registerCell(cellType: HeaderSeasonsTableViewCell.self)
     tableView.registerCell(cellType: SeasonListTableViewCell.self)
-    tableView.registerNib(cellType: EpisodeItemTableViewCell.self, bundle: Bundle.module)
+    tableView.registerCell(cellType: EpisodeItemTableViewCell.self)
 
     tableView.rowHeight = UITableView.automaticDimension
     tableView.tableFooterView = UIView()
@@ -92,7 +92,7 @@ extension EpisodesListRootView {
   private func makeCellForEpisode(at indexPath: IndexPath, element: EpisodeSectionModelType) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: EpisodeItemTableViewCell.self, for: indexPath)
     if let model = viewModel.getModel(for: element) {
-      cell.viewModel = model
+      cell.setModel(viewModel: model)
     }
     return cell
   }

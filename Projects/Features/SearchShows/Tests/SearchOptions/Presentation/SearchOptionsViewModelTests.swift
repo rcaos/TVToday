@@ -5,6 +5,8 @@
 //  Created by Jeans Ruiz on 7/28/20.
 //
 
+// swiftlint:disable all
+
 import Quick
 import Nimble
 import RxSwift

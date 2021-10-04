@@ -48,7 +48,7 @@ class SignInViewModel: SignInViewModelProtocol {
     .subscribe(onNext: { [weak self] url in
       guard let strongSelf = self else { return }
       strongSelf.delegate?.signInViewModel(strongSelf, didTapSignInButton: url)
-  
+
       }, onError: { [weak self] error in
         print("error to request token: \(error)")
         self?.viewStateSubject.onNext(.loading)

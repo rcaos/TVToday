@@ -18,32 +18,31 @@ public enum AppChildCoordinator {
 }
 
 class AppCoordinator: Coordinator {
-  
+
   private let window: UIWindow
-  
+
   private var childCoordinators = [AppChildCoordinator: Coordinator]()
-  
+
   private let appDIContainer: AppDIContainer
-  
+
   // MARK: - Initializer
-  
   public init(window: UIWindow, appDIContainer: AppDIContainer) {
     self.window = window
     self.appDIContainer = appDIContainer
   }
-  
+
   func start() {
     nagivateToSignedFlow()
   }
-  
+
   fileprivate func nagivateToSignedFlow() {
     let tabBar = UITabBarController()
     let coordinator = SignedCoordinator(tabBarController: tabBar,
                                         appDIContainer: appDIContainer)
-    
+
     self.window.rootViewController = tabBar
     self.window.makeKeyAndVisible()
-    
+
     childCoordinators[.signed] = coordinator
     coordinator.start()
   }

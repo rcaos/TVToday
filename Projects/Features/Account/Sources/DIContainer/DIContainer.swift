@@ -89,7 +89,8 @@ extension DIContainer: AccountCoordinatorDependencies {
     return AuthPermissionViewController(viewModel: authViewModel)
   }
 
-  func buildTVShowListCoordinator(navigationController: UINavigationController, delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinatorProtocol {
+  func buildTVShowListCoordinator(navigationController: UINavigationController,
+                                  delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinatorProtocol {
     return dependencies.showListBuilder.buildModuleCoordinator(in: navigationController, delegate: delegate)
   }
 }

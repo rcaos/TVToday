@@ -9,33 +9,95 @@
 import UIKit
 import UI
 
-public class TVShowViewCell: UITableViewCell {
+public class TVShowViewCell: NiblessTableViewCell {
 
-  @IBOutlet weak private var posterImageView: UIImageView!
-  @IBOutlet weak private var nameLabel: TVBoldLabel!
-  @IBOutlet weak private var startYearLabel: TVRegularLabel!
-  @IBOutlet weak private var starImageView: UIImageView!
-  @IBOutlet weak private var averageLabel: TVRegularLabel!
+  private let posterImageView: UIImageView = {
+    let imageView = UIImageView()
+    imageView.image = UIImage(name: "newTV")
+    imageView.contentMode = .scaleAspectFit
+    return imageView
+  }()
 
-  public var viewModel: TVShowCellViewModel? {
-    didSet {
-      setupUI()
-    }
-  }
+  private let nameLabel = TVBoldLabel(frame: .zero)
 
-  public override func awakeFromNib() {
-    super.awakeFromNib()
-    starImageView.image = UIImage(name: "star")
+  private let startYearLabel = TVRegularLabel(frame: .zero)
+
+  private lazy var leftContainerStackView: UIStackView = {
+    let stack = UIStackView(arrangedSubviews: [nameLabel, startYearLabel, averageStackView])
+    stack.axis = .vertical
+    stack.alignment = .leading
+    stack.distribution = .fill
+    stack.spacing = 8.0
+    return stack
+  }()
+
+  private let starImageView: UIImageView = {
+    let imageView = UIImageView()
+    imageView.image = UIImage(name: "star")
+    imageView.contentMode = .scaleAspectFit
+
+    imageView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      imageView.widthAnchor.constraint(equalToConstant: 20),
+      imageView.heightAnchor.constraint(equalToConstant: 20)
+    ])
+    return imageView
+  }()
+
+  private let averageLabel = TVRegularLabel(frame: .zero)
+
+  private lazy var averageStackView: UIStackView = {
+    let stack = UIStackView(arrangedSubviews: [starImageView, averageLabel])
+    stack.axis = .horizontal
+    stack.alignment = .fill
+    stack.distribution = .fill
+    stack.spacing = 5.0
+    return stack
+  }()
+
+  public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
+    setupUI()
   }
 
   private func setupUI() {
-    guard let viewModel = viewModel else {
-      return
-    }
+    constructHierarchy()
+    activateConstraints()
+  }
 
+  public func setModel(viewModel: TVShowCellViewModel) {
     posterImageView.setImage(with: viewModel.posterPathURL)
     nameLabel.text = viewModel.name
     startYearLabel.text = viewModel.firstAirDate
     averageLabel.text = viewModel.average
+  }
+
+  private func constructHierarchy() {
+    addSubview(posterImageView)
+    addSubview(leftContainerStackView)
+  }
+
+  private func activateConstraints() {
+    activateConstraintsForPosterView()
+    activateConstraintsForLeftStackView()
+  }
+
+  private func activateConstraintsForPosterView() {
+    posterImageView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      posterImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+      posterImageView.trailingAnchor.constraint(equalTo: leftContainerStackView.leadingAnchor, constant: -8),
+      posterImageView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+      posterImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
+      posterImageView.widthAnchor.constraint(equalToConstant: 150)
+    ])
+  }
+
+  private func activateConstraintsForLeftStackView() {
+    leftContainerStackView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      leftContainerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+      leftContainerStackView.centerYAnchor.constraint(equalTo: centerYAnchor)
+    ])
   }
 }

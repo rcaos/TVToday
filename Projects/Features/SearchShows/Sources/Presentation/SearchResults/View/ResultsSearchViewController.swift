@@ -51,7 +51,7 @@ class ResultsSearchViewController: UIViewController {
   }
 
   private func setupTableView() {
-    resultView.tableView.registerNib(cellType: TVShowViewCell.self, bundle: SharedResources.bundle)
+    resultView.tableView.registerCell(cellType: TVShowViewCell.self)
     resultView.tableView.registerNib(cellType: RecentSearchTableViewCell.self, bundle: Bundle.module)
 
     resultView.tableView.rx
@@ -179,7 +179,7 @@ extension ResultsSearchViewController {
 
   private func makeCellForResultSearch(_ tableView: UITableView, at indexPath: IndexPath, element: TVShowCellViewModel) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: TVShowViewCell.self, for: indexPath)
-    cell.viewModel = element
+    cell.setModel(viewModel: element)
     return cell
   }
 }

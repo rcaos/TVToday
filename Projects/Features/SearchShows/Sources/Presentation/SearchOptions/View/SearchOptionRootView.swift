@@ -40,7 +40,7 @@ class SearchOptionRootView: NiblessView {
   }
 
   fileprivate func registerCells() {
-    tableView.registerNib(cellType: VisitedShowTableViewCell.self, bundle: Bundle.module)
+    tableView.registerCell(cellType: VisitedShowTableViewCell.self)
     tableView.registerCell(cellType: GenreTableViewCell.self)
   }
 

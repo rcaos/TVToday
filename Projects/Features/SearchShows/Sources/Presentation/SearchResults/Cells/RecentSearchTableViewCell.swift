@@ -7,28 +7,61 @@
 
 import UIKit
 import Shared
+import UI
 
-class RecentSearchTableViewCell: UITableViewCell {
+class RecentSearchTableViewCell: NiblessTableViewCell {
 
-  @IBOutlet weak var titleLabel: UILabel!
-  @IBOutlet weak var accesoryImageView: UIImageView!
+  private let titleLabel = TVRegularLabel()
 
-  public var title: String? {
-    didSet {
-      setupCell()
-    }
-  }
+  private let accessoryImageView: UIImageView = {
+    let imageView = UIImageView()
+    imageView.image = UIImage(name: "up-left")
+    imageView.contentMode = .scaleAspectFill
+    imageView.clipsToBounds = true
+    return imageView
+  }()
 
-  override func awakeFromNib() {
-    super.awakeFromNib()
+  public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
     setupUI()
   }
 
-  private func setupUI() {
-    accesoryImageView.image = UIImage(name: "up-left")
+  func setModel(with text: String) {
+    titleLabel.text = text
   }
 
-  private func setupCell() {
-    titleLabel.text = title
+  private func setupUI() {
+    constructHierarchy()
+    activateConstraints()
   }
+
+  private func constructHierarchy() {
+    contentView.addSubview(titleLabel)
+    contentView.addSubview(accessoryImageView)
+  }
+
+  private func activateConstraints() {
+    activateConstraintsForLabel()
+    activateConstraintsForImage()
+  }
+
+  private func activateConstraintsForLabel() {
+    titleLabel.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+      titleLabel.trailingAnchor.constraint(greaterThanOrEqualTo: accessoryImageView.leadingAnchor, constant: -8),
+      titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+    ])
+  }
+
+  private func activateConstraintsForImage() {
+    accessoryImageView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      accessoryImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+      accessoryImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+      accessoryImageView.widthAnchor.constraint(equalToConstant: 24),
+      accessoryImageView.heightAnchor.constraint(equalToConstant: 24)
+    ])
+  }
+
 }

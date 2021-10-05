@@ -37,7 +37,7 @@ class VisitedShowTableViewCell: UITableViewCell {
 
   private func setupUI() {
     collectionView.allowsMultipleSelection = false
-    collectionView.registerNib(cellType: VisitedShowCollectionViewCell.self, bundle: Bundle.module)
+    collectionView.registerCell(cellType: VisitedShowCollectionViewCell.self)
     if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
       layout.scrollDirection = .horizontal
     }
@@ -68,7 +68,7 @@ class VisitedShowTableViewCell: UITableViewCell {
   fileprivate func configureCollectionViewCell() -> CollectionViewSectionedDataSource<VisitedShowSectionModel>.ConfigureCell {
     let configureCell: CollectionViewSectionedDataSource<VisitedShowSectionModel>.ConfigureCell = { _, collectionView, indexPath, item in
       let cell = collectionView.dequeueReusableCell(with: VisitedShowCollectionViewCell.self, for: indexPath)
-      cell.setupCell(with: item.pathImage)
+      cell.setModel(imageURL: item.pathImage)
       return cell
     }
     return configureCell

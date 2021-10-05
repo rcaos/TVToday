@@ -19,7 +19,6 @@ class VisitedShowCollectionViewCell: NiblessCollectionViewCell {
 
   public override init(frame: CGRect) {
     super.init(frame: frame)
-    print("rcaos here1121")
     setupUI()
   }
 

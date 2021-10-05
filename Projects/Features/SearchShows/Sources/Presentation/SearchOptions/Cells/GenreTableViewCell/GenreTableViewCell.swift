@@ -6,29 +6,44 @@
 //
 
 import UIKit
+import Shared
 import UI
 
-class GenreTableViewCell: UITableViewCell {
+class GenreTableViewCell: NiblessTableViewCell {
 
-  @IBOutlet weak public var regularTextLabel: TVRegularLabel!
+  private let regularTextLabel = TVRegularLabel()
 
-  public var viewModel: GenreViewModelProtocol? {
-    didSet {
-      setupUI()
-    }
+  public var viewModel: GenreViewModelProtocol?
+
+  public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
+    setupUI()
   }
 
-  override func awakeFromNib() {
-    super.awakeFromNib()
-  }
-
-  // MARK: - Private
-  private func setupUI() {
-    guard let viewModel = viewModel else { return }
+  func setViewModel(_ viewModel: GenreViewModelProtocol) {
+    self.viewModel = viewModel
     regularTextLabel.text = viewModel.name
   }
 
-  deinit {
-    print("deinit \(Self.self)")
+  private func setupUI() {
+    constructHierarchy()
+    activateConstraints()
+  }
+
+  private func constructHierarchy() {
+    contentView.addSubview(regularTextLabel)
+  }
+
+  private func activateConstraints() {
+    activateConstraintsForLabel()
+  }
+
+  private func activateConstraintsForLabel() {
+    regularTextLabel.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      regularTextLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+      regularTextLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 5),
+      regularTextLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+    ])
   }
 }

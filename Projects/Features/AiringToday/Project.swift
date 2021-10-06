@@ -3,7 +3,6 @@ import ProjectDescriptionHelpers
 
 let project = Project.framework(
   name: "AiringToday",
-  resources: ["Resources/**"],
   dependencies: [
     .project(
       target: "UI",

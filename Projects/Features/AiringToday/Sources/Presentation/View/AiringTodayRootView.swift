@@ -19,7 +19,7 @@ class AiringTodayRootView: NiblessView {
     flowLayout.scrollDirection = .vertical
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
     collectionView.translatesAutoresizingMaskIntoConstraints = false
-    collectionView.registerNib(cellType: AiringTodayCollectionViewCell.self, bundle: AiringTodayResources.bundle)
+    collectionView.registerCell(cellType: AiringTodayCollectionViewCell.self)
 
     collectionView.register(FooterReusableView.self,
                             forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
@@ -102,7 +102,7 @@ extension AiringTodayRootView {
       }
 
       let cell = collectionView.dequeueReusableCell(with: AiringTodayCollectionViewCell.self, for: indexPath)
-      cell.viewModel = item
+      cell.setViewModel(item)
 
       if let totalItems = dataSource.sectionModels.first?.items.count, indexPath.row == totalItems - 1 {
         strongSelf.viewModel.didLoadNextPage()

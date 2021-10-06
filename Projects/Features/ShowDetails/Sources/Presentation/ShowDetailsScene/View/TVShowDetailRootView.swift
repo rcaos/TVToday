@@ -25,7 +25,7 @@ class TVShowDetailRootView: NiblessView {
 
     let stack = UIStackView(arrangedSubviews:
       [
-        //backDropImageView,
+        backDropImageView,
 //       titleContainerView,
 //       firstSeparatorView,
 //       guideContainerView,
@@ -45,8 +45,7 @@ class TVShowDetailRootView: NiblessView {
   // MARK: - BackDrop Image
   private lazy var backDropImageView: UIImageView = {
     let imageView = UIImageView()
-    imageView.heightAnchor.constraint(equalToConstant: 240).isActive = true
-    imageView.contentMode = .scaleAspectFit
+    imageView.contentMode = .scaleAspectFill
     return imageView
   }()
 
@@ -367,6 +366,7 @@ class TVShowDetailRootView: NiblessView {
 
     // MARk: TODO, move
     overViewContainer.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.4).isActive = true
+    backDropImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.25).isActive = true
   }
 
   func activateConstraintsScrollView() {

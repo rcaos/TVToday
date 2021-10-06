@@ -40,8 +40,19 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
 
   private let showNameLabel: TVBoldLabel = {
     let label = TVBoldLabel()
-    label.tvSize = .custom(22)
+    label.numberOfLines = 2
+    label.lineBreakMode = .byTruncatingTail
+    label.tvSize = .custom(19)
     return label
+  }()
+
+  private lazy var bottomRightStackView: UIStackView = {
+    let stack = UIStackView(arrangedSubviews: [starImageView, averageLabel])
+    stack.axis = .horizontal
+    stack.alignment = .center
+    stack.distribution = .fill
+    stack.spacing = 5
+    return stack
   }()
 
   private let starImageView: UIImageView = {
@@ -79,8 +90,7 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
 
   private func constructHierarchy() {
     bottomView.addSubview(showNameLabel)
-    bottomView.addSubview(starImageView)
-    bottomView.addSubview(averageLabel)
+    bottomView.addSubview(bottomRightStackView)
 
     containerView.addSubview(mainStackView)
     contentView.addSubview(containerView)
@@ -90,6 +100,7 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
     activateConstraintsForContainerView()
     activateConstraintsForMainStackView()
     activateConstraintsForPosterImageView()
+    activateConstraintsForBottomRightStackView()
     activateConstraintsForNameShow()
     activateConstraintsForStartImage()
     activateConstraintsForAverageLabel()
@@ -112,11 +123,20 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
     ])
   }
 
+  private func activateConstraintsForBottomRightStackView() {
+    bottomRightStackView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      bottomRightStackView.leadingAnchor.constraint(equalTo: showNameLabel.trailingAnchor, constant: 8),
+      bottomRightStackView.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: -8),
+      bottomRightStackView.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor)
+    ])
+  }
+
   private func activateConstraintsForNameShow() {
     showNameLabel.translatesAutoresizingMaskIntoConstraints = false
+    showNameLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
     NSLayoutConstraint.activate([
       showNameLabel.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 8),
-      showNameLabel.trailingAnchor.constraint(greaterThanOrEqualTo: starImageView.leadingAnchor, constant: -8),
       showNameLabel.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor)
     ])
   }
@@ -124,18 +144,14 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
   private func activateConstraintsForStartImage() {
     starImageView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
-      starImageView.widthAnchor.constraint(equalToConstant: 35),
-      starImageView.heightAnchor.constraint(equalToConstant: 35),
-      starImageView.trailingAnchor.constraint(equalTo: averageLabel.leadingAnchor, constant: -8),
-      starImageView.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor)
+      starImageView.widthAnchor.constraint(equalToConstant: 25),
+      starImageView.heightAnchor.constraint(equalToConstant: 25)
     ])
   }
 
   private func activateConstraintsForAverageLabel() {
     averageLabel.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-      averageLabel.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: -8),
-      averageLabel.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor)
-    ])
+    averageLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+    averageLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
   }
 }

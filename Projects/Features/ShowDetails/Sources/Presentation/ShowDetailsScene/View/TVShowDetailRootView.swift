@@ -45,6 +45,7 @@ class TVShowDetailRootView: NiblessView {
   private lazy var backDropImageView: UIImageView = {
     let imageView = UIImageView()
     imageView.contentMode = .scaleAspectFill
+    imageView.clipsToBounds = true
     return imageView
   }()
 
@@ -61,7 +62,7 @@ class TVShowDetailRootView: NiblessView {
     let stack = UIStackView(arrangedSubviews: [nameLabel, releaseContainerView, genreLabel])
     stack.axis = .vertical
     stack.alignment = .fill
-    stack.distribution = .fillProportionally
+    stack.distribution = .fill
     stack.spacing = 8.0
     return stack
   }()
@@ -343,10 +344,15 @@ class TVShowDetailRootView: NiblessView {
   private func activateConstraints() {
     activateConstraintsScrollView()
     activateConstraintsMainStackView()
+    activateConstraintsForSubViews()
+  }
 
-    // MARk: TODO, move
-    overViewContainer.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.3).isActive = true
-    backDropImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.2).isActive = true
+  private func activateConstraintsForSubViews() {
+    scrollView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      backDropImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.25),
+      overViewContainer.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.25)
+    ])
   }
 
   private func activateConstraintsScrollView() {

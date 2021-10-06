@@ -23,17 +23,17 @@ class TVShowDetailRootView: NiblessView {
     let thirdSeparatorView = TVShowDetailRootView.buildSeparatorView()
     let fourthSeparatorView = TVShowDetailRootView.buildSeparatorView()
 
-    let stack = UIStackView(arrangedSubviews:
-                              [backDropImageView,
-                               titleContainerView,
-                               firstSeparatorView,
-                               guideContainerView,
-                               secondSeparatorView,
-                               overViewContainer,
-                               thirdSeparatorView,
-                               votesViewContainer,
-                               fourthSeparatorView
-                              ])
+    let stack = UIStackView(arrangedSubviews: [
+      backDropImageView,
+      titleContainerView,
+      firstSeparatorView,
+      guideContainerView,
+      secondSeparatorView,
+      overViewContainer,
+      thirdSeparatorView,
+      votesViewContainer,
+      fourthSeparatorView
+    ])
     stack.axis = .vertical
     stack.alignment = .fill
     stack.distribution = .fill
@@ -58,8 +58,7 @@ class TVShowDetailRootView: NiblessView {
   }()
 
   lazy var titleStackView: UIStackView = {
-    let stack = UIStackView(arrangedSubviews:
-      [nameLabel, releaseContainerView, genreLabel])
+    let stack = UIStackView(arrangedSubviews: [nameLabel, releaseContainerView, genreLabel])
     stack.axis = .vertical
     stack.alignment = .fill
     stack.distribution = .fillProportionally
@@ -80,24 +79,18 @@ class TVShowDetailRootView: NiblessView {
     view.addSubview(durationLabel)
 
     yearsReleaseLabel.translatesAutoresizingMaskIntoConstraints = false
-    let leading = yearsReleaseLabel.leadingAnchor
-      .constraint(equalTo: view.leadingAnchor)
-    let trailing = yearsReleaseLabel.trailingAnchor
-      .constraint(equalTo: durationLabel.leadingAnchor, constant: -40)
-    let top = yearsReleaseLabel.topAnchor
-      .constraint(equalTo: view.topAnchor)
-    let bottom = yearsReleaseLabel.bottomAnchor
-      .constraint(equalTo: view.bottomAnchor)
-    NSLayoutConstraint.activate(
-      [leading, trailing, top, bottom])
+    NSLayoutConstraint.activate([
+      yearsReleaseLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+      yearsReleaseLabel.trailingAnchor.constraint(equalTo: durationLabel.leadingAnchor, constant: -40),
+      yearsReleaseLabel.topAnchor.constraint(equalTo: view.topAnchor),
+      yearsReleaseLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+    ])
 
     durationLabel.translatesAutoresizingMaskIntoConstraints = false
-    let topDuration = durationLabel.topAnchor
-      .constraint(equalTo: view.topAnchor)
-    let bottomDuration = durationLabel.bottomAnchor
-      .constraint(equalTo: view.bottomAnchor)
-    NSLayoutConstraint.activate(
-      [topDuration, bottomDuration])
+    NSLayoutConstraint.activate([
+      durationLabel.topAnchor.constraint(equalTo: view.topAnchor),
+      durationLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+    ])
 
     return view
   }()
@@ -139,18 +132,18 @@ class TVShowDetailRootView: NiblessView {
     view.addSubview(numberEpisodesLabel)
 
     episodeLabel.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate(
-      [episodeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-       episodeLabel.topAnchor.constraint(equalTo: view.topAnchor),
-       episodeLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-      ])
+    NSLayoutConstraint.activate([
+      episodeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+      episodeLabel.topAnchor.constraint(equalTo: view.topAnchor),
+      episodeLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+    ])
 
     numberEpisodesLabel.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate(
-      [numberEpisodesLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-       numberEpisodesLabel.topAnchor.constraint(equalTo: view.topAnchor),
-       numberEpisodesLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-      ])
+    NSLayoutConstraint.activate([
+      numberEpisodesLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+      numberEpisodesLabel.topAnchor.constraint(equalTo: view.topAnchor),
+      numberEpisodesLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+    ])
 
     return view
   }()
@@ -227,18 +220,18 @@ class TVShowDetailRootView: NiblessView {
     view.addSubview(criticLabel)
 
     voteContainerStackView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate(
-      [voteContainerStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-       voteContainerStackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4),
-       voteContainerStackView.topAnchor.constraint(equalTo: view.topAnchor),
-       voteContainerStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-      ])
+    NSLayoutConstraint.activate([
+      voteContainerStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+      voteContainerStackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4),
+      voteContainerStackView.topAnchor.constraint(equalTo: view.topAnchor),
+      voteContainerStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+    ])
 
     criticLabel.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate(
-      [criticLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-       criticLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-      ])
+    NSLayoutConstraint.activate([
+      criticLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+      criticLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+    ])
 
     return view
   }()
@@ -335,55 +328,46 @@ class TVShowDetailRootView: NiblessView {
   }
 
   // MARK: - Private
-  fileprivate func setupUI() {
+  private func setupUI() {
     backgroundColor = .white
     constructHierarchy()
     activateConstraints()
     setupGestures()
   }
 
-  fileprivate func constructHierarchy() {
+  private func constructHierarchy() {
     scrollView.addSubview(mainStackView)
     addSubview(scrollView)
   }
 
-  fileprivate func activateConstraints() {
+  private func activateConstraints() {
     activateConstraintsScrollView()
     activateConstraintsMainStackView()
 
     // MARk: TODO, move
-    overViewContainer.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.4).isActive = true
-    backDropImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.25).isActive = true
+    overViewContainer.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.3).isActive = true
+    backDropImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.2).isActive = true
   }
 
-  func activateConstraintsScrollView() {
+  private func activateConstraintsScrollView() {
     scrollView.translatesAutoresizingMaskIntoConstraints = false
-    let leading = scrollView.leadingAnchor
-      .constraint(equalTo: safeAreaLayoutGuide.leadingAnchor)
-    let trailing = scrollView.trailingAnchor
-      .constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)
-    let top = scrollView.topAnchor
-      .constraint(equalTo: safeAreaLayoutGuide.topAnchor)
-    let bottom = scrollView.bottomAnchor
-      .constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
-    NSLayoutConstraint.activate(
-      [leading, trailing, top, bottom])
+    NSLayoutConstraint.activate([
+      scrollView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+      scrollView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+      scrollView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+      scrollView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+    ])
   }
 
-  func activateConstraintsMainStackView() {
+  private func activateConstraintsMainStackView() {
     mainStackView.translatesAutoresizingMaskIntoConstraints = false
-    let equalWidth = mainStackView.widthAnchor
-      .constraint(equalTo: scrollView.widthAnchor)
-    let leading = mainStackView.leadingAnchor
-      .constraint(equalTo: scrollView.leadingAnchor)
-    let trailing = mainStackView.trailingAnchor
-      .constraint(equalTo: scrollView.trailingAnchor)
-    let top = mainStackView.topAnchor
-      .constraint(equalTo: scrollView.topAnchor)
-    let bottom = mainStackView.bottomAnchor
-      .constraint(equalTo: scrollView.bottomAnchor)
-    NSLayoutConstraint.activate(
-      [equalWidth, leading, trailing, top, bottom])
+    NSLayoutConstraint.activate([
+      mainStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+      mainStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+      mainStackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+      mainStackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+      mainStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
+    ])
   }
 
   static func buildSeparatorView() -> UIView {
@@ -396,16 +380,12 @@ class TVShowDetailRootView: NiblessView {
     view.addSubview(lineView)
 
     lineView.translatesAutoresizingMaskIntoConstraints = false
-    let leading = lineView.leadingAnchor
-      .constraint(equalTo: view.leadingAnchor, constant: 10)
-    let trailing = lineView.trailingAnchor
-      .constraint(equalTo: view.trailingAnchor)
-    let top = lineView.topAnchor
-      .constraint(equalTo: view.topAnchor)
-    let bottom = lineView.bottomAnchor
-      .constraint(equalTo: view.bottomAnchor)
-    NSLayoutConstraint.activate(
-      [leading, trailing, top, bottom])
+    NSLayoutConstraint.activate([
+      lineView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+      lineView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+      lineView.topAnchor.constraint(equalTo: view.topAnchor),
+      lineView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+    ])
 
     return view
   }
@@ -417,7 +397,7 @@ class TVShowDetailRootView: NiblessView {
     guideContainerView.addGestureRecognizer(tapGesture)
   }
 
-  @objc func handleEpisodesGesture(_ sender: UITapGestureRecognizer) {
+  @objc private func handleEpisodesGesture(_ sender: UITapGestureRecognizer) {
     viewModel.navigateToSeasons()
   }
 

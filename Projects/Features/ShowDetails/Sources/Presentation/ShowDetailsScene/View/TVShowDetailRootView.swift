@@ -17,12 +17,12 @@ class TVShowDetailRootView: NiblessView {
   let scrollView: UIScrollView = UIScrollView()
 
   lazy var mainStackView: UIStackView = {
-    
+
     let firstSeparatorView = TVShowDetailRootView.buildSeparatorView()
     let secondSeparatorView = TVShowDetailRootView.buildSeparatorView()
     let thirdSeparatorView = TVShowDetailRootView.buildSeparatorView()
     let fourthSeparatorView = TVShowDetailRootView.buildSeparatorView()
-    
+
     let stack = UIStackView(arrangedSubviews:
                               [backDropImageView,
                                titleContainerView,
@@ -30,9 +30,9 @@ class TVShowDetailRootView: NiblessView {
                                guideContainerView,
                                secondSeparatorView,
                                overViewContainer,
-                               //thirdSeparatorView,
-                               //       votesViewContainer,
-                               //       fourthSeparatorView
+                               thirdSeparatorView,
+                               votesViewContainer,
+                               fourthSeparatorView
                               ])
     stack.axis = .vertical
     stack.alignment = .fill
@@ -227,24 +227,18 @@ class TVShowDetailRootView: NiblessView {
     view.addSubview(criticLabel)
 
     voteContainerStackView.translatesAutoresizingMaskIntoConstraints = false
-    let leading = voteContainerStackView.leadingAnchor
-      .constraint(equalTo: view.leadingAnchor, constant: 10)
-    let withProportional = voteContainerStackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4)
-
-    let top = voteContainerStackView.topAnchor
-      .constraint(equalTo: view.topAnchor)
-    let bottom = voteContainerStackView.bottomAnchor
-      .constraint(equalTo: view.bottomAnchor)
     NSLayoutConstraint.activate(
-      [withProportional, leading, top, bottom])
+      [voteContainerStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+       voteContainerStackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4),
+       voteContainerStackView.topAnchor.constraint(equalTo: view.topAnchor),
+       voteContainerStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+      ])
 
     criticLabel.translatesAutoresizingMaskIntoConstraints = false
-    let trailing2 = criticLabel.trailingAnchor
-      .constraint(equalTo: view.trailingAnchor, constant: -10)
-    let centerY = criticLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-
     NSLayoutConstraint.activate(
-      [trailing2, centerY])
+      [criticLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+       criticLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+      ])
 
     return view
   }()

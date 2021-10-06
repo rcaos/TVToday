@@ -18,7 +18,11 @@ public class TVShowViewCell: NiblessTableViewCell {
     return imageView
   }()
 
-  private let nameLabel = TVBoldLabel(frame: .zero)
+  private lazy var nameLabel: TVBoldLabel = {
+    let label = TVBoldLabel(frame: .zero)
+    label.numberOfLines = 0
+    return label
+  }()
 
   private let startYearLabel = TVRegularLabel(frame: .zero)
 

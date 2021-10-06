@@ -17,24 +17,23 @@ class TVShowDetailRootView: NiblessView {
   let scrollView: UIScrollView = UIScrollView()
 
   lazy var mainStackView: UIStackView = {
-
+    
     let firstSeparatorView = TVShowDetailRootView.buildSeparatorView()
     let secondSeparatorView = TVShowDetailRootView.buildSeparatorView()
     let thirdSeparatorView = TVShowDetailRootView.buildSeparatorView()
     let fourthSeparatorView = TVShowDetailRootView.buildSeparatorView()
-
+    
     let stack = UIStackView(arrangedSubviews:
-      [
-        backDropImageView,
-//       titleContainerView,
-//       firstSeparatorView,
-//       guideContainerView,
-//       secondSeparatorView,
-       overViewContainer,
-       //thirdSeparatorView,
-//       votesViewContainer,
-//       fourthSeparatorView
-    ])
+                              [backDropImageView,
+                               titleContainerView,
+                               firstSeparatorView,
+                               guideContainerView,
+                               secondSeparatorView,
+                               overViewContainer,
+                               //thirdSeparatorView,
+                               //       votesViewContainer,
+                               //       fourthSeparatorView
+                              ])
     stack.axis = .vertical
     stack.alignment = .fill
     stack.distribution = .fill
@@ -140,24 +139,18 @@ class TVShowDetailRootView: NiblessView {
     view.addSubview(numberEpisodesLabel)
 
     episodeLabel.translatesAutoresizingMaskIntoConstraints = false
-    let leading = episodeLabel.leadingAnchor
-      .constraint(equalTo: view.leadingAnchor, constant: 10)
-    let top = episodeLabel.topAnchor
-      .constraint(equalTo: view.topAnchor)
-    let bottom = episodeLabel.bottomAnchor
-      .constraint(equalTo: view.bottomAnchor)
     NSLayoutConstraint.activate(
-      [leading, top, bottom])
+      [episodeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+       episodeLabel.topAnchor.constraint(equalTo: view.topAnchor),
+       episodeLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+      ])
 
     numberEpisodesLabel.translatesAutoresizingMaskIntoConstraints = false
-    let trailing = numberEpisodesLabel.trailingAnchor
-      .constraint(equalTo: view.trailingAnchor, constant: -10)
-    let top2 = numberEpisodesLabel.topAnchor
-      .constraint(equalTo: view.topAnchor)
-    let bottom2 = numberEpisodesLabel.bottomAnchor
-      .constraint(equalTo: view.bottomAnchor)
     NSLayoutConstraint.activate(
-      [trailing, top2, bottom2])
+      [numberEpisodesLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+       numberEpisodesLabel.topAnchor.constraint(equalTo: view.topAnchor),
+       numberEpisodesLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+      ])
 
     return view
   }()

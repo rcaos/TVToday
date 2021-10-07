@@ -27,7 +27,7 @@ class TVShowDetailRootView: NiblessView {
       titleContainerView,
       backDropImageView,
       firstSeparatorView,
-      guideContainerView,
+      episodeGuideContainerView,
       secondSeparatorView,
       overViewContainer,
       thirdSeparatorView,
@@ -127,10 +127,11 @@ class TVShowDetailRootView: NiblessView {
   }()
 
   // MARK: - Episode Guide
-  private lazy var guideContainerView: UIView = {
+  private lazy var episodeGuideContainerView: UIView = {
     let view = UIView()
     view.addSubview(episodeLabel)
     view.addSubview(numberEpisodesLabel)
+    view.addSubview(rightSelectorView)
 
     episodeLabel.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
@@ -141,9 +142,17 @@ class TVShowDetailRootView: NiblessView {
 
     numberEpisodesLabel.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
-      numberEpisodesLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+      numberEpisodesLabel.trailingAnchor.constraint(equalTo: rightSelectorView.leadingAnchor, constant: -10),
       numberEpisodesLabel.topAnchor.constraint(equalTo: view.topAnchor),
       numberEpisodesLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+    ])
+
+    rightSelectorView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      rightSelectorView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+      rightSelectorView.widthAnchor.constraint(equalToConstant: 22),
+      rightSelectorView.heightAnchor.constraint(equalToConstant: 22),
+      rightSelectorView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
     ])
 
     return view
@@ -167,6 +176,15 @@ class TVShowDetailRootView: NiblessView {
     label.adjustsFontForContentSizeCategory = true
     label.setContentCompressionResistancePriority(.required, for: .vertical)
     return label
+  }()
+
+  private lazy var rightSelectorView: UIImageView = {
+    let imageView = UIImageView()
+    imageView.image = UIImage(name: "Right")?.withRenderingMode(.alwaysTemplate)
+    imageView.contentMode = .scaleAspectFill
+    imageView.clipsToBounds = true
+    imageView.tintColor = Colors.electricBlue.color
+    return imageView
   }()
 
   // MARK: - Overview
@@ -398,9 +416,9 @@ class TVShowDetailRootView: NiblessView {
 
   // MARK: - Gestures
   private func setupGestures() {
-    guideContainerView.isUserInteractionEnabled = true
+    episodeGuideContainerView.isUserInteractionEnabled = true
     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleEpisodesGesture))
-    guideContainerView.addGestureRecognizer(tapGesture)
+    episodeGuideContainerView.addGestureRecognizer(tapGesture)
   }
 
   @objc private func handleEpisodesGesture(_ sender: UITapGestureRecognizer) {

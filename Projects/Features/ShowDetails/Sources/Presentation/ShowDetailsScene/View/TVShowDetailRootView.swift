@@ -24,8 +24,8 @@ class TVShowDetailRootView: NiblessView {
     let fourthSeparatorView = TVShowDetailRootView.buildSeparatorView()
 
     let stack = UIStackView(arrangedSubviews: [
-      backDropImageView,
       titleContainerView,
+      backDropImageView,
       firstSeparatorView,
       guideContainerView,
       secondSeparatorView,
@@ -54,7 +54,7 @@ class TVShowDetailRootView: NiblessView {
     let view = UIView()
     view.addSubview(titleStackView)
     titleStackView.translatesAutoresizingMaskIntoConstraints = false
-    titleStackView.pin(to: view, insets: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0) )
+    titleStackView.pin(to: view, insets: UIEdgeInsets(top: 8, left: 10, bottom: 0, right: 0) )
     return view
   }()
 
@@ -63,13 +63,13 @@ class TVShowDetailRootView: NiblessView {
     stack.axis = .vertical
     stack.alignment = .fill
     stack.distribution = .fill
-    stack.spacing = 8.0
+    stack.spacing = 4.0
     return stack
   }()
 
   private lazy var nameLabel: TVBoldLabel = {
     let label = TVBoldLabel()
-    label.tvSize = .custom(24)
+    label.tvSize = .custom(26)
     label.setContentCompressionResistancePriority(.required, for: .vertical)
     return label
   }()

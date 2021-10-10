@@ -10,11 +10,11 @@ import Shared
 import RxSwift
 
 class SignInRootView: NiblessView {
-  
+
   private let viewModel: SignInViewModelProtocol
-  
+
   private let disposeBag = DisposeBag()
-  
+
   let signInButton: LoadableButton = {
     let button = LoadableButton(type: .custom)
     button.setBackgroundImage(UIImage(name: "loginbackground"), for: .normal)
@@ -24,14 +24,14 @@ class SignInRootView: NiblessView {
     button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 30)
     return button
   }()
-  
+
   private let tvImageView: UIImageView = {
     let imageView = UIImageView()
     imageView.image = UIImage(name: "newTV")
     imageView.contentMode = .scaleAspectFit
     return imageView
   }()
-  
+
   lazy var mainStackView: UIStackView = {
     let stack = UIStackView(arrangedSubviews: [tvImageView, signInButton])
     stack.axis = .vertical
@@ -40,29 +40,29 @@ class SignInRootView: NiblessView {
     stack.spacing = 30.0
     return stack
   }()
-  
+
   // MARK: - Initializer
   init(frame: CGRect = .zero, viewModel: SignInViewModelProtocol) {
     self.viewModel = viewModel
     super.init(frame: frame)
-    
+
     backgroundColor = .white
     setupBindables()
     constructHierarchy()
   }
-  
+
   private func setupBindables() {
     signInButton.rx
       .tap
       .bind(to: viewModel.tapButton)
       .disposed(by: disposeBag)
   }
-  
+
   private func constructHierarchy() {
     addSubview(mainStackView)
     activateConstraints()
   }
-  
+
   private func activateConstraints() {
     mainStackView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([

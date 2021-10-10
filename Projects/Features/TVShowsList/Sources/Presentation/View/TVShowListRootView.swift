@@ -16,7 +16,7 @@ class TVShowListRootView: NiblessView {
 
   let tableView: UITableView = {
     let tableView = UITableView(frame: .zero, style: .plain)
-    tableView.registerNib(cellType: TVShowViewCell.self, bundle: SharedResources.bundle)
+    tableView.registerCell(cellType: TVShowViewCell.self)
     tableView.rowHeight = UITableView.automaticDimension
     tableView.tableFooterView = UIView()
     tableView.contentInsetAdjustmentBehavior = .automatic
@@ -85,7 +85,7 @@ class TVShowListRootView: NiblessView {
           }
 
           let cell = tableView.dequeueReusableCell(with: TVShowViewCell.self, for: indexPath)
-          cell.viewModel = item
+          cell.setModel(viewModel: item)
 
           if let totalItems = dataSource.sectionModels.first?.items.count, indexPath.row == totalItems - 1 {
             strongSelf.viewModel.didLoadNextPage()

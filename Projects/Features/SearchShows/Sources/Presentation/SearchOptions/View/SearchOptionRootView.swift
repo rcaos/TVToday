@@ -18,7 +18,6 @@ class SearchOptionRootView: NiblessView {
 
   let tableView: UITableView = {
     let tableView = UITableView(frame: .zero, style: .plain)
-    tableView.registerNib(cellType: TVShowViewCell.self, bundle: SharedResources.bundle)
     tableView.rowHeight = UITableView.automaticDimension
     tableView.tableFooterView = UIView()
     tableView.contentInsetAdjustmentBehavior = .automatic
@@ -40,8 +39,8 @@ class SearchOptionRootView: NiblessView {
   }
 
   fileprivate func registerCells() {
-    tableView.registerNib(cellType: VisitedShowTableViewCell.self, bundle: Bundle.module)
-    tableView.registerNib(cellType: GenreTableViewCell.self, bundle: Bundle.module)
+    tableView.registerCell(cellType: VisitedShowTableViewCell.self)
+    tableView.registerCell(cellType: GenreTableViewCell.self)
   }
 
   fileprivate func setupDataSource() {
@@ -94,7 +93,7 @@ extension SearchOptionRootView {
 
   private func makeCellForGenre(at indexPath: IndexPath, viewModel: GenreViewModelProtocol) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: GenreTableViewCell.self, for: indexPath)
-    cell.viewModel = viewModel
+    cell.setViewModel(viewModel)
     return cell
   }
 }

@@ -56,8 +56,8 @@ class ProfileRootView: NiblessView {
   }
 
   fileprivate func registerCells() {
-    tableView.registerNib(cellType: ProfileTableViewCell.self, bundle: Bundle.module)
-    tableView.registerNib(cellType: GenericViewCell.self, bundle: SharedResources.bundle)
+    tableView.registerCell(cellType: ProfileTableViewCell.self)
+    tableView.registerCell(cellType: GenericViewCell.self)
     tableView.registerCell(cellType: LogoutTableViewCell.self)
   }
 
@@ -96,13 +96,13 @@ extension ProfileRootView {
 
   fileprivate func buildCellForProfileInfo(at indexPath: IndexPath, element: AccountResult) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: ProfileTableViewCell.self, for: indexPath)
-    cell.configCell(with: element)
+    cell.setModel(with: element)
     return cell
   }
 
   fileprivate func buildCellForUserLists(at indexPath: IndexPath, element: UserListType) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: GenericViewCell.self, for: indexPath)
-    cell.setupUI(with: element.rawValue)
+    cell.setTitle(with: element.rawValue)
     return cell
   }
 

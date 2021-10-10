@@ -8,22 +8,70 @@
 import UIKit
 import UI
 
-public class ErrorView: UIView, NibLoadable {
+public class ErrorView: NiblessView {
 
-  @IBOutlet weak var titleLabel: TVBoldLabel!
-  @IBOutlet weak var messageLabel: TVRegularLabel!
-  @IBOutlet weak var retryButton: LoadableButton!
+  private lazy var mainStackView: UIStackView = {
+    let stack = UIStackView(arrangedSubviews: [imageView, titleLabel, messageLabel, retryButton])
+    stack.axis = .vertical
+    stack.alignment = .center
+    stack.distribution = .fill
+    stack.spacing = 16.0
+    return stack
+  }()
+
+  private let imageView: UIImageView = {
+    let imageView = UIImageView()
+    imageView.image = UIImage(name: "Error003")
+    imageView.contentMode = .scaleAspectFit
+    return imageView
+  }()
+
+  private let titleLabel = TVBoldLabel(frame: .zero)
+  let messageLabel = TVRegularLabel(frame: .zero)
+  private let retryButton = LoadableButton(frame: .zero)
 
   var retry: (() -> Void)?
 
-  override public func awakeFromNib() {
-    super.awakeFromNib()
-    setupView()
+  public override init(frame: CGRect) {
+    super.init(frame: frame)
+    setupUI()
   }
 
-  private func setupView() {
+  private func setupUI() {
+    constructHierarchy()
+    activateConstraints()
+    configureViews()
+  }
+
+  private func constructHierarchy() {
+    addSubview(mainStackView)
+  }
+
+  private func activateConstraints() {
+    activateConstraintsForStackView()
+    activateConstraintsForImage()
+  }
+
+  private func activateConstraintsForStackView() {
+    mainStackView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      mainStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
+      mainStackView.centerXAnchor.constraint(equalTo: centerXAnchor),
+      mainStackView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.8)
+    ])
+  }
+
+  private func activateConstraintsForImage() {
+    imageView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: 10/8)
+    ])
+  }
+
+  private func configureViews() {
     backgroundColor = .white
 
+    titleLabel.text = "Oops!"
     titleLabel.tvSize = .custom(25)
     messageLabel.numberOfLines = 0
 
@@ -43,9 +91,5 @@ public class ErrorView: UIView, NibLoadable {
   @objc private func retryAction() {
     retryButton.defaultShowLoadingView()
     retry?()
-  }
-
-  func resetState() {
-    retryButton.defaultHideLoadingView()
   }
 }

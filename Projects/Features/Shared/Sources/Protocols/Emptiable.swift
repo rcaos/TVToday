@@ -18,7 +18,7 @@ public protocol Emptiable {
 public extension Emptiable where Self: UIViewController {
 
   func showEmptyView(with message: String?) {
-    let emptyView = EmptyView.loadFromNib()
+    let emptyView = EmptyView()
     emptyView.messageLabel.text = message
     emptyView.translatesAutoresizingMaskIntoConstraints = false
 

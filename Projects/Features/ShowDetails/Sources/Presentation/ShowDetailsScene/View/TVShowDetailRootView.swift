@@ -23,29 +23,29 @@ class TVShowDetailRootView: NiblessView {
     let thirdSeparatorView = TVShowDetailRootView.buildSeparatorView()
     let fourthSeparatorView = TVShowDetailRootView.buildSeparatorView()
 
-    let stack = UIStackView(arrangedSubviews:
-      [backDropImageView,
-       titleContainerView,
-       firstSeparatorView,
-       guideContainerView,
-       secondSeparatorView,
-       overViewContainer,
-       thirdSeparatorView,
-       votesViewContainer,
-       fourthSeparatorView
+    let stack = UIStackView(arrangedSubviews: [
+      titleContainerView,
+      backDropImageView,
+      firstSeparatorView,
+      episodeGuideContainerView,
+      secondSeparatorView,
+      overViewContainer,
+      thirdSeparatorView,
+      votesViewContainer,
+      fourthSeparatorView
     ])
     stack.axis = .vertical
     stack.alignment = .fill
-    stack.distribution = .fillProportionally
+    stack.distribution = .fill
     stack.spacing = 10.0
     return stack
   }()
 
   // MARK: - BackDrop Image
-  let backDropImageView: UIImageView = {
+  private lazy var backDropImageView: UIImageView = {
     let imageView = UIImageView()
-    imageView.heightAnchor.constraint(equalToConstant: 240).isActive = true
-    imageView.contentMode = .scaleAspectFit
+    imageView.contentMode = .scaleAspectFill
+    imageView.clipsToBounds = true
     return imageView
   }()
 
@@ -54,56 +54,49 @@ class TVShowDetailRootView: NiblessView {
     let view = UIView()
     view.addSubview(titleStackView)
     titleStackView.translatesAutoresizingMaskIntoConstraints = false
-    titleStackView.pin(to: view, insets: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0) )
+    titleStackView.pin(to: view, insets: UIEdgeInsets(top: 8, left: 10, bottom: 0, right: 0) )
     return view
   }()
 
   lazy var titleStackView: UIStackView = {
-    let stack = UIStackView(arrangedSubviews:
-      [nameLabel, releaseContainerView, genreLabel])
+    let stack = UIStackView(arrangedSubviews: [nameLabel, releaseContainerView, genreLabel])
     stack.axis = .vertical
     stack.alignment = .fill
-    stack.distribution = .fillProportionally
-    stack.spacing = 8.0
+    stack.distribution = .fill
+    stack.spacing = 4.0
     return stack
   }()
 
-  let nameLabel: TVBoldLabel = {
+  private lazy var nameLabel: TVBoldLabel = {
     let label = TVBoldLabel()
-    label.tvSize = .custom(24)
+    label.tvSize = .custom(26)
     label.setContentCompressionResistancePriority(.required, for: .vertical)
     return label
   }()
 
-  lazy var releaseContainerView: UIView = {
+  private lazy var releaseContainerView: UIView = {
     let view = UIView()
     view.addSubview(yearsReleaseLabel)
     view.addSubview(durationLabel)
 
     yearsReleaseLabel.translatesAutoresizingMaskIntoConstraints = false
-    let leading = yearsReleaseLabel.leadingAnchor
-      .constraint(equalTo: view.leadingAnchor)
-    let trailing = yearsReleaseLabel.trailingAnchor
-      .constraint(equalTo: durationLabel.leadingAnchor, constant: -40)
-    let top = yearsReleaseLabel.topAnchor
-      .constraint(equalTo: view.topAnchor)
-    let bottom = yearsReleaseLabel.bottomAnchor
-      .constraint(equalTo: view.bottomAnchor)
-    NSLayoutConstraint.activate(
-      [leading, trailing, top, bottom])
+    NSLayoutConstraint.activate([
+      yearsReleaseLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+      yearsReleaseLabel.trailingAnchor.constraint(equalTo: durationLabel.leadingAnchor, constant: -40),
+      yearsReleaseLabel.topAnchor.constraint(equalTo: view.topAnchor),
+      yearsReleaseLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+    ])
 
     durationLabel.translatesAutoresizingMaskIntoConstraints = false
-    let topDuration = durationLabel.topAnchor
-      .constraint(equalTo: view.topAnchor)
-    let bottomDuration = durationLabel.bottomAnchor
-      .constraint(equalTo: view.bottomAnchor)
-    NSLayoutConstraint.activate(
-      [topDuration, bottomDuration])
+    NSLayoutConstraint.activate([
+      durationLabel.topAnchor.constraint(equalTo: view.topAnchor),
+      durationLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+    ])
 
     return view
   }()
 
-  let yearsReleaseLabel: TVRegularLabel = {
+  private lazy var yearsReleaseLabel: TVRegularLabel = {
     let label = TVRegularLabel()
     label.text = "1997 - 2002"
     label.translatesAutoresizingMaskIntoConstraints = false
@@ -113,7 +106,7 @@ class TVShowDetailRootView: NiblessView {
     return label
   }()
 
-  let durationLabel: TVRegularLabel = {
+  private lazy var durationLabel: TVRegularLabel = {
     let label = TVRegularLabel()
     label.text = "23 min"
     label.translatesAutoresizingMaskIntoConstraints = false
@@ -123,7 +116,7 @@ class TVShowDetailRootView: NiblessView {
     return label
   }()
 
-  let genreLabel: TVRegularLabel = {
+  private lazy var genreLabel: TVRegularLabel = {
     let label = TVRegularLabel()
     label.text = "Drama"
     label.translatesAutoresizingMaskIntoConstraints = false
@@ -134,35 +127,38 @@ class TVShowDetailRootView: NiblessView {
   }()
 
   // MARK: - Episode Guide
-  lazy var guideContainerView: UIView = {
+  private lazy var episodeGuideContainerView: UIView = {
     let view = UIView()
     view.addSubview(episodeLabel)
     view.addSubview(numberEpisodesLabel)
+    view.addSubview(rightSelectorView)
 
     episodeLabel.translatesAutoresizingMaskIntoConstraints = false
-    let leading = episodeLabel.leadingAnchor
-      .constraint(equalTo: view.leadingAnchor, constant: 10)
-    let top = episodeLabel.topAnchor
-      .constraint(equalTo: view.topAnchor)
-    let bottom = episodeLabel.bottomAnchor
-      .constraint(equalTo: view.bottomAnchor)
-    NSLayoutConstraint.activate(
-      [leading, top, bottom])
+    NSLayoutConstraint.activate([
+      episodeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+      episodeLabel.topAnchor.constraint(equalTo: view.topAnchor),
+      episodeLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+    ])
 
     numberEpisodesLabel.translatesAutoresizingMaskIntoConstraints = false
-    let trailing = numberEpisodesLabel.trailingAnchor
-      .constraint(equalTo: view.trailingAnchor, constant: -10)
-    let top2 = numberEpisodesLabel.topAnchor
-      .constraint(equalTo: view.topAnchor)
-    let bottom2 = numberEpisodesLabel.bottomAnchor
-      .constraint(equalTo: view.bottomAnchor)
-    NSLayoutConstraint.activate(
-      [trailing, top2, bottom2])
+    NSLayoutConstraint.activate([
+      numberEpisodesLabel.trailingAnchor.constraint(equalTo: rightSelectorView.leadingAnchor, constant: -10),
+      numberEpisodesLabel.topAnchor.constraint(equalTo: view.topAnchor),
+      numberEpisodesLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+    ])
+
+    rightSelectorView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      rightSelectorView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+      rightSelectorView.widthAnchor.constraint(equalToConstant: 22),
+      rightSelectorView.heightAnchor.constraint(equalToConstant: 22),
+      rightSelectorView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+    ])
 
     return view
   }()
 
-  let episodeLabel: TVRegularLabel = {
+  private lazy var episodeLabel: TVRegularLabel = {
     let label = TVRegularLabel()
     label.text = "Episode Guide"
     label.translatesAutoresizingMaskIntoConstraints = false
@@ -172,7 +168,7 @@ class TVShowDetailRootView: NiblessView {
     return label
   }()
 
-  let numberEpisodesLabel: TVRegularLabel = {
+  private lazy var numberEpisodesLabel: TVRegularLabel = {
     let label = TVRegularLabel()
     label.text = "1123"
     label.translatesAutoresizingMaskIntoConstraints = false
@@ -182,89 +178,84 @@ class TVShowDetailRootView: NiblessView {
     return label
   }()
 
-  // MARK: - Overview
-  lazy var overViewContainer: UIView = {
-    let view = UIView()
-    view.heightAnchor.constraint(equalToConstant: 250).isActive = true
+  private lazy var rightSelectorView: UIImageView = {
+    let imageView = UIImageView()
+    imageView.image = UIImage(name: "Right")?.withRenderingMode(.alwaysTemplate)
+    imageView.contentMode = .scaleAspectFill
+    imageView.clipsToBounds = true
+    imageView.tintColor = Colors.electricBlue.color
+    return imageView
+  }()
 
+  // MARK: - Overview
+  private lazy var overViewContainer: UIView = {
+    let view = UIView()
+
+    view.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(posterImageView)
     view.addSubview(overViewText)
 
     posterImageView.translatesAutoresizingMaskIntoConstraints = false
-    let leading = posterImageView.leadingAnchor
-      .constraint(equalTo: view.leadingAnchor, constant: 10)
-    let withProportional = posterImageView.widthAnchor
-      .constraint(equalTo: view.widthAnchor, multiplier: 0.4)
-    let trailing = posterImageView.trailingAnchor
-      .constraint(equalTo: overViewText.leadingAnchor, constant: -10)
-    let top = posterImageView.topAnchor
-      .constraint(equalTo: view.topAnchor)
-    let bottom = posterImageView.bottomAnchor
-      .constraint(equalTo: view.bottomAnchor)
-    NSLayoutConstraint.activate(
-      [withProportional, leading, trailing, top, bottom])
+    NSLayoutConstraint.activate([
+      posterImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+      posterImageView.trailingAnchor.constraint(equalTo: overViewText.leadingAnchor, constant: -10),
+      posterImageView.topAnchor.constraint(greaterThanOrEqualTo: view.topAnchor, constant: 0),
+      posterImageView.bottomAnchor.constraint(greaterThanOrEqualTo: view.bottomAnchor, constant: 0),
+      posterImageView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4),
+      posterImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+    ])
 
     overViewText.translatesAutoresizingMaskIntoConstraints = false
-    let trailingOverView = overViewText.trailingAnchor
-      .constraint(equalTo: view.trailingAnchor, constant: -10)
-    let topOverView = overViewText.topAnchor
-      .constraint(equalTo: view.topAnchor)
-    let bottomOverView = overViewText.bottomAnchor
-      .constraint(equalTo: view.bottomAnchor)
-    NSLayoutConstraint.activate(
-      [trailingOverView, topOverView, bottomOverView])
+    NSLayoutConstraint.activate([
+      overViewText.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+      overViewText.topAnchor.constraint(greaterThanOrEqualTo: view.topAnchor, constant: 0),
+      overViewText.bottomAnchor.constraint(greaterThanOrEqualTo: view.bottomAnchor, constant: 0),
+      overViewText.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+    ])
 
     return view
   }()
 
-  let posterImageView: UIImageView = {
+  private lazy var posterImageView: UIImageView = {
     let imageView = UIImageView()
     imageView.contentMode = .scaleAspectFit
-    imageView.heightAnchor.constraint(equalToConstant: 128).isActive = true
     return imageView
   }()
 
-  let overViewText: UITextView = {
+  private lazy var overViewText: UITextView = {
     let overViewText = UITextView()
     overViewText.textAlignment = NSTextAlignment.justified
     overViewText.isSelectable = true
     overViewText.isEditable = false
-    overViewText.text = "overViewText"
     overViewText.textColor = Colors.electricBlue.color
     overViewText.font = Font.sanFrancisco.of(type: .regular, with: .custom(16))
     return overViewText
   }()
 
   // MARK: - Votes Container
-  lazy var votesViewContainer: UIView = {
+  private lazy var votesViewContainer: UIView = {
     let view = UIView()
     view.addSubview(voteContainerStackView)
     view.addSubview(criticLabel)
 
     voteContainerStackView.translatesAutoresizingMaskIntoConstraints = false
-    let leading = voteContainerStackView.leadingAnchor
-      .constraint(equalTo: view.leadingAnchor, constant: 10)
-    let withProportional = voteContainerStackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4)
-
-    let top = voteContainerStackView.topAnchor
-      .constraint(equalTo: view.topAnchor)
-    let bottom = voteContainerStackView.bottomAnchor
-      .constraint(equalTo: view.bottomAnchor)
-    NSLayoutConstraint.activate(
-      [withProportional, leading, top, bottom])
+    NSLayoutConstraint.activate([
+      voteContainerStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+      voteContainerStackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4),
+      voteContainerStackView.topAnchor.constraint(equalTo: view.topAnchor),
+      voteContainerStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+    ])
 
     criticLabel.translatesAutoresizingMaskIntoConstraints = false
-    let trailing2 = criticLabel.trailingAnchor
-      .constraint(equalTo: view.trailingAnchor, constant: -10)
-    let centerY = criticLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-
-    NSLayoutConstraint.activate(
-      [trailing2, centerY])
+    NSLayoutConstraint.activate([
+      criticLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+      criticLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+    ])
 
     return view
   }()
 
-  lazy var voteContainerStackView: UIStackView = {
+  private lazy var voteContainerStackView: UIStackView = {
     let stack = UIStackView(arrangedSubviews: [starImageView, voteMaxStackView, countVoteLabel])
     stack.axis = .vertical
     stack.alignment = .center
@@ -273,14 +264,14 @@ class TVShowDetailRootView: NiblessView {
     return stack
   }()
 
-  let starImageView: UIImageView = {
+  private lazy var starImageView: UIImageView = {
     let imageView = UIImageView(image: UIImage(name: "star") )
     imageView.contentMode = .scaleToFill
     imageView.setContentCompressionResistancePriority(.required, for: .vertical)
     return imageView
   }()
 
-  lazy var voteMaxStackView: UIStackView = {
+  private lazy var voteMaxStackView: UIStackView = {
     let stack = UIStackView(arrangedSubviews: [scoreLabel, maxScoreLabel])
     stack.axis = .horizontal
     stack.alignment = .fill
@@ -289,7 +280,7 @@ class TVShowDetailRootView: NiblessView {
     return stack
   }()
 
-  let scoreLabel: TVBoldLabel = {
+  private lazy var scoreLabel: TVBoldLabel = {
     let label = TVBoldLabel()
     label.tvSize = .custom(20)
     label.text = "7.8/"
@@ -300,7 +291,7 @@ class TVShowDetailRootView: NiblessView {
     return label
   }()
 
-  let maxScoreLabel: TVRegularLabel = {
+  private lazy var maxScoreLabel: TVRegularLabel = {
     let label = TVRegularLabel()
     label.tvSize = .custom(22)
     label.text = "10"
@@ -311,7 +302,7 @@ class TVShowDetailRootView: NiblessView {
     return label
   }()
 
-  let countVoteLabel: TVRegularLabel = {
+  private lazy var countVoteLabel: TVRegularLabel = {
     let label = TVRegularLabel()
     label.text = "3054"
     label.translatesAutoresizingMaskIntoConstraints = false
@@ -321,7 +312,7 @@ class TVShowDetailRootView: NiblessView {
     return label
   }()
 
-  let criticLabel: TVRegularLabel = {
+  private lazy var criticLabel: TVRegularLabel = {
     let label = TVRegularLabel()
     label.text = "Critic Reviews"
     label.translatesAutoresizingMaskIntoConstraints = false
@@ -356,51 +347,51 @@ class TVShowDetailRootView: NiblessView {
   }
 
   // MARK: - Private
-  fileprivate func setupUI() {
+  private func setupUI() {
     backgroundColor = .white
     constructHierarchy()
     activateConstraints()
     setupGestures()
   }
 
-  fileprivate func constructHierarchy() {
+  private func constructHierarchy() {
     scrollView.addSubview(mainStackView)
     addSubview(scrollView)
   }
 
-  fileprivate func activateConstraints() {
+  private func activateConstraints() {
     activateConstraintsScrollView()
     activateConstraintsMainStackView()
+    activateConstraintsForSubViews()
   }
 
-  func activateConstraintsScrollView() {
+  private func activateConstraintsForSubViews() {
     scrollView.translatesAutoresizingMaskIntoConstraints = false
-    let leading = scrollView.leadingAnchor
-      .constraint(equalTo: safeAreaLayoutGuide.leadingAnchor)
-    let trailing = scrollView.trailingAnchor
-      .constraint(equalTo: safeAreaLayoutGuide.trailingAnchor)
-    let top = scrollView.topAnchor
-      .constraint(equalTo: safeAreaLayoutGuide.topAnchor)
-    let bottom = scrollView.bottomAnchor
-      .constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
-    NSLayoutConstraint.activate(
-      [leading, trailing, top, bottom])
+    NSLayoutConstraint.activate([
+      backDropImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.25),
+      overViewContainer.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.25)
+    ])
   }
 
-  func activateConstraintsMainStackView() {
+  private func activateConstraintsScrollView() {
+    scrollView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      scrollView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+      scrollView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+      scrollView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+      scrollView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+    ])
+  }
+
+  private func activateConstraintsMainStackView() {
     mainStackView.translatesAutoresizingMaskIntoConstraints = false
-    let equalWidth = mainStackView.widthAnchor
-      .constraint(equalTo: scrollView.widthAnchor)
-    let leading = mainStackView.leadingAnchor
-      .constraint(equalTo: scrollView.leadingAnchor)
-    let trailing = mainStackView.trailingAnchor
-      .constraint(equalTo: scrollView.trailingAnchor)
-    let top = mainStackView.topAnchor
-      .constraint(equalTo: scrollView.topAnchor)
-    let bottom = mainStackView.bottomAnchor
-      .constraint(equalTo: scrollView.bottomAnchor)
-    NSLayoutConstraint.activate(
-      [equalWidth, leading, trailing, top, bottom])
+    NSLayoutConstraint.activate([
+      mainStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+      mainStackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+      mainStackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+      mainStackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+      mainStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
+    ])
   }
 
   static func buildSeparatorView() -> UIView {
@@ -413,28 +404,24 @@ class TVShowDetailRootView: NiblessView {
     view.addSubview(lineView)
 
     lineView.translatesAutoresizingMaskIntoConstraints = false
-    let leading = lineView.leadingAnchor
-      .constraint(equalTo: view.leadingAnchor, constant: 10)
-    let trailing = lineView.trailingAnchor
-      .constraint(equalTo: view.trailingAnchor)
-    let top = lineView.topAnchor
-      .constraint(equalTo: view.topAnchor)
-    let bottom = lineView.bottomAnchor
-      .constraint(equalTo: view.bottomAnchor)
-    NSLayoutConstraint.activate(
-      [leading, trailing, top, bottom])
+    NSLayoutConstraint.activate([
+      lineView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+      lineView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+      lineView.topAnchor.constraint(equalTo: view.topAnchor),
+      lineView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+    ])
 
     return view
   }
 
   // MARK: - Gestures
   private func setupGestures() {
-    guideContainerView.isUserInteractionEnabled = true
+    episodeGuideContainerView.isUserInteractionEnabled = true
     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleEpisodesGesture))
-    guideContainerView.addGestureRecognizer(tapGesture)
+    episodeGuideContainerView.addGestureRecognizer(tapGesture)
   }
 
-  @objc func handleEpisodesGesture(_ sender: UITapGestureRecognizer) {
+  @objc private func handleEpisodesGesture(_ sender: UITapGestureRecognizer) {
     viewModel.navigateToSeasons()
   }
 

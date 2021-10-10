@@ -9,16 +9,44 @@
 import UIKit
 import UI
 
-public class GenericViewCell: UITableViewCell {
+public class GenericViewCell: NiblessTableViewCell {
 
-  @IBOutlet weak public var regularTextLabel: TVRegularLabel!
+  private let regularTextLabel = TVRegularLabel(frame: .zero)
 
-  public override func awakeFromNib() {
-    super.awakeFromNib()
+  public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
+    setupUI()
   }
 
-  public func setupUI(with title: String?) {
-    regularTextLabel?.text = title
+  public func setTitle(with title: String?) {
+    regularTextLabel.text = title
+  }
+
+  private func setupUI() {
+    constructHierarchy()
+    activateConstraints()
+    configureViews()
+  }
+
+  private func configureViews() {
+    accessoryType = .disclosureIndicator
+  }
+
+  private func constructHierarchy() {
+    addSubview(regularTextLabel)
+  }
+
+  private func activateConstraints() {
+    activateConstraintsForLabel()
+  }
+
+  private func activateConstraintsForLabel() {
+    regularTextLabel.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      regularTextLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+      regularTextLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5),
+      regularTextLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
+    ])
   }
 
   deinit {

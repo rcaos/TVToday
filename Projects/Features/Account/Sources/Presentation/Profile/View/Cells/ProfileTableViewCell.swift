@@ -10,17 +10,21 @@ import UIKit
 import Shared
 import UI
 
-class ProfileTableViewCell: UITableViewCell {
+class ProfileTableViewCell: NiblessTableViewCell {
+  private let nameLabel = TVRegularLabel(frame: .zero)
 
-  @IBOutlet weak var nameLabel: TVRegularLabel!
-  @IBOutlet weak var avatarImageView: UIImageView!
+  private let avatarImageView: UIImageView = {
+    let imageView = UIImageView()
+    imageView.contentMode = .scaleAspectFit
+    return imageView
+  }()
 
-  override func awakeFromNib() {
-    super.awakeFromNib()
-    nameLabel.tvSize = .custom(25)
+  public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
+    setupUI()
   }
 
-  func configCell(with entity: AccountResult) {
+  func setModel(with entity: AccountResult) {
     if let userName = entity.userName {
       nameLabel.text = "Hi \(userName)!"
     }
@@ -29,5 +33,46 @@ class ProfileTableViewCell: UITableViewCell {
       let imageURL = "https://www.gravatar.com/avatar/\(hash)"
       avatarImageView.setImage(with: URL(string: imageURL))
     }
+  }
+
+  private func setupUI() {
+    constructHierarchy()
+    activateConstraints()
+    setupViews()
+  }
+
+  private func setupViews() {
+    nameLabel.tvSize = .custom(25)
+    nameLabel.textAlignment  = .center
+  }
+
+  private func constructHierarchy() {
+    addSubview(nameLabel)
+    addSubview(avatarImageView)
+  }
+
+  private func activateConstraints() {
+    activateConstraintsForTitleLabel()
+    activateConstraintsForImage()
+  }
+
+  private func activateConstraintsForTitleLabel() {
+    nameLabel.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+      nameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+      nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 5),
+      nameLabel.bottomAnchor.constraint(equalTo: avatarImageView.topAnchor, constant: -10)
+    ])
+  }
+
+  private func activateConstraintsForImage() {
+    avatarImageView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      avatarImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+      avatarImageView.widthAnchor.constraint(equalToConstant: 100),
+      avatarImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
+      avatarImageView.heightAnchor.constraint(equalTo: avatarImageView.widthAnchor, multiplier: 1)
+    ])
   }
 }

@@ -8,11 +8,20 @@
 import UIKit
 import RxSwift
 import RxDataSources
+import Shared
 import Persistence
 
-class VisitedShowTableViewCell: UITableViewCell {
+class VisitedShowTableViewCell: NiblessTableViewCell {
 
-  @IBOutlet weak var collectionView: UICollectionView!
+  private let collectionView: UICollectionView = {
+    let layout = UICollectionViewFlowLayout()
+    layout.scrollDirection = .horizontal
+    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+    collectionView.isScrollEnabled = true
+    collectionView.allowsMultipleSelection = false
+    collectionView.backgroundColor = .white
+    return collectionView
+  }()
 
   var viewModel: VisitedShowViewModelProtocol?
 
@@ -22,8 +31,8 @@ class VisitedShowTableViewCell: UITableViewCell {
   private var preferredHeight: CGFloat = 170.0
 
   // MARK: - Life Cycle
-  override func awakeFromNib() {
-    super.awakeFromNib()
+  public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    super.init(style: style, reuseIdentifier: reuseIdentifier)
     setupUI()
   }
 
@@ -33,14 +42,6 @@ class VisitedShowTableViewCell: UITableViewCell {
     collectionView.layoutIfNeeded()
     collectionView.frame = CGRect(x: 0, y: 0, width: targetSize.width, height: preferredHeight)
     return collectionView.collectionViewLayout.collectionViewContentSize
-  }
-
-  private func setupUI() {
-    collectionView.allowsMultipleSelection = false
-    collectionView.registerNib(cellType: VisitedShowCollectionViewCell.self, bundle: Bundle.module)
-    if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-      layout.scrollDirection = .horizontal
-    }
   }
 
   func setupCell(with viewModel: VisitedShowViewModelProtocol) {
@@ -68,10 +69,29 @@ class VisitedShowTableViewCell: UITableViewCell {
   fileprivate func configureCollectionViewCell() -> CollectionViewSectionedDataSource<VisitedShowSectionModel>.ConfigureCell {
     let configureCell: CollectionViewSectionedDataSource<VisitedShowSectionModel>.ConfigureCell = { _, collectionView, indexPath, item in
       let cell = collectionView.dequeueReusableCell(with: VisitedShowCollectionViewCell.self, for: indexPath)
-      cell.setupCell(with: item.pathImage)
+      cell.setModel(imageURL: item.pathImage)
       return cell
     }
     return configureCell
+  }
+
+  private func setupUI() {
+    constructHierarchy()
+    activateConstraints()
+    configureViews()
+  }
+
+  private func configureViews() {
+    collectionView.registerCell(cellType: VisitedShowCollectionViewCell.self)
+  }
+
+  private func constructHierarchy() {
+    contentView.addSubview(collectionView)
+  }
+
+  private func activateConstraints() {
+    collectionView.translatesAutoresizingMaskIntoConstraints = false
+    collectionView.pin(to: contentView)
   }
 }
 

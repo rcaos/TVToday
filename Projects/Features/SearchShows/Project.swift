@@ -3,7 +3,6 @@ import ProjectDescriptionHelpers
 
 let project = Project.framework(
   name: "SearchShows",
-  resources: ["Resources/**"],
   dependencies: [
     .project(
       target: "Networking",

@@ -6,16 +6,42 @@
 //
 
 import UIKit
+import Shared
 
-class VisitedShowCollectionViewCell: UICollectionViewCell {
+class VisitedShowCollectionViewCell: NiblessCollectionViewCell {
 
-  @IBOutlet weak var visitedImageView: UIImageView!
+  private let visitedImageView: UIImageView = {
+    let imageView = UIImageView()
+    imageView.contentMode = .scaleAspectFit
+    imageView.clipsToBounds = true
+    return imageView
+  }()
 
-  override func awakeFromNib() {
-    super.awakeFromNib()
+  public override init(frame: CGRect) {
+    super.init(frame: frame)
+    setupUI()
   }
 
-  func setupCell(with imageURL: String) {
+  func setModel(imageURL: String) {
+    // MARK: - TODO, add placeHolder
     visitedImageView.setImage(with: URL(string: imageURL))
+  }
+
+  private func setupUI() {
+    constructHierarchy()
+    activateConstraints()
+  }
+
+  private func constructHierarchy() {
+    contentView.addSubview(visitedImageView)
+  }
+
+  private func activateConstraints() {
+    activateConstraintsForImage()
+  }
+
+  private func activateConstraintsForImage() {
+    visitedImageView.translatesAutoresizingMaskIntoConstraints = false
+    visitedImageView.pin(to: contentView)
   }
 }

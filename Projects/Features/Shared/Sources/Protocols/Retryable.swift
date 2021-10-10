@@ -19,7 +19,7 @@ public protocol Retryable {
 public extension Retryable where Self: UIViewController {
 
   func showMessageView(with message: String?, errorHandler: @escaping () -> Void ) {
-    let messageView = ErrorView.loadFromNib()
+    let messageView = ErrorView()
     messageView.messageLabel.text = message
     messageView.retry = errorHandler
 

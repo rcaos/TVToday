@@ -1,4 +1,7 @@
 [![Tuist badge](https://img.shields.io/badge/Powered%20by-Tuist-blue)](https://tuist.io)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Platforms](https://img.shields.io/badge/platform-iOS-lightgrey.svg)
+[![Swift Version](https://img.shields.io/badge/Swift-5-F16D39.svg?style=flat)](https://developer.apple.com/swift)
 
 TVShows iOS app built with RxSwift, using the [TMDb API](https://www.themoviedb.org/).
 

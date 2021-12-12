@@ -44,7 +44,7 @@ public class SignedCoordinator: Coordinator {
     buildPopularScene(in: popularNavigation)
 
     let searchNavigation = UINavigationController()
-    searchNavigation.tabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 2)
+    searchNavigation.tabBarItem = UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), tag: 2)
     buildSearchScene(in: searchNavigation)
 
     let accountNavigation = UINavigationController()

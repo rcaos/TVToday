@@ -24,6 +24,7 @@ class LogoutTableViewCell: UITableViewCell {
   }
 
   private func setupUI() {
+    backgroundColor = .secondarySystemBackground
     textLabel?.text = "Sign out"
     textLabel?.textAlignment = .center
     textLabel?.textColor = .red

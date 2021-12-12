@@ -34,6 +34,7 @@ class SeasonEpisodeCollectionViewCell: NiblessCollectionViewCell {
   }
 
   private func setupUI() {
+    backgroundColor = .secondarySystemBackground
     constructHierarchy()
     activateConstraints()
     configureViews()

@@ -79,13 +79,14 @@ class EpisodeItemTableViewCell: NiblessTableViewCell {
   }
 
   private func setupUI() {
+    backgroundColor = .secondarySystemBackground
     constructHierarchy()
     activateConstraints()
     setupViews()
   }
 
   private func setupViews() {
-    separatorView.backgroundColor = .lightGray
+    separatorView.backgroundColor = .separator
     separatorView.alpha = 0.2
   }
 

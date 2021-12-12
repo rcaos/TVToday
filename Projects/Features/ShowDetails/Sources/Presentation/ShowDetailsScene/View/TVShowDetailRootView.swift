@@ -227,6 +227,7 @@ class TVShowDetailRootView: NiblessView {
     overViewText.isSelectable = true
     overViewText.isEditable = false
     overViewText.font = Font.sanFrancisco.of(type: .regular, with: .custom(16))
+    overViewText.backgroundColor = .secondarySystemBackground
     return overViewText
   }()
 
@@ -349,7 +350,7 @@ class TVShowDetailRootView: NiblessView {
 
   // MARK: - Private
   private func setupUI() {
-    backgroundColor = .systemBackground
+    backgroundColor = .secondarySystemBackground
     constructHierarchy()
     activateConstraints()
     setupGestures()

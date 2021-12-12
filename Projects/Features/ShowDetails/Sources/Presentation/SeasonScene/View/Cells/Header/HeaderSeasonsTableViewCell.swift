@@ -27,6 +27,7 @@ class HeaderSeasonsTableViewCell: NiblessTableViewCell {
   }
 
   private func setupUI() {
+    backgroundColor = .systemGroupedBackground
     constructHierarchy()
     activateConstraints()
     setupViews()

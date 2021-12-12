@@ -18,7 +18,7 @@ class SeasonListTableViewCell: NiblessTableViewCell {
     layout.scrollDirection = .horizontal
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     collectionView.isScrollEnabled = true
-    collectionView.backgroundColor = .systemBackground
+    collectionView.backgroundColor = .secondarySystemBackground
     return collectionView
   }()
 
@@ -33,6 +33,7 @@ class SeasonListTableViewCell: NiblessTableViewCell {
   }
 
   private func setupUI() {
+    backgroundColor = .secondarySystemBackground
     constructHierarchy()
     activateConstraints()
     configureViews()

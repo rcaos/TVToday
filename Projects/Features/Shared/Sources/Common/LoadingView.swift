@@ -18,7 +18,7 @@ public class LoadingView: UIView {
     return defaultLoadingView
   }()
 
-  private let activityIndicator = UIActivityIndicatorView(style: .gray)
+  private let activityIndicator = UIActivityIndicatorView(style: .medium)
 
   // MARK: - Initializers
 

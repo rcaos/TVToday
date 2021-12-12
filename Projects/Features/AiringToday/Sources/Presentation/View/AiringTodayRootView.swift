@@ -24,7 +24,7 @@ class AiringTodayRootView: NiblessView {
     collectionView.register(FooterReusableView.self,
                             forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
                             withReuseIdentifier: "FooterReusableView")
-    collectionView.backgroundColor = UIColor.groupTableViewBackground
+    collectionView.backgroundColor = .systemBackground
     return collectionView
   }()
 

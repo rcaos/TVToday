@@ -29,7 +29,7 @@ public class MessageView: UIView {
   }
 
   private func setupView() {
-    backgroundColor = .white
+    backgroundColor = .systemBackground
     messageLabel.numberOfLines = 0
     messageLabel.textAlignment = .center
 

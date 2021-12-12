@@ -40,7 +40,7 @@ public class EmptyView: NiblessView {
   }
 
   private func configureViews() {
-    backgroundColor = .white
+    backgroundColor = .systemBackground
     messageLabel.numberOfLines = 0
     // MARK: TODO, rename image
     imageView.image = UIImage(name: "Error009")

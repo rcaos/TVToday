@@ -36,19 +36,19 @@ public class SignedCoordinator: Coordinator {
 
   fileprivate func showMainFeatures() {
     let todayNavigation = UINavigationController()
-    todayNavigation.tabBarItem = UITabBarItem(title: "Today", image: UIImage(name: "calendar"), tag: 0)
+    todayNavigation.tabBarItem = UITabBarItem(title: "Today", image: UIImage(systemName: "calendar.badge.clock"), tag: 0)
     buildTodayScene(in: todayNavigation)
 
     let popularNavigation = UINavigationController()
-    popularNavigation.tabBarItem = UITabBarItem(title: "Popular", image: UIImage(name: "popular"), tag: 1)
+    popularNavigation.tabBarItem = UITabBarItem(title: "Popular", image: UIImage(systemName: "star.fill"), tag: 1)
     buildPopularScene(in: popularNavigation)
 
     let searchNavigation = UINavigationController()
-    searchNavigation.tabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 2)
+    searchNavigation.tabBarItem = UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), tag: 2)
     buildSearchScene(in: searchNavigation)
 
     let accountNavigation = UINavigationController()
-    accountNavigation.tabBarItem = UITabBarItem(title: "Account", image: UIImage(name: "accountTab"), tag: 3)
+    accountNavigation.tabBarItem = UITabBarItem(title: "Account", image: UIImage(systemName: "person.crop.circle.fill"), tag: 3)
     buildAccountCoordinator(in: accountNavigation)
 
     tabBarController.setViewControllers([todayNavigation,

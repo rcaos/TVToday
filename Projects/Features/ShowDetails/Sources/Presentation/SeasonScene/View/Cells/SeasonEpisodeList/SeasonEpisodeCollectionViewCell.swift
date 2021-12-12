@@ -16,7 +16,7 @@ class SeasonEpisodeCollectionViewCell: NiblessCollectionViewCell {
 
   override var isSelected: Bool {
     didSet {
-      seasonNumber.backgroundColor = isSelected ? Colors.customYellow.color : Colors.clear.color
+      seasonNumber.backgroundColor = isSelected ? .systemYellow : .clear
     }
   }
 
@@ -34,6 +34,7 @@ class SeasonEpisodeCollectionViewCell: NiblessCollectionViewCell {
   }
 
   private func setupUI() {
+    backgroundColor = .secondarySystemBackground
     constructHierarchy()
     activateConstraints()
     configureViews()
@@ -49,7 +50,7 @@ class SeasonEpisodeCollectionViewCell: NiblessCollectionViewCell {
   }
 
   private func configureViews() {
-    seasonNumber.backgroundColor = Colors.clear.color
+    seasonNumber.backgroundColor = .clear
     seasonNumber.textAlignment = .center
   }
 
@@ -62,5 +63,6 @@ class SeasonEpisodeCollectionViewCell: NiblessCollectionViewCell {
   func setViewModel(viewModel: SeasonEpisodeViewModel?) {
     self.viewModel = viewModel
     seasonNumber.text = viewModel?.seasonNumber
+    seasonNumber.textColor = .label
   }
 }

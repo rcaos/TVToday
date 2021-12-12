@@ -180,10 +180,9 @@ class TVShowDetailRootView: NiblessView {
 
   private lazy var rightSelectorView: UIImageView = {
     let imageView = UIImageView()
-    imageView.image = UIImage(name: "Right")?.withRenderingMode(.alwaysTemplate)
+    imageView.image = UIImage(systemName: "chevron.right")
     imageView.contentMode = .scaleAspectFill
     imageView.clipsToBounds = true
-    imageView.tintColor = Colors.electricBlue.color
     return imageView
   }()
 
@@ -227,8 +226,8 @@ class TVShowDetailRootView: NiblessView {
     overViewText.textAlignment = NSTextAlignment.justified
     overViewText.isSelectable = true
     overViewText.isEditable = false
-    overViewText.textColor = Colors.electricBlue.color
     overViewText.font = Font.sanFrancisco.of(type: .regular, with: .custom(16))
+    overViewText.backgroundColor = .secondarySystemBackground
     return overViewText
   }()
 
@@ -260,12 +259,15 @@ class TVShowDetailRootView: NiblessView {
     stack.axis = .vertical
     stack.alignment = .center
     stack.distribution = .fill
-    stack.spacing = 0
+    stack.spacing = 2
     return stack
   }()
 
   private lazy var starImageView: UIImageView = {
-    let imageView = UIImageView(image: UIImage(name: "star") )
+    let largeConfig = UIImage.SymbolConfiguration(pointSize: 25, weight: .bold, scale: .large)
+    let starFill = UIImage(systemName: "star.fill", withConfiguration: largeConfig)
+    let imageView = UIImageView(image: starFill)
+    imageView.tintColor = .systemYellow
     imageView.contentMode = .scaleToFill
     imageView.setContentCompressionResistancePriority(.required, for: .vertical)
     return imageView
@@ -348,7 +350,7 @@ class TVShowDetailRootView: NiblessView {
 
   // MARK: - Private
   private func setupUI() {
-    backgroundColor = .white
+    backgroundColor = .secondarySystemBackground
     constructHierarchy()
     activateConstraints()
     setupGestures()

@@ -37,7 +37,7 @@ public class MessageImageView: UIView {
   }
 
   fileprivate func setupElements() {
-    backgroundColor = .white
+    backgroundColor = .systemBackground
 
     messageLabel.numberOfLines = 0
     messageLabel.textAlignment = .center

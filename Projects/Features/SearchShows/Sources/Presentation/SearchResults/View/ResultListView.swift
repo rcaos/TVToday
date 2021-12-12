@@ -16,7 +16,7 @@ class ResultListView: UIView {
 
     tableView.rowHeight = UITableView.automaticDimension
     tableView.estimatedRowHeight = 150
-    tableView.backgroundColor = .clear
+    tableView.backgroundColor = .systemBackground
     return tableView
   }()
 
@@ -33,7 +33,7 @@ class ResultListView: UIView {
 
   // MARK: - Private
   private func setupUI() {
-    backgroundColor = .white
+    backgroundColor = .systemBackground
     setupTableView()
   }
 

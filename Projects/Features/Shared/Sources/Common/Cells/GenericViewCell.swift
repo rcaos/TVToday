@@ -23,6 +23,7 @@ public class GenericViewCell: NiblessTableViewCell {
   }
 
   private func setupUI() {
+    backgroundColor = .secondarySystemBackground
     constructHierarchy()
     activateConstraints()
     configureViews()

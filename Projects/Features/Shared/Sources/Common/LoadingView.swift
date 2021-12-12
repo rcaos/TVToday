@@ -18,7 +18,7 @@ public class LoadingView: UIView {
     return defaultLoadingView
   }()
 
-  private let activityIndicator = UIActivityIndicatorView(style: .gray)
+  private let activityIndicator = UIActivityIndicatorView(style: .medium)
 
   // MARK: - Initializers
 
@@ -37,7 +37,7 @@ public class LoadingView: UIView {
   }
 
   private func setupView() {
-    backgroundColor = .white
+    backgroundColor = .systemBackground
     activityIndicator.color = .darkGray
 
     activityIndicator.translatesAutoresizingMaskIntoConstraints = false

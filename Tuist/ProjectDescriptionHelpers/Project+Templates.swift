@@ -1,6 +1,6 @@
 import ProjectDescription
 
-private let deploymentTarget = ProjectDescription.DeploymentTarget.iOS(targetVersion: "12.2", devices: [.iphone])
+private let deploymentTarget = ProjectDescription.DeploymentTarget.iOS(targetVersion: "13.0", devices: [.iphone])
 
 // MARK: - TODO:
 // 1. Swiftlint script into Build Phases

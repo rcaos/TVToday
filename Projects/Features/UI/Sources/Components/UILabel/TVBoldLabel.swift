@@ -21,12 +21,6 @@ public class TVBoldLabel: UILabel {
     }
   }
 
-  public var tvColor: UIColor = Colors.electricBlue.color {
-    didSet {
-      textColor = tvColor
-    }
-  }
-
   public override init(frame: CGRect) {
     super.init(frame: frame)
     configureView()
@@ -39,6 +33,5 @@ public class TVBoldLabel: UILabel {
 
   private func configureView() {
     font = tvFont.of(type: .bold, with: tvSize)
-    textColor = tvColor
   }
 }

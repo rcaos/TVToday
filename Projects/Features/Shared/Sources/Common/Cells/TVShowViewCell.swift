@@ -36,15 +36,13 @@ public class TVShowViewCell: NiblessTableViewCell {
   }()
 
   private let starImageView: UIImageView = {
-    let imageView = UIImageView()
-    imageView.image = UIImage(name: "star")
-    imageView.contentMode = .scaleAspectFit
+    let largeConfig = UIImage.SymbolConfiguration(pointSize: 14, weight: .bold, scale: .large)
+    let starFill = UIImage(systemName: "star.fill", withConfiguration: largeConfig)
 
-    imageView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-      imageView.widthAnchor.constraint(equalToConstant: 20),
-      imageView.heightAnchor.constraint(equalToConstant: 20)
-    ])
+    let imageView = UIImageView()
+    imageView.image = starFill
+    imageView.contentMode = .scaleAspectFit
+    imageView.tintColor = .systemYellow
     return imageView
   }()
 
@@ -65,6 +63,7 @@ public class TVShowViewCell: NiblessTableViewCell {
   }
 
   private func setupUI() {
+    backgroundColor = .secondarySystemBackground
     constructHierarchy()
     activateConstraints()
   }

@@ -27,6 +27,7 @@ class HeaderSeasonsTableViewCell: NiblessTableViewCell {
   }
 
   private func setupUI() {
+    backgroundColor = .systemGroupedBackground
     constructHierarchy()
     activateConstraints()
     setupViews()
@@ -34,9 +35,7 @@ class HeaderSeasonsTableViewCell: NiblessTableViewCell {
 
   private func setupViews() {
     showNameLabel.font = Font.sanFrancisco.of(type: .bold, with: .custom(22))
-    showNameLabel.textColor = Colors.electricBlue.color
-
-    seasonsLabel.textColor = Colors.davyGrey.color
+    seasonsLabel.textColor = .secondaryLabel
     seasonsLabel.text = "Seasons:"
   }
 

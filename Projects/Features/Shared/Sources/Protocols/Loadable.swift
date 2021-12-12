@@ -17,7 +17,7 @@ public protocol Loadable {
 public extension Loadable where Self: UIButton {
 
   func showLoadingView() {
-    let activityIndicator = UIActivityIndicatorView(style: .white)
+    let activityIndicator = UIActivityIndicatorView(style: .medium)
     addSubview(activityIndicator)
     activityIndicator.translatesAutoresizingMaskIntoConstraints = false
     activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
@@ -42,7 +42,7 @@ public extension Loadable where Self: UIButton {
 public extension Loadable where Self: UIView {
 
   func showLoadingView() {
-    let activityIndicator = UIActivityIndicatorView(style: .gray)
+    let activityIndicator = UIActivityIndicatorView(style: .medium)
     addSubview(activityIndicator)
     activityIndicator.translatesAutoresizingMaskIntoConstraints = false
     activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true

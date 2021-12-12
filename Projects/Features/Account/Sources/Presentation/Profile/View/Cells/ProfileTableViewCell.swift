@@ -36,6 +36,7 @@ class ProfileTableViewCell: NiblessTableViewCell {
   }
 
   private func setupUI() {
+    backgroundColor = .secondarySystemBackground
     constructHierarchy()
     activateConstraints()
     setupViews()

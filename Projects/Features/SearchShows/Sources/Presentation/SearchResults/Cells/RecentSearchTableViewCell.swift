@@ -15,7 +15,7 @@ class RecentSearchTableViewCell: NiblessTableViewCell {
 
   private let accessoryImageView: UIImageView = {
     let imageView = UIImageView()
-    imageView.image = UIImage(name: "up-left")
+    imageView.image = UIImage(systemName: "arrow.up.left")
     imageView.contentMode = .scaleAspectFill
     imageView.clipsToBounds = true
     return imageView
@@ -31,6 +31,7 @@ class RecentSearchTableViewCell: NiblessTableViewCell {
   }
 
   private func setupUI() {
+    backgroundColor = .secondarySystemBackground
     constructHierarchy()
     activateConstraints()
   }

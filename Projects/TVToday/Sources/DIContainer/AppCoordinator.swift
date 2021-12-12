@@ -32,10 +32,10 @@ class AppCoordinator: Coordinator {
   }
 
   func start() {
-    nagivateToSignedFlow()
+    navigateToSignedFlow()
   }
 
-  fileprivate func nagivateToSignedFlow() {
+  fileprivate func navigateToSignedFlow() {
     let tabBar = UITabBarController()
     let coordinator = SignedCoordinator(tabBarController: tabBar,
                                         appDIContainer: appDIContainer)

@@ -56,10 +56,14 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
   }()
 
   private let starImageView: UIImageView = {
+    let largeConfig = UIImage.SymbolConfiguration(pointSize: 16, weight: .bold, scale: .large)
+    let starFill = UIImage(systemName: "star.fill", withConfiguration: largeConfig)
+
     let imageView = UIImageView()
-    imageView.image = UIImage(name: "star")
+    imageView.image = starFill
     imageView.contentMode = .scaleAspectFit
     imageView.clipsToBounds = true
+    imageView.tintColor = .systemYellow
     return imageView
   }()
 
@@ -102,7 +106,6 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
     activateConstraintsForPosterImageView()
     activateConstraintsForBottomRightStackView()
     activateConstraintsForNameShow()
-    activateConstraintsForStartImage()
     activateConstraintsForAverageLabel()
   }
 
@@ -138,14 +141,6 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
     NSLayoutConstraint.activate([
       showNameLabel.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 8),
       showNameLabel.centerYAnchor.constraint(equalTo: bottomView.centerYAnchor)
-    ])
-  }
-
-  private func activateConstraintsForStartImage() {
-    starImageView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-      starImageView.widthAnchor.constraint(equalToConstant: 25),
-      starImageView.heightAnchor.constraint(equalToConstant: 25)
     ])
   }
 

@@ -183,7 +183,6 @@ class TVShowDetailRootView: NiblessView {
     imageView.image = UIImage(name: "Right")?.withRenderingMode(.alwaysTemplate)
     imageView.contentMode = .scaleAspectFill
     imageView.clipsToBounds = true
-    imageView.tintColor = Colors.electricBlue.color
     return imageView
   }()
 
@@ -227,7 +226,6 @@ class TVShowDetailRootView: NiblessView {
     overViewText.textAlignment = NSTextAlignment.justified
     overViewText.isSelectable = true
     overViewText.isEditable = false
-    overViewText.textColor = Colors.electricBlue.color
     overViewText.font = Font.sanFrancisco.of(type: .regular, with: .custom(16))
     return overViewText
   }()
@@ -348,7 +346,7 @@ class TVShowDetailRootView: NiblessView {
 
   // MARK: - Private
   private func setupUI() {
-    backgroundColor = .white
+    backgroundColor = .systemBackground
     constructHierarchy()
     activateConstraints()
     setupGestures()

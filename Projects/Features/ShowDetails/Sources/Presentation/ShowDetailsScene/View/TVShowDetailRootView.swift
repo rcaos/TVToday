@@ -258,12 +258,15 @@ class TVShowDetailRootView: NiblessView {
     stack.axis = .vertical
     stack.alignment = .center
     stack.distribution = .fill
-    stack.spacing = 0
+    stack.spacing = 2
     return stack
   }()
 
   private lazy var starImageView: UIImageView = {
-    let imageView = UIImageView(image: UIImage(name: "star") )
+    let largeConfig = UIImage.SymbolConfiguration(pointSize: 25, weight: .bold, scale: .large)
+    let starFill = UIImage(systemName: "star.fill", withConfiguration: largeConfig)
+    let imageView = UIImageView(image: starFill)
+    imageView.tintColor = .systemYellow
     imageView.contentMode = .scaleToFill
     imageView.setContentCompressionResistancePriority(.required, for: .vertical)
     return imageView

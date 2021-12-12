@@ -107,7 +107,7 @@ class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Em
     viewModel
       .isWatchList
       .subscribe(onNext: { [weak self] isWatchList in
-        self?.watchListButton.tintColor = isWatchList ? Colors.customGreen.color : .gray
+        self?.watchListButton.tintColor = isWatchList ? .systemGreen : .systemGray
       })
       .disposed(by: disposeBag)
   }

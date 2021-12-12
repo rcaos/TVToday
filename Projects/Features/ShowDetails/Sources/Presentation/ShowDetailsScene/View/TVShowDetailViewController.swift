@@ -17,16 +17,14 @@ class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Em
   var rootView: TVShowDetailRootView?
 
   lazy var favoriteButton: UIBarButtonItem = {
-    let barButtonItem = UIBarButtonItem(image: UIImage(name: "favorite"),
+    let barButtonItem = UIBarButtonItem(image: UIImage(systemName: "heart.fill"),
                                         style: .plain, target: nil, action: nil)
-    barButtonItem.tintColor = .gray
     return barButtonItem
   }()
 
   lazy var watchListButton: UIBarButtonItem = {
-    let bookmarkButton = UIBarButtonItem(image: UIImage(name: "bookmark"),
+    let bookmarkButton = UIBarButtonItem(image: UIImage(systemName: "bookmark.fill"),
                                          style: .plain, target: nil, action: nil)
-    bookmarkButton.tintColor = .gray
     return bookmarkButton
   }()
 
@@ -100,7 +98,7 @@ class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Em
     viewModel
       .isFavorite
       .subscribe(onNext: { [weak self] isFavorite in
-        self?.favoriteButton.tintColor = isFavorite ? .red : .gray
+        self?.favoriteButton.tintColor = isFavorite ? .systemRed : .systemGray
       })
       .disposed(by: disposeBag)
 

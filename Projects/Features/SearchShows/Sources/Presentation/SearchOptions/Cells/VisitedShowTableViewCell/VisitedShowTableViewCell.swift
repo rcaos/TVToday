@@ -19,7 +19,7 @@ class VisitedShowTableViewCell: NiblessTableViewCell {
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     collectionView.isScrollEnabled = true
     collectionView.allowsMultipleSelection = false
-    collectionView.backgroundColor = .systemBackground
+    collectionView.backgroundColor = .secondarySystemBackground
     return collectionView
   }()
 

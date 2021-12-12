@@ -180,7 +180,7 @@ class TVShowDetailRootView: NiblessView {
 
   private lazy var rightSelectorView: UIImageView = {
     let imageView = UIImageView()
-    imageView.image = UIImage(name: "Right")?.withRenderingMode(.alwaysTemplate)
+    imageView.image = UIImage(systemName: "chevron.right")
     imageView.contentMode = .scaleAspectFill
     imageView.clipsToBounds = true
     return imageView

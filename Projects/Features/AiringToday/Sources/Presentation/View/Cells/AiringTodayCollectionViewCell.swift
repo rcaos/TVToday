@@ -14,7 +14,7 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
 
   private lazy var containerView: UIView = {
     let view = UIView()
-    view.backgroundColor = .systemBackground
+    view.backgroundColor = .secondarySystemBackground
     view.layer.cornerRadius = 14
     view.clipsToBounds = true
     return view

@@ -77,7 +77,7 @@ public class ErrorView: NiblessView {
 
     retryButton.setTitle("Retry", for: .normal)
     retryButton.defaultTitle = "Retry"
-    retryButton.backgroundColor = Colors.electricBlue.color
+    retryButton.backgroundColor = .systemBlue
     retryButton.setTitleColor(.white, for: .normal) // MARK: - TODO, change?
     retryButton.titleLabel?.font = Font.sanFrancisco.of(type: .regular, with: .normal)
 

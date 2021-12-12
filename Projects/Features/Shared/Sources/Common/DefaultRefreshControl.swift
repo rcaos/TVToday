@@ -13,7 +13,7 @@ public class DefaultRefreshControl: UIRefreshControl {
   var refreshHandler: () -> Void
 
   // MARK: - Initializer
-  public init(tintColor: UIColor = Colors.electricBlue.color,
+  public init(tintColor: UIColor = .systemBlue,
               attributedTitle: String = "",
               backgroundColor: UIColor? = .clear,
               refreshHandler: @escaping () -> Void) {

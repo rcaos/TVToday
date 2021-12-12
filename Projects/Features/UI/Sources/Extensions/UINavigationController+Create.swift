@@ -14,18 +14,18 @@ public extension UINavigationController {
     standard.configureWithDefaultBackground()
 
     standard.titleTextAttributes = [
-      .foregroundColor: Colors.electricBlue.color,
+      .foregroundColor: UIColor.systemBlue,
       .font: Font.montserrat.of(type: .bold, with: .normal)]
 
     let button = UIBarButtonItemAppearance(style: .plain)
     button.normal.titleTextAttributes = [
-      NSAttributedString.Key.foregroundColor: Colors.electricBlue.color,
+      NSAttributedString.Key.foregroundColor: UIColor.systemBlue,
       .font: Font.montserrat.of(type: .bold, with: .normal)]
     standard.buttonAppearance = button
 
     let done = UIBarButtonItemAppearance(style: .done)
     done.normal.titleTextAttributes = [
-      NSAttributedString.Key.foregroundColor: Colors.electricBlue.color,
+      NSAttributedString.Key.foregroundColor: UIColor.systemBlue,
       .font: Font.montserrat.of(type: .bold, with: .normal)]
     standard.doneButtonAppearance = done
 

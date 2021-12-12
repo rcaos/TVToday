@@ -18,7 +18,7 @@ class SeasonListTableViewCell: NiblessTableViewCell {
     layout.scrollDirection = .horizontal
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     collectionView.isScrollEnabled = true
-    collectionView.backgroundColor = .white
+    collectionView.backgroundColor = .systemBackground
     return collectionView
   }()
 

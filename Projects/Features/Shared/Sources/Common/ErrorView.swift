@@ -69,7 +69,7 @@ public class ErrorView: NiblessView {
   }
 
   private func configureViews() {
-    backgroundColor = .white
+    backgroundColor = .systemBackground
 
     titleLabel.text = "Oops!"
     titleLabel.tvSize = .custom(25)
@@ -78,7 +78,7 @@ public class ErrorView: NiblessView {
     retryButton.setTitle("Retry", for: .normal)
     retryButton.defaultTitle = "Retry"
     retryButton.backgroundColor = Colors.electricBlue.color
-    retryButton.setTitleColor(.white, for: .normal)
+    retryButton.setTitleColor(.white, for: .normal) // MARK: - TODO, change?
     retryButton.titleLabel?.font = Font.sanFrancisco.of(type: .regular, with: .normal)
 
     retryButton.contentEdgeInsets = UIEdgeInsets(top: 7, left: 15, bottom: 7, right: 15)

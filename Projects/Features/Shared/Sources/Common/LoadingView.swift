@@ -37,7 +37,7 @@ public class LoadingView: UIView {
   }
 
   private func setupView() {
-    backgroundColor = .white
+    backgroundColor = .systemBackground
     activityIndicator.color = .darkGray
 
     activityIndicator.translatesAutoresizingMaskIntoConstraints = false

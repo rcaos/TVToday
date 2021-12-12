@@ -10,7 +10,6 @@ import UIKit
 public enum Colors {
   case customYellow
   case customGreen
-  case davyGrey
   case clear
 
   public var color: UIColor {
@@ -19,8 +18,6 @@ public enum Colors {
       return UIColor(name: "Custom-Yellow")
     case .customGreen:
       return UIColor(name: "Custom-Green")
-    case .davyGrey:
-      return UIColor(name: "Davy-Grey")
     case .clear:
       return UIColor.clear
     }

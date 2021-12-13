@@ -18,7 +18,7 @@ TVShows iOS app built with RxSwift, using the [TMDb API](https://www.themoviedb.
 - Tuist
 - Swift Package Manager
 
-## Requiriments
+## Requirements
 1. Tuist 1.50.0+
 2. Xcode 12.0+
 

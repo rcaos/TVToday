@@ -40,26 +40,26 @@ This project is setup with [Tuist](https://tuist.io). Therefore no `xcodeproj`/`
 
 ### Dark Mode
 <p>
-<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/dark/01.png" width="215" height="383">
-<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/dark/02.png" width="215" height="383">
-<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/dark/03.png" width="215" height="383">
-<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/dark/04.png" width="215" height="383">
-<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/dark/05.png" width="215" height="383">
-<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/dark/06.png" width="215" height="383">
-<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/dark/07.png" width="215" height="383">
-<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/dark/08.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/dark/01.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/dark/02.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/dark/03.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/dark/04.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/dark/05.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/dark/06.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/dark/07.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/dark/08.png" width="215" height="383">
 </p>
 
 ### Light Mode
 <p>
-<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/light/01.png" width="215" height="383">
-<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/light/02.png" width="215" height="383">
-<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/light/03.png" width="215" height="383">
-<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/light/04.png" width="215" height="383">
-<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/light/05.png" width="215" height="383">
-<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/light/06.png" width="215" height="383">
-<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/light/07.png" width="215" height="383">
-<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/light/08.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/light/01.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/light/02.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/light/03.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/light/04.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/light/05.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/light/06.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/light/07.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/light/08.png" width="215" height="383">
 </p>
 
 ## CocoaPods branch

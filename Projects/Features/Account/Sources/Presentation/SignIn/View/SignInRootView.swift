@@ -46,7 +46,7 @@ class SignInRootView: NiblessView {
     self.viewModel = viewModel
     super.init(frame: frame)
 
-    backgroundColor = .systemBackground
+    backgroundColor = .secondarySystemBackground
     setupBindables()
     constructHierarchy()
   }

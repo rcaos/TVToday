@@ -17,6 +17,7 @@ TVShows iOS app built with RxSwift, using the [TMDb API](https://www.themoviedb.
 - KeychainSwift
 - Tuist
 - Swift Package Manager
+- Dark Mode support
 
 ## Requirements
 1. Tuist 1.50.0+
@@ -35,21 +36,30 @@ This project is setup with [Tuist](https://tuist.io). Therefore no `xcodeproj`/`
 
 
 
-
-
-
 ## Screenshots
+
+### Dark Mode
 <p>
-<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen 101.png" width="215" height="466">
-<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen 102.png" width="215" height="466">
-<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen 103.png" width="215" height="466">
-<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen 103-2.png" width="215" height="466">
-<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen 104.png" width="215" height="466">
-<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen 105.png" width="215" height="466">
-<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen 106.png" width="215" height="466">
-<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen 107.png" width="215" height="466">
-<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen 108.png" width="215" height="466">
-<img src="https://github.com/rcaos/TVToday/blob/master/Screens/Screen 109.png" width="215" height="466">
+<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/dark/01.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/dark/02.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/dark/03.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/dark/04.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/dark/05.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/dark/06.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/dark/07.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/dark/08.png" width="215" height="383">
+</p>
+
+### Light Mode
+<p>
+<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/light/01.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/light/02.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/light/03.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/light/04.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/light/05.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/light/06.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/light/07.png" width="215" height="383">
+<img src="https://github.com/rcaos/TVToday/blob/master/ScreenShoots/light/08.png" width="215" height="383">
 </p>
 
 ## CocoaPods branch

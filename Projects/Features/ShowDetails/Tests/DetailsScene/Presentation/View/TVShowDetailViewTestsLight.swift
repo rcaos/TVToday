@@ -6,12 +6,12 @@
 //
 
 import SnapshotTesting
-import RxSwift
+import XCTest
 
 @testable import ShowDetails
 @testable import Shared
 
-class TVShowDetailViewTestsLight: FBSnapshotTestCase {
+class TVShowDetailViewTestsLight: XCTestCase {
 
   override func setUp() {
     super.setUp()

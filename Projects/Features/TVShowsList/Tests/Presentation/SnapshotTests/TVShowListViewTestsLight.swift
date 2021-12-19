@@ -12,7 +12,7 @@ import RxSwift
 @testable import TVShowsList
 @testable import Shared
 
-class TVShowListViewTestsLight: XCTest {
+class TVShowListViewTestsLight: XCTestCase {
 
   let firstShow = TVShow.stub(id: 1, name: "title1 🐶", posterPath: "/1",
                               backDropPath: "/back1", overview: "overview")
@@ -59,6 +59,7 @@ class TVShowListViewTestsLight: XCTest {
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewPopulated_thenShowPopulatedScreen() {
@@ -73,6 +74,7 @@ class TVShowListViewTestsLight: XCTest {
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewIsEmpty_thenShowEmptyScreen() {

@@ -24,7 +24,7 @@ class AiringTodayViewTests: XCTestCase {
                               backDropPath: "/back3", overview: "overview3")
 
   lazy var firstPage = TVShowResult.stub(page: 1,
-                                         results: [firstShow, secondShow],
+                                         results: [firstShow],
                                          totalResults: 3,
                                          totalPages: 2)
 

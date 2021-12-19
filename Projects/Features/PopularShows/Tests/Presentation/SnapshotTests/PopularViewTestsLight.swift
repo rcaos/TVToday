@@ -38,6 +38,7 @@ class PopularViewTests: XCTestCase {
 
     // when
     let viewController = PopularsViewController(viewModel: viewModel)
+    viewController.overrideUserInterfaceStyle = .light
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
@@ -50,6 +51,7 @@ class PopularViewTests: XCTestCase {
     // when
     let viewModel = PopularViewModelMock(state: .paging(firsPageCells, next: 2) )
     let viewController = PopularsViewController(viewModel: viewModel)
+    viewController.overrideUserInterfaceStyle = .light
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)), named: "testHere")
@@ -63,6 +65,7 @@ class PopularViewTests: XCTestCase {
     // when
     let viewModel = PopularViewModelMock(state: .populated(totalCells) )
     let viewController = PopularsViewController(viewModel: viewModel)
+    viewController.overrideUserInterfaceStyle = .light
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
@@ -74,6 +77,7 @@ class PopularViewTests: XCTestCase {
 
     // when
     let viewController = PopularsViewController(viewModel: viewModel)
+    viewController.overrideUserInterfaceStyle = .light
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
@@ -85,6 +89,7 @@ class PopularViewTests: XCTestCase {
 
     // when
     let viewController = PopularsViewController(viewModel: viewModel)
+    viewController.overrideUserInterfaceStyle = .light
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))

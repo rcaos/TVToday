@@ -1,8 +1,8 @@
 //
-//  PopularViewTests.swift
-//  PopularShows-Unit-Tests
+//  PopularViewTestsDark.swift
+//  PopularShowsTests
 //
-//  Created by Jeans Ruiz on 7/30/20.
+//  Created by Jeans Ruiz on 19/12/21.
 //
 
 import XCTest
@@ -11,7 +11,7 @@ import SnapshotTesting
 @testable import PopularShows
 @testable import Shared
 
-class PopularViewTestsLight: XCTestCase {
+class PopularViewTestsDark: XCTestCase {
 
   let firstShow = TVShow.stub(id: 1, name: "Dark 🐶", voteAverage: 8.0)
   let secondShow = TVShow.stub(id: 2, name: "Dragon Ball Z 🔫", voteAverage: 9.0)
@@ -38,7 +38,7 @@ class PopularViewTestsLight: XCTestCase {
 
     // when
     let viewController = PopularsViewController(viewModel: viewModel)
-    viewController.overrideUserInterfaceStyle = .light
+    viewController.overrideUserInterfaceStyle = .dark
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
@@ -51,7 +51,7 @@ class PopularViewTestsLight: XCTestCase {
     // when
     let viewModel = PopularViewModelMock(state: .paging(firsPageCells, next: 2) )
     let viewController = PopularsViewController(viewModel: viewModel)
-    viewController.overrideUserInterfaceStyle = .light
+    viewController.overrideUserInterfaceStyle = .dark
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
@@ -66,7 +66,7 @@ class PopularViewTestsLight: XCTestCase {
     // when
     let viewModel = PopularViewModelMock(state: .populated(totalCells) )
     let viewController = PopularsViewController(viewModel: viewModel)
-    viewController.overrideUserInterfaceStyle = .light
+    viewController.overrideUserInterfaceStyle = .dark
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
@@ -79,7 +79,7 @@ class PopularViewTestsLight: XCTestCase {
 
     // when
     let viewController = PopularsViewController(viewModel: viewModel)
-    viewController.overrideUserInterfaceStyle = .light
+    viewController.overrideUserInterfaceStyle = .dark
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
@@ -91,9 +91,10 @@ class PopularViewTestsLight: XCTestCase {
 
     // when
     let viewController = PopularsViewController(viewModel: viewModel)
-    viewController.overrideUserInterfaceStyle = .light
+    viewController.overrideUserInterfaceStyle = .dark
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
   }
 }
+

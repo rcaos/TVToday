@@ -1,8 +1,8 @@
 //
-//  ShowListViewTestsLight.swift
-//  AiringToday-Unit-Tests
+//  TVShowListViewTestsDark.swift
+//  TVShowsListTests
 //
-//  Created by Jeans Ruiz on 7/30/20.
+//  Created by Jeans Ruiz on 19/12/21.
 //
 
 import SnapshotTesting
@@ -12,7 +12,7 @@ import RxSwift
 @testable import TVShowsList
 @testable import Shared
 
-class TVShowListViewTestsLight: XCTest {
+class TVShowListViewTestsDark: XCTest {
 
   let firstShow = TVShow.stub(id: 1, name: "title1 🐶", posterPath: "/1",
                               backDropPath: "/back1", overview: "overview")
@@ -42,7 +42,7 @@ class TVShowListViewTestsLight: XCTest {
 
     // when
     let viewController = TVShowListViewController(viewModel: viewModel)
-    viewController.overrideUserInterfaceStyle = .light
+    viewController.overrideUserInterfaceStyle = .dark
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
@@ -55,7 +55,7 @@ class TVShowListViewTestsLight: XCTest {
 
     // when
     let viewController = TVShowListViewController(viewModel: viewModel)
-    viewController.overrideUserInterfaceStyle = .light
+    viewController.overrideUserInterfaceStyle = .dark
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
@@ -69,7 +69,7 @@ class TVShowListViewTestsLight: XCTest {
 
     // when
     let viewController = TVShowListViewController(viewModel: viewModel)
-    viewController.overrideUserInterfaceStyle = .light
+    viewController.overrideUserInterfaceStyle = .dark
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
@@ -81,7 +81,7 @@ class TVShowListViewTestsLight: XCTest {
 
     // when
     let viewController = TVShowListViewController(viewModel: viewModel)
-    viewController.overrideUserInterfaceStyle = .light
+    viewController.overrideUserInterfaceStyle = .dark
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
@@ -93,9 +93,10 @@ class TVShowListViewTestsLight: XCTest {
 
     // when
     let viewController = TVShowListViewController(viewModel: viewModel)
-    viewController.overrideUserInterfaceStyle = .light
+    viewController.overrideUserInterfaceStyle = .dark
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
   }
 }
+

@@ -6,11 +6,12 @@
 //
 
 import SnapshotTesting
+import XCTest
 
 @testable import ShowDetails
 @testable import Shared
 
-class EpisodesListViewTestsLight: FBSnapshotTestCase {
+class EpisodesListViewTestsLight: XCTestCase {
 
   private var headerViewModel: SeasonHeaderViewModelMock!
 

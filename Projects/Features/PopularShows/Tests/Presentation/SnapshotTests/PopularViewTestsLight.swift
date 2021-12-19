@@ -29,7 +29,7 @@ class PopularViewTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
-    isRecording = true
+    isRecording = false
   }
 
   func test_WhenViewIsLoading_thenShowLoadingScreen() {
@@ -54,7 +54,8 @@ class PopularViewTests: XCTestCase {
     viewController.overrideUserInterfaceStyle = .light
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)), named: "testHere")
+    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewPopulated_thenShowPopulatedScreen() {
@@ -69,6 +70,7 @@ class PopularViewTests: XCTestCase {
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewIsEmpty_thenShowEmptyScreen() {

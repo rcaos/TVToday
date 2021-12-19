@@ -1,8 +1,8 @@
 //
-//  AiringTodayViewTests.swift
-//  AiringToday-Unit-Tests
+//  AiringTodayViewTests_Dark.swift
+//  AiringTodayTests
 //
-//  Created by Jeans Ruiz on 7/30/20.
+//  Created by Jeans Ruiz on 19/12/21.
 //
 
 import XCTest
@@ -12,7 +12,7 @@ import RxSwift
 @testable import AiringToday
 @testable import Shared
 
-class AiringTodayViewTestsLight: XCTestCase {
+class AiringTodayViewTestsDark: XCTestCase {
 
   let firstShow = TVShow.stub(id: 1, name: "title1 🐶", posterPath: "/1",
                               backDropPath: "/back1", overview: "overview")
@@ -39,7 +39,7 @@ class AiringTodayViewTestsLight: XCTestCase {
   func test_WhenViewIsLoading_thenShowLoadingScreen() {
     // when
     let viewController = AiringTodayViewController(viewModel: AiringTodayViewModelMock(state: .loading) )
-    viewController.overrideUserInterfaceStyle = .light
+    viewController.overrideUserInterfaceStyle = .dark
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
@@ -51,7 +51,7 @@ class AiringTodayViewTestsLight: XCTestCase {
 
     // when
     let viewController = AiringTodayViewController(viewModel: AiringTodayViewModelMock(state: .paging(firsPageCells, next: 2) ) )
-    viewController.overrideUserInterfaceStyle = .light
+    viewController.overrideUserInterfaceStyle = .dark
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
@@ -64,7 +64,7 @@ class AiringTodayViewTestsLight: XCTestCase {
 
     // when
     let viewController = AiringTodayViewController(viewModel: AiringTodayViewModelMock(state: .paging(firsPageCells, next: 2) ) )
-    viewController.overrideUserInterfaceStyle = .light
+    viewController.overrideUserInterfaceStyle = .dark
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
@@ -78,7 +78,7 @@ class AiringTodayViewTestsLight: XCTestCase {
 
     // when
     let viewController = AiringTodayViewController(viewModel: AiringTodayViewModelMock(state: .populated(totalCells) ))
-    viewController.overrideUserInterfaceStyle = .light
+    viewController.overrideUserInterfaceStyle = .dark
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
@@ -88,7 +88,7 @@ class AiringTodayViewTestsLight: XCTestCase {
   func test_WhenViewIsEmpty_thenShowEmptyScreen() {
     // when
     let viewController = AiringTodayViewController(viewModel: AiringTodayViewModelMock(state: .empty ) )
-    viewController.overrideUserInterfaceStyle = .light
+    viewController.overrideUserInterfaceStyle = .dark
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
@@ -97,9 +97,10 @@ class AiringTodayViewTestsLight: XCTestCase {
   func test_WhenViewIsError_thenShowErrorScreen() {
     // when
     let viewController = AiringTodayViewController(viewModel: AiringTodayViewModelMock(state: .error("Error to Fetch Shows") ) )
-    viewController.overrideUserInterfaceStyle = .light
+    viewController.overrideUserInterfaceStyle = .dark
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
   }
 }
+

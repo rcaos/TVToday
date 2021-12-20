@@ -83,4 +83,3 @@ class ResultsSearchViewDarkTests: XCTestCase {
     assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
   }
 }
-

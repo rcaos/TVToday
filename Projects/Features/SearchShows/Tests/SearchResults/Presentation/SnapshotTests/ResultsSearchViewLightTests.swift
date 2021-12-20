@@ -13,7 +13,7 @@ import XCTest
 @testable import Shared
 @testable import Persistence
 
-class ResultsSearchViewTests: XCTestCase {
+class ResultsSearchViewLightTests: XCTestCase {
 
   override func setUp() {
     super.setUp()

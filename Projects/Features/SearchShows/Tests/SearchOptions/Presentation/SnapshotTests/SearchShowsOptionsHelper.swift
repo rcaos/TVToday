@@ -11,19 +11,19 @@
 
 public func createSectionModel(showsVisited: [ShowVisited], genres: [Genre]) -> [SearchOptionsSectionModel] {
   var dataSource: [SearchOptionsSectionModel] = []
-  
+
   let showsSectionItem = mapRecentShowsToSectionItem(recentsShows: showsVisited)
-  
+
   if let recentShowsSection = showsSectionItem {
     dataSource.append(.showsVisited(items: [recentShowsSection]))
   }
-  
+
   let genresSectionItem = mapGenreToSectionItem(genres: genres)
-  
+
   if !genresSectionItem.isEmpty {
     dataSource.append(.genres(items: genresSectionItem))
   }
-  
+
   return dataSource
 }
 

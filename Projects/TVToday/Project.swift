@@ -31,6 +31,10 @@ let project = Project.app(
     .remote(
       url: "https://github.com/Quick/Nimble.git",
       requirement: .upToNextMajor(from: "9.1.0")
+    ),
+    .remote(
+      url: "https://github.com/pointfreeco/swift-snapshot-testing.git",
+      requirement: .upToNextMajor(from: "1.9.0")
     )
   ],
   resources: [

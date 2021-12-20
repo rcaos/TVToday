@@ -32,6 +32,7 @@ let project = Project.framework(
     .package(product: "RxBlocking"),
     .package(product: "RxTest"),
     .package(product: "Quick"),
-    .package(product: "Nimble")
+    .package(product: "Nimble"),
+    .package(product: "SnapshotTesting")
   ]
 )

@@ -9,7 +9,7 @@
 import Foundation
 import Shared
 
-final class AiringTodayCollectionViewModel {
+struct AiringTodayCollectionViewModel: Hashable {
   let show: TVShow
 
   var showName: String?
@@ -20,12 +20,8 @@ final class AiringTodayCollectionViewModel {
   // MARK: - Initializers
   public init(show: TVShow) {
     self.show = show
-    setup()
-  }
 
-  fileprivate func setup() {
     showName = show.name ?? ""
-
     if let average = show.voteAverage {
       self.average = String(average)
     } else {
@@ -35,8 +31,6 @@ final class AiringTodayCollectionViewModel {
   }
 }
 
-extension AiringTodayCollectionViewModel: Equatable {
-  public static func == (lhs: AiringTodayCollectionViewModel, rhs: AiringTodayCollectionViewModel) -> Bool {
-    return lhs.show.id == rhs.show.id
-  }
+enum SectionAiringTodayFeed: Hashable {
+  case shows(shows: [AiringTodayCollectionViewModel])
 }

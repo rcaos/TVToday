@@ -8,7 +8,9 @@
 
 import Foundation
 
-public struct TVShow {
+// MARK: - TODO, remove forces unwrapping here
+
+public struct TVShow: Hashable {
 
   public var id: Int!
   public var name: String!

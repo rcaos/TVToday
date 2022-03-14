@@ -50,7 +50,6 @@ class AiringTodayRootView: NiblessView {
   fileprivate func setupUI() {
     setupCollectionView()
     setupDataSource()
-    handleSelectionItems()
   }
 
   // MARK: - Setup CollectionView
@@ -69,10 +68,11 @@ class AiringTodayRootView: NiblessView {
       let cell = collectionView.dequeueReusableCell(with: AiringTodayCollectionViewCell.self, for: indexPath)
       cell.setViewModel(viewModel)
 
-      // MARK: - TODO
-      //      if let totalItems = dataSource.sectionModels.first?.items.count, indexPath.row == totalItems - 1 {
-      //        strongSelf.viewModel.didLoadNextPage()
-      //      }
+      // MARK: - Consider move to ViewModel
+      if let totalItems = self?.dataSource?.snapshot().itemIdentifiers(inSection: .shows).count, indexPath.row == totalItems - 1 {
+        self?.viewModel.didLoadNextPage()
+      }
+
       return cell
     })
 
@@ -90,25 +90,14 @@ class AiringTodayRootView: NiblessView {
       .map { $0.currentEntities }
       .map { entities -> Snapshot in
         var snapShot = Snapshot()
-        let section = SectionAiringTodayFeed.shows(shows: entities)
-        snapShot.appendSections([section])
-        snapShot.appendItems(entities, toSection: section)
+        snapShot.appendSections([.shows])
+        snapShot.appendItems(entities, toSection: .shows)
         return snapShot
       }
       .subscribe(onNext: { [weak self] snapshot in
         self?.dataSource?.apply(snapshot)
       })
       .disposed(by: disposeBag)
-  }
-
-  fileprivate func handleSelectionItems() {
-    //    collectionView.rx
-    //      .modelSelected( AiringTodayCollectionViewModel.self)
-    //      .subscribe(onNext: { [weak self] item in
-    //        guard let strongSelf = self else { return }
-    //        strongSelf.viewModel.showIsPicked(with: item.show.id)
-    //      })
-    //      .disposed(by: disposeBag)
   }
 
   override func layoutSubviews() {
@@ -120,16 +109,16 @@ class AiringTodayRootView: NiblessView {
 // MARK: - UICollectionViewDelegateFlowLayout
 extension AiringTodayRootView: UICollectionViewDelegateFlowLayout {
 
-  public func collectionView(_ collectionView: UICollectionView,
-                             layout collectionViewLayout: UICollectionViewLayout,
-                             sizeForItemAt indexPath: IndexPath) -> CGSize {
+  func collectionView(_ collectionView: UICollectionView,
+                      layout collectionViewLayout: UICollectionViewLayout,
+                      sizeForItemAt indexPath: IndexPath) -> CGSize {
     let width = collectionView.frame.width
     return CGSize(width: width, height: 275)
   }
 
-  public func collectionView(_ collectionView: UICollectionView,
-                             layout collectionViewLayout: UICollectionViewLayout,
-                             referenceSizeForFooterInSection section: Int) -> CGSize {
+  func collectionView(_ collectionView: UICollectionView,
+                      layout collectionViewLayout: UICollectionViewLayout,
+                      referenceSizeForFooterInSection section: Int) -> CGSize {
     let viewState = viewModel.getCurrentViewState()
 
     switch viewState {
@@ -137,6 +126,12 @@ extension AiringTodayRootView: UICollectionViewDelegateFlowLayout {
       return CGSize(width: collectionView.frame.width, height: 100)
     default:
       return .zero
+    }
+  }
+
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    if let item = dataSource?.itemIdentifier(for: indexPath) {
+      viewModel.showIsPicked(with: item.show.id)
     }
   }
 }

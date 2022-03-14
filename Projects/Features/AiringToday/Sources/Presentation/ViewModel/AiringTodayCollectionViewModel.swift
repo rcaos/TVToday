@@ -32,5 +32,5 @@ struct AiringTodayCollectionViewModel: Hashable {
 }
 
 enum SectionAiringTodayFeed: Hashable {
-  case shows(shows: [AiringTodayCollectionViewModel])
+  case shows
 }

@@ -58,7 +58,7 @@ class AiringTodayRootView: NiblessView {
       self?.viewModel.refreshView()
     })
 
-    collectionView.register(AiringTodayCollectionViewCell.self, forCellWithReuseIdentifier: "AiringTodayCollectionViewCell")
+    collectionView.registerCell(cellType: AiringTodayCollectionViewCell.self)
     collectionView.register(FooterReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
                             withReuseIdentifier: "FooterReusableView")
     collectionView.delegate = self

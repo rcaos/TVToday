@@ -47,13 +47,13 @@ class AiringTodayRootView: NiblessView {
     collectionView.refreshControl?.endRefreshing(with: 0.5)
   }
 
-  fileprivate func setupUI() {
+  private func setupUI() {
     setupCollectionView()
     setupDataSource()
   }
 
   // MARK: - Setup CollectionView
-  fileprivate func setupCollectionView() {
+  private func setupCollectionView() {
     collectionView.refreshControl = DefaultRefreshControl(refreshHandler: { [weak self] in
       self?.viewModel.refreshView()
     })
@@ -84,7 +84,7 @@ class AiringTodayRootView: NiblessView {
     }
   }
 
-  fileprivate func setupDataSource() {
+  private func setupDataSource() {
     viewModel
       .viewState
       .map { $0.currentEntities }

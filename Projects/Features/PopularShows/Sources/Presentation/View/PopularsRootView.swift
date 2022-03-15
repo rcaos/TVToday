@@ -42,24 +42,22 @@ class PopularsRootView: NiblessView {
     tableView.refreshControl?.endRefreshing(with: 0.5)
   }
 
-  fileprivate func setupUI() {
+  private func setupUI() {
     setupTableView()
     setupDataSource()
-    handleSelectionItems()
     subscribe()
   }
 
   // MARK: - Setup TableView
-  fileprivate func setupTableView() {
+  private func setupTableView() {
+    tableView.registerCell(cellType: TVShowViewCell.self)
     tableView.delegate = self
     tableView.refreshControl = DefaultRefreshControl(refreshHandler: { [weak self] in
       self?.viewModel.refreshView()
     })
   }
 
-  fileprivate func setupDataSource() {
-    tableView.registerCell(cellType: TVShowViewCell.self)
-
+  private func setupDataSource() {
     dataSource = UITableViewDiffableDataSource(tableView: tableView, cellProvider: { [weak self] tableView, indexPath, model in
       let cell = tableView.dequeueReusableCell(with: TVShowViewCell.self, for: indexPath)
       cell.setModel(viewModel: model)
@@ -87,17 +85,6 @@ class PopularsRootView: NiblessView {
       .disposed(by: disposeBag)
   }
 
-  fileprivate func handleSelectionItems() {
-//    Observable
-//      .zip( tableView.rx.itemSelected, tableView.rx.modelSelected(TVShowCellViewModel.self) )
-//      .bind { [weak self] (indexPath, item) in
-//        guard let strongSelf = self else { return }
-//        strongSelf.tableView.deselectRow(at: indexPath, animated: true)
-//        strongSelf.viewModel.showIsPicked(with: item.entity.id)
-//    }
-//    .disposed(by: disposeBag)
-  }
-
   override func layoutSubviews() {
     super.layoutSubviews()
     tableView.frame = bounds
@@ -108,5 +95,12 @@ class PopularsRootView: NiblessView {
 extension PopularsRootView: UITableViewDelegate {
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 175.0
+  }
+
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    if let model = dataSource?.itemIdentifier(for: indexPath) {
+      tableView.deselectRow(at: indexPath, animated: true)
+      viewModel.showIsPicked(with: model.entity.id)
+    }
   }
 }

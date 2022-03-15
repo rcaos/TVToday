@@ -25,8 +25,8 @@ class PopularsRootView: NiblessView {
 
   typealias DataSource = UITableViewDiffableDataSource<SectionPopularView, TVShowCellViewModel>
   typealias Snapshot = NSDiffableDataSourceSnapshot<SectionPopularView, TVShowCellViewModel>
-
   private var dataSource: DataSource?
+
   private let disposeBag = DisposeBag()
 
   // MARK: - Initializer

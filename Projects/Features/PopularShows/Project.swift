@@ -16,8 +16,6 @@ let project = Project.framework(
       target: "ShowDetailsInterface",
       path: .relativeToRoot("Projects/Features/ShowDetails")
     ),
-    .package(product: "RxCocoa"),
-    .package(product: "RxDataSources"),
     .package(product: "RxSwift")
   ],
   testFolder: "Tests",

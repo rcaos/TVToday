@@ -8,8 +8,6 @@
 
 import UIKit
 import RxSwift
-import RxCocoa
-import RxDataSources
 import Shared
 
 class TVShowListViewController: NiblessViewController, Loadable, Retryable, Emptiable {

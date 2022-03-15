@@ -68,7 +68,7 @@ class AiringTodayRootView: NiblessView {
       let cell = collectionView.dequeueReusableCell(with: AiringTodayCollectionViewCell.self, for: indexPath)
       cell.setViewModel(viewModel)
 
-      // MARK: - Consider move to ViewModel
+      // MARK: - TODO, Use willDisplayCell and trigger signal to ViewModel instead
       if let totalItems = self?.dataSource?.snapshot().itemIdentifiers(inSection: .shows).count, indexPath.row == totalItems - 1 {
         self?.viewModel.didLoadNextPage()
       }

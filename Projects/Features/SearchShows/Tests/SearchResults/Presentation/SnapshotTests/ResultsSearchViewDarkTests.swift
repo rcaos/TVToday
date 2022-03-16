@@ -30,8 +30,8 @@ class ResultsSearchViewDarkTests: XCTestCase {
     viewController.overrideUserInterfaceStyle = .dark
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneXsMax)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewIsLoading_thenShowLoadingScreen() {
@@ -41,7 +41,7 @@ class ResultsSearchViewDarkTests: XCTestCase {
     viewController.overrideUserInterfaceStyle = .dark
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewIsPopulated_thenShowPopulatedScreen() {
@@ -59,8 +59,8 @@ class ResultsSearchViewDarkTests: XCTestCase {
     viewController.overrideUserInterfaceStyle = .dark
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneXsMax)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewIsEmpty_thenShowEmptyScreen() {
@@ -70,7 +70,7 @@ class ResultsSearchViewDarkTests: XCTestCase {
     viewController.overrideUserInterfaceStyle = .dark
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewDidError_thenShowErrorScreen() {
@@ -80,6 +80,6 @@ class ResultsSearchViewDarkTests: XCTestCase {
     viewController.overrideUserInterfaceStyle = .dark
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
   }
 }

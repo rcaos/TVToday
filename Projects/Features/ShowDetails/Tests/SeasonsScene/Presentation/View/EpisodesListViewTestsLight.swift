@@ -13,12 +13,12 @@ import XCTest
 
 class EpisodesListViewTestsLight: XCTestCase {
 
-  private var headerViewModel: SeasonHeaderViewModelMock!
+  private var headerViewModel: SeasonHeaderViewModel!
 
   override func setUp() {
     super.setUp()
     isRecording = false
-    headerViewModel = SeasonHeaderViewModelMock(showName: "Dragon Ball Z (1987 - 1992)")
+    headerViewModel = .mock("Dragon Ball Z", "1987-01-01", "1992-01-01")
   }
 
   func test_WhenViewIsLoading_thenShow_LoadingScreen() {

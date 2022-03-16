@@ -8,11 +8,16 @@
 import RxSwift
 @testable import ShowDetails
 
-class SeasonHeaderViewModelMock: SeasonHeaderViewModelProtocol {
-  var showName: String
-
-  init(showName: String) {
-    self.showName = showName
+extension SeasonHeaderViewModel {
+  
+  static var mock: (String, String, String) -> SeasonHeaderViewModel = { name, firstAirDate, lastAirDate in
+    return .init(showDetail:
+                    .stub(
+                      name: name,
+                      firstAirDate: firstAirDate,
+                      lastAirDate: lastAirDate
+                    )
+    )
   }
 }
 
@@ -46,7 +51,7 @@ class EpisodesListViewModelMock: EpisodesListViewModelProtocol {
        numberOfSeasons: Int = 1,
        seasonSelected: Int = 1,
        episodes: [Episode] = [],
-       headerViewModel: SeasonHeaderViewModelProtocol? = nil) {
+       headerViewModel: SeasonHeaderViewModel? = nil) {
 
     viewStateObservableSubject = BehaviorSubject(value: .loading)
     viewState = viewStateObservableSubject.asObservable()
@@ -63,7 +68,7 @@ class EpisodesListViewModelMock: EpisodesListViewModelProtocol {
     viewStateObservableSubject.onNext(state)
   }
 
-  fileprivate func createSectionModel(_ headerViewModel: SeasonHeaderViewModelProtocol?,
+  fileprivate func createSectionModel(_ headerViewModel: SeasonHeaderViewModel?,
                                       with numberOfSeasons: Int,
                                       and episodes: [Episode]) {
     var dataSourceSections: [SeasonsSectionModel] = []

@@ -7,7 +7,6 @@
 
 import UIKit
 import RxSwift
-import RxDataSources
 import Shared
 
 class EpisodesListRootView: NiblessView {

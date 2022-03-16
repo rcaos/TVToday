@@ -25,7 +25,7 @@ class ResultsSearchViewController: NiblessViewController {
   // MARK: - Life Cycle
   init(viewModel: ResultsSearchViewModelProtocol) {
     self.viewModel = viewModel
-    super.init(nibName: nil, bundle: nil)
+    super.init()
   }
 
   override func loadView() {

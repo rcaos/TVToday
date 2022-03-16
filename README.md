@@ -5,6 +5,11 @@
 
 TVShows iOS app built with RxSwift, using the [TMDb API](https://www.themoviedb.org/).
 
+## What I'm working on
+15 March, 2022
+* [ ] Migrate from RxDataSources to UICollectionViewDiffableDataSource
+* [ ] Migrate from RxSwift to Combine
+
 ## Built with
 - Swift 5
 - RxSwift, RxDataSources

@@ -7,7 +7,6 @@
 //
 
 import RxSwift
-import RxDataSources
 import Shared
 
 protocol SeasonListViewModelDelegate: AnyObject {
@@ -84,17 +83,6 @@ final class SeasonListViewModel: SeasonListViewModelProtocol {
 }
 
 // MARK: - Data Source
-struct SectionSeasonsList {
-  var header: String
-  var items: [Item]
-}
-
-extension SectionSeasonsList: SectionModelType {
-
-  typealias Item = Int
-
-  init(original: SectionSeasonsList, items: [Item]) {
-    self = original
-    self.items = items
-  }
+enum SectionSeasonsList: Hashable {
+  case season
 }

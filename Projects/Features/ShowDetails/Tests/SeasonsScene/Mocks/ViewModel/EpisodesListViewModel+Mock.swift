@@ -9,7 +9,7 @@ import RxSwift
 @testable import ShowDetails
 
 extension SeasonHeaderViewModel {
-  
+
   static var mock: (String, String, String) -> SeasonHeaderViewModel = { name, firstAirDate, lastAirDate in
     return .init(showDetail:
                     .stub(

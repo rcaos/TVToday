@@ -62,7 +62,9 @@ class TVShowDetailViewModelTapsTests: QuickSpec {
           )
 
           viewModel.isFavorite
-            .bind(to: favoriteObserver)
+            .subscribe { event in
+              favoriteObserver.on(event)
+            }
             .disposed(by: disposeBag)
 
           // when
@@ -70,7 +72,9 @@ class TVShowDetailViewModelTapsTests: QuickSpec {
 
           // Emit taps from View
           scheduler.createColdObservable([.next(10, ())])
-            .bind(to: viewModel.tapFavoriteButton)
+            .subscribe { event in
+              viewModel.tapFavoriteButton.on(event)
+            }
             .disposed(by: disposeBag)
           scheduler.start()
 
@@ -110,7 +114,9 @@ class TVShowDetailViewModelTapsTests: QuickSpec {
           )
 
           viewModel.isWatchList
-            .bind(to: watchedObserver)
+            .subscribe { event in
+              watchedObserver.on(event)
+            }
             .disposed(by: disposeBag)
 
           // when
@@ -118,7 +124,9 @@ class TVShowDetailViewModelTapsTests: QuickSpec {
 
           // Emit taps from View
           scheduler.createColdObservable([.next(10, ())])
-            .bind(to: viewModel.tapWatchedButton)
+            .subscribe { event in
+              viewModel.tapWatchedButton.on(event)
+            }
             .disposed(by: disposeBag)
           scheduler.start()
 

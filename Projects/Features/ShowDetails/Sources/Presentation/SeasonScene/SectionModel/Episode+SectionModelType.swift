@@ -8,7 +8,7 @@
 
 import RxDataSources
 
-public struct EpisodeSectionModelType {
+public struct EpisodeSectionModelType: Hashable {
 
   var id: Int
   var episodeNumber: Int

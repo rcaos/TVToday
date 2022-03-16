@@ -12,7 +12,7 @@ import RxCocoa
 import RxDataSources
 import Shared
 
-class ResultsSearchViewController: UIViewController {
+class ResultsSearchViewController: NiblessViewController {
 
   private let disposeBag = DisposeBag()
 
@@ -26,10 +26,6 @@ class ResultsSearchViewController: UIViewController {
   init(viewModel: ResultsSearchViewModelProtocol) {
     self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
-  }
-
-  required init?(coder aDecoder: NSCoder) {
-    fatalError()
   }
 
   override func loadView() {

@@ -27,7 +27,7 @@ class TVShowDetailViewTestsLight: XCTestCase {
     viewController.overrideUserInterfaceStyle = .light
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewPopulated_thenShowPopulatedScreen() {
@@ -39,8 +39,8 @@ class TVShowDetailViewTestsLight: XCTestCase {
     viewController.overrideUserInterfaceStyle = .light
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneXsMax)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewIsError_thenShowErrorScreen() {
@@ -52,6 +52,6 @@ class TVShowDetailViewTestsLight: XCTestCase {
     viewController.overrideUserInterfaceStyle = .light
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
   }
 }

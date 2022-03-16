@@ -28,7 +28,7 @@ class EpisodesListViewTestsLight: XCTestCase {
     viewController.overrideUserInterfaceStyle = .light
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewModelDidPopulated_thenShow_PopulatedScreen() {
@@ -47,8 +47,8 @@ class EpisodesListViewTestsLight: XCTestCase {
     viewController.overrideUserInterfaceStyle = .light
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneXsMax)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewModelReturnsError_thenShow_ErrorScreen() {
@@ -58,7 +58,7 @@ class EpisodesListViewTestsLight: XCTestCase {
     viewController.overrideUserInterfaceStyle = .light
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewModelLoadSeason_thenShow_LoadingSeasonScreen() {
@@ -69,8 +69,8 @@ class EpisodesListViewTestsLight: XCTestCase {
     viewController.overrideUserInterfaceStyle = .light
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneXsMax)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewModelReturnsEmpty_thenShow_EmptyScreen() {
@@ -81,7 +81,7 @@ class EpisodesListViewTestsLight: XCTestCase {
     viewController.overrideUserInterfaceStyle = .light
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewModelReturnsErrorSeason_thenShow_ErrorSeasonScreen() {
@@ -92,6 +92,6 @@ class EpisodesListViewTestsLight: XCTestCase {
     viewController.overrideUserInterfaceStyle = .light
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
   }
 }

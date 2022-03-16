@@ -8,8 +8,6 @@ let project = Project.framework(
       target: "UI",
       path: .relativeToRoot("Projects/Features/UI")
     ),
-    .package(product: "RxCocoa"),
-    .package(product: "RxDataSources"),
     .package(product: "RxSwift")
   ],
   interfaceFolder: "Interface",

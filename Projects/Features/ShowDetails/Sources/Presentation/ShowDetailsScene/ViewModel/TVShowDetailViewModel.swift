@@ -160,8 +160,8 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
         self?.isLoadingFavoriteSubject.onNext(true)
         return strongSelf.markAsFavorite(state: isFavorite)
-    }
-    .share()
+      }
+      .share()
 
     requestFavorite
       .subscribe(onNext: { [weak self] (response) in
@@ -178,7 +178,9 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
     requestFavorite
       .flatMap { _ in return Observable.just(false) }
-      .bind(to: isLoadingFavoriteSubject)
+      .subscribe { [isLoadingFavoriteSubject] event in
+        isLoadingFavoriteSubject.on(event)
+      }
       .disposed(by: disposeBag)
   }
 
@@ -196,8 +198,8 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
         self?.isLoadingWatchList.onNext(true)
         return strongSelf.saveToWatchList(state: isFavorite)
-    }
-    .share()
+      }
+      .share()
 
     requestFavorite
       .subscribe(onNext: { [weak self] (response) in
@@ -214,7 +216,9 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
     requestFavorite
       .flatMap { _ in return Observable.just(false) }
-      .bind(to: isLoadingWatchList)
+      .subscribe { [isLoadingWatchList] event in
+        isLoadingWatchList.on(event)
+      }
       .disposed(by: disposeBag)
   }
 
@@ -225,17 +229,19 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
       .flatMap { [weak self] _ -> Observable<Result<TVShowDetailResult, Error>> in
         guard let strongSelf = self else { return Observable.error(CustomError.genericError) }
         return strongSelf.fetchShowDetails()
-    }
-    .flatMap { (result) -> Observable<ViewState> in
-      switch result {
-      case .success(let detailResult):
-        return Observable.just(.populated( TVShowDetailInfo(show: detailResult) ))
-      case .failure(let error):
-        return Observable.just(.error(error.localizedDescription))
       }
-    }
-    .bind(to: viewStateObservableSubject)
-    .disposed(by: disposeBag)
+      .flatMap { (result) -> Observable<ViewState> in
+        switch result {
+        case .success(let detailResult):
+          return Observable.just(.populated( TVShowDetailInfo(show: detailResult) ))
+        case .failure(let error):
+          return Observable.just(.error(error.localizedDescription))
+        }
+      }
+      .subscribe { [viewStateObservableSubject] event in
+        viewStateObservableSubject.on(event)
+      }
+      .disposed(by: disposeBag)
   }
 
   // MARK: - Request For Logged Users
@@ -244,13 +250,13 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
     typealias ResultForShowState = (Result<TVShowAccountStateResult, Error>)
 
     let responses =
-      didLoadView
-        .filter { $0 == true }
-        .flatMap { [weak self] _ -> Observable< (ResultForDetails, ResultForShowState)> in
-          guard let strongSelf = self else {
-            return Observable.just( (.failure(CustomError.genericError), .failure(CustomError.genericError) ) )
-          }
-          return Observable.zip(strongSelf.fetchShowDetails(), strongSelf.fetchTVShowState())
+    didLoadView
+      .filter { $0 == true }
+      .flatMap { [weak self] _ -> Observable< (ResultForDetails, ResultForShowState)> in
+        guard let strongSelf = self else {
+          return Observable.just( (.failure(CustomError.genericError), .failure(CustomError.genericError) ) )
+        }
+        return Observable.zip(strongSelf.fetchShowDetails(), strongSelf.fetchTVShowState())
       }.share()
 
     responses
@@ -264,9 +270,11 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
         case (_, .failure(let error)):
           return Observable.just(.error(error.localizedDescription))
         }
-    }
-    .bind(to: viewStateObservableSubject)
-    .disposed(by: disposeBag)
+      }
+      .subscribe { [viewStateObservableSubject] event in
+        viewStateObservableSubject.on(event)
+      }
+      .disposed(by: disposeBag)
 
     responses
       .flatMap { (_, result) -> Observable<Bool> in
@@ -276,9 +284,11 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
         case .failure:
           return Observable.just(false)
         }
-    }
-    .bind(to: isFavoriteSubject)
-    .disposed(by: disposeBag)
+      }
+      .subscribe { [isFavoriteSubject] event in
+        isFavoriteSubject.on(event)
+      }
+      .disposed(by: disposeBag)
 
     responses
       .flatMap { (_, result) -> Observable<Bool> in
@@ -288,9 +298,11 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
         case .failure:
           return Observable.just(false)
         }
-    }
-    .bind(to: isWatchListSubject)
-    .disposed(by: disposeBag)
+      }
+      .subscribe { [isWatchListSubject] event in
+        isWatchListSubject.on(event)
+      }
+      .disposed(by: disposeBag)
   }
 
   // MARK: - Observables

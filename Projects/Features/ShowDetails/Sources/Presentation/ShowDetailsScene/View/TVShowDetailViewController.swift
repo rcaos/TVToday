@@ -8,6 +8,7 @@
 import UIKit
 import RxSwift
 import Shared
+import RxCocoa
 import UI
 
 class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Emptiable {

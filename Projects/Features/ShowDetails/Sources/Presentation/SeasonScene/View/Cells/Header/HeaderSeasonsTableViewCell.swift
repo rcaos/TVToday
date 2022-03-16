@@ -14,14 +14,14 @@ class HeaderSeasonsTableViewCell: NiblessTableViewCell {
   private let showNameLabel = TVRegularLabel()
   private let seasonsLabel = TVRegularLabel()
 
-  var viewModel: SeasonHeaderViewModelProtocol?
+  var viewModel: SeasonHeaderViewModel?
 
   public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
     setupUI()
   }
 
-  func setModel(viewModel: SeasonHeaderViewModelProtocol) {
+  func setModel(viewModel: SeasonHeaderViewModel) {
     self.viewModel = viewModel
     showNameLabel.text = viewModel.showName
   }

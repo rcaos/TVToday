@@ -90,7 +90,8 @@ class SeasonListTableViewCell: NiblessTableViewCell {
 
   private func selectedSeason(at index: Int) {
     let indexPath = IndexPath(row: index - 1, section: 0)
-    collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .top)
+    // MARK: - TODO, fix crash here
+//    collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .top)
   }
 
   private func configureCollectionViewCell() -> CollectionViewSectionedDataSource<SectionSeasonsList>.ConfigureCell {

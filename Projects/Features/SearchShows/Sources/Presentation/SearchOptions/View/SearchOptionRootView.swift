@@ -8,7 +8,6 @@
 import UIKit
 import Shared
 import RxSwift
-import RxDataSources
 
 class SearchOptionRootView: NiblessView {
 

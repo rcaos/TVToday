@@ -5,47 +5,46 @@
 //  Created by Jeans Ruiz on 7/8/20.
 //
 
-import RxDataSources
 import Shared
 
-enum ResultSearchSectionModel: Equatable {
+enum ResultSearchSectionModel: Hashable {
   case recentSearchs(items: [ResultSearchSectionItem])
   case results(items: [ResultSearchSectionItem])
 
-  func getHeader() -> String? {
+  var section: ResultSearchSectionView {
     switch self {
     case .recentSearchs:
-      return "Recent Searchs"
+      return .recentSearch
     case .results:
+      return .results
+    }
+  }
+
+  var items: [ResultSearchSectionItem] {
+    switch self {
+    case let .recentSearchs(items):
+      return items
+    case let .results(items):
+      return items
+    }
+  }
+}
+
+enum ResultSearchSectionView: Hashable {
+  case recentSearch
+  case results
+
+  var header: String? {
+    switch self {
+    case .recentSearch:
+      return "Recent Searchs"
+    default:
       return nil
     }
   }
 }
 
-enum ResultSearchSectionItem: Equatable {
+enum ResultSearchSectionItem: Hashable {
   case recentSearchs(items: String)
   case results(items: TVShowCellViewModel)
-}
-
-extension ResultSearchSectionModel: SectionModelType {
-
-  typealias Item =  ResultSearchSectionItem
-
-  var items: [ResultSearchSectionItem] {
-    switch self {
-    case .recentSearchs(items: let items):
-      return items
-    case .results(items: let items):
-      return items
-    }
-  }
-
-  init(original: Self, items: [Self.Item]) {
-    switch original {
-    case .recentSearchs:
-      self = .recentSearchs(items: items)
-    case .results:
-      self = .results(items: items)
-    }
-  }
 }

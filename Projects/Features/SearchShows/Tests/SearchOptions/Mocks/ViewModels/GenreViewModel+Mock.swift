@@ -6,13 +6,17 @@
 //
 
 @testable import SearchShows
+@testable import Shared
+@testable import Persistence
 
-final class GenreViewModelMock: GenreViewModelProtocol {
-  let id: Int
-  let name: String
+extension GenreViewModel {
+  static var mock: (Genre) -> GenreViewModel = { genre in
+    return GenreViewModel(genre: genre)
+  }
+}
 
-  init(id: Int, name: String) {
-    self.id = id
-    self.name = name
+extension VisitedShowViewModel {
+  static var mock: ([ShowVisited]) -> VisitedShowViewModel = { shows in
+    return VisitedShowViewModel(shows: shows)
   }
 }

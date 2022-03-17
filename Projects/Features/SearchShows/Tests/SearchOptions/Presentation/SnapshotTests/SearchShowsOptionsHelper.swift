@@ -28,12 +28,12 @@ public func createSectionModel(showsVisited: [ShowVisited], genres: [Genre]) -> 
 }
 
 private func mapRecentShowsToSectionItem(recentsShows: [ShowVisited]) -> SearchSectionItem? {
-  let visitedModel = VisitedShowViewModelMock(showsMock: recentsShows)
+  let visitedModel: VisitedShowViewModel = .mock(recentsShows)
   return recentsShows.isEmpty ? nil : .showsVisited(items: visitedModel)
 }
 
 private func mapGenreToSectionItem(genres: [Genre] ) -> [SearchSectionItem] {
   return genres
-    .map { GenreViewModelMock(id: $0.id, name: $0.name) }
+    .map { GenreViewModel.mock($0)  }
     .map { SearchSectionItem.genres(items: $0) }
 }

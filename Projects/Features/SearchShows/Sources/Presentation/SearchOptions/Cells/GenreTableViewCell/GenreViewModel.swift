@@ -12,7 +12,7 @@ protocol GenreViewModelProtocol {
   var name: String { get }
 }
 
-final class GenreViewModel: GenreViewModelProtocol {
+final class GenreViewModel: GenreViewModelProtocol, Hashable {
   let id: Int
   let name: String
   private let genre: Genre
@@ -21,5 +21,13 @@ final class GenreViewModel: GenreViewModelProtocol {
     self.genre = genre
     id = genre.id
     name = genre.name
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(id)
+  }
+
+  static func == (lhs: GenreViewModel, rhs: GenreViewModel) -> Bool {
+    return lhs.id == rhs.id
   }
 }

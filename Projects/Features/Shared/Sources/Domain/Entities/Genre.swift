@@ -8,6 +8,8 @@
 
 import Foundation
 
+// MARK: - Fix this 👇
+
 public struct Genre: Hashable {
   public var id: Int!
   public var name: String!

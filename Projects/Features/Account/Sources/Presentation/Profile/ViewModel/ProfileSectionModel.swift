@@ -6,50 +6,49 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxDataSources
+import Foundation
 
 enum ProfileSectionModel: Equatable {
-  case
-  userInfo(header: String, items: [ProfilesSectionItem]),
-  userLists(header: String, items: [ProfilesSectionItem]),
-  logout(header: String, items: [ProfilesSectionItem])
-}
+  case userInfo(items: [ProfilesSectionItem])
+  case userLists(items: [ProfilesSectionItem])
+  case logout(items: [ProfilesSectionItem])
 
-extension ProfileSectionModel: SectionModelType {
-
-  typealias Item = ProfilesSectionItem
+  var sectionView: ProfileSectionView {
+    switch self {
+    case .userInfo:
+      return .userInfo
+    case .userLists:
+      return .userLists
+    case .logout:
+      return .logout
+    }
+  }
 
   var items: [ProfilesSectionItem] {
     switch self {
-    case .userInfo(_, items: let items):
+    case let .userInfo(items):
       return items
-    case .userLists(_, items: let items):
+    case let .userLists(items):
       return items
-    case .logout(_, items: let items):
+    case let .logout(items):
       return items
-    }
-  }
-
-  init(original: Self, items: [Self.Item]) {
-    switch original {
-    case .userInfo(header: let header, items: _):
-      self = .userInfo(header: header, items: items)
-    case .userLists(header: let header, items: _):
-      self = .userLists(header: header, items: items)
-    case .logout(header: let header, items: _):
-      self = .logout(header: header, items: items)
     }
   }
 }
 
-enum ProfilesSectionItem: Equatable {
-  case
-  userInfo(number: AccountResult),
-  userLists(items: UserListType),
-  logout(items: String)
+enum ProfileSectionView: Hashable {
+  case userInfo
+  case userLists
+  case logout
 }
 
-enum UserListType: String {
+enum ProfilesSectionItem: Hashable {
+  case userInfo(number: AccountResult)
+  case userLists(items: UserListType)
+  case logout(items: String)
+}
+
+enum UserListType: String, Hashable {
   case favorites = "Favorites"
   case watchList = "Watch List"
 }

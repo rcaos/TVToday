@@ -9,10 +9,6 @@ let project = Project.app(
       requirement: .upToNextMajor(from: "6.2.0")
     ),
     .remote(
-      url: "https://github.com/RxSwiftCommunity/RxDataSources.git",
-      requirement: .upToNextMajor(from: "5.0.0")
-    ),
-    .remote(
       url: "https://github.com/evgenyneu/keychain-swift.git",
       requirement: .upToNextMajor(from: "14.0.0")
     ),

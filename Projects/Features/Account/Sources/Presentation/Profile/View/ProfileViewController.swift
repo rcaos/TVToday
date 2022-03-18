@@ -8,7 +8,6 @@
 
 import UIKit
 import RxSwift
-import RxDataSources
 import Shared
 
 class ProfileViewController: NiblessViewController {

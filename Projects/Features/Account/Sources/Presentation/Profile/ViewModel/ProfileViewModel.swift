@@ -41,21 +41,22 @@ class ProfileViewModel: ProfileViewModelProtocol {
   }
 
   // MARK: - Private
-  fileprivate func createSectionModel(account: AccountResult) {
+  private func createSectionModel(account: AccountResult) {
     let items: [ProfilesSectionItem] = [
       .userLists(items: .favorites),
-      .userLists(items: .watchList)]
+      .userLists(items: .watchList)
+    ]
 
     let sectionProfile: [ProfileSectionModel] = [
-      .userInfo(header: "", items: [.userInfo(number: account)]),
-      .userLists(header: "", items: items),
-      .logout(header: "", items: [.logout(items: "Log Out")])
+      .userInfo(items: [.userInfo(number: account)]),
+      .userLists(items: items),
+      .logout(items: [.logout(items: "Log Out")])
     ]
 
     sectionsSubject.onNext(sectionProfile)
   }
 
-  fileprivate func subscribe() {
+  private func subscribe() {
     tapLogoutAction.asObserver()
       .subscribe(onNext: { [weak self] in
         guard let strongSelf = self else { return }
@@ -70,7 +71,7 @@ class ProfileViewModel: ProfileViewModelProtocol {
       .disposed(by: disposeBag)
   }
 
-  fileprivate func didSelectedCell(_ model: ProfilesSectionItem) {
+  private func didSelectedCell(_ model: ProfilesSectionItem) {
     switch model {
     case .userLists(items: let cellType):
       delegate?.profileViewModel(didUserList: cellType)

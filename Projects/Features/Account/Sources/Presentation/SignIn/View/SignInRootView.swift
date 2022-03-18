@@ -52,10 +52,12 @@ class SignInRootView: NiblessView {
   }
 
   private func setupBindables() {
-    signInButton.rx
-      .tap
-      .bind(to: viewModel.tapButton)
-      .disposed(by: disposeBag)
+    signInButton.addAction(
+      UIAction(handler: { [viewModel] _ in
+        viewModel.tapButton.onNext(())
+      }),
+      for: .touchUpInside
+    )
   }
 
   private func constructHierarchy() {

@@ -36,7 +36,9 @@ class ProfileViewModelTests: QuickSpec {
 
           // when
           viewModel.dataSource
-            .bind(to: dataSourceObserver)
+            .subscribe { event in
+              dataSourceObserver.on(event)
+            }
             .disposed(by: disposeBag)
 
           // then

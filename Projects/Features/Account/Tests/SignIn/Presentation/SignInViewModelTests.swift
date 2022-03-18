@@ -57,13 +57,17 @@ class SignInViewModelTests: QuickSpec {
           let viewModel: SignInViewModelProtocol = SignInViewModel(createTokenUseCase: createTokenUseCase)
 
           viewModel.viewState
-            .bind(to: viewStateObserver)
+            .subscribe { event in
+              viewStateObserver.on(event)
+            }
             .disposed(by: disposeBag)
 
           // when
           // Tap Button
           scheduler.createColdObservable([.next(10, ())])
-            .bind(to: viewModel.tapButton)
+            .subscribe { event in
+              viewModel.tapButton.on(event)
+            }
             .disposed(by: disposeBag)
           scheduler.start()
 
@@ -90,7 +94,9 @@ class SignInViewModelTests: QuickSpec {
           // when
           // Tap Button
           scheduler.createColdObservable([.next(10, ())])
-            .bind(to: viewModel.tapButton)
+            .subscribe { event in
+              viewModel.tapButton.on(event)
+            }
             .disposed(by: disposeBag)
           scheduler.start()
 

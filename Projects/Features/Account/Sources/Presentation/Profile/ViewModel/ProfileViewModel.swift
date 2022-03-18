@@ -7,7 +7,6 @@
 //
 
 import RxSwift
-import RxDataSources
 
 class ProfileViewModel: ProfileViewModelProtocol {
 

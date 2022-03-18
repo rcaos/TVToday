@@ -52,12 +52,13 @@ class ProfileViewModelTests: QuickSpec {
   static func createSectionModel(with account: AccountResult) -> [ProfileSectionModel] {
     let items: [ProfilesSectionItem] = [
       .userLists(items: .favorites),
-      .userLists(items: .watchList)]
+      .userLists(items: .watchList)
+    ]
 
     let sectionProfile: [ProfileSectionModel] = [
-      .userInfo(header: "", items: [.userInfo(number: account)]),
-      .userLists(header: "", items: items),
-      .logout(header: "", items: [.logout(items: "Log Out")])
+      .userInfo(items: [.userInfo(number: account)]),
+      .userLists(items: items),
+      .logout(items: [.logout(items: "Log Out")])
     ]
     return sectionProfile
   }

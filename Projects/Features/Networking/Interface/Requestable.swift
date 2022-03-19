@@ -41,6 +41,6 @@ public protocol ResponseRequestable: Requestable {
   var responseDecoder: ResponseDecoder { get }
 }
 
-enum RequestGenerationError: Error {
+public enum RequestGenerationError: Error {
   case components
 }

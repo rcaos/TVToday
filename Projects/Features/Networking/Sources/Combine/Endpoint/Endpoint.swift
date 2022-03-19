@@ -44,9 +44,11 @@ public class Endpoint<R>: ResponseRequestable {
     self.bodyEncoding = bodyEncoding
     self.responseDecoder = responseDecoder
   }
+}
+
+extension Requestable {
 
   public func urlRequest(with config: NetworkConfigurable) throws -> URLRequest {
-
     let url = try self.url(with: config)
     var urlRequest = URLRequest(url: url)
     var allHeaders: [String: String] = config.headers
@@ -60,11 +62,8 @@ public class Endpoint<R>: ResponseRequestable {
     urlRequest.allHTTPHeaderFields = allHeaders
     return urlRequest
   }
-}
 
-extension Requestable {
-
-  func url(with config: NetworkConfigurable) throws -> URL {
+  private func url(with config: NetworkConfigurable) throws -> URL {
     let baseURL = config.baseURL.absoluteString.last != "/" ? config.baseURL.absoluteString + "/" : config.baseURL.absoluteString
     let endpoint = isFullPath ? path : baseURL.appending(path)
 
@@ -83,7 +82,7 @@ extension Requestable {
     return url
   }
 
-  func encodeBody(bodyParamaters: [String: Any], bodyEncoding: BodyEncoding) -> Data? {
+  private func encodeBody(bodyParamaters: [String: Any], bodyEncoding: BodyEncoding) -> Data? {
     switch bodyEncoding {
     case .jsonSerializationData:
       return try? JSONSerialization.data(withJSONObject: bodyParamaters)

@@ -5,5 +5,7 @@ let project = Project.framework(
   name: "Networking",
   dependencies: [
     .package(product: "RxSwift")
-  ]
+  ],
+  interfaceFolder: "Interface",
+  testFolder: "Tests"
 )

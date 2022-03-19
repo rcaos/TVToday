@@ -8,6 +8,7 @@
 import XCTest
 import Combine
 @testable import NetworkingInterface
+@testable import Networking
 
 class NetworkServiceTests: XCTestCase {
 

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Networking
+import NetworkingInterface
 
 enum AccountShowsProvider {
   case favorites(page: Int, userId: String, sessionId: String)

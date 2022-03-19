@@ -7,7 +7,7 @@
 //
 
 import RxSwift
-import Networking
+import NetworkingInterface
 
 final class DefaultAuthRepository {
 

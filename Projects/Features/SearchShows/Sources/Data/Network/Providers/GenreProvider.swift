@@ -6,7 +6,7 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
-import Networking
+import NetworkingInterface
 
 enum GenreProvider {
   case getAll

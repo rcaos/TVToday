@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Networking
+import NetworkingInterface
 
 public enum TVShowsProvider {
   case getAiringTodayShows(Int)

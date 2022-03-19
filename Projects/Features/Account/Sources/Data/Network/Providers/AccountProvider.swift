@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Networking
+import NetworkingInterface
 
 // MARK: - TODO, remove favorites and watchList
 

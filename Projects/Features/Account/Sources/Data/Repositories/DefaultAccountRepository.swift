@@ -7,7 +7,7 @@
 //
 
 import RxSwift
-import Networking
+import NetworkingInterface
 import Shared
 
 public final class DefaultAccountRepository {

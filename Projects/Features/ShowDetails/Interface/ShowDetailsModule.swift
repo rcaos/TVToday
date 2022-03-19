@@ -7,7 +7,7 @@
 
 import UIKit
 import Shared
-import Networking
+import NetworkingInterface
 import Persistence
 
 public struct ModuleDependencies {

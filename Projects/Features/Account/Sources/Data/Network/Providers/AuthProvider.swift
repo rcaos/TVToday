@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Networking
+import NetworkingInterface
 
 enum AuthProvider {
   case createRequestToken

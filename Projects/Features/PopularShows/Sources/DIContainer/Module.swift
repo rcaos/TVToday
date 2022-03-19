@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-import Networking
+import NetworkingInterface
 import Shared
 import ShowDetailsInterface
 

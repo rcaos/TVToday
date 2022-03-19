@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 import Networking
+import NetworkingInterface
 import Persistence
 import RealmPersistence
 import Shared

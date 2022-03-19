@@ -6,7 +6,7 @@
 //
 
 import RxSwift
-import Networking
+import NetworkingInterface
 
 public final class DefaultAccountTVShowsRepository {
 

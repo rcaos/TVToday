@@ -7,13 +7,7 @@
 //
 
 import Foundation
-
-public protocol EndPoint {
-  var path: String { get }
-  var method: ServiceMethod { get }
-  var queryParameters: [String: Any]? { get }
-  var parameterEncoding: ParameterEnconding { get }
-}
+import NetworkingInterface
 
 extension EndPoint {
 
@@ -52,8 +46,9 @@ extension EndPoint {
     return postRequest
   }
 
+  // MARK: - Check this
   private func getUrl(with config: NetworkConfigurable) -> URL? {
-    var urlComponents = URLComponents(string: config.baseURL)
+    var urlComponents = URLComponents(string: config.baseURL.absoluteString)
     urlComponents?.path = path
 
     var queryItems: [URLQueryItem] = []
@@ -90,15 +85,4 @@ extension EndPoint {
 
     return parameters.map { return URLQueryItem(name: "\($0)", value: "\($1)") }
   }
-}
-
-public enum ServiceMethod: String {
-  case get = "GET"
-  case post = "POST"
-}
-
-public enum ParameterEnconding {
-  case defaultEncoding
-  case jsonEncoding
-  case compositeEncoding
 }

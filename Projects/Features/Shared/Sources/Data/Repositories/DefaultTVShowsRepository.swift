@@ -7,7 +7,7 @@
 //
 
 import RxSwift
-import Networking
+import NetworkingInterface
 
 public final class DefaultTVShowsRepository {
   private let dataTransferService: DataTransferService

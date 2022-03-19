@@ -7,7 +7,7 @@
 //
 
 import RxSwift
-import Networking
+import NetworkingInterface
 
 final class DefaultGenreRepository {
   private let dataTransferService: DataTransferService

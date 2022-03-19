@@ -3,9 +3,10 @@ import ProjectDescriptionHelpers
 
 let project = Project.framework(
   name: "Networking",
-  dependencies: [
+  interfaceFolder: "Interface",
+  interfaceDependencies: [
+    // MARK: - TODO, remove soon
     .package(product: "RxSwift")
   ],
-  interfaceFolder: "Interface",
   testFolder: "Tests"
 )

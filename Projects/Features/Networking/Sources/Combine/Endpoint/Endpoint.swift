@@ -15,32 +15,32 @@ public class Endpoint<R>: ResponseRequestable {
   public var path: String
   public var isFullPath: Bool
   public var method: HTTPMethodType
-  public var headerParamaters: [String: String]
+  public var headerParameters: [String: String]
   public var queryParametersEncodable: Encodable?
   public var queryParameters: [String: Any]
-  public var bodyParamatersEncodable: Encodable?
-  public var bodyParamaters: [String: Any]
+  public var bodyParametersEncodable: Encodable?
+  public var bodyParameters: [String: Any]
   public var bodyEncoding: BodyEncoding
   public var responseDecoder: ResponseDecoder
 
   public init(path: String,
               isFullPath: Bool = false,
               method: HTTPMethodType,
-              headerParamaters: [String: String] = [:],
+              headerParameters: [String: String] = [:],
               queryParametersEncodable: Encodable? = nil,
               queryParameters: [String: Any] = [:],
-              bodyParamatersEncodable: Encodable? = nil,
-              bodyParamaters: [String: Any] = [:],
+              bodyParametersEncodable: Encodable? = nil,
+              bodyParameters: [String: Any] = [:],
               bodyEncoding: BodyEncoding = .jsonSerializationData,
               responseDecoder: ResponseDecoder = JSONResponseDecoder()) {
     self.path = path
     self.isFullPath = isFullPath
     self.method = method
-    self.headerParamaters = headerParamaters
+    self.headerParameters = headerParameters
     self.queryParametersEncodable = queryParametersEncodable
     self.queryParameters = queryParameters
-    self.bodyParamatersEncodable = bodyParamatersEncodable
-    self.bodyParamaters = bodyParamaters
+    self.bodyParametersEncodable = bodyParametersEncodable
+    self.bodyParameters = bodyParameters
     self.bodyEncoding = bodyEncoding
     self.responseDecoder = responseDecoder
   }
@@ -50,11 +50,11 @@ public class Endpoint<R>: ResponseRequestable {
     let url = try self.url(with: config)
     var urlRequest = URLRequest(url: url)
     var allHeaders: [String: String] = config.headers
-    headerParamaters.forEach { allHeaders.updateValue($1, forKey: $0) }
+    headerParameters.forEach { allHeaders.updateValue($1, forKey: $0) }
 
-    let bodyParamaters = try bodyParamatersEncodable?.toDictionary() ?? self.bodyParamaters
-    if !bodyParamaters.isEmpty {
-      urlRequest.httpBody = encodeBody(bodyParamaters: bodyParamaters, bodyEncoding: bodyEncoding)
+    let bodyParameters = try bodyParametersEncodable?.toDictionary() ?? self.bodyParameters
+    if !bodyParameters.isEmpty {
+      urlRequest.httpBody = encodeBody(bodyParamaters: bodyParameters, bodyEncoding: bodyEncoding)
     }
     urlRequest.httpMethod = method.rawValue
     urlRequest.allHTTPHeaderFields = allHeaders
@@ -108,4 +108,3 @@ private extension Encodable {
     return josnData as? [String: Any]
   }
 }
-

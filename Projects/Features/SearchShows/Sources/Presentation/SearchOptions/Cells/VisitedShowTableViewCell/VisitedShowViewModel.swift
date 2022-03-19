@@ -23,7 +23,7 @@ protocol VisitedShowViewModelProtocol {
   var delegate: VisitedShowViewModelDelegate? { get set }
 }
 
-final class VisitedShowViewModel: VisitedShowViewModelProtocol {
+final class VisitedShowViewModel: VisitedShowViewModelProtocol, Hashable {
 
   weak var delegate: VisitedShowViewModelDelegate?
 
@@ -35,11 +35,15 @@ final class VisitedShowViewModel: VisitedShowViewModelProtocol {
 
   private var disposeBag = DisposeBag()
 
+  internal let hashValue: Int
+
   // MARK: - Initializer
   init(shows: [ShowVisited]) {
     self.showsObservableSubject = BehaviorSubject(value: shows)
 
     self.shows = showsObservableSubject.asObservable()
+
+    self.hashValue = shows.hashValue
 
     subscribe()
   }
@@ -52,5 +56,13 @@ final class VisitedShowViewModel: VisitedShowViewModelProtocol {
         strongSelf.delegate?.visitedShowViewModel(strongSelf, didSelectRecentlyVisitedShow: showId)
       })
       .disposed(by: disposeBag)
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(hashValue)
+  }
+
+  static func == (lhs: VisitedShowViewModel, rhs: VisitedShowViewModel) -> Bool {
+    return lhs.hashValue == rhs.hashValue
   }
 }

@@ -8,7 +8,6 @@
 import UIKit
 import Shared
 import RxSwift
-import RxDataSources
 
 class TVShowListRootView: NiblessView {
 
@@ -22,6 +21,10 @@ class TVShowListRootView: NiblessView {
     tableView.contentInsetAdjustmentBehavior = .automatic
     return tableView
   }()
+
+  typealias DataSource = UITableViewDiffableDataSource<SectionListShowsView, TVShowCellViewModel>
+  typealias Snapshot = NSDiffableDataSourceSnapshot<SectionListShowsView, TVShowCellViewModel>
+  private var dataSource: DataSource?
 
   private let disposeBag = DisposeBag()
 
@@ -38,61 +41,46 @@ class TVShowListRootView: NiblessView {
     tableView.refreshControl?.endRefreshing(with: 0.5)
   }
 
-  fileprivate func setupUI() {
+  private func setupUI() {
     setupTableView()
     setupDataSource()
-    handleSelectionItems()
+    subscribe()
   }
 
-  // MARK: - Setup TableView
-  fileprivate func setupTableView() {
-    tableView.rx
-      .setDelegate(self)
-      .disposed(by: disposeBag)
-
+  private func setupTableView() {
+    tableView.registerCell(cellType: TVShowViewCell.self)
+    tableView.delegate = self
     tableView.refreshControl = DefaultRefreshControl(refreshHandler: { [weak self] in
       self?.viewModel.refreshView()
     })
   }
 
   private func setupDataSource() {
-    let dataSource = configureTableViewDataSource()
+    dataSource = UITableViewDiffableDataSource(tableView: tableView, cellProvider: { [weak self] tableView, indexPath, model in
+      let cell = tableView.dequeueReusableCell(with: TVShowViewCell.self, for: indexPath)
+      cell.setModel(viewModel: model)
 
+      // MARK: - TODO, use willDisplay instead
+      if let totalItems = self?.dataSource?.snapshot().itemIdentifiers(inSection: .list).count, indexPath.row == totalItems - 1 {
+        self?.viewModel.didLoadNextPage()
+      }
+      return cell
+    })
+  }
+
+  private func subscribe() {
     viewModel
       .viewState
-      .map {  [SectionTVShowListView(header: "TV Shows List", items: $0.currentEntities)] }
-      .bind(to: tableView.rx.items(dataSource: dataSource))
-      .disposed(by: disposeBag)
-  }
-
-  private func handleSelectionItems() {
-    Observable
-      .zip( tableView.rx.itemSelected, tableView.rx.modelSelected(TVShowCellViewModel.self) )
-      .bind { [weak self] (indexPath, item) in
-        guard let strongSelf = self else { return }
-        strongSelf.tableView.deselectRow(at: indexPath, animated: true)
-        strongSelf.viewModel.showIsPicked(with: item.entity.id)
-    }
-    .disposed(by: disposeBag)
-  }
-
-  fileprivate func configureTableViewDataSource() ->
-    RxTableViewSectionedReloadDataSource<SectionTVShowListView> {
-      let configureCell = RxTableViewSectionedReloadDataSource<SectionTVShowListView>(
-        configureCell: { [weak self] dataSource, tableView, indexPath, item in
-          guard let strongSelf = self else {
-            fatalError()
-          }
-
-          let cell = tableView.dequeueReusableCell(with: TVShowViewCell.self, for: indexPath)
-          cell.setModel(viewModel: item)
-
-          if let totalItems = dataSource.sectionModels.first?.items.count, indexPath.row == totalItems - 1 {
-            strongSelf.viewModel.didLoadNextPage()
-          }
-          return cell
+      .map { viewState -> Snapshot in
+        var snapShot = Snapshot()
+        snapShot.appendSections([.list])
+        snapShot.appendItems(viewState.currentEntities, toSection: .list)
+        return snapShot
+      }
+      .subscribe(onNext: { [weak self] snapshot in
+        self?.dataSource?.apply(snapshot)
       })
-      return configureCell
+      .disposed(by: disposeBag)
   }
 
   override func layoutSubviews() {
@@ -105,5 +93,12 @@ class TVShowListRootView: NiblessView {
 extension TVShowListRootView: UITableViewDelegate {
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 175.0
+  }
+
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    if let model = dataSource?.itemIdentifier(for: indexPath) {
+      tableView.deselectRow(at: indexPath, animated: true)
+      viewModel.showIsPicked(with: model.entity.id)
+    }
   }
 }

@@ -8,28 +8,26 @@
 
 import UIKit
 import RxSwift
-import RxCocoa
-import RxDataSources
 import Shared
 
-class ResultsSearchViewController: UIViewController {
+class ResultsSearchViewController: NiblessViewController {
 
   private let disposeBag = DisposeBag()
 
-  private var resultView: ResultListView = ResultListView()
+  private let resultView: ResultListView = ResultListView()
 
-  private var viewModel: ResultsSearchViewModelProtocol
+  private let viewModel: ResultsSearchViewModelProtocol
 
-  private var messageView = MessageView()
+  private let messageView = MessageView()
+
+  typealias DataSource = UITableViewDiffableDataSource<ResultSearchSectionView, ResultSearchSectionItem>
+  typealias Snapshot = NSDiffableDataSourceSnapshot<ResultSearchSectionView, ResultSearchSectionItem>
+  private var dataSource: DataSource?
 
   // MARK: - Life Cycle
   init(viewModel: ResultsSearchViewModelProtocol) {
     self.viewModel = viewModel
-    super.init(nibName: nil, bundle: nil)
-  }
-
-  required init?(coder aDecoder: NSCoder) {
-    fatalError()
+    super.init()
   }
 
   override func loadView() {
@@ -53,10 +51,7 @@ class ResultsSearchViewController: UIViewController {
   private func setupTableView() {
     resultView.tableView.registerCell(cellType: TVShowViewCell.self)
     resultView.tableView.registerCell(cellType: RecentSearchTableViewCell.self)
-
-    resultView.tableView.rx
-      .setDelegate(self)
-      .disposed(by: disposeBag)
+    resultView.tableView.delegate = self
   }
 
   // MARK: - SetupViewModel
@@ -73,52 +68,38 @@ class ResultsSearchViewController: UIViewController {
   // MARK: - Setup Table View
   private func setupTable() {
     setupDataSource()
-    handleSelection()
+    subscribe()
   }
 
   private func setupDataSource() {
-    let dataSource = RxTableViewSectionedReloadDataSource<ResultSearchSectionModel>(
-      configureCell: { [weak self] (_, tableView, indexPath, element) -> UITableViewCell in
+    dataSource = CustomSectionTableViewDiffableDataSource(tableView: resultView.tableView, cellProvider: { [weak self] tableView, indexPath, model in
       guard let strongSelf = self else {
         fatalError()
       }
 
-      switch element {
-      case .recentSearchs(items: let recentQuery):
-        return strongSelf.makeCellForRecentSearch(tableView, at: indexPath, element: recentQuery)
-      case .results(items: let showViewModel):
-        return strongSelf.makeCellForResultSearch(tableView, at: indexPath, element: showViewModel)
+      switch model {
+      case let .recentSearchs(model):
+        return strongSelf.makeCellForRecentSearch(tableView, at: indexPath, element: model)
+      case let .results(viewModel):
+        return strongSelf.makeCellForResultSearch(tableView, at: indexPath, element: viewModel)
       }
     })
 
-    dataSource.titleForHeaderInSection = { dataSource, section in
-      return dataSource.sectionModels[section].getHeader()
-    }
-
-    viewModel
-      .dataSource
-      .bind(to: resultView.tableView.rx.items(dataSource: dataSource))
-      .disposed(by: disposeBag)
   }
 
-  private  func handleSelection() {
-    Observable
-      .zip(resultView.tableView.rx.itemSelected,
-           resultView.tableView.rx.modelSelected(ResultSearchSectionItem.self))
-      .subscribe(onNext: { [weak self] (index, element) in
-        guard let strongSelf = self else {
-          return
+  private func subscribe() {
+    viewModel
+      .dataSource
+      .map { dataSource -> Snapshot in
+        var snapShot = Snapshot()
+        for element in dataSource {
+          snapShot.appendSections([element.section])
+          snapShot.appendItems(element.items, toSection: element.section)
         }
-
-        switch element {
-        case .recentSearchs(let query) :
-          strongSelf.resultView.tableView.deselectRow(at: index, animated: true)
-          strongSelf.viewModel.recentSearchIsPicked(query: query)
-
-        case .results(let viewModel):
-          strongSelf.resultView.tableView.deselectRow(at: index, animated: true)
-          strongSelf.viewModel.showIsPicked(idShow: viewModel.entity.id)
-        }
+        return snapShot
+      }
+      .subscribe(onNext: { [weak self] snapshot in
+        self?.dataSource?.apply(snapshot)
       })
       .disposed(by: disposeBag)
   }
@@ -165,6 +146,20 @@ extension ResultsSearchViewController: UITableViewDelegate {
       return 175.0
     default:
       return 0
+    }
+  }
+
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    if let model = dataSource?.itemIdentifier(for: indexPath) {
+      tableView.deselectRow(at: indexPath, animated: true)
+
+      switch model {
+      case .recentSearchs(let query) :
+        viewModel.recentSearchIsPicked(query: query)
+
+      case .results(let itemViewModel):
+        viewModel.showIsPicked(idShow: itemViewModel.entity.id)
+      }
     }
   }
 }

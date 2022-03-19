@@ -50,7 +50,7 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
     fetchGenresAndRecentShows()
   }
 
-  public func modelIsPicked(with item: SearchOptionsSectionModel.Item) {
+  public func modelIsPicked(with item: SearchSectionItem) {
     switch item {
     case .genres(items: let genre):
       delegate?.searchOptionsViewModel(self, didGenrePicked: genre.id, title: genre.name)

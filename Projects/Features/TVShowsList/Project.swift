@@ -4,8 +4,6 @@ import ProjectDescriptionHelpers
 let project = Project.framework(
   name: "TVShowsList",
   dependencies: [
-    .package(product: "RxCocoa"),
-    .package(product: "RxDataSources"),
     .package(product: "RxSwift")
   ],
   interfaceFolder: "Interface",

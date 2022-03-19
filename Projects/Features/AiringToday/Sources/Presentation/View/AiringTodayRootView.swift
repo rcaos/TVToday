@@ -8,7 +8,6 @@
 import Shared
 import UIKit
 import RxSwift
-import RxDataSources
 
 class AiringTodayRootView: NiblessView {
 
@@ -28,6 +27,11 @@ class AiringTodayRootView: NiblessView {
     return collectionView
   }()
 
+  private var dataSource: DataSource?
+
+  typealias DataSource = UICollectionViewDiffableDataSource<SectionAiringTodayFeed, AiringTodayCollectionViewModel>
+  typealias Snapshot = NSDiffableDataSourceSnapshot<SectionAiringTodayFeed, AiringTodayCollectionViewModel>
+
   private let disposeBag = DisposeBag()
 
   // MARK: - Initializer
@@ -43,43 +47,55 @@ class AiringTodayRootView: NiblessView {
     collectionView.refreshControl?.endRefreshing(with: 0.5)
   }
 
-  fileprivate func setupUI() {
+  private func setupUI() {
     setupCollectionView()
     setupDataSource()
-    handleSelectionItems()
   }
 
   // MARK: - Setup CollectionView
-  fileprivate func setupCollectionView() {
-    collectionView.rx
-      .setDelegate(self)
-      .disposed(by: disposeBag)
-
+  private func setupCollectionView() {
     collectionView.refreshControl = DefaultRefreshControl(refreshHandler: { [weak self] in
       self?.viewModel.refreshView()
     })
+
+    collectionView.registerCell(cellType: AiringTodayCollectionViewCell.self)
+    collectionView.register(FooterReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+                            withReuseIdentifier: "FooterReusableView")
+    collectionView.delegate = self
+
+    dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView,
+                                                    cellProvider: { [weak self] collectionView, indexPath, viewModel in
+      let cell = collectionView.dequeueReusableCell(with: AiringTodayCollectionViewCell.self, for: indexPath)
+      cell.setViewModel(viewModel)
+
+      // MARK: - TODO, Use willDisplayCell and trigger signal to ViewModel instead
+      if let totalItems = self?.dataSource?.snapshot().itemIdentifiers(inSection: .shows).count, indexPath.row == totalItems - 1 {
+        self?.viewModel.didLoadNextPage()
+      }
+
+      return cell
+    })
+
+    dataSource?.supplementaryViewProvider = { collectionView, kind, indexPath in
+      let footerView = collectionView.dequeueReusableSupplementaryView(
+        ofKind: kind,
+        withReuseIdentifier: "FooterReusableView", for: indexPath) as! FooterReusableView
+      return footerView
+    }
   }
 
-  fileprivate func setupDataSource() {
-    let (configureCollectionViewCell, configureSupplementaryView) = configureCollectionViewDataSource()
-
-    let dataSource = RxCollectionViewSectionedReloadDataSource<SectionAiringToday>(
-      configureCell: configureCollectionViewCell,
-      configureSupplementaryView: configureSupplementaryView)
-
+  private func setupDataSource() {
     viewModel
       .viewState
-      .map { [SectionAiringToday(header: "Shows Today", items: $0.currentEntities) ] }
-      .bind(to: collectionView.rx.items(dataSource: dataSource))
-      .disposed(by: disposeBag)
-  }
-
-  fileprivate func handleSelectionItems() {
-    collectionView.rx
-      .modelSelected( AiringTodayCollectionViewModel.self)
-      .subscribe(onNext: { [weak self] item in
-        guard let strongSelf = self else { return }
-        strongSelf.viewModel.showIsPicked(with: item.show.id)
+      .map { $0.currentEntities }
+      .map { entities -> Snapshot in
+        var snapShot = Snapshot()
+        snapShot.appendSections([.shows])
+        snapShot.appendItems(entities, toSection: .shows)
+        return snapShot
+      }
+      .subscribe(onNext: { [weak self] snapshot in
+        self?.dataSource?.apply(snapshot)
       })
       .disposed(by: disposeBag)
   }
@@ -90,51 +106,19 @@ class AiringTodayRootView: NiblessView {
   }
 }
 
-// MARK: - Configure CollectionView Views
-extension AiringTodayRootView {
-  func configureCollectionViewDataSource() -> (
-    CollectionViewSectionedDataSource<SectionAiringToday>.ConfigureCell,
-    CollectionViewSectionedDataSource<SectionAiringToday>.ConfigureSupplementaryView
-  ) {
-    let configureCell: CollectionViewSectionedDataSource<SectionAiringToday>.ConfigureCell = { [weak self] dataSource, collectionView, indexPath, item in
-      guard let strongSelf = self else {
-        fatalError()
-      }
-
-      let cell = collectionView.dequeueReusableCell(with: AiringTodayCollectionViewCell.self, for: indexPath)
-      cell.setViewModel(item)
-
-      if let totalItems = dataSource.sectionModels.first?.items.count, indexPath.row == totalItems - 1 {
-        strongSelf.viewModel.didLoadNextPage()
-      }
-
-      return cell
-    }
-
-    let configureFooterView: CollectionViewSectionedDataSource<SectionAiringToday>.ConfigureSupplementaryView = { _, collectionView, kindOfView, indexPath in
-      let footerView = collectionView.dequeueReusableSupplementaryView(
-        ofKind: kindOfView,
-        withReuseIdentifier: "FooterReusableView", for: indexPath) as! FooterReusableView
-      return footerView
-    }
-
-    return (configureCell, configureFooterView)
-  }
-}
-
 // MARK: - UICollectionViewDelegateFlowLayout
 extension AiringTodayRootView: UICollectionViewDelegateFlowLayout {
 
-  public func collectionView(_ collectionView: UICollectionView,
-                             layout collectionViewLayout: UICollectionViewLayout,
-                             sizeForItemAt indexPath: IndexPath) -> CGSize {
+  func collectionView(_ collectionView: UICollectionView,
+                      layout collectionViewLayout: UICollectionViewLayout,
+                      sizeForItemAt indexPath: IndexPath) -> CGSize {
     let width = collectionView.frame.width
     return CGSize(width: width, height: 275)
   }
 
-  public func collectionView(_ collectionView: UICollectionView,
-                             layout collectionViewLayout: UICollectionViewLayout,
-                             referenceSizeForFooterInSection section: Int) -> CGSize {
+  func collectionView(_ collectionView: UICollectionView,
+                      layout collectionViewLayout: UICollectionViewLayout,
+                      referenceSizeForFooterInSection section: Int) -> CGSize {
     let viewState = viewModel.getCurrentViewState()
 
     switch viewState {
@@ -142,6 +126,12 @@ extension AiringTodayRootView: UICollectionViewDelegateFlowLayout {
       return CGSize(width: collectionView.frame.width, height: 100)
     default:
       return .zero
+    }
+  }
+
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    if let item = dataSource?.itemIdentifier(for: indexPath) {
+      viewModel.showIsPicked(with: item.show.id)
     }
   }
 }

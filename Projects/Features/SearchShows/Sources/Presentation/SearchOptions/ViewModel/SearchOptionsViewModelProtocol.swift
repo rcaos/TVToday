@@ -27,7 +27,7 @@ enum SearchViewState: Equatable {
 protocol SearchOptionsViewModelProtocol: VisitedShowViewModelDelegate {
   // MARK: - Input
   func viewDidLoad()
-  func modelIsPicked(with item: SearchOptionsSectionModel.Item)
+  func modelIsPicked(with item: SearchSectionItem)
 
   // MARK: - Output
   var viewState: Observable<SearchViewState> { get }

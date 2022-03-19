@@ -9,7 +9,6 @@
 import UIKit
 import RxSwift
 import Shared
-import RxDataSources
 
 class SeasonListTableViewCell: NiblessTableViewCell {
 
@@ -21,6 +20,10 @@ class SeasonListTableViewCell: NiblessTableViewCell {
     collectionView.backgroundColor = .secondarySystemBackground
     return collectionView
   }()
+
+  typealias DataSource = UICollectionViewDiffableDataSource<SectionSeasonsList, Int>
+  typealias Snapshot = NSDiffableDataSourceSnapshot<SectionSeasonsList, Int>
+  private var dataSource: DataSource?
 
   var viewModel: SeasonListViewModelProtocol?
 
@@ -51,14 +54,12 @@ class SeasonListTableViewCell: NiblessTableViewCell {
   private func configureViews() {
     collectionView.allowsMultipleSelection = false
     collectionView.registerCell(cellType: SeasonEpisodeCollectionViewCell.self)
-
-    collectionView.rx
-      .setDelegate(self)
-      .disposed(by: disposeBag)
+    collectionView.delegate = self
   }
 
   public func setViewModel(viewModel: SeasonListViewModelProtocol?) {
     self.viewModel = viewModel
+    setupDataSource()
     setupBindables()
   }
 
@@ -67,16 +68,17 @@ class SeasonListTableViewCell: NiblessTableViewCell {
       return
     }
 
-    let dataSource = RxCollectionViewSectionedReloadDataSource<SectionSeasonsList>(configureCell: configureCollectionViewCell())
-
     viewModel
       .seasons
-      .map { [SectionSeasonsList(header: "Seasons", items: $0 )] }
-      .bind(to: collectionView.rx.items(dataSource: dataSource) )
-      .disposed(by: disposeBag)
-
-    collectionView.rx.modelSelected(Int.self)
-      .bind(to: viewModel.inputSelectedSeason)
+      .map { data -> Snapshot in
+        var snapShot = Snapshot()
+        snapShot.appendSections([.season])
+        snapShot.appendItems(data, toSection: .season)
+        return snapShot
+      }
+      .subscribe(onNext: { [weak self] snapshot in
+        self?.dataSource?.apply(snapshot)
+      })
       .disposed(by: disposeBag)
 
     viewModel
@@ -90,21 +92,20 @@ class SeasonListTableViewCell: NiblessTableViewCell {
 
   private func selectedSeason(at index: Int) {
     let indexPath = IndexPath(row: index - 1, section: 0)
-    collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .top)
+    if indexPath.row < collectionView.numberOfItems(inSection: 0) {
+      collectionView.selectItem(at: indexPath, animated: true, scrollPosition: .top)
+    }
   }
 
-  private func configureCollectionViewCell() -> CollectionViewSectionedDataSource<SectionSeasonsList>.ConfigureCell {
-    let configureCell: CollectionViewSectionedDataSource<SectionSeasonsList>.ConfigureCell = { [weak self] _, collectionView, indexPath, item in
+  private func setupDataSource() {
+    dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView, cellProvider: { [weak self] collectionView, indexPath, season in
       guard let strongSelf = self else {
         fatalError()
       }
-
       let cell = collectionView.dequeueReusableCell(with: SeasonEpisodeCollectionViewCell.self, for: indexPath)
-
-      cell.setViewModel(viewModel: strongSelf.viewModel?.getModel(for: item))
+      cell.setViewModel(viewModel: strongSelf.viewModel?.getModel(for: season))
       return cell
-    }
-    return configureCell
+    })
   }
 }
 
@@ -123,5 +124,11 @@ extension SeasonListTableViewCell: UICollectionViewDelegateFlowLayout {
     let insetTop = (height - 50) / 2
 
     return UIEdgeInsets(top: insetTop, left: 8, bottom: insetTop, right: 0)
+  }
+
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    if let item = dataSource?.itemIdentifier(for: indexPath) {
+      viewModel?.inputSelectedSeason.onNext(item)
+    }
   }
 }

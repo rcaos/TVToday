@@ -8,13 +8,10 @@
 import UIKit
 import Shared
 import RxSwift
-import RxDataSources
 
 class SearchOptionRootView: NiblessView {
 
   private let viewModel: SearchOptionsViewModelProtocol
-
-  private let disposeBag = DisposeBag()
 
   let tableView: UITableView = {
     let tableView = UITableView(frame: .zero, style: .plain)
@@ -24,6 +21,12 @@ class SearchOptionRootView: NiblessView {
     return tableView
   }()
 
+  typealias DataSource = UITableViewDiffableDataSource<SearchOptionsSectionView, SearchSectionItem>
+  typealias Snapshot = NSDiffableDataSourceSnapshot<SearchOptionsSectionView, SearchSectionItem>
+  private var dataSource: DataSource?
+
+  private let disposeBag = DisposeBag()
+
   init(frame: CGRect = .zero, viewModel: SearchOptionsViewModelProtocol) {
     self.viewModel = viewModel
     super.init(frame: frame)
@@ -32,68 +35,72 @@ class SearchOptionRootView: NiblessView {
     setupUI()
   }
 
-  fileprivate func setupUI() {
+  private func setupUI() {
     registerCells()
     setupDataSource()
-    handleSelection()
+    subscribe()
   }
 
-  fileprivate func registerCells() {
+  private func registerCells() {
     tableView.registerCell(cellType: VisitedShowTableViewCell.self)
     tableView.registerCell(cellType: GenreTableViewCell.self)
   }
 
-  fileprivate func setupDataSource() {
-    let dataSource = RxTableViewSectionedReloadDataSource<SearchOptionsSectionModel>(
-      configureCell: { [weak self] (_, _, indexPath, element) -> UITableViewCell in
-        guard let strongSelf = self else { fatalError() }
-        switch element {
-        case .showsVisited(items: let viewModel):
-          return strongSelf.makeCellForShowVisited(at: indexPath, cellViewModel: viewModel)
-        case .genres(items: let genre):
-          return strongSelf.makeCellForGenre(at: indexPath, viewModel: genre)
-        }
+  private func setupDataSource() {
+    tableView.delegate = self
+
+    dataSource = SearchSectionTableViewDiffableDataSource(tableView: tableView, cellProvider: { [weak self] tableView, indexPath, model in
+      guard let strongSelf = self else { fatalError() }
+      switch model {
+      case .showsVisited(items: let viewModel):
+        return strongSelf.makeCellForShowVisited(tableView, at: indexPath, cellViewModel: viewModel)
+      case .genres(items: let genre):
+        return strongSelf.makeCellForGenre(tableView, at: indexPath, viewModel: genre)
+      }
     })
-
-    dataSource.titleForHeaderInSection = { dataSource, section in
-      return dataSource.sectionModels[section].getHeader()
-    }
-
-    viewModel
-      .dataSource
-      .bind(to: tableView.rx.items(dataSource: dataSource))
-      .disposed(by: disposeBag)
   }
 
-  fileprivate func handleSelection() {
-    Observable
-      .zip( tableView.rx.itemSelected, tableView.rx.modelSelected(SearchOptionsSectionModel.Item.self) )
-      .bind { [weak self] (indexPath, item) in
-        guard let strongSelf = self else { return }
-        strongSelf.tableView.deselectRow(at: indexPath, animated: true)
-        strongSelf.viewModel.modelIsPicked(with: item)
-    }
-    .disposed(by: disposeBag)
+  private func subscribe() {
+    viewModel.dataSource
+      .map { dataSource -> Snapshot in
+        var snapShot = Snapshot()
+        for element in dataSource {
+          snapShot.appendSections([element.sectionView])
+          snapShot.appendItems(element.items, toSection: element.sectionView)
+        }
+        return snapShot
+      }
+      .subscribe(onNext: { [weak self] snapshot in
+        self?.dataSource?.apply(snapshot)
+      })
+      .disposed(by: disposeBag)
   }
 
   override func layoutSubviews() {
     super.layoutSubviews()
     tableView.frame = bounds
   }
-}
 
-// MARK: - Build Cells
-extension SearchOptionRootView {
-
-  private func makeCellForShowVisited(at indexPath: IndexPath, cellViewModel: VisitedShowViewModelProtocol) -> UITableViewCell {
+  private func makeCellForShowVisited(_ tableView: UITableView, at indexPath: IndexPath,
+                                      cellViewModel: VisitedShowViewModelProtocol) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: VisitedShowTableViewCell.self, for: indexPath)
     cell.setupCell(with: cellViewModel)
     return cell
   }
 
-  private func makeCellForGenre(at indexPath: IndexPath, viewModel: GenreViewModelProtocol) -> UITableViewCell {
+  private func makeCellForGenre(_ tableView: UITableView, at indexPath: IndexPath, viewModel: GenreViewModelProtocol) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: GenreTableViewCell.self, for: indexPath)
     cell.setViewModel(viewModel)
     return cell
+  }
+}
+
+// MARK: - UITableViewDelegate
+extension SearchOptionRootView: UITableViewDelegate {
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    if let model = dataSource?.itemIdentifier(for: indexPath) {
+      tableView.deselectRow(at: indexPath, animated: true)
+      viewModel.modelIsPicked(with: model)
+    }
   }
 }

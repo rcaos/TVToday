@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct TVShowDetailResult {
+public struct TVShowDetailResult: Hashable {
   public let id: Int!
   public let name: String!
   public let firstAirDate: String?
@@ -60,7 +60,10 @@ extension TVShowDetailResult {
       return "?"
     }
 
+    // https://stackoverflow.com/a/41023135/11964677
     let formatter = DateFormatter()
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.timeZone = TimeZone(identifier: "America/New_York")
     formatter.dateFormat = "yyyy-MM-dd"
 
     if let date = formatter.date(from: dateString) {

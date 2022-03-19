@@ -8,7 +8,6 @@
 import Shared
 import UIKit
 import RxSwift
-import RxDataSources
 
 class ProfileRootView: NiblessView {
 
@@ -22,6 +21,10 @@ class ProfileRootView: NiblessView {
     return tableView
   }()
 
+  typealias DataSource = UITableViewDiffableDataSource<ProfileSectionView, ProfilesSectionItem>
+  typealias Snapshot = NSDiffableDataSourceSnapshot<ProfileSectionView, ProfilesSectionItem>
+  private var dataSource: DataSource?
+
   private let disposeBag = DisposeBag()
 
   // MARK: - Initializer
@@ -33,55 +36,50 @@ class ProfileRootView: NiblessView {
     setupView()
   }
 
-  fileprivate func setupView() {
+  private func setupView() {
     setupTableView()
-    registerCells()
     setupDataSource()
+    subscribe()
   }
 
-  fileprivate func setupTableView() {
-    tableView.rx
-      .setDelegate(self)
-      .disposed(by: disposeBag)
-
-    tableView.rx.itemSelected
-      .subscribe(onNext: { [weak self] indexPath in
-        self?.tableView.deselectRow(at: indexPath, animated: true)
-      })
-      .disposed(by: disposeBag)
-
-    tableView.rx.modelSelected(ProfilesSectionItem.self)
-      .bind(to: viewModel.tapCellAction)
-      .disposed(by: disposeBag)
-  }
-
-  fileprivate func registerCells() {
+  private func setupTableView() {
+    tableView.delegate = self
     tableView.registerCell(cellType: ProfileTableViewCell.self)
     tableView.registerCell(cellType: GenericViewCell.self)
     tableView.registerCell(cellType: LogoutTableViewCell.self)
   }
 
-  fileprivate func setupDataSource() {
-    let dataSource = RxTableViewSectionedReloadDataSource<ProfileSectionModel>(configureCell: { [weak self] (_, _, indexPath, element) -> UITableViewCell in
-      guard let strongSelf = self else {
-        fatalError()
-      }
+  private func setupDataSource() {
+    dataSource = UITableViewDiffableDataSource(tableView: tableView, cellProvider: { [weak self] tableView, indexPath, model in
+      guard let strongSelf = self else { fatalError() }
 
-      switch element {
+      switch model {
       case .userInfo(number: let accountInfo):
-        return strongSelf.buildCellForProfileInfo(at: indexPath, element: accountInfo)
+        return strongSelf.buildCellForProfileInfo(tableView, at: indexPath, element: accountInfo)
 
       case .userLists(items: let title):
-        return strongSelf.buildCellForUserLists(at: indexPath, element: title)
+        return strongSelf.buildCellForUserLists(tableView, at: indexPath, element: title)
 
       case .logout(items: let title):
-        return strongSelf.buildLogOutCell(at: indexPath, element: title)
+        return strongSelf.buildLogOutCell(tableView, at: indexPath, element: title)
       }
     })
+  }
 
+  private func subscribe() {
     viewModel
       .dataSource
-      .bind(to: tableView.rx.items(dataSource: dataSource))
+      .map { dataSource -> Snapshot in
+        var snapShot = Snapshot()
+        for element in dataSource {
+          snapShot.appendSections([element.sectionView])
+          snapShot.appendItems(element.items, toSection: element.sectionView)
+        }
+        return snapShot
+      }
+      .subscribe(onNext: { [weak self] snapshot in
+        self?.dataSource?.apply(snapshot)
+      })
       .disposed(by: disposeBag)
   }
 
@@ -89,24 +87,21 @@ class ProfileRootView: NiblessView {
     super.layoutSubviews()
     tableView.frame = bounds
   }
-}
 
-// MARK: - Build Cells
-extension ProfileRootView {
-
-  fileprivate func buildCellForProfileInfo(at indexPath: IndexPath, element: AccountResult) -> UITableViewCell {
+  // MARK: - Build Cells
+  private func buildCellForProfileInfo(_ tableView: UITableView, at indexPath: IndexPath, element: AccountResult) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: ProfileTableViewCell.self, for: indexPath)
     cell.setModel(with: element)
     return cell
   }
 
-  fileprivate func buildCellForUserLists(at indexPath: IndexPath, element: UserListType) -> UITableViewCell {
+  private func buildCellForUserLists(_ tableView: UITableView, at indexPath: IndexPath, element: UserListType) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: GenericViewCell.self, for: indexPath)
     cell.setTitle(with: element.rawValue)
     return cell
   }
 
-  fileprivate func buildLogOutCell(at indexPath: IndexPath, element: String) -> UITableViewCell {
+  private func buildLogOutCell(_ tableView: UITableView, at indexPath: IndexPath, element: String) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: LogoutTableViewCell.self, for: indexPath)
     return cell
   }
@@ -116,5 +111,12 @@ extension ProfileRootView {
 extension ProfileRootView: UITableViewDelegate {
   func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
     return CGFloat(40)
+  }
+
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    tableView.deselectRow(at: indexPath, animated: true)
+    if let model = dataSource?.itemIdentifier(for: indexPath) {
+      viewModel.tapCellAction.onNext(model)
+    }
   }
 }

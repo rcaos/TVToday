@@ -27,7 +27,7 @@ class SignInViewDarkTests: XCTestCase {
     viewController.overrideUserInterfaceStyle = .dark
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewIsLoading_thenShowLoadingScreen() {
@@ -37,7 +37,7 @@ class SignInViewDarkTests: XCTestCase {
     viewController.overrideUserInterfaceStyle = .dark
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewIsError_thenShowErrorScreen() {
@@ -47,6 +47,6 @@ class SignInViewDarkTests: XCTestCase {
     viewController.overrideUserInterfaceStyle = .dark
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
   }
 }

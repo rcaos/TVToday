@@ -8,17 +8,17 @@
 
 import Foundation
 
-public struct AccountResult: Equatable {
+public struct AccountResult: Hashable {
   let avatar: Avatar?
   let id: Int?
   let userName: String?
 }
 
-public struct Avatar: Equatable {
+public struct Avatar: Hashable {
   let gravatar: Gravatar?
 }
 
-public struct Gravatar: Equatable {
+public struct Gravatar: Hashable {
   let hash: String?
 
 }

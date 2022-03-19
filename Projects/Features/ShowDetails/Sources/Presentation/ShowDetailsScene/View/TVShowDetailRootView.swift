@@ -426,8 +426,4 @@ class TVShowDetailRootView: NiblessView {
   @objc private func handleEpisodesGesture(_ sender: UITapGestureRecognizer) {
     viewModel.navigateToSeasons()
   }
-
-  override func layoutSubviews() {
-    super.layoutSubviews()
-  }
 }

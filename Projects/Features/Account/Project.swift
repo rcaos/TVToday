@@ -20,8 +20,6 @@ let project = Project.framework(
       target: "TVShowsListInterface",
       path: .relativeToRoot("Projects/Features/TVShowsList")
     ),
-    .package(product: "RxCocoa"),
-    .package(product: "RxDataSources"),
     .package(product: "RxSwift")
   ],
   testFolder: "Tests",

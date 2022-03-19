@@ -7,12 +7,11 @@
 
 import UIKit
 import RxSwift
-import RxDataSources
 import Shared
 
 class EpisodesListRootView: NiblessView {
 
-  private var viewModel: EpisodesListViewModelProtocol
+  private let viewModel: EpisodesListViewModelProtocol
 
   let tableView: UITableView = {
     let tableView = UITableView(frame: .zero, style: .plain)
@@ -26,6 +25,10 @@ class EpisodesListRootView: NiblessView {
     return tableView
   }()
 
+  typealias DataSource = UITableViewDiffableDataSource<SeasonsSectionCollection, SeasonsSectionItem>
+  typealias Snapshot = NSDiffableDataSourceSnapshot<SeasonsSectionCollection, SeasonsSectionItem>
+  private var dataSource: DataSource?
+
   private let disposeBag = DisposeBag()
 
   init(frame: CGRect = .zero, viewModel: EpisodesListViewModelProtocol) {
@@ -35,33 +38,46 @@ class EpisodesListRootView: NiblessView {
     setupView()
   }
 
-  fileprivate func setupView() {
+  private func setupView() {
     setupTable()
     setupDataSource()
+    subscribe()
   }
 
-  fileprivate func setupTable() {
-    tableView.rx.setDelegate(self)
-      .disposed(by: disposeBag)
+  private func setupTable() {
+    tableView.delegate = self
   }
 
-  fileprivate func setupDataSource() {
-    let dataSource = RxTableViewSectionedAnimatedDataSource<SeasonsSectionModel>(
-      configureCell: { [weak self] (_, _, indexPath, element) -> UITableViewCell in
-        guard let strongSelf = self else { fatalError() }
-        switch element {
-        case .headerShow(viewModel: let viewModel):
-          return strongSelf.makeCellForHeaderShow(at: indexPath, viewModel: viewModel)
-        case .seasons(number: let numberOfSeasons):
-          return strongSelf.makeCellForSeasonNumber(at: indexPath, element: numberOfSeasons)
-        case .episodes(items: let episode):
-          return strongSelf.makeCellForEpisode(at: indexPath, element: episode)
-        }
+  private func setupDataSource() {
+    dataSource = UITableViewDiffableDataSource(tableView: tableView, cellProvider: { [weak self] _, indexPath, section in
+      guard let strongSelf = self else {
+        fatalError()
+      }
+      switch section {
+      case .headerShow(viewModel: let viewModel):
+        return strongSelf.makeCellForHeaderShow(at: indexPath, viewModel: viewModel)
+      case .seasons(number: let numberOfSeasons):
+        return strongSelf.makeCellForSeasonNumber(at: indexPath, element: numberOfSeasons)
+      case .episodes(items: let episode):
+        return strongSelf.makeCellForEpisode(at: indexPath, element: episode)
+      }
     })
+  }
 
+  private func subscribe() {
     viewModel
       .data
-      .bind(to: tableView.rx.items(dataSource: dataSource) )
+      .map { data -> Snapshot in
+        var snapShot = Snapshot()
+        for section in data {
+          snapShot.appendSections([section.sectionCollection])
+          snapShot.appendItems(section.items, toSection: section.sectionCollection)
+        }
+        return snapShot
+      }
+      .subscribe(onNext: { [weak self] snapshot in
+        self?.dataSource?.apply(snapshot)
+      })
       .disposed(by: disposeBag)
   }
 
@@ -73,7 +89,7 @@ class EpisodesListRootView: NiblessView {
 
 // MARK: - Configure Cells
 extension EpisodesListRootView {
-  private func makeCellForHeaderShow(at indexPath: IndexPath, viewModel: SeasonHeaderViewModelProtocol) -> UITableViewCell {
+  private func makeCellForHeaderShow(at indexPath: IndexPath, viewModel: SeasonHeaderViewModel) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: HeaderSeasonsTableViewCell.self, for: indexPath)
     if cell.viewModel == nil {
       cell.setModel(viewModel: viewModel)

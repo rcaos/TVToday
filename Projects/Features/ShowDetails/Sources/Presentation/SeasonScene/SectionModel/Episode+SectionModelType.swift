@@ -6,9 +6,7 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxDataSources
-
-public struct EpisodeSectionModelType {
+public struct EpisodeSectionModelType: Hashable {
 
   var id: Int
   var episodeNumber: Int
@@ -33,19 +31,5 @@ public struct EpisodeSectionModelType {
                    airDate: episodeSection.airDate,
                    voteAverage: episodeSection.voteAverage,
                    posterPath: episodeSection.posterPath)
-  }
-}
-
-// MARK: - RxDataSource Animated
-extension EpisodeSectionModelType: IdentifiableType {
-  public typealias Identity = Int
-  public var identity: Int {
-    return id
-  }
-}
-
-extension EpisodeSectionModelType: Equatable {
-  static public func == (lhs: Self, rhs: Self) -> Bool {
-    return lhs.id == rhs.id
   }
 }

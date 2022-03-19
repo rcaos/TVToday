@@ -7,7 +7,6 @@
 
 import UIKit
 import RxSwift
-import RxDataSources
 import Shared
 import Persistence
 
@@ -27,8 +26,12 @@ class VisitedShowTableViewCell: NiblessTableViewCell {
 
   private var disposeBag = DisposeBag()
 
-  private var preferredWidth: CGFloat = 100.0
-  private var preferredHeight: CGFloat = 170.0
+  private let preferredWidth: CGFloat = 100.0
+  private let preferredHeight: CGFloat = 170.0
+
+  typealias DataSource = UICollectionViewDiffableDataSource<HeaderModel, ShowVisited>
+  typealias Snapshot = NSDiffableDataSourceSnapshot<HeaderModel, ShowVisited>
+  private var dataSource: DataSource?
 
   // MARK: - Life Cycle
   public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -48,31 +51,26 @@ class VisitedShowTableViewCell: NiblessTableViewCell {
     self.viewModel = viewModel
     disposeBag = DisposeBag()
 
-    collectionView.rx
-      .setDelegate(self)
-      .disposed(by: disposeBag)
+    collectionView.delegate = self
 
-    let dataSource = RxCollectionViewSectionedReloadDataSource<VisitedShowSectionModel>(configureCell: configureCollectionViewCell())
-
-    viewModel
-      .shows
-      .map { [VisitedShowSectionModel(header: "Visited", items: $0)] }
-      .bind(to: collectionView.rx.items(dataSource: dataSource))
-      .disposed(by: disposeBag)
-
-    collectionView.rx.modelSelected(ShowVisited.self)
-      .map { $0.id }
-      .bind(to: viewModel.selectedShow)
-      .disposed(by: disposeBag)
-  }
-
-  fileprivate func configureCollectionViewCell() -> CollectionViewSectionedDataSource<VisitedShowSectionModel>.ConfigureCell {
-    let configureCell: CollectionViewSectionedDataSource<VisitedShowSectionModel>.ConfigureCell = { _, collectionView, indexPath, item in
+    dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView,
+                                                    cellProvider: { collectionView, indexPath, model in
       let cell = collectionView.dequeueReusableCell(with: VisitedShowCollectionViewCell.self, for: indexPath)
-      cell.setModel(imageURL: item.pathImage)
+      cell.setModel(imageURL: model.pathImage)
       return cell
-    }
-    return configureCell
+    })
+
+    viewModel.shows
+      .map { shows -> Snapshot in
+        var snapShot = Snapshot()
+        snapShot.appendSections([.header])
+        snapShot.appendItems(shows, toSection: .header)
+        return snapShot
+      }
+      .subscribe(onNext: { [weak self] snapshot in
+        self?.dataSource?.apply(snapshot)
+      })
+      .disposed(by: disposeBag)
   }
 
   private func setupUI() {
@@ -95,7 +93,7 @@ class VisitedShowTableViewCell: NiblessTableViewCell {
   }
 }
 
-// MARK: UICollectionViewDelegateFlowLayout
+// MARK: - UICollectionViewDelegateFlowLayout
 extension VisitedShowTableViewCell: UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView,
                       layout collectionViewLayout: UICollectionViewLayout,
@@ -107,5 +105,11 @@ extension VisitedShowTableViewCell: UICollectionViewDelegateFlowLayout {
                       layout collectionViewLayout: UICollectionViewLayout,
                       insetForSectionAt section: Int) -> UIEdgeInsets {
     return UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 0)
+  }
+
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    if let item = dataSource?.itemIdentifier(for: indexPath) {
+      viewModel?.selectedShow.onNext(item.id)
+    }
   }
 }

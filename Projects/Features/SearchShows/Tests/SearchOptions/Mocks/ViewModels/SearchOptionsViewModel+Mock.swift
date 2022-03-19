@@ -12,7 +12,7 @@ import RxSwift
 final class SearchOptionsViewModelMock: SearchOptionsViewModelProtocol {
   func viewDidLoad() { }
 
-  func modelIsPicked(with item: SearchOptionsSectionModel.Item) { }
+  func modelIsPicked(with item: SearchSectionItem) { }
 
   var viewState: Observable<SearchViewState>
 

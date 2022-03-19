@@ -28,7 +28,7 @@ class AccountViewDarkTests: XCTestCase {
     viewController.overrideUserInterfaceStyle = .dark
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewIsLogged_thenShowProfileScreen() {
@@ -39,6 +39,6 @@ class AccountViewDarkTests: XCTestCase {
     viewController.overrideUserInterfaceStyle = .dark
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
   }
 }

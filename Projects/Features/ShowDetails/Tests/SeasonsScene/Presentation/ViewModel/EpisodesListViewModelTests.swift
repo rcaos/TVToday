@@ -202,7 +202,9 @@ class EpisodesListViewModelTests: QuickSpec {
 
           viewModel.viewState
             .distinctUntilChanged()
-            .bind(to: statesObserver)
+            .subscribe { event in
+              statesObserver.on(event)
+            }
             .disposed(by: disposeBag)
 
           let seasonViewModel = SeasonListViewModelMock()
@@ -244,7 +246,9 @@ class EpisodesListViewModelTests: QuickSpec {
 
           viewModel.viewState
             .distinctUntilChanged()
-            .bind(to: statesObserver)
+            .subscribe { event in
+              statesObserver.on(event)
+            }
             .disposed(by: disposeBag)
 
           let seasonViewModel = SeasonListViewModelMock()
@@ -287,7 +291,9 @@ class EpisodesListViewModelTests: QuickSpec {
 
           viewModel.viewState
             .distinctUntilChanged()
-            .bind(to: statesObserver)
+            .subscribe { event in
+              statesObserver.on(event)
+            }
             .disposed(by: disposeBag)
 
           let seasonViewModel = SeasonListViewModelMock()
@@ -358,7 +364,9 @@ class EpisodesListViewModelTests: QuickSpec {
 
           viewModel.data
             .distinctUntilChanged()
-            .bind(to: episodesObserver)
+            .subscribe { event in
+              episodesObserver.on(event)
+            }
             .disposed(by: disposeBag)
 
           let seasonViewModel = SeasonListViewModelMock()

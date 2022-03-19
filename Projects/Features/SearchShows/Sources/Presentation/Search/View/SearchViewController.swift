@@ -65,7 +65,10 @@ class SearchViewController: NiblessViewController {
 
   private func bindSearchBarText() {
     viewModel.searchBarText
-      .bind(to: searchController.searchBar.rx.text)
+      .observe(on: MainScheduler.instance)
+      .subscribe(onNext: { [searchController] value in
+        searchController.searchBar.text = value
+      })
       .disposed(by: disposeBag)
   }
 }

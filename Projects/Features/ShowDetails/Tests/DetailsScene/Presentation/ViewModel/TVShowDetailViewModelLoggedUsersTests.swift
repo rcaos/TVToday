@@ -183,7 +183,9 @@ class TVShowDetailViewModelLoggedUsersTests: QuickSpec {
           )
 
           viewModel.viewState
-            .bind(to: viewStateObserver)
+            .subscribe { event in
+              viewStateObserver.on(event)
+            }
             .disposed(by: disposeBag)
 
           // when

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct ShowVisited {
+public struct ShowVisited: Hashable {
   public let id: Int
   public let pathImage: String
 

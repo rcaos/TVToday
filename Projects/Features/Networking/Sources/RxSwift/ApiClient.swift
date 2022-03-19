@@ -7,11 +7,9 @@
 //
 
 import Foundation
+import NetworkingInterface
 import RxSwift
-
-public protocol DataTransferService {
-  func request<Element: Decodable>(_ router: EndPoint, _ type: Element.Type) -> Observable<Element>
-}
+import Combine
 
 public protocol NetworkCancellable {
   func cancel()
@@ -29,6 +27,13 @@ public class ApiClient {
 // MARK: - DataTransferService
 
 extension ApiClient: DataTransferService {
+  public func request<T, E>(with endpoint: E) -> AnyPublisher<T, DataTransferError> where T: Decodable, T == E.Response, E: ResponseRequestable {
+    return Empty(outputType: T.self, failureType: DataTransferError.self).eraseToAnyPublisher()
+  }
+
+  public func request<E>(with endpoint: E) -> AnyPublisher<Data, DataTransferError> where E: ResponseRequestable, E.Response == Data {
+    return Empty(outputType: Data.self, failureType: DataTransferError.self).eraseToAnyPublisher()
+  }
 
   public func request<Element>(_ router: EndPoint, _ decodingType: Element.Type) -> Observable<Element> where Element: Decodable {
     return Observable<Element>.create { [unowned self] (event) -> Disposable in

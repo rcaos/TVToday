@@ -6,7 +6,6 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
 import Combine
 import NetworkingInterface
 
@@ -19,5 +18,5 @@ public protocol TVShowsRepository {
 
   func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowResult, DataTransferError>
 
-  func fetchTVShowDetails(with showId: Int) -> Observable<TVShowDetailResult>
+  func fetchTVShowDetails(with showId: Int) -> AnyPublisher<TVShowDetailResult, DataTransferError>
 }

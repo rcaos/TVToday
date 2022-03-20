@@ -17,7 +17,7 @@ public protocol TVShowsRepository {
 
   func fetchShowsByGenre(genreId: Int, page: Int) -> AnyPublisher<TVShowResult, DataTransferError>
 
-  func searchShowsFor(query: String, page: Int) -> Observable<TVShowResult>
+  func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowResult, DataTransferError>
 
   func fetchTVShowDetails(with showId: Int) -> Observable<TVShowDetailResult>
 }

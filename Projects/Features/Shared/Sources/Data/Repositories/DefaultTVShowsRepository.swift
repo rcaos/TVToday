@@ -41,6 +41,10 @@ extension DefaultTVShowsRepository: TVShowsRepository {
       queryParameters: ["page": page]
     )
     return dataTransferService.request(with: endpoint)
+      .map { response -> TVShowResult in
+        self.mapShowDetailsWithBasePath(response: response)
+      }
+      .eraseToAnyPublisher()
   }
 
   public func fetchPopularShows(page: Int) -> Observable<TVShowResult> {

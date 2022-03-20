@@ -66,7 +66,7 @@ extension DefaultTVShowsRepository: TVShowsRepository {
   }
 
   public func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowResult, DataTransferError> {
-    let endPoint = Endpoint<TVShowResult>(
+    let endpoint = Endpoint<TVShowResult>(
       path: "3/search/tv",
       method: .get,
       queryParameters: [
@@ -74,13 +74,13 @@ extension DefaultTVShowsRepository: TVShowsRepository {
         "page": page
       ]
     )
-    return dataTransferService.request(with: endPoint)
+    return dataTransferService.request(with: endpoint)
       .map { self.mapShowDetailsWithBasePath(response: $0) }
       .eraseToAnyPublisher()
   }
 
   // MARK: - Map responses with ImageBase URL
-  fileprivate func mapShowDetailsWithBasePath(response: TVShowResult) -> TVShowResult {
+  private func mapShowDetailsWithBasePath(response: TVShowResult) -> TVShowResult {
     guard let basePath = basePath else { return response }
 
     var newResponse = response
@@ -96,16 +96,18 @@ extension DefaultTVShowsRepository: TVShowsRepository {
   }
 
   // MARK: - Fetch TVShow Details
-  public func fetchTVShowDetails(with showId: Int) -> Observable<TVShowDetailResult> {
-    let endPoint = TVShowsProvider.getTVShowDetail(showId)
+  public func fetchTVShowDetails(with showId: Int) -> AnyPublisher<TVShowDetailResult, DataTransferError> {
+    let endpoint = Endpoint<TVShowDetailResult>(
+      path: "3/tv/\(showId)",
+      method: .get
+    )
 
-    return dataTransferService.request(endPoint, TVShowDetailResult.self)
-      .flatMap { response -> Observable<TVShowDetailResult> in
-        Observable.just( self.mapShowDetailsWithBasePath(response: response))
-      }
+    return dataTransferService.request(with: endpoint)
+      .map { self.mapShowDetailsWithBasePath(response: $0) }
+      .eraseToAnyPublisher()
   }
 
-  fileprivate func mapShowDetailsWithBasePath(response: TVShowDetailResult) -> TVShowDetailResult {
+  private func mapShowDetailsWithBasePath(response: TVShowDetailResult) -> TVShowDetailResult {
     guard let basePath = basePath else { return response }
 
     var newResponse = response

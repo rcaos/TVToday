@@ -15,13 +15,17 @@ public final class DefaultDataTransferService {
   private let networkService: NetworkService
   private let errorResolver: DataTransferErrorResolver
   private let errorLogger: DataTransferErrorLogger
+  private let apiClient: ApiClient  // remove soon
 
   public init(with networkService: NetworkService,
               errorResolver: DataTransferErrorResolver = DefaultDataTransferErrorResolver(),
-              errorLogger: DataTransferErrorLogger = DefaultDataTransferErrorLogger()) {
+              errorLogger: DataTransferErrorLogger = DefaultDataTransferErrorLogger(),
+              apiClient: ApiClient // remove soon
+  ) {
     self.networkService = networkService
     self.errorResolver = errorResolver
     self.errorLogger = errorLogger
+    self.apiClient = apiClient // remove soon
   }
 }
 
@@ -29,7 +33,7 @@ public final class DefaultDataTransferService {
 extension DefaultDataTransferService: DataTransferService {
 
   public func request<Element>(_ router: EndPoint, _ decodingType: Element.Type) -> Observable<Element> where Element: Decodable {
-    return Observable.empty()
+    return apiClient.request(router, decodingType)
   }
 
   // MARK: - Private

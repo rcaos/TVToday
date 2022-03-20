@@ -38,13 +38,17 @@ extension DefaultTVShowsRepository: TVShowsRepository {
       .eraseToAnyPublisher()
   }
 
-  public func fetchPopularShows(page: Int) -> Observable<TVShowResult> {
-    let endPoint = TVShowsProvider.getPopularTVShows(page)
-
-    return dataTransferService.request(endPoint, TVShowResult.self)
-      .flatMap { response -> Observable<TVShowResult> in
-        Observable.just( self.mapShowDetailsWithBasePath(response: response) )
-    }
+  public func fetchPopularShows(page: Int) -> AnyPublisher<TVShowResult, DataTransferError> {
+    let endpoint = Endpoint<TVShowResult>(
+      path: "3/tv/popular",
+      method: .get,
+      queryParameters: ["page": page]
+    )
+    return dataTransferService.request(with: endpoint)
+      .map { response -> TVShowResult in
+        self.mapShowDetailsWithBasePath(response: response)
+      }
+      .eraseToAnyPublisher()
   }
 
   public func fetchShowsByGenre(genreId: Int, page: Int) -> Observable<TVShowResult> {

@@ -7,11 +7,13 @@
 //
 
 import RxSwift
+import Combine
+import NetworkingInterface
 
 public protocol TVShowsRepository {
-  func fetchAiringTodayShows(page: Int) -> Observable<TVShowResult>
+  func fetchAiringTodayShows(page: Int) -> AnyPublisher<TVShowResult, DataTransferError>
 
-  func fetchPopularShows(page: Int) -> Observable<TVShowResult>
+  func fetchPopularShows(page: Int) -> AnyPublisher<TVShowResult, DataTransferError>
 
   func fetchShowsByGenre(genreId: Int, page: Int) -> Observable<TVShowResult>
 

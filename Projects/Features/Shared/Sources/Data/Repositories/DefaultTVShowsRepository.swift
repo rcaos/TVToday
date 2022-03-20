@@ -26,12 +26,12 @@ public final class DefaultTVShowsRepository {
 extension DefaultTVShowsRepository: TVShowsRepository {
 
   public func fetchAiringTodayShows(page: Int) -> AnyPublisher<TVShowResult, DataTransferError> {
-    let endpoint = Endpoint<TVShowResult>(
+    let endPoint = Endpoint<TVShowResult>(
       path: "3/tv/airing_today",
       method: .get,
       queryParameters: ["page": page]
     )
-    return dataTransferService.request(with: endpoint)
+    return dataTransferService.request(with: endPoint)
       .map { response -> TVShowResult in
         self.mapShowDetailsWithBasePath(response: response)
       }
@@ -39,25 +39,36 @@ extension DefaultTVShowsRepository: TVShowsRepository {
   }
 
   public func fetchPopularShows(page: Int) -> AnyPublisher<TVShowResult, DataTransferError> {
-    let endpoint = Endpoint<TVShowResult>(
+    let endPoint = Endpoint<TVShowResult>(
       path: "3/tv/popular",
       method: .get,
       queryParameters: ["page": page]
     )
-    return dataTransferService.request(with: endpoint)
+    return dataTransferService.request(with: endPoint)
       .map { response -> TVShowResult in
         self.mapShowDetailsWithBasePath(response: response)
       }
       .eraseToAnyPublisher()
   }
 
-  public func fetchShowsByGenre(genreId: Int, page: Int) -> Observable<TVShowResult> {
-    let endPoint = TVShowsProvider.listTVShowsBy(genreId, page)
+  public func fetchShowsByGenre(genreId: Int, page: Int) -> AnyPublisher<TVShowResult, DataTransferError> {
+    let endPoint = Endpoint<TVShowResult>(
+      path: "3/discover/tv",
+      method: .get,
+      queryParameters: [
+        "with_genres": genreId,
+        "page": page,
+        "sort_by": "popularity.desc",
+        "timezone": "America%2FNew_York",
+        "include_null_first_air_dates": "false"
+      ]
+    )
 
-    return dataTransferService.request(endPoint, TVShowResult.self)
-      .flatMap { response -> Observable<TVShowResult> in
-        Observable.just( self.mapShowDetailsWithBasePath(response: response) )
-    }
+    return dataTransferService.request(with: endPoint)
+      .map { response -> TVShowResult in
+        self.mapShowDetailsWithBasePath(response: response)
+      }
+      .eraseToAnyPublisher()
   }
 
   public func searchShowsFor(query: String, page: Int) -> Observable<TVShowResult> {

@@ -26,33 +26,29 @@ public final class DefaultTVShowsRepository {
 extension DefaultTVShowsRepository: TVShowsRepository {
 
   public func fetchAiringTodayShows(page: Int) -> AnyPublisher<TVShowResult, DataTransferError> {
-    let endPoint = Endpoint<TVShowResult>(
+    let endpoint = Endpoint<TVShowResult>(
       path: "3/tv/airing_today",
       method: .get,
       queryParameters: ["page": page]
     )
-    return dataTransferService.request(with: endPoint)
-      .map { response -> TVShowResult in
-        self.mapShowDetailsWithBasePath(response: response)
-      }
+    return dataTransferService.request(with: endpoint)
+      .map { self.mapShowDetailsWithBasePath(response: $0) }
       .eraseToAnyPublisher()
   }
 
   public func fetchPopularShows(page: Int) -> AnyPublisher<TVShowResult, DataTransferError> {
-    let endPoint = Endpoint<TVShowResult>(
+    let endpoint = Endpoint<TVShowResult>(
       path: "3/tv/popular",
       method: .get,
       queryParameters: ["page": page]
     )
-    return dataTransferService.request(with: endPoint)
-      .map { response -> TVShowResult in
-        self.mapShowDetailsWithBasePath(response: response)
-      }
+    return dataTransferService.request(with: endpoint)
+      .map { self.mapShowDetailsWithBasePath(response: $0) }
       .eraseToAnyPublisher()
   }
 
   public func fetchShowsByGenre(genreId: Int, page: Int) -> AnyPublisher<TVShowResult, DataTransferError> {
-    let endPoint = Endpoint<TVShowResult>(
+    let endpoint = Endpoint<TVShowResult>(
       path: "3/discover/tv",
       method: .get,
       queryParameters: [
@@ -64,10 +60,8 @@ extension DefaultTVShowsRepository: TVShowsRepository {
       ]
     )
 
-    return dataTransferService.request(with: endPoint)
-      .map { response -> TVShowResult in
-        self.mapShowDetailsWithBasePath(response: response)
-      }
+    return dataTransferService.request(with: endpoint)
+      .map { self.mapShowDetailsWithBasePath(response: $0) }
       .eraseToAnyPublisher()
   }
 

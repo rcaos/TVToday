@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import Combine
 
 public protocol ShowsViewModel: AnyObject {
   associatedtype MovieCellViewModel: Equatable
@@ -21,6 +22,8 @@ public protocol ShowsViewModel: AnyObject {
   var viewStateObservableSubject: BehaviorSubject<SimpleViewState<MovieCellViewModel>> { get set }
 
   var disposeBag: DisposeBag { get set }
+
+  var cancellabes: Set<AnyCancellable> { get set }
 
   func mapToCell(entites: [TVShow]) -> [MovieCellViewModel]
 }
@@ -37,15 +40,18 @@ extension ShowsViewModel {
 
     let request = FetchTVShowsUseCaseRequestValue(page: page)
 
-    fetchTVShowsUseCase.execute(requestValue: request)
-      .subscribe(onNext: { [weak self] result in
-        guard let strongSelf = self else { return }
-        strongSelf.processFetched(for: result, currentPage: page)
-        }, onError: { [weak self] error in
-          guard let strongSelf = self else { return }
-          strongSelf.viewStateObservableSubject.onNext(.error(error.localizedDescription))
+    fetchTVShowsUseCase.execute2(requestValue: request)
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { [weak self] completion in
+        switch completion {
+        case let .failure(error):
+          self?.viewStateObservableSubject.onNext(.error(error.localizedDescription))
+        case .finished: break
+        }
+      }, receiveValue: { [weak self] result in
+        self?.processFetched(for: result, currentPage: page)
       })
-      .disposed(by: disposeBag)
+      .store(in: &cancellabes)
   }
 
   private func processFetched(for response: TVShowResult, currentPage: Int) {

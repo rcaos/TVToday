@@ -71,13 +71,18 @@ extension DefaultTVShowsRepository: TVShowsRepository {
       .eraseToAnyPublisher()
   }
 
-  public func searchShowsFor(query: String, page: Int) -> Observable<TVShowResult> {
-    let endPoint = TVShowsProvider.searchTVShow(query, page)
-
-    return dataTransferService.request(endPoint, TVShowResult.self)
-      .flatMap { response -> Observable<TVShowResult> in
-        Observable.just( self.mapShowDetailsWithBasePath(response: response) )
-    }
+  public func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowResult, DataTransferError> {
+    let endPoint = Endpoint<TVShowResult>(
+      path: "3/search/tv",
+      method: .get,
+      queryParameters: [
+        "query": query,
+        "page": page
+      ]
+    )
+    return dataTransferService.request(with: endPoint)
+      .map { self.mapShowDetailsWithBasePath(response: $0) }
+      .eraseToAnyPublisher()
   }
 
   // MARK: - Map responses with ImageBase URL

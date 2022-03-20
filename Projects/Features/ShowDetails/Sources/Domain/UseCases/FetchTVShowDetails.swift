@@ -13,8 +13,6 @@ import Shared
 import Persistence
 
 public protocol FetchTVShowDetailsUseCase {
-  typealias Response = Result<TVShowDetailResult, Error>
-
   // MARK: - TODO Use another error maybe?
   func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> AnyPublisher<TVShowDetailResult, DataTransferError>
 }

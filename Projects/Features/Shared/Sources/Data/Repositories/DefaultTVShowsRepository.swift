@@ -8,6 +8,8 @@
 
 import RxSwift
 import NetworkingInterface
+import Combine
+import Networking
 
 public final class DefaultTVShowsRepository {
   private let dataTransferService: DataTransferService
@@ -30,6 +32,15 @@ extension DefaultTVShowsRepository: TVShowsRepository {
       .flatMap { response -> Observable<TVShowResult> in
         Observable.just( self.mapShowDetailsWithBasePath(response: response) )
     }
+  }
+
+  public func fetchAiringTodayShows2(page: Int) -> AnyPublisher<TVShowResult, DataTransferError> {
+    let endpoint = Endpoint<TVShowResult>(
+      path: "3/tv/airing_today",
+      method: .get,
+      queryParameters: ["page": page]
+    )
+    return dataTransferService.request(with: endpoint)
   }
 
   public func fetchPopularShows(page: Int) -> Observable<TVShowResult> {

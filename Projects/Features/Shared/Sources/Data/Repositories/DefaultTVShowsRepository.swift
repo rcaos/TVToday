@@ -6,9 +6,8 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
-import NetworkingInterface
 import Combine
+import NetworkingInterface
 import Networking
 
 public final class DefaultTVShowsRepository {

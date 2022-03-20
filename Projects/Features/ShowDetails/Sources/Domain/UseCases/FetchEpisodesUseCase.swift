@@ -6,10 +6,11 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
+import NetworkingInterface
 
 protocol FetchEpisodesUseCase {
-  func execute(requestValue: FetchEpisodesUseCaseRequestValue) -> Observable<SeasonResult>
+  func execute(requestValue: FetchEpisodesUseCaseRequestValue) -> AnyPublisher<SeasonResult, DataTransferError>
 }
 
 struct FetchEpisodesUseCaseRequestValue {
@@ -26,9 +27,10 @@ final class DefaultFetchEpisodesUseCase: FetchEpisodesUseCase {
     self.episodesRepository = episodesRepository
   }
 
-  func execute(requestValue: FetchEpisodesUseCaseRequestValue) -> Observable<SeasonResult> {
+  func execute(requestValue: FetchEpisodesUseCaseRequestValue) -> AnyPublisher<SeasonResult, DataTransferError> {
     return episodesRepository.fetchEpisodesList(
       for: requestValue.showIdentifier,
-      season: requestValue.seasonNumber)
+      season: requestValue.seasonNumber
+    )
   }
 }

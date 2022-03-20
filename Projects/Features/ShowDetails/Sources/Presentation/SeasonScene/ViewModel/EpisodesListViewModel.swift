@@ -6,6 +6,8 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
+import Foundation
+import Combine
 import RxSwift
 import Shared
 
@@ -36,8 +38,6 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
 
   private let allEpisodesSubject = BehaviorSubject<[Int: [Episode]]>(value: [:])
 
-  private var disposeBag = DisposeBag()
-
   private let dataObservableSubject = BehaviorSubject<[SeasonsSectionModel]>(value: [])
 
   private let viewStateObservableSubject = BehaviorSubject<ViewState>(value: .loading)
@@ -45,6 +45,10 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
   private let seasonSelectedSubject = BehaviorSubject<Int>(value: 0)
 
   private var seasonListViewModel: SeasonListViewModelProtocol?
+
+  private var disposeBag = DisposeBag()
+
+  private var cancelable = Set<AnyCancellable>()
 
   // MARK: - Public Api
   var viewState: Observable<ViewState>
@@ -107,7 +111,7 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
   }
 
   // MARK: - Networking
-  fileprivate func fetchShowDetailsAndFirstSeason(showLoader: Bool = true) {
+  private func fetchShowDetailsAndFirstSeason(showLoader: Bool = true) {
     if showLoader {
       viewStateObservableSubject.onNext( .loading )
     }
@@ -115,45 +119,48 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
     let requestDetailsShow = FetchTVShowDetailsUseCaseRequestValue(identifier: tvShowId)
     let requestFirstSeason = FetchEpisodesUseCaseRequestValue(showIdentifier: tvShowId, seasonNumber: 1)
 
-    Observable.zip(
+    Publishers.Zip(
       fetchDetailShowUseCase.execute(requestValue: requestDetailsShow),
-      fetchEpisodesUseCase.execute(requestValue: requestFirstSeason))
-      .subscribe(onNext: { [weak self] (resultShowDetails, firstSeason) in
-        guard let strongSelf = self else { return }
-
-        // MARK: - TODO, refactor this
-        switch resultShowDetails {
-        case .success(let detailResult):
-          strongSelf.showDetailResult = detailResult
-          strongSelf.processFetched(with: firstSeason)
-          strongSelf.selectFirstSeason()
-        case .failure:
-          strongSelf.viewStateObservableSubject.onNext( .error(CustomError.genericError.localizedDescription) )
+      fetchEpisodesUseCase.execute(requestValue: requestFirstSeason)
+    )
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { [weak self] completion in
+        switch completion {
+        case let .failure(error):
+          self?.viewStateObservableSubject.onNext( .error(error.localizedDescription) )
+        case .finished:
+          break
         }
-        }, onError: {[weak self] error in
-          guard let strongSelf = self else { return }
-          strongSelf.viewStateObservableSubject.onNext( .error(CustomError.genericError.localizedDescription) )
+      }, receiveValue: { [weak self] (resultShowDetails, firstSeason) in
+        self?.showDetailResult = resultShowDetails
+        self?.processFetched(with: firstSeason)
+        self?.selectFirstSeason()
       })
-      .disposed(by: disposeBag)
+      .store(in: &cancelable)
   }
 
-  fileprivate func fetchEpisodesFor(season seasonNumber: Int) {
+  private func fetchEpisodesFor(season seasonNumber: Int) {
     createSectionModel(state: .loadingSeason, with: totalSeasons, seasonSelected: seasonNumber, and: [])
 
     let request = FetchEpisodesUseCaseRequestValue(showIdentifier: tvShowId, seasonNumber: seasonNumber)
 
     fetchEpisodesUseCase.execute(requestValue: request)
-      .subscribe(onNext: { [weak self] result in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { [weak self] completion in
         guard let strongSelf = self else { return }
-        strongSelf.processFetched(with: result)
 
-        }, onError: { [weak self] error in
-          guard let strongSelf = self else { return }
+        switch completion {
+        case let .failure(error):
           strongSelf.createSectionModel(state: .errorSeason(error.localizedDescription),
                                         with: strongSelf.totalSeasons,
                                         seasonSelected: seasonNumber, and: [])
+        case .finished:
+          break
+        }
+      }, receiveValue: { [weak self] result in
+        self?.processFetched(with: result)
       })
-      .disposed(by: disposeBag)
+      .store(in: &cancelable)
   }
 
   fileprivate func processFetched(with response: SeasonResult) {

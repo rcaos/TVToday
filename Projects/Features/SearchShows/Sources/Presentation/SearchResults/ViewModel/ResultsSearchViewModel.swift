@@ -6,6 +6,8 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
+import Foundation
+import Combine
 import RxSwift
 import Shared
 import Persistence
@@ -23,6 +25,8 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
   private let viewStateObservableSubject: BehaviorSubject<ResultViewState> = .init(value: .initial)
 
   private var disposeBag = DisposeBag()
+
+  private var cancelables = Set<AnyCancellable>()
 
   // MARK: - Public Api
   let viewState: Observable<ResultViewState>
@@ -103,14 +107,18 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
     let request = SearchTVShowsUseCaseRequestValue(query: query, page: 1)
 
     searchTVShowsUseCase.execute(requestValue: request)
-      .subscribe(onNext: { [weak self] result in
-        guard let strongSelf = self else { return }
-        strongSelf.processFetched(for: result)
-        }, onError: { [weak self] error in
-          guard let strongSelf = self else { return }
-          strongSelf.viewStateObservableSubject.onNext(.error(error.localizedDescription))
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { [weak self] completion in
+        switch completion {
+        case let .failure(error):
+          self?.viewStateObservableSubject.onNext(.error(error.localizedDescription))
+        case .finished:
+          break
+        }
+      }, receiveValue: { [weak self] result in
+        self?.processFetched(for: result)
       })
-      .disposed(by: disposeBag)
+      .store(in: &cancelables)
   }
 
   private func processFetched(for response: TVShowResult) {

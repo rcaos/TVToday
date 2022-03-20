@@ -8,18 +8,8 @@
 
 import RxSwift
 import Shared
-
-protocol AiringTodayViewModelProtocol {
-  // MARK: - Input
-  func viewDidLoad()
-  func didLoadNextPage()
-  func showIsPicked(with id: Int)
-  func refreshView()
-
-  // MARK: - Output
-  var viewState: Observable<SimpleViewState<AiringTodayCollectionViewModel>> { get }
-  func getCurrentViewState() -> SimpleViewState<AiringTodayCollectionViewModel>
-}
+import Combine
+import Foundation
 
 final class AiringTodayViewModel: AiringTodayViewModelProtocol, ShowsViewModel {
   var fetchTVShowsUseCase: FetchTVShowsUseCase
@@ -35,6 +25,8 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol, ShowsViewModel {
   var viewState: Observable<SimpleViewState<AiringTodayCollectionViewModel>>
 
   var disposeBag = DisposeBag()
+
+  var cancellabes = Set<AnyCancellable>()
 
   // MARK: - Initializers
   init(fetchTVShowsUseCase: FetchTVShowsUseCase,

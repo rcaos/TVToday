@@ -5,8 +5,10 @@
 //  Created by Jeans Ruiz on 6/27/20.
 //
 
+import Combine
 import RxSwift
 import NetworkingInterface
+import Networking
 
 public final class DefaultAccountTVShowsRepository {
 
@@ -60,10 +62,15 @@ extension DefaultAccountTVShowsRepository: AccountTVShowsRepository {
     return newResponse
   }
 
-  public func fetchTVAccountStates(tvShowId: Int, sessionId: String) -> Observable<TVShowAccountStateResult> {
-    let endPoint = AccountShowsProvider.getAccountStates(tvShowId: tvShowId,
-                                                    sessionId: sessionId)
-    return dataTransferService.request(endPoint, TVShowAccountStateResult.self)
+  public func fetchTVAccountStates(tvShowId: Int, sessionId: String) -> AnyPublisher<TVShowAccountStateResult, DataTransferError> {
+    let endpoint = Endpoint<TVShowAccountStateResult>(
+      path: "3/tv/\(String(tvShowId))/account_states",
+      method: .get,
+      queryParameters: [
+        "session_id": sessionId
+      ]
+    )
+    return dataTransferService.request(with: endpoint)
   }
 
   public func markAsFavorite(session: String, userId: String, tvShowId: Int, favorite: Bool) -> Observable<StatusResult> {

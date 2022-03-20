@@ -25,16 +25,7 @@ public final class DefaultTVShowsRepository {
 // MARK: - TVShowsRepository
 extension DefaultTVShowsRepository: TVShowsRepository {
 
-  public func fetchAiringTodayShows(page: Int) -> Observable<TVShowResult> {
-    let endPoint = TVShowsProvider.getAiringTodayShows(page)
-
-    return dataTransferService.request(endPoint, TVShowResult.self)
-      .flatMap { response -> Observable<TVShowResult> in
-        Observable.just( self.mapShowDetailsWithBasePath(response: response) )
-    }
-  }
-
-  public func fetchAiringTodayShows2(page: Int) -> AnyPublisher<TVShowResult, DataTransferError> {
+  public func fetchAiringTodayShows(page: Int) -> AnyPublisher<TVShowResult, DataTransferError> {
     let endpoint = Endpoint<TVShowResult>(
       path: "3/tv/airing_today",
       method: .get,

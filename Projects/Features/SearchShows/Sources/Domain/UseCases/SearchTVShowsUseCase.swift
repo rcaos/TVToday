@@ -5,13 +5,13 @@
 //  Created by Jeans Ruiz on 6/28/20.
 //
 
-import RxSwift
+import Combine
 import Shared
 import Persistence
+import NetworkingInterface
 
 public protocol SearchTVShowsUseCase {
-
-  func execute(requestValue: SearchTVShowsUseCaseRequestValue) -> Observable<TVShowResult>
+  func execute(requestValue: SearchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowResult, DataTransferError>
 }
 
 public struct SearchTVShowsUseCaseRequestValue {
@@ -34,25 +34,26 @@ final class DefaultSearchTVShowsUseCase: SearchTVShowsUseCase {
     self.searchsLocalRepository = searchsLocalRepository
   }
 
-  func execute(requestValue: SearchTVShowsUseCaseRequestValue) -> Observable<TVShowResult> {
+  // MARK: - TODO, implemented this 👇
+  func execute(requestValue: SearchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowResult, DataTransferError> {
 
-    var idLogged = 0
-    if let userLogged = keychainRepository.fetchLoguedUser() {
-      idLogged = userLogged.id
-    }
+//    var idLogged = 0
+//    if let userLogged = keychainRepository.fetchLoguedUser() {
+//      idLogged = userLogged.id
+//    }
 
     return tvShowsRepository.searchShowsFor(query: requestValue.query,
                                             page: requestValue.page)
-      .flatMap { resultSearch -> Observable<TVShowResult> in
+//      .flatMap { resultSearch -> Observable<TVShowResult> in
 
-        if requestValue.page == 1 {
-          return self.searchsLocalRepository.saveSearch(query: requestValue.query, userId: idLogged)
-            .flatMap { _ -> Observable<TVShowResult> in
-              return Observable.just(resultSearch)
-          }
-        } else {
-          return Observable.just(resultSearch)
-        }
-    }
+//        if requestValue.page == 1 {
+//          return self.searchsLocalRepository.saveSearch(query: requestValue.query, userId: idLogged)
+//            .flatMap { _ -> Observable<TVShowResult> in
+//              return Observable.just(resultSearch)
+//          }
+//        } else {
+//          return Observable.just(resultSearch)
+//        }
+//    }
   }
 }

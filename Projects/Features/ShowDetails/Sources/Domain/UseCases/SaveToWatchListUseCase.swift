@@ -20,9 +20,7 @@ public struct SaveToWatchListUseCaseRequestValue {
 }
 
 final class DefaultSaveToWatchListUseCase: SaveToWatchListUseCase {
-
   private let accountShowsRepository: AccountTVShowsRepository
-
   private let keychainRepository: KeychainRepository
 
   init(accountShowsRepository: AccountTVShowsRepository,
@@ -40,10 +38,9 @@ final class DefaultSaveToWatchListUseCase: SaveToWatchListUseCase {
       session: account.sessionId,
       userId: String(account.id),
       tvShowId: requestValue.showId,
-      watchedList: requestValue.watchList)
-      .map { _ -> Bool in
-        return requestValue.watchList
-      }
+      watchedList: requestValue.watchList
+    )
+      .map { _ in requestValue.watchList }
       .eraseToAnyPublisher()
   }
 }

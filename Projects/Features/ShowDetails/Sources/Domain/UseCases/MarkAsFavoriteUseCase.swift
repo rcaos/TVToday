@@ -38,7 +38,8 @@ public final class DefaultMarkAsFavoriteUseCase: MarkAsFavoriteUseCase {
       session: account.sessionId,
       userId: String(account.id),
       tvShowId: requestValue.showId,
-      favorite: requestValue.favorite)
+      favorite: requestValue.favorite
+    )
       .map { _ in requestValue.favorite }
       .eraseToAnyPublisher()
   }

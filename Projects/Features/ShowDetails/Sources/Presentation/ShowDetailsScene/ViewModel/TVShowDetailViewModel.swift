@@ -20,7 +20,7 @@ protocol TVShowDetailViewModelProtocol {
   func refreshView()
   func viewDidFinish()
 
-  var tapFavoriteButton: PassthroughSubject<Void, Never> { get }
+  var tapFavoriteButton: PassthroughSubject<Bool, Never> { get }
   var tapWatchedButton: PassthroughSubject<Void, Never> { get }
 
   // MARK: - Output
@@ -60,7 +60,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   private var cancelable = Set<AnyCancellable>()
 
   // MARK: - Public Api
-  var tapFavoriteButton: PassthroughSubject<Void, Never>
+  var tapFavoriteButton: PassthroughSubject<Bool, Never>
   var tapWatchedButton: PassthroughSubject<Void, Never>
 
   var viewState: Observable<ViewState>
@@ -144,13 +144,16 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
   // MARK: - Handle Favorite Tap Button ❤️
   private func subscribeFavoriteTap() {
-    tapFavoriteButton
-      .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
-      .flatMap { self.isLoadingFavoriteSubject }
-      .filter { $0 == false }
-      .flatMap { _ in self.isFavorite }
-      .flatMap { [weak self] isFavorite -> AnyPublisher<Bool, DataTransferError> in
+    Publishers.CombineLatest3(
+      tapFavoriteButton
+        .debounce(for: .milliseconds(300), scheduler: RunLoop.main),
+      self.isLoadingFavoriteSubject,
+      self.isFavorite
+    )
+      .filter { $0.0 == true && $0.1 == false }
+      .flatMap { [weak self] (_, _, isFavorite) -> AnyPublisher<Bool, DataTransferError> in
         guard let strongSelf = self else { return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher() }
+        strongSelf.tapFavoriteButton.send(false)
         strongSelf.isLoadingFavoriteSubject.send(true)
         return strongSelf.markAsFavorite(state: isFavorite)
       }

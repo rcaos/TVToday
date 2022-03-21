@@ -86,7 +86,7 @@ class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Em
 
   private func setupBindablesForUserLogged() {
     favoriteButton.primaryAction = UIAction(handler: { [weak self] _ in
-      self?.viewModel.tapFavoriteButton.onNext(())
+      self?.viewModel.tapFavoriteButton.send(())
     })
 
     watchListButton.primaryAction = UIAction(handler: { [weak self] _ in

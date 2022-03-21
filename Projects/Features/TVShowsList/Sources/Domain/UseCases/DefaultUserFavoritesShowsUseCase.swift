@@ -5,11 +5,11 @@
 //  Created by Jeans Ruiz on 6/27/20.
 //
 
-import RxSwift
+import Combine
 import Shared
+import NetworkingInterface
 
 public final class DefaultUserFavoritesShowsUseCase: FetchTVShowsUseCase {
-
   private let accountShowsRepository: AccountTVShowsRepository
 
   private let keychainRepository: KeychainRepository
@@ -19,9 +19,10 @@ public final class DefaultUserFavoritesShowsUseCase: FetchTVShowsUseCase {
     self.keychainRepository = keychainRepository
   }
 
-  public func execute(requestValue: FetchTVShowsUseCaseRequestValue) -> Observable<TVShowResult> {
+  public func execute(requestValue: FetchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowResult, DataTransferError> {
     guard let userLogged = keychainRepository.fetchLoguedUser() else {
-      return Observable.error(CustomError.genericError)
+      return Fail(error: DataTransferError.noResponse)    // TODO, another error type
+        .eraseToAnyPublisher()
     }
 
     return accountShowsRepository.fetchFavoritesShows(page: requestValue.page,

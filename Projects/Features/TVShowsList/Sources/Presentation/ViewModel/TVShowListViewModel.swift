@@ -10,6 +10,7 @@ import RxSwift
 import Shared
 import ShowDetailsInterface
 import TVShowsListInterface
+import Combine
 
 protocol TVShowListViewModelProtocol {
   // MARK: - Input
@@ -38,6 +39,8 @@ final class TVShowListViewModel: TVShowListViewModelProtocol, ShowsViewModel {
   private weak var coordinator: TVShowListCoordinatorProtocol?
 
   var disposeBag = DisposeBag()
+
+  var cancellabes = Set<AnyCancellable>()
 
   let stepOrigin: TVShowListStepOrigin?
 

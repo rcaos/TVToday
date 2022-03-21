@@ -90,7 +90,7 @@ class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Em
     })
 
     watchListButton.primaryAction = UIAction(handler: { [weak self] _ in
-      self?.viewModel.tapWatchedButton.onNext(())
+      self?.viewModel.tapWatchedButton.send(())
     })
 
     viewModel

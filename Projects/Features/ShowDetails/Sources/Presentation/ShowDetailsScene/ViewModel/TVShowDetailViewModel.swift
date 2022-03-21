@@ -29,7 +29,7 @@ protocol TVShowDetailViewModelProtocol {
 
   var viewState: Observable<TVShowDetailViewModel.ViewState> { get }
   var isFavorite: CurrentValueSubject<Bool, Never> { get }
-  var isWatchList: Observable<Bool> { get }
+  var isWatchList: CurrentValueSubject<Bool, Never> { get }
 }
 
 final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
@@ -52,8 +52,6 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
   private var viewStateObservableSubject = BehaviorSubject<ViewState>(value: .loading)
 
-  private var isWatchListSubject = CurrentValueSubject<Bool, Never>(false)
-
   private var isLoadingFavoriteSubject = CurrentValueSubject<Bool, Never>(false)
   private var isLoadingWatchList = CurrentValueSubject<Bool, Never>(false)
 
@@ -68,7 +66,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   var viewState: Observable<ViewState>
 
   var isFavorite = CurrentValueSubject<Bool, Never>(false)
-  var isWatchList: Observable<Bool>
+  var isWatchList = CurrentValueSubject<Bool, Never>(false)
 
   private let disposeBag = DisposeBag()
 
@@ -96,8 +94,6 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
     tapWatchedButton = PassthroughSubject()
 
     viewState = viewStateObservableSubject.asObservable()
-    isWatchList = Observable.just(false) //isWatchListSubject.asObservable() // TODO, set this
-
     subscribe()
   }
 
@@ -175,7 +171,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
       .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
       .flatMap { self.isLoadingWatchList }
       .filter { $0 == false }
-      .flatMap { _ in self.isWatchListSubject }
+      .flatMap { _ in self.isWatchList }
       .flatMap { [weak self] isOnWatchList -> AnyPublisher<Bool, DataTransferError> in
         guard let strongSelf = self else { return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher() }
         strongSelf.isLoadingWatchList.send(true)
@@ -185,7 +181,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
       .sink(receiveCompletion: { _ in },
             receiveValue: { [weak self] newState in
         guard let strongSelf = self else { return }
-        strongSelf.isWatchListSubject.send(newState)
+        strongSelf.isWatchList.send(newState)
         strongSelf.closures?.updateWatchListShows?(TVShowUpdated(showId: strongSelf.showId, isActive: newState))
         strongSelf.isLoadingWatchList.send(false)
       })
@@ -242,9 +238,9 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
     responses
       .receive(on: RunLoop.main)
-      .sink(receiveCompletion: { _ in }, receiveValue: { [isFavorite, isWatchListSubject]  (_, stateShow) in
+      .sink(receiveCompletion: { _ in }, receiveValue: { [isFavorite, isWatchList]  (_, stateShow) in
         isFavorite.send(stateShow.isFavorite)
-        isWatchListSubject.send(stateShow.isWatchList)
+        isWatchList.send(stateShow.isWatchList)
       })
       .store(in: &cancelable)
   }

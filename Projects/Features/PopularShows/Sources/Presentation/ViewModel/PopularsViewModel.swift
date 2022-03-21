@@ -8,6 +8,7 @@
 
 import RxSwift
 import Shared
+import Combine
 
 protocol PopularViewModelProtocol {
 
@@ -37,6 +38,8 @@ final class PopularViewModel: PopularViewModelProtocol, ShowsViewModel {
   weak var coordinator: PopularCoordinatorProtocol?
 
   var disposeBag = DisposeBag()
+
+  var cancellabes = Set<AnyCancellable>()
 
   // MARK: - Initializers
   init(fetchTVShowsUseCase: FetchTVShowsUseCase,

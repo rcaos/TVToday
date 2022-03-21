@@ -12,7 +12,7 @@ import RxSwift
 public protocol AccountTVShowsRepository {
   func fetchFavoritesShows(page: Int, userId: Int, sessionId: String) -> AnyPublisher<TVShowResult, DataTransferError>
 
-  func fetchWatchListShows(page: Int, userId: Int, sessionId: String) -> Observable<TVShowResult>
+  func fetchWatchListShows(page: Int, userId: Int, sessionId: String) -> AnyPublisher<TVShowResult, DataTransferError>
 
   func fetchTVAccountStates(tvShowId: Int, sessionId: String) -> AnyPublisher<TVShowAccountStateResult, DataTransferError>
 

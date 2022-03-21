@@ -41,13 +41,19 @@ extension DefaultAccountTVShowsRepository: AccountTVShowsRepository {
       .eraseToAnyPublisher()
   }
 
-  public func fetchWatchListShows(page: Int, userId: Int, sessionId: String) -> Observable<TVShowResult> {
-    let endPoint = AccountShowsProvider.watchList(page: page, userId: String(userId), sessionId: sessionId)
+  public func fetchWatchListShows(page: Int, userId: Int, sessionId: String) -> AnyPublisher<TVShowResult, DataTransferError> {
+    let endpoint = Endpoint<TVShowResult>(
+      path: "3/account/\(userId)/watchlist/tv",
+      method: .get,
+      queryParameters: [
+        "page": page,
+        "session_id": sessionId
+      ]
+    )
 
-    return dataTransferService.request(endPoint, TVShowResult.self)
-      .flatMap { response -> Observable<TVShowResult> in
-        Observable.just( self.mapShowDetailsWithBasePath(response: response) )
-    }
+    return dataTransferService.request(with: endpoint)
+      .map { self.mapShowDetailsWithBasePath(response: $0) }
+      .eraseToAnyPublisher()
   }
 
   fileprivate func mapShowDetailsWithBasePath(response: TVShowResult) -> TVShowResult {

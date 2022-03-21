@@ -7,7 +7,6 @@
 
 import Combine
 import NetworkingInterface
-import RxSwift
 
 public protocol AccountTVShowsRepository {
   func fetchFavoritesShows(page: Int, userId: Int, sessionId: String) -> AnyPublisher<TVShowResult, DataTransferError>
@@ -18,5 +17,5 @@ public protocol AccountTVShowsRepository {
 
   func markAsFavorite(session: String, userId: String, tvShowId: Int, favorite: Bool) -> AnyPublisher<StatusResult, DataTransferError>
 
-  func saveToWatchList(session: String, userId: String, tvShowId: Int, watchedList: Bool) -> Observable<StatusResult>
+  func saveToWatchList(session: String, userId: String, tvShowId: Int, watchedList: Bool) -> AnyPublisher<StatusResult, DataTransferError>
 }

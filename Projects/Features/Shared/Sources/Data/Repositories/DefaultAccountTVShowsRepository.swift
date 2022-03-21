@@ -100,12 +100,19 @@ extension DefaultAccountTVShowsRepository: AccountTVShowsRepository {
     return dataTransferService.request(with: endpoint)
   }
 
-  public func saveToWatchList(session: String, userId: String, tvShowId: Int, watchedList: Bool) -> Observable<StatusResult> {
-    let endPoint = AccountShowsProvider.savetoWatchList(
-      userId: userId,
-      tvShowId: tvShowId,
-      sessionId: session,
-      watchList: watchedList)
-    return dataTransferService.request(endPoint, StatusResult.self)
+  public func saveToWatchList(session: String, userId: String, tvShowId: Int, watchedList: Bool) -> AnyPublisher<StatusResult, DataTransferError> {
+    let queryParams: [String: Any] = ["session_id": session]
+    let bodyParams: [String: Any] = [
+      "media_type": "tv",
+      "media_id": tvShowId,
+      "watchlist": watchedList
+    ]
+
+    let endpoint = Endpoint<StatusResult>(
+      path: "3/account/\(userId)/watchlist",
+      method: .get,
+      queryParameters: ["query": queryParams, "body": bodyParams]
+    )
+    return dataTransferService.request(with: endpoint)
   }
 }

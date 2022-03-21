@@ -6,11 +6,12 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import Shared
+import NetworkingInterface
 
 public protocol SaveToWatchListUseCase {
-  func execute(requestValue: SaveToWatchListUseCaseRequestValue) -> Observable<Result<Bool, Error>>
+  func execute(requestValue: SaveToWatchListUseCaseRequestValue) -> AnyPublisher<Bool, DataTransferError>
 }
 
 public struct SaveToWatchListUseCaseRequestValue {
@@ -30,9 +31,9 @@ final class DefaultSaveToWatchListUseCase: SaveToWatchListUseCase {
     self.keychainRepository = keychainRepository
   }
 
-  public func execute(requestValue: SaveToWatchListUseCaseRequestValue) -> Observable<Result<Bool, Error>> {
+  public func execute(requestValue: SaveToWatchListUseCaseRequestValue) -> AnyPublisher<Bool, DataTransferError> {
     guard let account = keychainRepository.fetchLoguedUser() else {
-      return Observable.just(Result.failure(CustomError.genericError))
+      return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher() // TODO, use other error
     }
 
     return accountShowsRepository.saveToWatchList(
@@ -40,9 +41,9 @@ final class DefaultSaveToWatchListUseCase: SaveToWatchListUseCase {
       userId: String(account.id),
       tvShowId: requestValue.showId,
       watchedList: requestValue.watchList)
-      .flatMap { _ -> Observable<Result<Bool, Error>> in
-        return Observable.just(Result.success(requestValue.watchList))
-    }
-    .catchErrorJustReturn( Result.failure(CustomError.genericError) )
+      .map { _ -> Bool in
+        return requestValue.watchList
+      }
+      .eraseToAnyPublisher()
   }
 }

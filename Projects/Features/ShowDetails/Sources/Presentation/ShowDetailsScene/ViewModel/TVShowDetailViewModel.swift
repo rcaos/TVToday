@@ -20,7 +20,7 @@ protocol TVShowDetailViewModelProtocol {
   func refreshView()
   func viewDidFinish()
 
-  var tapFavoriteButton: PublishSubject<Void> { get }
+  var tapFavoriteButton: PassthroughSubject<Void, Never> { get }
   var tapWatchedButton: PublishSubject<Void> { get }
 
   // MARK: - Output
@@ -52,23 +52,21 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
   private var viewStateObservableSubject = BehaviorSubject<ViewState>(value: .loading)
 
-  private var isFavoriteSubject = BehaviorSubject<Bool>(value: false)
+  private var isFavoriteSubject = CurrentValueSubject<Bool, Never>(false)
 
   private var isWatchListSubject = BehaviorSubject<Bool>(value: false)
 
-  private var isLoadingFavoriteSubject = BehaviorSubject<Bool>(value: false)
+  private var isLoadingFavoriteSubject = CurrentValueSubject<Bool, Never>(false)
 
   private var isLoadingWatchList = BehaviorSubject<Bool>(value: false)
 
   private let closures: TVShowDetailViewModelClosures?
 
-  private let disposeBag = DisposeBag()
-
   private var cancelable = Set<AnyCancellable>()
 
   // MARK: - Public Api
 
-  var tapFavoriteButton: PublishSubject<Void>
+  var tapFavoriteButton: PassthroughSubject<Void, Never>
 
   var tapWatchedButton: PublishSubject<Void>
 
@@ -77,6 +75,10 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   var isFavorite: Observable<Bool>
 
   var isWatchList: Observable<Bool>
+
+  private let disposeBag = DisposeBag()
+
+  private var cancelables = Set<AnyCancellable>()
 
   // MARK: - Initializers
   init(_ showId: Int,
@@ -96,11 +98,11 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
     self.coordinator = coordinator
     self.closures = closures
 
-    tapFavoriteButton = PublishSubject<Void>()
+    tapFavoriteButton = PassthroughSubject()
     tapWatchedButton = PublishSubject<Void>()
 
     viewState = viewStateObservableSubject.asObservable()
-    isFavorite = isFavoriteSubject.asObservable()
+    isFavorite = Observable.just(false) //isFavoriteSubject.asObservable() // TODO, set this
     isWatchList = isWatchListSubject.asObservable()
 
     subscribe()
@@ -152,79 +154,67 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   }
 
   // MARK: - Handle Favorite Tap Button ❤️
-  fileprivate func subscribeFavoriteTap() {
+  private func subscribeFavoriteTap() {
     let requestFavorite = tapFavoriteButton
-      .debounce(RxTimeInterval.milliseconds(300), scheduler: MainScheduler.instance)
-      .withLatestFrom(isLoadingFavoriteSubject)
+      .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
+      .flatMap { self.isLoadingFavoriteSubject }
       .filter { $0 == false }
-      .withLatestFrom(isFavoriteSubject)
-      .flatMap { [weak self] (isFavorite) -> Observable<Result<Bool, Error>> in
-        guard let strongSelf = self else {
-          return Observable.error(CustomError.genericError)
-        }
-
-        self?.isLoadingFavoriteSubject.onNext(true)
+      .flatMap { _ in self.isFavoriteSubject }
+      .flatMap { [weak self] isFavorite -> AnyPublisher<Bool, DataTransferError> in
+        guard let strongSelf = self else { return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher() }
+        strongSelf.isLoadingFavoriteSubject.send(true)
         return strongSelf.markAsFavorite(state: isFavorite)
       }
       .share()
 
     requestFavorite
-      .subscribe(onNext: { [weak self] (response) in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in },
+            receiveValue: { [weak self] newState in
         guard let strongSelf = self else { return }
-        switch response {
-        case .success(let newState):
-          strongSelf.isFavoriteSubject.onNext(newState)
-          strongSelf.closures?.updateFavoritesShows?( TVShowUpdated(showId: strongSelf.showId, isActive: newState) )
-        default:
-          break
-        }
+        strongSelf.isFavoriteSubject.send(newState)
+        strongSelf.closures?.updateFavoritesShows?(TVShowUpdated(showId: strongSelf.showId, isActive: newState))
+        strongSelf.isLoadingFavoriteSubject.send(false)
       })
-      .disposed(by: disposeBag)
-
-    requestFavorite
-      .flatMap { _ in return Observable.just(false) }
-      .subscribe { [isLoadingFavoriteSubject] event in
-        isLoadingFavoriteSubject.on(event)
-      }
-      .disposed(by: disposeBag)
+      .store(in: &cancelables)
   }
 
   // MARK: - Handle Wath List Button Tap 🎦
   fileprivate func subscribeWatchListTap() {
-    let requestFavorite = tapWatchedButton
-      .debounce(RxTimeInterval.milliseconds(300), scheduler: MainScheduler.instance)
-      .withLatestFrom(isLoadingWatchList)
-      .filter { $0 == false }
-      .withLatestFrom(isWatchListSubject)
-      .flatMap { [weak self] (isFavorite) -> Observable<Result<Bool, Error>> in
-        guard let strongSelf = self else {
-          return Observable.error(CustomError.genericError)
-        }
-
-        self?.isLoadingWatchList.onNext(true)
-        return strongSelf.saveToWatchList(state: isFavorite)
-      }
-      .share()
-
-    requestFavorite
-      .subscribe(onNext: { [weak self] (response) in
-        guard let strongSelf = self else { return }
-        switch response {
-        case .success(let newState):
-          strongSelf.isWatchListSubject.onNext(newState)
-          strongSelf.closures?.updateWatchListShows?( TVShowUpdated(showId: strongSelf.showId, isActive: newState))
-        default:
-          break
-        }
-      })
-      .disposed(by: disposeBag)
-
-    requestFavorite
-      .flatMap { _ in return Observable.just(false) }
-      .subscribe { [isLoadingWatchList] event in
-        isLoadingWatchList.on(event)
-      }
-      .disposed(by: disposeBag)
+//    let requestFavorite = tapWatchedButton
+//      .debounce(RxTimeInterval.milliseconds(300), scheduler: MainScheduler.instance)
+//      .withLatestFrom(isLoadingWatchList)
+//      .filter { $0 == false }
+//      .withLatestFrom(isWatchListSubject)
+//      .flatMap { [weak self] (isFavorite) -> Observable<Result<Bool, Error>> in
+//        guard let strongSelf = self else {
+//          return Observable.error(CustomError.genericError)
+//        }
+//
+//        self?.isLoadingWatchList.onNext(true)
+//        return strongSelf.saveToWatchList(state: isFavorite)
+//      }
+//      .share()
+//
+//    requestFavorite
+//      .subscribe(onNext: { [weak self] (response) in
+//        guard let strongSelf = self else { return }
+//        switch response {
+//        case .success(let newState):
+//          strongSelf.isWatchListSubject.onNext(newState)
+//          strongSelf.closures?.updateWatchListShows?( TVShowUpdated(showId: strongSelf.showId, isActive: newState))
+//        default:
+//          break
+//        }
+//      })
+//      .disposed(by: disposeBag)
+//
+//    requestFavorite
+//      .flatMap { _ in return Observable.just(false) }
+//      .subscribe { [isLoadingWatchList] event in
+//        isLoadingWatchList.on(event)
+//      }
+//      .disposed(by: disposeBag)
   }
 
   // MARK: - Request For Guest Users
@@ -278,7 +268,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
     responses
       .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [isFavoriteSubject, isWatchListSubject]  (_, stateShow) in
-        isFavoriteSubject.onNext(stateShow.isFavorite)
+        isFavoriteSubject.send(stateShow.isFavorite)
         isWatchListSubject.onNext(stateShow.isWatchList)
       })
       .store(in: &cancelable)
@@ -295,12 +285,12 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
     return fetchTvShowState.execute(requestValue: request)
   }
 
-  fileprivate func markAsFavorite(state: Bool) -> Observable<Result<Bool, Error>> {
+  private func markAsFavorite(state: Bool) -> AnyPublisher<Bool, DataTransferError> {
     let request = MarkAsFavoriteUseCaseRequestValue(showId: showId, favorite: !state)
     return markAsFavoriteUseCase.execute(requestValue: request)
   }
 
-  fileprivate func saveToWatchList(state: Bool) -> Observable<Result<Bool, Error>> {
+  private func saveToWatchList(state: Bool) -> AnyPublisher<Bool, DataTransferError> {
     let request = SaveToWatchListUseCaseRequestValue(showId: showId, watchList: !state)
     return saveToWatchListUseCase.execute(requestValue: request)
   }

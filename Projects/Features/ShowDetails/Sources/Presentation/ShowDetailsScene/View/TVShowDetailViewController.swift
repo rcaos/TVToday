@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 import RxSwift
 import Shared
 import UI
@@ -28,7 +29,9 @@ class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Em
     return bookmarkButton
   }()
 
-  let disposeBag = DisposeBag()
+  private let disposeBag = DisposeBag()
+
+  private var cancelables = Set<AnyCancellable>()
 
   // MARK: - Initializer
   init(viewModel: TVShowDetailViewModelProtocol) {
@@ -95,10 +98,12 @@ class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Em
 
     viewModel
       .isFavorite
-      .subscribe(onNext: { [weak self] isFavorite in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in },
+            receiveValue: { [weak self] isFavorite in
         self?.favoriteButton.tintColor = isFavorite ? .systemRed : .systemGray
       })
-      .disposed(by: disposeBag)
+      .store(in: &cancelables)
 
     viewModel
       .isWatchList

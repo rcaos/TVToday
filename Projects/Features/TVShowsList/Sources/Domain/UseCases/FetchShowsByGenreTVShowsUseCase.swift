@@ -5,8 +5,9 @@
 //  Created by Jeans Ruiz on 6/28/20.
 //
 
-import RxSwift
+import Combine
 import Shared
+import NetworkingInterface
 
 final class DefaultFetchShowsByGenreTVShowsUseCase: FetchTVShowsUseCase {
 
@@ -18,7 +19,7 @@ final class DefaultFetchShowsByGenreTVShowsUseCase: FetchTVShowsUseCase {
     self.tvShowsRepository = tvShowsRepository
   }
 
-  func execute(requestValue: FetchTVShowsUseCaseRequestValue) -> Observable<TVShowResult> {
+  func execute(requestValue: FetchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowResult, DataTransferError> {
     return tvShowsRepository.fetchShowsByGenre(genreId: genreId, page: requestValue.page)
   }
 }

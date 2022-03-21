@@ -21,7 +21,7 @@ protocol TVShowDetailViewModelProtocol {
   func viewDidFinish()
 
   var tapFavoriteButton: PassthroughSubject<Bool, Never> { get }
-  var tapWatchedButton: PassthroughSubject<Void, Never> { get }
+  var tapWatchedButton: PassthroughSubject<Bool, Never> { get }
 
   // MARK: - Output
   func isUserLogged() -> Bool
@@ -61,7 +61,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
   // MARK: - Public Api
   var tapFavoriteButton: PassthroughSubject<Bool, Never>
-  var tapWatchedButton: PassthroughSubject<Void, Never>
+  var tapWatchedButton: PassthroughSubject<Bool, Never>
 
   var viewState: Observable<ViewState>
 
@@ -168,15 +168,18 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
       .store(in: &cancelables)
   }
 
-  // MARK: - Handle Wath List Button Tap 🎦
+  // MARK: - Handle Watch List Button Tap 🎦
   private func subscribeWatchListTap() {
-    tapWatchedButton
-      .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
-      .flatMap { self.isLoadingWatchList }
-      .filter { $0 == false }
-      .flatMap { _ in self.isWatchList }
-      .flatMap { [weak self] isOnWatchList -> AnyPublisher<Bool, DataTransferError> in
+    Publishers.CombineLatest3(
+      tapWatchedButton
+        .debounce(for: .milliseconds(300), scheduler: RunLoop.main),
+      self.isLoadingWatchList,
+      self.isWatchList
+    )
+      .filter { $0.0 == true && $0.1 == false }
+      .flatMap { [weak self] (_, _, isOnWatchList) -> AnyPublisher<Bool, DataTransferError> in
         guard let strongSelf = self else { return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher() }
+        strongSelf.tapWatchedButton.send(false)
         strongSelf.isLoadingWatchList.send(true)
         return strongSelf.saveToWatchList(state: isOnWatchList)
       }

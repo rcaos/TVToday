@@ -144,11 +144,11 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
   // MARK: - Subscriptions
   fileprivate func subscribeToViewAppears() {
-//    if isUserLogged() {
-//      requestTVShowDetaisAndState()
-//    } else {
+    if isUserLogged() {
+      requestTVShowDetailsAndState()
+    } else {
       requestTVShowDetails()
-//    }
+    }
   }
 
   // MARK: - Handle Favorite Tap Button ❤️
@@ -251,65 +251,38 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   }
 
   // MARK: - Request For Logged Users
-//  fileprivate func requestTVShowDetaisAndState() {
-//    typealias ResultForDetails = (Result<TVShowDetailResult, Error>)
-//    typealias ResultForShowState = (Result<TVShowAccountStateResult, Error>)
-//
-//    let responses =
-//    didLoadView
-//      .filter { $0 == true }
-//      .flatMap { [weak self] _ -> Observable< (ResultForDetails, ResultForShowState)> in
-//        guard let strongSelf = self else {
-//          return Observable.just( (.failure(CustomError.genericError), .failure(CustomError.genericError) ) )
-//        }
-//        return Observable.zip(strongSelf.fetchShowDetails(), strongSelf.fetchTVShowState())
-//      }.share()
-//
-//    responses
-//      .flatMap { (resultDetails, resultState ) -> Observable<ViewState> in
-//
-//        switch (resultDetails, resultState) {
-//        case (.success(let detailResult), .success):
-//          return Observable.just(.populated( TVShowDetailInfo(show: detailResult) ))
-//        case (.failure(let error), _):
-//          return Observable.just(.error(error.localizedDescription))
-//        case (_, .failure(let error)):
-//          return Observable.just(.error(error.localizedDescription))
-//        }
-//      }
-//      .subscribe { [viewStateObservableSubject] event in
-//        viewStateObservableSubject.on(event)
-//      }
-//      .disposed(by: disposeBag)
-//
-//    responses
-//      .flatMap { (_, result) -> Observable<Bool> in
-//        switch result {
-//        case .success(let stateShow):
-//          return Observable.just(stateShow.isFavorite)
-//        case .failure:
-//          return Observable.just(false)
-//        }
-//      }
-//      .subscribe { [isFavoriteSubject] event in
-//        isFavoriteSubject.on(event)
-//      }
-//      .disposed(by: disposeBag)
-//
-//    responses
-//      .flatMap { (_, result) -> Observable<Bool> in
-//        switch result {
-//        case .success(let stateShow):
-//          return Observable.just(stateShow.isWatchList)
-//        case .failure:
-//          return Observable.just(false)
-//        }
-//      }
-//      .subscribe { [isWatchListSubject] event in
-//        isWatchListSubject.on(event)
-//      }
-//      .disposed(by: disposeBag)
-//  }
+  private func requestTVShowDetailsAndState() {
+    let responses =
+    didLoadView
+      .filter { $0 == true }
+      .flatMap { _ -> AnyPublisher<(TVShowDetailResult, TVShowAccountStateResult), DataTransferError> in
+        Publishers.Zip(self.fetchShowDetails(), self.fetchTVShowState())
+          .eraseToAnyPublisher()
+      }
+      .share()
+
+    responses
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { completion in
+        switch completion {
+        case let .failure(error):
+          self.viewStateObservableSubject.onError(error)
+        case .finished:
+          break
+        }
+      }, receiveValue: { [viewStateObservableSubject] (resultDetails, _) in
+        viewStateObservableSubject.onNext(.populated(TVShowDetailInfo(show: resultDetails)))
+      })
+      .store(in: &cancelable)
+
+    responses
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [isFavoriteSubject, isWatchListSubject]  (_, stateShow) in
+        isFavoriteSubject.onNext(stateShow.isFavorite)
+        isWatchListSubject.onNext(stateShow.isWatchList)
+      })
+      .store(in: &cancelable)
+  }
 
   // MARK: - Observables
   private func fetchShowDetails() -> AnyPublisher<TVShowDetailResult, DataTransferError> {

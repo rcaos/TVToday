@@ -13,20 +13,16 @@ import UI
 
 class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Emptiable {
 
-  let viewModel: TVShowDetailViewModelProtocol
+  private let viewModel: TVShowDetailViewModelProtocol
 
-  var rootView: TVShowDetailRootView?
+  private var rootView: TVShowDetailRootView?
 
-  lazy var favoriteButton: UIBarButtonItem = {
-    let barButtonItem = UIBarButtonItem(image: UIImage(systemName: "heart.fill"),
-                                        style: .plain, target: nil, action: nil)
-    return barButtonItem
+  private lazy var favoriteButton: UIBarButtonItem = {
+    return UIBarButtonItem()
   }()
 
-  lazy var watchListButton: UIBarButtonItem = {
-    let bookmarkButton = UIBarButtonItem(image: UIImage(systemName: "bookmark.fill"),
-                                         style: .plain, target: nil, action: nil)
-    return bookmarkButton
+  private lazy var watchListButton: UIBarButtonItem = {
+    return UIBarButtonItem()
   }()
 
   private let disposeBag = DisposeBag()
@@ -88,13 +84,17 @@ class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Em
   }
 
   private func setupBindablesForUserLogged() {
-    favoriteButton.primaryAction = UIAction(handler: { [weak self] _ in
-      self?.viewModel.tapFavoriteButton.send(())
-    })
+    favoriteButton.primaryAction = UIAction(
+      image: UIImage(systemName: "heart.fill"),
+      handler: { [weak self] _ in
+        self?.viewModel.tapFavoriteButton.send(())
+      })
 
-    watchListButton.primaryAction = UIAction(handler: { [weak self] _ in
-      self?.viewModel.tapWatchedButton.send(())
-    })
+    watchListButton.primaryAction = UIAction(
+      image: UIImage(systemName: "bookmark.fill"),
+      handler: { [weak self] _ in
+        self?.viewModel.tapWatchedButton.send(())
+      })
 
     viewModel
       .isFavorite

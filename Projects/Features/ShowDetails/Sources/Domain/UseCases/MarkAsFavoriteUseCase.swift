@@ -6,11 +6,12 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import Shared
+import NetworkingInterface
 
 public protocol MarkAsFavoriteUseCase {
-  func execute(requestValue: MarkAsFavoriteUseCaseRequestValue) -> Observable<Result<Bool, Error>>
+  func execute(requestValue: MarkAsFavoriteUseCaseRequestValue) -> AnyPublisher<Bool, DataTransferError>
 }
 
 public struct MarkAsFavoriteUseCaseRequestValue {
@@ -19,9 +20,7 @@ public struct MarkAsFavoriteUseCaseRequestValue {
 }
 
 public final class DefaultMarkAsFavoriteUseCase: MarkAsFavoriteUseCase {
-
   private let accountShowsRepository: AccountTVShowsRepository
-
   private let keychainRepository: KeychainRepository
 
   public init(accountShowsRepository: AccountTVShowsRepository,
@@ -30,9 +29,9 @@ public final class DefaultMarkAsFavoriteUseCase: MarkAsFavoriteUseCase {
     self.keychainRepository = keychainRepository
   }
 
-  public func execute(requestValue: MarkAsFavoriteUseCaseRequestValue) -> Observable<Result<Bool, Error>> {
+  public func execute(requestValue: MarkAsFavoriteUseCaseRequestValue) -> AnyPublisher<Bool, DataTransferError> {
     guard let account = keychainRepository.fetchLoguedUser() else {
-      return Observable.just(Result.failure(CustomError.genericError))
+      return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher() // TODO, use other error
     }
 
     return accountShowsRepository.markAsFavorite(
@@ -40,9 +39,7 @@ public final class DefaultMarkAsFavoriteUseCase: MarkAsFavoriteUseCase {
       userId: String(account.id),
       tvShowId: requestValue.showId,
       favorite: requestValue.favorite)
-      .flatMap { _ -> Observable<Result<Bool, Error>> in
-        return Observable.just( Result.success(requestValue.favorite) )
-    }
-    .catchErrorJustReturn( Result.failure(CustomError.genericError) )
+      .map { _ in requestValue.favorite }
+      .eraseToAnyPublisher()
   }
 }

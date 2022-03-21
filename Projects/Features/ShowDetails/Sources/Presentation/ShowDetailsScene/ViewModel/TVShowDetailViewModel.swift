@@ -20,8 +20,8 @@ protocol TVShowDetailViewModelProtocol {
   func refreshView()
   func viewDidFinish()
 
-  var tapFavoriteButton: PassthroughSubject<Bool, Never> { get }
-  var tapWatchedButton: PassthroughSubject<Bool, Never> { get }
+  func favoriteButtonDidTapped()
+  func watchedButtonDidTapped()
 
   // MARK: - Output
   func isUserLogged() -> Bool
@@ -55,14 +55,14 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   private var isLoadingFavoriteSubject = CurrentValueSubject<Bool, Never>(false)
   private var isLoadingWatchList = CurrentValueSubject<Bool, Never>(false)
 
+  private var tapFavoriteButton: PassthroughSubject<Bool, Never>
+  private var tapWatchedButton: PassthroughSubject<Bool, Never>
+
   private let closures: TVShowDetailViewModelClosures?
 
   private var cancelable = Set<AnyCancellable>()
 
   // MARK: - Public Api
-  var tapFavoriteButton: PassthroughSubject<Bool, Never>
-  var tapWatchedButton: PassthroughSubject<Bool, Never>
-
   var viewState: Observable<ViewState>
 
   var isFavorite = CurrentValueSubject<Bool, Never>(false)
@@ -111,6 +111,14 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
   public func isUserLogged() -> Bool {
     return fetchLoggedUser.execute() == nil ? false : true
+  }
+
+  func favoriteButtonDidTapped() {
+    tapFavoriteButton.send(true)
+  }
+
+  func watchedButtonDidTapped() {
+    tapWatchedButton.send(true)
   }
 
   // MARK: - Private

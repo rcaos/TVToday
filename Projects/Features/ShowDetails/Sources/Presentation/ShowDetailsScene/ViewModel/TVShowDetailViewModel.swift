@@ -151,7 +151,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
   // MARK: - Handle Favorite Tap Button ❤️
   private func subscribeFavoriteTap() {
-    let requestFavorite = tapFavoriteButton
+    tapFavoriteButton
       .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
       .flatMap { self.isLoadingFavoriteSubject }
       .filter { $0 == false }
@@ -161,9 +161,6 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
         strongSelf.isLoadingFavoriteSubject.send(true)
         return strongSelf.markAsFavorite(state: isFavorite)
       }
-      .share()
-
-    requestFavorite
       .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in },
             receiveValue: { [weak self] newState in
@@ -177,7 +174,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
   // MARK: - Handle Wath List Button Tap 🎦
   private func subscribeWatchListTap() {
-    let requestFavorite = tapWatchedButton
+    tapWatchedButton
       .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
       .flatMap { self.isLoadingWatchList }
       .filter { $0 == false }
@@ -187,9 +184,6 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
         strongSelf.isLoadingWatchList.send(true)
         return strongSelf.saveToWatchList(state: isOnWatchList)
       }
-      .share()
-
-    requestFavorite
       .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in },
             receiveValue: { [weak self] newState in

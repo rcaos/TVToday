@@ -49,6 +49,9 @@ public class AppDIContainer {
 
     let configuration = ApiDataNetworkConfig(
       baseURL: appConfigurations.apiBaseURL,
+      headers: [
+        "Content-Type": "application/json; charset=utf-8"
+      ],
       queryParameters: queryParameters
     )
     let networkService = DefaultNetworkService(config: configuration)

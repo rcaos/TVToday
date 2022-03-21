@@ -40,7 +40,7 @@ extension ShowsViewModel {
 
     let request = FetchTVShowsUseCaseRequestValue(page: page)
 
-    fetchTVShowsUseCase.execute2(requestValue: request)
+    fetchTVShowsUseCase.execute(requestValue: request)
       .receive(on: RunLoop.main)
       .sink(receiveCompletion: { [weak self] completion in
         switch completion {

@@ -87,13 +87,13 @@ class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Em
     favoriteButton.primaryAction = UIAction(
       image: UIImage(systemName: "heart.fill"),
       handler: { [weak self] _ in
-        self?.viewModel.tapFavoriteButton.send(())
+        self?.viewModel.favoriteButtonDidTapped()
       })
 
     watchListButton.primaryAction = UIAction(
       image: UIImage(systemName: "bookmark.fill"),
       handler: { [weak self] _ in
-        self?.viewModel.tapWatchedButton.send(())
+        self?.viewModel.watchedButtonDidTapped()
       })
 
     viewModel

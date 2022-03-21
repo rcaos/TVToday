@@ -83,6 +83,7 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
         return currentEpisodes
       })
 
+    // MARK: - TODO, withLatestFrom by CombineLatest
     seasonSelectedSubject
       .distinctUntilChanged()
       .filter { $0 >= 1 }

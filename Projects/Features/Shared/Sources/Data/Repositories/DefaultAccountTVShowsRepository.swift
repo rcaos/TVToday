@@ -56,7 +56,7 @@ extension DefaultAccountTVShowsRepository: AccountTVShowsRepository {
       .eraseToAnyPublisher()
   }
 
-  fileprivate func mapShowDetailsWithBasePath(response: TVShowResult) -> TVShowResult {
+  private func mapShowDetailsWithBasePath(response: TVShowResult) -> TVShowResult {
     guard let basePath = basePath else {
       return response
     }

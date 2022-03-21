@@ -6,9 +6,12 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
+import Combine
 import RxSwift
 import Shared
 import ShowDetailsInterface
+import NetworkingInterface
+import Foundation
 
 protocol TVShowDetailViewModelProtocol {
 
@@ -45,7 +48,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
   private let showId: Int
 
-  private var didLoadView = BehaviorSubject<Bool>(value: false)
+  private let didLoadView = CurrentValueSubject<Bool, Never>(false)
 
   private var viewStateObservableSubject = BehaviorSubject<ViewState>(value: .loading)
 
@@ -60,6 +63,8 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   private let closures: TVShowDetailViewModelClosures?
 
   private let disposeBag = DisposeBag()
+
+  private var cancelable = Set<AnyCancellable>()
 
   // MARK: - Public Api
 
@@ -106,11 +111,11 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   }
 
   func viewDidLoad() {
-    didLoadView.onNext(true)
+    didLoadView.send(true)
   }
 
   public func refreshView() {
-    didLoadView.onNext(true)
+    didLoadView.send(true)
   }
 
   public func isUserLogged() -> Bool {
@@ -139,11 +144,11 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
   // MARK: - Subscriptions
   fileprivate func subscribeToViewAppears() {
-    if isUserLogged() {
-      requestTVShowDetaisAndState()
-    } else {
+//    if isUserLogged() {
+//      requestTVShowDetaisAndState()
+//    } else {
       requestTVShowDetails()
-    }
+//    }
   }
 
   // MARK: - Handle Favorite Tap Button ❤️
@@ -223,95 +228,96 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   }
 
   // MARK: - Request For Guest Users
-  fileprivate func requestTVShowDetails() {
+  private func requestTVShowDetails() {
     didLoadView
       .filter { $0 == true }
-      .flatMap { [weak self] _ -> Observable<Result<TVShowDetailResult, Error>> in
-        guard let strongSelf = self else { return Observable.error(CustomError.genericError) }
-        return strongSelf.fetchShowDetails()
+      .flatMap { _ -> AnyPublisher<TVShowDetailResult, DataTransferError> in
+        return self.fetchShowDetails()
       }
-      .flatMap { (result) -> Observable<ViewState> in
-        switch result {
-        case .success(let detailResult):
-          return Observable.just(.populated( TVShowDetailInfo(show: detailResult) ))
-        case .failure(let error):
-          return Observable.just(.error(error.localizedDescription))
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { [weak self] completion in
+        switch completion {
+        case let .failure(error):
+          self?.viewStateObservableSubject.onError(error)
+        case .finished:
+          break
         }
-      }
-      .subscribe { [viewStateObservableSubject] event in
-        viewStateObservableSubject.on(event)
-      }
-      .disposed(by: disposeBag)
+      }, receiveValue: { [weak self] detailResult in
+        self?.viewStateObservableSubject.onNext(
+          .populated(TVShowDetailInfo(show: detailResult))
+        )
+      })
+      .store(in: &cancelable)
   }
 
   // MARK: - Request For Logged Users
-  fileprivate func requestTVShowDetaisAndState() {
-    typealias ResultForDetails = (Result<TVShowDetailResult, Error>)
-    typealias ResultForShowState = (Result<TVShowAccountStateResult, Error>)
-
-    let responses =
-    didLoadView
-      .filter { $0 == true }
-      .flatMap { [weak self] _ -> Observable< (ResultForDetails, ResultForShowState)> in
-        guard let strongSelf = self else {
-          return Observable.just( (.failure(CustomError.genericError), .failure(CustomError.genericError) ) )
-        }
-        return Observable.zip(strongSelf.fetchShowDetails(), strongSelf.fetchTVShowState())
-      }.share()
-
-    responses
-      .flatMap { (resultDetails, resultState ) -> Observable<ViewState> in
-
-        switch (resultDetails, resultState) {
-        case (.success(let detailResult), .success):
-          return Observable.just(.populated( TVShowDetailInfo(show: detailResult) ))
-        case (.failure(let error), _):
-          return Observable.just(.error(error.localizedDescription))
-        case (_, .failure(let error)):
-          return Observable.just(.error(error.localizedDescription))
-        }
-      }
-      .subscribe { [viewStateObservableSubject] event in
-        viewStateObservableSubject.on(event)
-      }
-      .disposed(by: disposeBag)
-
-    responses
-      .flatMap { (_, result) -> Observable<Bool> in
-        switch result {
-        case .success(let stateShow):
-          return Observable.just(stateShow.isFavorite)
-        case .failure:
-          return Observable.just(false)
-        }
-      }
-      .subscribe { [isFavoriteSubject] event in
-        isFavoriteSubject.on(event)
-      }
-      .disposed(by: disposeBag)
-
-    responses
-      .flatMap { (_, result) -> Observable<Bool> in
-        switch result {
-        case .success(let stateShow):
-          return Observable.just(stateShow.isWatchList)
-        case .failure:
-          return Observable.just(false)
-        }
-      }
-      .subscribe { [isWatchListSubject] event in
-        isWatchListSubject.on(event)
-      }
-      .disposed(by: disposeBag)
-  }
+//  fileprivate func requestTVShowDetaisAndState() {
+//    typealias ResultForDetails = (Result<TVShowDetailResult, Error>)
+//    typealias ResultForShowState = (Result<TVShowAccountStateResult, Error>)
+//
+//    let responses =
+//    didLoadView
+//      .filter { $0 == true }
+//      .flatMap { [weak self] _ -> Observable< (ResultForDetails, ResultForShowState)> in
+//        guard let strongSelf = self else {
+//          return Observable.just( (.failure(CustomError.genericError), .failure(CustomError.genericError) ) )
+//        }
+//        return Observable.zip(strongSelf.fetchShowDetails(), strongSelf.fetchTVShowState())
+//      }.share()
+//
+//    responses
+//      .flatMap { (resultDetails, resultState ) -> Observable<ViewState> in
+//
+//        switch (resultDetails, resultState) {
+//        case (.success(let detailResult), .success):
+//          return Observable.just(.populated( TVShowDetailInfo(show: detailResult) ))
+//        case (.failure(let error), _):
+//          return Observable.just(.error(error.localizedDescription))
+//        case (_, .failure(let error)):
+//          return Observable.just(.error(error.localizedDescription))
+//        }
+//      }
+//      .subscribe { [viewStateObservableSubject] event in
+//        viewStateObservableSubject.on(event)
+//      }
+//      .disposed(by: disposeBag)
+//
+//    responses
+//      .flatMap { (_, result) -> Observable<Bool> in
+//        switch result {
+//        case .success(let stateShow):
+//          return Observable.just(stateShow.isFavorite)
+//        case .failure:
+//          return Observable.just(false)
+//        }
+//      }
+//      .subscribe { [isFavoriteSubject] event in
+//        isFavoriteSubject.on(event)
+//      }
+//      .disposed(by: disposeBag)
+//
+//    responses
+//      .flatMap { (_, result) -> Observable<Bool> in
+//        switch result {
+//        case .success(let stateShow):
+//          return Observable.just(stateShow.isWatchList)
+//        case .failure:
+//          return Observable.just(false)
+//        }
+//      }
+//      .subscribe { [isWatchListSubject] event in
+//        isWatchListSubject.on(event)
+//      }
+//      .disposed(by: disposeBag)
+//  }
 
   // MARK: - Observables
-  fileprivate func fetchShowDetails() -> Observable<Result<TVShowDetailResult, Error>> {
+  private func fetchShowDetails() -> AnyPublisher<TVShowDetailResult, DataTransferError> {
     let request = FetchTVShowDetailsUseCaseRequestValue(identifier: showId)
     return fetchDetailShowUseCase.execute(requestValue: request)
   }
 
-  fileprivate func fetchTVShowState() -> Observable<Result<TVShowAccountStateResult, Error>> {
+  fileprivate func fetchTVShowState() -> AnyPublisher<TVShowAccountStateResult, DataTransferError> {
     let request = FetchTVAccountStatesRequestValue(showId: showId)
     return fetchTvShowState.execute(requestValue: request)
   }

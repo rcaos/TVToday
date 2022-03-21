@@ -27,13 +27,18 @@ public final class DefaultAccountTVShowsRepository {
 
 extension DefaultAccountTVShowsRepository: AccountTVShowsRepository {
 
-  public func fetchFavoritesShows(page: Int, userId: Int, sessionId: String) -> Observable<TVShowResult> {
-    let endPoint = AccountShowsProvider.favorites(page: page, userId: String(userId), sessionId: sessionId)
-
-    return dataTransferService.request(endPoint, TVShowResult.self)
-      .flatMap { response -> Observable<TVShowResult> in
-        Observable.just( self.mapShowDetailsWithBasePath(response: response) )
-    }
+  public func fetchFavoritesShows(page: Int, userId: Int, sessionId: String) -> AnyPublisher<TVShowResult, DataTransferError> {
+    let endpoint = Endpoint<TVShowResult>(
+      path: "3/account/\(userId)/favorite/tv",
+      method: .get,
+      queryParameters: [
+        "page": page,
+        "session_id": sessionId
+      ]
+    )
+    return dataTransferService.request(with: endpoint)
+      .map { self.mapShowDetailsWithBasePath(response: $0) }
+      .eraseToAnyPublisher()
   }
 
   public func fetchWatchListShows(page: Int, userId: Int, sessionId: String) -> Observable<TVShowResult> {

@@ -10,7 +10,7 @@ import NetworkingInterface
 import RxSwift
 
 public protocol AccountTVShowsRepository {
-  func fetchFavoritesShows(page: Int, userId: Int, sessionId: String) -> Observable<TVShowResult>
+  func fetchFavoritesShows(page: Int, userId: Int, sessionId: String) -> AnyPublisher<TVShowResult, DataTransferError>
 
   func fetchWatchListShows(page: Int, userId: Int, sessionId: String) -> Observable<TVShowResult>
 

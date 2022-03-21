@@ -107,10 +107,12 @@ class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Em
 
     viewModel
       .isWatchList
-      .subscribe(onNext: { [weak self] isWatchList in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in },
+            receiveValue: { [weak self] isWatchList in
         self?.watchListButton.tintColor = isWatchList ? .systemGreen : .systemGray
       })
-      .disposed(by: disposeBag)
+      .store(in: &cancelables)
   }
 
   fileprivate func configView(with state: TVShowDetailViewModel.ViewState) {

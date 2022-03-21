@@ -84,13 +84,20 @@ extension DefaultAccountTVShowsRepository: AccountTVShowsRepository {
     return dataTransferService.request(with: endpoint)
   }
 
-  public func markAsFavorite(session: String, userId: String, tvShowId: Int, favorite: Bool) -> Observable<StatusResult> {
-    let endPoint = AccountShowsProvider.markAsFavorite(
-      userId: userId,
-      tvShowId: tvShowId,
-      sessionId: session,
-      favorite: favorite)
-    return dataTransferService.request(endPoint, StatusResult.self)
+  public func markAsFavorite(session: String, userId: String, tvShowId: Int, favorite: Bool) -> AnyPublisher<StatusResult, DataTransferError> {
+    let queryParams: [String: Any] = ["session_id": session]
+    let bodyParams: [String: Any] = [
+      "media_type": "tv",
+      "media_id": tvShowId,
+      "favorite": favorite
+    ]
+
+    let endpoint = Endpoint<StatusResult>(
+      path: "3/account/\(userId)/favorite",
+      method: .get,
+      queryParameters: ["query": queryParams, "body": bodyParams]
+    )
+    return dataTransferService.request(with: endpoint)
   }
 
   public func saveToWatchList(session: String, userId: String, tvShowId: Int, watchedList: Bool) -> Observable<StatusResult> {

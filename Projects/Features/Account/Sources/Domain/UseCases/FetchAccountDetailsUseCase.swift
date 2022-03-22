@@ -28,13 +28,15 @@ final class DefaultFetchAccountDetailsUseCase: FetchAccountDetailsUseCase {
     guard let sessionId = keychainRepository.fetchAccessToken() else {
       return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher()
     }
-
-    // TODO
+    
     return accountRepository.getAccountDetails(session: sessionId)
-//      .flatMap { [weak self] accountResult -> Observable<AccountResult> in
-//        guard let fetchedAccount = accountResult.id else { throw CustomError.genericError }
-//        self?.keychainRepository.saveLoguedUser(fetchedAccount, sessionId)
-//        return Observable.just(accountResult)
-//    }
+      .flatMap { [weak self] accountResult -> AnyPublisher<AccountResult, DataTransferError> in
+        guard let fetchedAccount = accountResult.id else {
+          return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher()
+        }
+        self?.keychainRepository.saveLoguedUser(fetchedAccount, sessionId)
+        return Just(accountResult).setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
+      }
+      .eraseToAnyPublisher()
   }
 }

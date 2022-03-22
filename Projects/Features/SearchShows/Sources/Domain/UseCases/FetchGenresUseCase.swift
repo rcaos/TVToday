@@ -6,14 +6,14 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
+import NetworkingInterface
 
 protocol FetchGenresUseCase {
-  func execute(requestValue: FetchGenresUseCaseRequestValue) -> Observable<GenreListResult>
+  func execute(requestValue: FetchGenresUseCaseRequestValue) -> AnyPublisher<GenreListResult, DataTransferError>
 }
 
-struct FetchGenresUseCaseRequestValue {
-}
+struct FetchGenresUseCaseRequestValue { }
 
 final class DefaultFetchGenresUseCase: FetchGenresUseCase {
 
@@ -23,7 +23,7 @@ final class DefaultFetchGenresUseCase: FetchGenresUseCase {
     self.genresRepository = genresRepository
   }
 
-  func execute(requestValue: FetchGenresUseCaseRequestValue) -> Observable<GenreListResult> {
+  func execute(requestValue: FetchGenresUseCaseRequestValue) -> AnyPublisher<GenreListResult, DataTransferError> {
     return genresRepository.genresList()
   }
 }

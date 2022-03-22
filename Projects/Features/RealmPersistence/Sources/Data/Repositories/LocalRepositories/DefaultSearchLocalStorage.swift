@@ -6,9 +6,10 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import RealmSwift
 import Persistence
+import Shared
 
 public final class DefaultSearchLocalStorage {
   private let store: PersistenceStore<RealmSearchShow>
@@ -20,24 +21,25 @@ public final class DefaultSearchLocalStorage {
 
 extension DefaultSearchLocalStorage: SearchLocalStorage {
 
-  public func saveSearch(query: String, userId: Int) -> Observable<Void> {
-    return Observable<()>.create { [weak self] (event) -> Disposable in
-      let disposable = Disposables.create()
+  public func saveSearch(query: String, userId: Int) -> AnyPublisher<Void, CustomError> {
+    let subject = PassthroughSubject<Void, CustomError>()
 
-      let persistEntitie = RealmSearchShow()
-      persistEntitie.query = query
-      persistEntitie.userId = userId
+    let persistEntitie = RealmSearchShow()
+    persistEntitie.query = query
+    persistEntitie.userId = userId
 
-      self?.store.saveSearch(entitie: persistEntitie) {
-        event.onNext(())
-        event.onCompleted()
-      }
-      return disposable
+    store.saveSearch(entitie: persistEntitie) {
+      subject.send(())
+      subject.send(completion: .finished)
     }
+
+    return subject.eraseToAnyPublisher()
   }
 
-  public func fetchSearchs(userId: Int) -> Observable<[Search]> {
-    return Observable.just(
-      store.find(for: userId).map { $0.asDomain() })
+  public func fetchSearchs(userId: Int) -> AnyPublisher<[Search], CustomError> {
+    return Just(
+      store.find(for: userId).map { $0.asDomain() }
+    )
+      .setFailureType(to: CustomError.self)
   }
 }

@@ -6,11 +6,12 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import Persistence
+import Shared
 
 public protocol SearchLocalStorage {
-  func saveSearch(query: String, userId: Int) -> Observable<Void>
+  func saveSearch(query: String, userId: Int) -> AnyPublisher<Void, CustomError>
 
-  func fetchSearchs(userId: Int) -> Observable<[Search]>
+  func fetchSearchs(userId: Int) -> AnyPublisher<[Search], CustomError>
 }

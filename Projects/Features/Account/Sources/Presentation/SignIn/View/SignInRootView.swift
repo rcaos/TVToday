@@ -54,7 +54,7 @@ class SignInRootView: NiblessView {
   private func setupBindables() {
     signInButton.addAction(
       UIAction(handler: { [viewModel] _ in
-        viewModel.tapButton.onNext(())
+        viewModel.tapButton.send(())
       }),
       for: .touchUpInside
     )

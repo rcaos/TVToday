@@ -5,11 +5,11 @@
 //  Created by Jeans Ruiz on 7/7/20.
 //
 
-import RxSwift
+import Combine
 import Shared
 
 public protocol FetchSearchsUseCase {
-  func execute(requestValue: FetchSearchsUseCaseRequestValue) -> Observable<[Search]>
+  func execute(requestValue: FetchSearchsUseCaseRequestValue) -> AnyPublisher<[Search], CustomError>
 }
 
 public struct FetchSearchsUseCaseRequestValue {
@@ -27,7 +27,7 @@ public final class DefaultFetchSearchsUseCase: FetchSearchsUseCase {
     self.keychainRepository = keychainRepository
   }
 
-  public func execute(requestValue: FetchSearchsUseCaseRequestValue) -> Observable<[Search]> {
+  public func execute(requestValue: FetchSearchsUseCaseRequestValue) -> AnyPublisher<[Search], CustomError> {
     var idLogged = 0
     if let userLogged = keychainRepository.fetchLoguedUser() {
       idLogged = userLogged.id

@@ -41,5 +41,6 @@ extension DefaultSearchLocalStorage: SearchLocalStorage {
       store.find(for: userId).map { $0.asDomain() }
     )
       .setFailureType(to: CustomError.self)
+      .eraseToAnyPublisher()
   }
 }

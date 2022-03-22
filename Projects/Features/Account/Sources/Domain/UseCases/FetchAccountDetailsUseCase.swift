@@ -6,16 +6,16 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import Shared
+import NetworkingInterface
 
 protocol FetchAccountDetailsUseCase {
-  func execute() -> Observable<AccountResult>
+  func execute() -> AnyPublisher<AccountResult, DataTransferError>
 }
 
 final class DefaultFetchAccountDetailsUseCase: FetchAccountDetailsUseCase {
   private let accountRepository: AccountRepository
-
   private let keychainRepository: KeychainRepository
 
   init(accountRepository: AccountRepository,
@@ -24,17 +24,17 @@ final class DefaultFetchAccountDetailsUseCase: FetchAccountDetailsUseCase {
     self.keychainRepository = keychainRepository
   }
 
-  func execute() -> Observable<AccountResult> {
-
+  func execute() -> AnyPublisher<AccountResult, DataTransferError> {
     guard let sessionId = keychainRepository.fetchAccessToken() else {
-      return Observable.error(CustomError.genericError)
+      return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher()
     }
 
+    // TODO
     return accountRepository.getAccountDetails(session: sessionId)
-      .flatMap { [weak self] accountResult -> Observable<AccountResult> in
-        guard let fetchedAccount = accountResult.id else { throw CustomError.genericError }
-        self?.keychainRepository.saveLoguedUser(fetchedAccount, sessionId)
-        return Observable.just(accountResult)
-    }
+//      .flatMap { [weak self] accountResult -> Observable<AccountResult> in
+//        guard let fetchedAccount = accountResult.id else { throw CustomError.genericError }
+//        self?.keychainRepository.saveLoguedUser(fetchedAccount, sessionId)
+//        return Observable.just(accountResult)
+//    }
   }
 }

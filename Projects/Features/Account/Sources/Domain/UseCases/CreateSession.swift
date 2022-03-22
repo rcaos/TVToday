@@ -6,16 +6,16 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
+import NetworkingInterface
 import Shared
 
 protocol CreateSessionUseCase {
-  func execute() -> Observable<Void>
+  func execute() -> AnyPublisher<Void, DataTransferError>
 }
 
 final class DefaultCreateSessionUseCase: CreateSessionUseCase {
   private let authRepository: AuthRepository
-
   private let keyChainRepository: KeychainRepository
 
   init(authRepository: AuthRepository, keyChainRepository: KeychainRepository) {
@@ -23,19 +23,23 @@ final class DefaultCreateSessionUseCase: CreateSessionUseCase {
     self.keyChainRepository = keyChainRepository
   }
 
-  func execute() -> Observable<Void> {
+  func execute() -> AnyPublisher<Void, DataTransferError> {
     guard let requestToken = keyChainRepository.fetchRequestToken() else {
-      return Observable.error(CustomError.genericError)
+      return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher()
     }
 
     return authRepository.createSession(requestToken: requestToken)
-      .flatMap { [weak self] sessionResult -> Observable<Void> in
+      .flatMap { [weak self] sessionResult -> AnyPublisher<Void, DataTransferError> in
         guard let sessionId = sessionResult.sessionId else {
-          throw CustomError.genericError
+          return Fail(error: DataTransferError.noResponse)
+            .eraseToAnyPublisher()
         }
 
         self?.keyChainRepository.saveAccessToken(sessionId)
-        return Observable.just(())
-    }
+
+        return Just(())
+          .setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
+      }
+      .eraseToAnyPublisher()
   }
 }

@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import Combine
+import NetworkingInterface
 import RxSwift
 import Shared
 
@@ -33,6 +35,7 @@ final class AccountViewModel: AccountViewModelProtocol {
   weak var coordinator: AccountCoordinatorProtocol?
 
   private let disposeBag = DisposeBag()
+  private var cancelables = Set<AnyCancellable>()
 
   // MARK: - Public Api
   let viewState: Observable<AccountViewState>
@@ -60,31 +63,47 @@ final class AccountViewModel: AccountViewModelProtocol {
     }
   }
 
-  fileprivate func fetchUserDetails() {
+  private func fetchUserDetails() {
     fetchDetailsAccount()
-      .subscribe(onNext: { [weak self] accountDetails in
-        self?.viewStateSubject.onNext(.profile(account: accountDetails))
-        }, onError: { [weak self] _ in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { [weak self] completion in
+        switch completion {
+        case .failure:
           self?.viewStateSubject.onNext(.login)
+        case .finished:
+          break
+        }
+      },
+            receiveValue: { [weak self] accountDetails in
+        self?.viewStateSubject.onNext(.profile(account: accountDetails))
       })
-      .disposed(by: disposeBag)
+      .store(in: &cancelables)
   }
 
-  fileprivate func createSession() {
+  private func createSession() {
     createNewSession.execute()
-      .flatMap { [weak self] () -> Observable<AccountResult> in
-        guard let strongSelf = self else { return Observable.error(CustomError.genericError) }
+      .flatMap { [weak self] () -> AnyPublisher<AccountResult, DataTransferError> in
+        guard let strongSelf = self else {
+          return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher()
+        }
         return strongSelf.fetchDetailsAccount()
-    }
-    .subscribe(onNext: { [weak self] accountDetails in
-      self?.viewStateSubject.onNext(.profile(account: accountDetails))
-      }, onError: { [weak self] _ in
-        self?.viewStateSubject.onNext(.login)
-    })
-      .disposed(by: disposeBag)
+      }
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { [weak self] completion in
+        switch completion {
+        case .failure:
+          self?.viewStateSubject.onNext(.login)
+        case .finished:
+          break
+        }
+      },
+            receiveValue: { [weak self] accountDetails in
+        self?.viewStateSubject.onNext(.profile(account: accountDetails))
+      })
+      .store(in: &cancelables)
   }
 
-  fileprivate func fetchDetailsAccount() -> Observable<AccountResult> {
+  private func fetchDetailsAccount() -> AnyPublisher<AccountResult, DataTransferError> {
     return fetchAccountDetails.execute()
   }
 

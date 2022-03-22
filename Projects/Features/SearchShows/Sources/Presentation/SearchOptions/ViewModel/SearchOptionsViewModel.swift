@@ -5,9 +5,12 @@
 //  Created by Jeans Ruiz on 7/7/20.
 //
 
+import Foundation
+import Combine
 import RxSwift
 import Shared
 import Persistence
+import NetworkingInterface
 
 final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
 
@@ -28,6 +31,7 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
   private let visitedShows: [ShowVisited] = []
 
   private let disposeBag = DisposeBag()
+  private var cancelables = Set<AnyCancellable>()
 
   var viewState: Observable<SearchViewState>
 
@@ -64,32 +68,41 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
     return fetchVisitedShowsUseCase.execute(requestValue: FetchVisitedShowsUseCaseRequestValue())
   }
 
-  private func fetchGenres() -> Observable<GenreListResult> {
+  private func fetchGenres() -> AnyPublisher<GenreListResult, DataTransferError> {
     return fetchGenresUseCase.execute(requestValue: FetchGenresUseCaseRequestValue())
   }
 
-  private func recentShowsDidChanged() -> Observable<[ShowVisited]> {
-    recentVisitedShowsDidChange.execute()
-      .filter { $0 }
-      .flatMap { [weak self] _ -> Observable<[ShowVisited]> in
-        guard let strongSelf = self else { return Observable.just([]) }
-        return strongSelf.fetchRecentShows()
-    }
+  // TODO,
+  private func recentShowsDidChanged() -> AnyPublisher<[ShowVisited], DataTransferError> {
+    return Just([]).setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
+//    recentVisitedShowsDidChange.execute()
+//      .filter { $0 }
+//      .flatMap { [weak self] _ -> Observable<[ShowVisited]> in
+//        guard let strongSelf = self else { return Observable.just([]) }
+//        return strongSelf.fetchRecentShows()
+//    }
   }
 
   private func fetchGenresAndRecentShows() {
-    Observable.combineLatest(recentShowsDidChanged(), fetchGenres())
-      .subscribe(onNext: { [weak self] (visited, resultGenre) in
+    Publishers.CombineLatest(
+      recentShowsDidChanged(),
+      fetchGenres()
+    )
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { [weak self] completion in
+        switch completion {
+        case let .failure(error):
+          self?.viewStateObservableSubject.onError(error)
+        case .finished:
+          break
+        }
+      },
+            receiveValue: { [weak self] (visited, resultGenre) in
         guard let strongSelf = self else { return }
         strongSelf.processFetched(for: resultGenre)
         strongSelf.createSectionModel(showsVisited: visited, genres: resultGenre.genres ?? [])
-
-        }, onError: { [weak self] error in
-          guard let strongSelf = self else { return }
-          print("Error to fetch Case use \(error)")
-          strongSelf.viewStateObservableSubject.onNext( .error(CustomError.genericError.localizedDescription) )
       })
-      .disposed(by: disposeBag)
+      .store(in: &cancelables)
   }
 
   private func processFetched(for response: GenreListResult) {

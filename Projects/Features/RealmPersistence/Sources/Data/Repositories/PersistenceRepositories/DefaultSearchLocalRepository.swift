@@ -5,8 +5,9 @@
 //  Created by Jeans Ruiz on 7/3/20.
 //
 
-import RxSwift
+import Combine
 import Persistence
+import Shared
 
 public final class DefaultSearchLocalRepository {
   private var searchLocalStorage: SearchLocalStorage
@@ -18,11 +19,11 @@ public final class DefaultSearchLocalRepository {
 
 extension DefaultSearchLocalRepository: SearchLocalRepository {
 
-  public func saveSearch(query: String, userId: Int) -> Observable<Void> {
+  public func saveSearch(query: String, userId: Int) -> AnyPublisher<Void, CustomError> {
     return searchLocalStorage.saveSearch(query: query, userId: userId)
   }
 
-  public func fetchSearchs(userId: Int) -> Observable<[Search]> {
+  public func fetchSearchs(userId: Int) -> AnyPublisher<[Search], CustomError> {
     return searchLocalStorage.fetchSearchs(userId: userId)
   }
 }

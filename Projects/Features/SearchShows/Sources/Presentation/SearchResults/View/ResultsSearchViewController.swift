@@ -12,20 +12,14 @@ import RxSwift
 import Shared
 
 class ResultsSearchViewController: NiblessViewController {
-
-  private let disposeBag = DisposeBag()
-
-  private let resultView: ResultListView = ResultListView()
-
   private let viewModel: ResultsSearchViewModelProtocol
-
+  private let resultView: ResultListView = ResultListView()
   private let messageView = MessageView()
-
   typealias DataSource = UITableViewDiffableDataSource<ResultSearchSectionView, ResultSearchSectionItem>
   typealias Snapshot = NSDiffableDataSourceSnapshot<ResultSearchSectionView, ResultSearchSectionItem>
   private var dataSource: DataSource?
 
-  private var cancelables = Set<AnyCancellable>()
+  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Life Cycle
   init(viewModel: ResultsSearchViewModelProtocol) {
@@ -60,12 +54,12 @@ class ResultsSearchViewController: NiblessViewController {
   // MARK: - SetupViewModel
   private func setupViewModel() {
     viewModel
-      .viewStateObservableSubject
+      .viewState
       .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] state in
         self?.configView(with: state)
       })
-      .store(in: &cancelables)
+      .store(in: &disposeBag)
   }
 
   // MARK: - Setup Table View
@@ -93,7 +87,6 @@ class ResultsSearchViewController: NiblessViewController {
   private func subscribe() {
     viewModel
       .dataSource
-      .observe(on: MainScheduler.instance)
       .map { dataSource -> Snapshot in
         var snapShot = Snapshot()
         for element in dataSource {
@@ -102,10 +95,11 @@ class ResultsSearchViewController: NiblessViewController {
         }
         return snapShot
       }
-      .subscribe(onNext: { [weak self] snapshot in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] snapshot in
         self?.dataSource?.apply(snapshot)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
   // MARK: - Handle View State

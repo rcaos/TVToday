@@ -17,7 +17,7 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
   private var currentSearchSubject = CurrentValueSubject<String, Never>("")  /// ?????
 
   let viewState  = CurrentValueSubject<ResultViewState, Never>(.initial)
-  let dataSourceObservableSubject = CurrentValueSubject<[ResultSearchSectionModel], Never>([])
+  let dataSource = CurrentValueSubject<[ResultSearchSectionModel], Never>([])
 
   weak var delegate: ResultsSearchViewModelDelegate?
   private var disposeBag = Set<AnyCancellable>()
@@ -88,7 +88,7 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
       .sink(receiveCompletion: { [weak self] completion in
         switch completion {
         case let .failure(error):
-          self?.viewStateObservableSubject.send(.error(error.localizedDescription))
+          self?.viewState.send(.error(error.localizedDescription))
         case .finished:
           break
         }
@@ -127,6 +127,6 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
       sectionModel.append(.results(items: resultsShowsItem))
     }
 
-    self.dataSource.send(sectionModel)
+    dataSource.send(sectionModel)
   }
 }

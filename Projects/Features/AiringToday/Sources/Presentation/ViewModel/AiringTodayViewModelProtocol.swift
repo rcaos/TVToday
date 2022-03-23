@@ -6,7 +6,7 @@
 //
 
 import Shared
-import RxSwift
+import Combine
 
 protocol AiringTodayViewModelProtocol {
   // MARK: - Input
@@ -16,6 +16,7 @@ protocol AiringTodayViewModelProtocol {
   func refreshView()
 
   // MARK: - Output
-  var viewState: Observable<SimpleViewState<AiringTodayCollectionViewModel>> { get }
+  var viewStateObservableSubject: CurrentValueSubject<SimpleViewState<AiringTodayCollectionViewModel>, Never> { get }
+
   func getCurrentViewState() -> SimpleViewState<AiringTodayCollectionViewModel>
 }

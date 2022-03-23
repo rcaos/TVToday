@@ -6,27 +6,18 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
-import RxSwift
-import Shared
 import Combine
-import Foundation
+import Shared
 
 final class AiringTodayViewModel: AiringTodayViewModelProtocol, ShowsViewModel {
-  var fetchTVShowsUseCase: FetchTVShowsUseCase
+  let fetchTVShowsUseCase: FetchTVShowsUseCase
+  let viewStateObservableSubject = CurrentValueSubject<SimpleViewState<AiringTodayCollectionViewModel>, Never>(.loading)
 
   var shows: [TVShow]
-
   var showsCells: [AiringTodayCollectionViewModel] = []
 
   weak var coordinator: AiringTodayCoordinatorProtocol?
-
-  var viewStateObservableSubject = BehaviorSubject<SimpleViewState<AiringTodayCollectionViewModel>>(value: .loading)
-
-  var viewState: Observable<SimpleViewState<AiringTodayCollectionViewModel>>
-
-  var disposeBag = DisposeBag()
-
-  var cancellabes = Set<AnyCancellable>()
+  var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializers
   init(fetchTVShowsUseCase: FetchTVShowsUseCase,
@@ -34,8 +25,6 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol, ShowsViewModel {
     self.fetchTVShowsUseCase = fetchTVShowsUseCase
     self.coordinator = coordinator
     shows = []
-
-    viewState = viewStateObservableSubject.asObservable()
   }
 
   func mapToCell(entites: [TVShow]) -> [AiringTodayCollectionViewModel] {
@@ -48,7 +37,7 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol, ShowsViewModel {
   }
 
   func didLoadNextPage() {
-    if case .paging(_, let nextPage) = getCurrentViewState() {
+    if case .paging(_, let nextPage) = viewStateObservableSubject.value {
       getShows(for: nextPage)
     }
   }
@@ -57,18 +46,11 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol, ShowsViewModel {
     getShows(for: 1, showLoader: false)
   }
 
-  // MARK: - Output
   func getCurrentViewState() -> SimpleViewState<AiringTodayCollectionViewModel> {
-    guard let currentState = try? viewStateObservableSubject.value() else { return .loading }
-    return currentState
+    return viewStateObservableSubject.value
   }
 
   func showIsPicked(with id: Int) {
-    navigateTo(step: .showIsPicked(id))
-  }
-
-  // MARK: - Navigation
-  fileprivate func navigateTo(step: AiringTodayStep) {
-    coordinator?.navigate(to: step)
+    coordinator?.navigate(to: .showIsPicked(id))
   }
 }

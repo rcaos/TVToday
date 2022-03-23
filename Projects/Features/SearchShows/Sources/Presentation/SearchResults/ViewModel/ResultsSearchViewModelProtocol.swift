@@ -7,6 +7,7 @@
 
 import RxSwift
 import Shared
+import Combine
 
 protocol ResultsSearchViewModelDelegate: AnyObject {
   func resultsSearchViewModel(_ resultsSearchViewModel: ResultsSearchViewModelProtocol,
@@ -25,7 +26,7 @@ protocol ResultsSearchViewModelProtocol {
   func resetSearch()
 
   // MARK: - Output
-  var viewState: Observable<ResultViewState> { get }
+  var viewStateObservableSubject: CurrentValueSubject<ResultViewState, Never> { get }
   var dataSource: Observable<[ResultSearchSectionModel]> { get }
   var delegate: ResultsSearchViewModelDelegate? { get set }
   func getViewState() -> ResultViewState

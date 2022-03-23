@@ -29,7 +29,7 @@ extension DefaultShowsVisitedLocalStorage: ShowsVisitedLocalStorage {
 
   public func saveShow(id: Int, pathImage: String, userId: Int) -> AnyPublisher<Void, CustomError> {
     return Deferred {
-      return Future<Void, CustomError> { [weak self] promise
+      return Future<Void, CustomError> { [weak self] promise in
         let persistEntity = RealmShowVisited()
         persistEntity.id = id
         persistEntity.userId = userId
@@ -43,10 +43,12 @@ extension DefaultShowsVisitedLocalStorage: ShowsVisitedLocalStorage {
     .eraseToAnyPublisher()
   }
 
-  public func fetchVisitedShows(userId: Int) -> Observable<[ShowVisited]> {
-    return Observable.just(
+  public func fetchVisitedShows(userId: Int) -> AnyPublisher<[ShowVisited], CustomError> {
+    return Just(
       store.find(for: userId).map { $0.asDomain() }
     )
+      .setFailureType(to: CustomError.self)
+      .eraseToAnyPublisher()
   }
 
   public func recentVisitedShowsDidChange() -> Observable<Bool> {

@@ -22,18 +22,18 @@ public final class DefaultSearchLocalStorage {
 extension DefaultSearchLocalStorage: SearchLocalStorage {
 
   public func saveSearch(query: String, userId: Int) -> AnyPublisher<Void, CustomError> {
-    let subject = PassthroughSubject<Void, CustomError>()
+    return Deferred { [store] in
+      return Future<Void, CustomError> { [store] promise in
+        let persistEntity = RealmSearchShow()
+        persistEntity.query = query
+        persistEntity.userId = userId
 
-    let persistEntitie = RealmSearchShow()
-    persistEntitie.query = query
-    persistEntitie.userId = userId
-
-    store.saveSearch(entitie: persistEntitie) {
-      subject.send(())
-      subject.send(completion: .finished)
+        store.saveSearch(entitie: persistEntity) {
+          promise(.success(()))
+        }
+      }
     }
-
-    return subject.eraseToAnyPublisher()
+    .eraseToAnyPublisher()
   }
 
   public func fetchSearchs(userId: Int) -> AnyPublisher<[Search], CustomError> {

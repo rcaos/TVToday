@@ -8,29 +8,20 @@
 
 import Foundation
 import Combine
-import RxSwift
 import Shared
 import NetworkingInterface
 
 class SignInViewModel: SignInViewModelProtocol {
-
   private let createTokenUseCase: CreateTokenUseCase
-
-  private let viewStateSubject: BehaviorSubject<SignInViewState> = .init(value: .initial)
-
-  private let disposeBag = DisposeBag()
-  private var cancelables = Set<AnyCancellable>()
-
-  weak var delegate: SignInViewModelDelegate?
-
   private let tapButton = PassthroughSubject<Void, Never>()
 
-  let viewState: Observable<SignInViewState>
+  let viewState: CurrentValueSubject<SignInViewState, Never> = .init(.initial)
+  weak var delegate: SignInViewModelDelegate?
+  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializers
   init(createTokenUseCase: CreateTokenUseCase) {
     self.createTokenUseCase = createTokenUseCase
-    viewState = viewStateSubject.asObservable()
     subscribe()
   }
 
@@ -40,15 +31,15 @@ class SignInViewModel: SignInViewModelProtocol {
   }
 
   public func changeState(with state: SignInViewState) {
-    viewStateSubject.onNext(state)
+    viewState.send(state)
   }
 
   // MARK: - Private
   private func subscribe() {
     // MARK: - TODO, test handle several taps
     tapButton
-      .flatMap { [viewStateSubject, createTokenUseCase] () -> AnyPublisher<URL, DataTransferError> in
-        viewStateSubject.onNext(.loading)
+      .flatMap { [viewState, createTokenUseCase] () -> AnyPublisher<URL, DataTransferError> in
+        viewState.send(.loading)
         return createTokenUseCase.execute()
       }
       .receive(on: RunLoop.main)
@@ -56,7 +47,7 @@ class SignInViewModel: SignInViewModelProtocol {
         switch completion {
         case let .failure(error):
           print("error to request token: \(error)")
-          self?.viewStateSubject.onNext(.loading)
+          self?.viewState.send(.loading)
         case .finished:
           break
         }
@@ -65,6 +56,6 @@ class SignInViewModel: SignInViewModelProtocol {
         guard let strongSelf = self else { return }
         strongSelf.delegate?.signInViewModel(strongSelf, didTapSignInButton: url)
       })
-      .store(in: &cancelables)
+      .store(in: &disposeBag)
   }
 }

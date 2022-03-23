@@ -8,7 +8,6 @@
 
 import UIKit
 import Combine
-import RxSwift
 import Shared
 
 class ResultsSearchViewController: NiblessViewController {

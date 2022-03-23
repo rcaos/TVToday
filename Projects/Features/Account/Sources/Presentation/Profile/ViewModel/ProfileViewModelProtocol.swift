@@ -5,7 +5,7 @@
 //  Created by Jeans Ruiz on 8/8/20.
 //
 
-import RxSwift
+import Combine
 
 protocol ProfileViewModelDelegate: AnyObject {
   func profileViewModel(didTapLogoutButton tapped: Bool)
@@ -14,11 +14,11 @@ protocol ProfileViewModelDelegate: AnyObject {
 
 protocol ProfileViewModelProtocol {
   // MARK: - Input
-  var tapCellAction: PublishSubject<ProfilesSectionItem> { get }
   func didTapLogoutButton()
+  func didCellTap(model: ProfilesSectionItem)
   var delegate: ProfileViewModelDelegate? { get set }
 
   // MARK: - Output
-  var dataSource: Observable<[ProfileSectionModel]> { get }
-  var presentSignOutAlert: Observable<Bool> { get }
+  var dataSource: CurrentValueSubject<[ProfileSectionModel], Never> { get }
+  var presentSignOutAlert: CurrentValueSubject<Bool, Never> { get }
 }

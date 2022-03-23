@@ -27,14 +27,14 @@ public final class DefaultShowsVisitedLocalStorage {
 extension DefaultShowsVisitedLocalStorage: ShowsVisitedLocalStorage {
 
   public func saveShow(id: Int, pathImage: String, userId: Int) -> AnyPublisher<Void, CustomError> {
-    return Deferred {
-      return Future<Void, CustomError> { [weak self] promise in
+    return Deferred { [store] in
+      return Future<Void, CustomError> { [store] promise in
         let persistEntity = RealmShowVisited()
         persistEntity.id = id
         persistEntity.userId = userId
         persistEntity.pathImage = pathImage
 
-        self?.store.saveVisit(entitie: persistEntity) {
+        store.saveVisit(entitie: persistEntity) {
           promise(.success(()))
         }
       }

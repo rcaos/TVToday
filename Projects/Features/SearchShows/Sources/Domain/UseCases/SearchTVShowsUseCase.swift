@@ -9,6 +9,7 @@ import Combine
 import Shared
 import Persistence
 import NetworkingInterface
+import Foundation
 
 public protocol SearchTVShowsUseCase {
   func execute(requestValue: SearchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowResult, DataTransferError>
@@ -41,6 +42,7 @@ final class DefaultSearchTVShowsUseCase: SearchTVShowsUseCase {
     }
     
     return tvShowsRepository.searchShowsFor(query: requestValue.query, page: requestValue.page)
+      .receive(on: RunLoop.main)
       .flatMap { resultSearch -> AnyPublisher<TVShowResult, DataTransferError> in
         if requestValue.page == 1 {
           return self.searchsLocalRepository.saveSearch(query: requestValue.query, userId: idLogged)

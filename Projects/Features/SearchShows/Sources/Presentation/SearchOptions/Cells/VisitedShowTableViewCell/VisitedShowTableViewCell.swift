@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 import Shared
 import Persistence
 
@@ -24,7 +24,7 @@ class VisitedShowTableViewCell: NiblessTableViewCell {
 
   var viewModel: VisitedShowViewModelProtocol?
 
-  private var disposeBag = DisposeBag()
+  private var disposeBag = Set<AnyCancellable>()
 
   private let preferredWidth: CGFloat = 100.0
   private let preferredHeight: CGFloat = 170.0
@@ -49,7 +49,7 @@ class VisitedShowTableViewCell: NiblessTableViewCell {
 
   func setupCell(with viewModel: VisitedShowViewModelProtocol) {
     self.viewModel = viewModel
-    disposeBag = DisposeBag()
+    disposeBag = Set<AnyCancellable>()
 
     collectionView.delegate = self
 
@@ -67,10 +67,11 @@ class VisitedShowTableViewCell: NiblessTableViewCell {
         snapShot.appendItems(shows, toSection: .header)
         return snapShot
       }
-      .subscribe(onNext: { [weak self] snapshot in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] snapshot in
         self?.dataSource?.apply(snapshot)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
   private func setupUI() {
@@ -109,7 +110,7 @@ extension VisitedShowTableViewCell: UICollectionViewDelegateFlowLayout {
 
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     if let item = dataSource?.itemIdentifier(for: indexPath) {
-      viewModel?.selectedShow.onNext(item.id)
+      viewModel?.showDidSelected(id: item.id)
     }
   }
 }

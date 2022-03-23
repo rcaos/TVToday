@@ -13,13 +13,13 @@ import RxSwift
 public protocol ShowsViewModel: AnyObject {
   associatedtype MovieCellViewModel: Equatable
 
-  var fetchTVShowsUseCase: FetchTVShowsUseCase { get set }
+  var fetchTVShowsUseCase: FetchTVShowsUseCase { get }
 
   var shows: [TVShow] { get set }
 
   var showsCells: [MovieCellViewModel] { get set }
 
-  var viewStateObservableSubject: CurrentValueSubject<SimpleViewState<MovieCellViewModel>, Never> { get set }
+  var viewStateObservableSubject: CurrentValueSubject<SimpleViewState<MovieCellViewModel>, Never> { get }
 
   var disposeBag: Set<AnyCancellable> { get set }
 

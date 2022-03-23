@@ -7,7 +7,6 @@
 //
 
 import Combine
-import RxSwift
 import RealmSwift
 import Persistence
 import Shared
@@ -15,8 +14,7 @@ import Shared
 public final class DefaultShowsVisitedLocalStorage {
 
   private let store: PersistenceStore<RealmShowVisited>
-
-  private let recentsShowsSubject = BehaviorSubject<Bool>(value: true)
+  private let recentsShowsSubject = PassthroughSubject<Bool, Never>()
 
   public init(realmDataStack: RealmDataStorage) {
     self.store = PersistenceStore(realmDataStack.realm)
@@ -52,14 +50,14 @@ extension DefaultShowsVisitedLocalStorage: ShowsVisitedLocalStorage {
       .eraseToAnyPublisher()
   }
 
-  public func recentVisitedShowsDidChange() -> Observable<Bool> {
-    return recentsShowsSubject.asObservable()
+  public func recentVisitedShowsDidChange() -> AnyPublisher<Bool, Never> {
+    return recentsShowsSubject.eraseToAnyPublisher()
   }
 }
 
 // MARK: - RealmDataStorageDelegate
 extension DefaultShowsVisitedLocalStorage: PersistenceStoreDelegate {
   func persistenceStore(didUpdateEntity update: Bool) {
-    recentsShowsSubject.onNext(update)
+    recentsShowsSubject.send(update)
   }
 }

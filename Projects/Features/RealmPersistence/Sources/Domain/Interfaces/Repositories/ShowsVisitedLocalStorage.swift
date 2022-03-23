@@ -7,7 +7,6 @@
 //
 
 import Combine
-import RxSwift
 import Persistence
 import Shared
 
@@ -16,5 +15,5 @@ public protocol ShowsVisitedLocalStorage {
 
   func fetchVisitedShows(userId: Int) -> AnyPublisher<[ShowVisited], CustomError>
 
-  func recentVisitedShowsDidChange() -> Observable<Bool>
+  func recentVisitedShowsDidChange() -> AnyPublisher<Bool, Never>
 }

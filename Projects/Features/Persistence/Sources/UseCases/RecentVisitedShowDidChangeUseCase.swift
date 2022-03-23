@@ -5,10 +5,10 @@
 //  Created by Jeans Ruiz on 7/7/20.
 //
 
-import RxSwift
+import Combine
 
 public protocol RecentVisitedShowDidChangeUseCase {
-  func execute() -> Observable<Bool>
+  func execute() -> AnyPublisher<Bool, Never>
 }
 
 public final class DefaultRecentVisitedShowDidChangeUseCase: RecentVisitedShowDidChangeUseCase {
@@ -18,7 +18,7 @@ public final class DefaultRecentVisitedShowDidChangeUseCase: RecentVisitedShowDi
     self.showsVisitedLocalRepository = showsVisitedLocalRepository
   }
 
-  public func execute() -> Observable<Bool> {
+  public func execute() -> AnyPublisher<Bool, Never> {
     return showsVisitedLocalRepository.recentVisitedShowsDidChange()
   }
 }

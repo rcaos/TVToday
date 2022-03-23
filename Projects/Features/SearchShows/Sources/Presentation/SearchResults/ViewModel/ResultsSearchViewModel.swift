@@ -22,14 +22,12 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
 
   private var currentSearchSubject = BehaviorSubject<String>(value: "")
 
-  private let viewStateObservableSubject: BehaviorSubject<ResultViewState> = .init(value: .initial)
-
   private var disposeBag = DisposeBag()
 
   private var cancelables = Set<AnyCancellable>()
 
   // MARK: - Public Api
-  let viewState: Observable<ResultViewState>
+  let viewStateObservableSubject = CurrentValueSubject<ResultViewState, Never>(.initial)
   let dataSource: Observable<[ResultSearchSectionModel]>
   weak var delegate: ResultsSearchViewModelDelegate?
 
@@ -39,7 +37,6 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
     self.searchTVShowsUseCase = searchTVShowsUseCase
     self.fetchRecentSearchsUseCase = fetchRecentSearchsUseCase
 
-    viewState = viewStateObservableSubject.asObservable()
     dataSource = dataSourceObservableSubject.asObservable()
 
     subscribeToRecentsShowsChange()
@@ -52,7 +49,7 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
   }
 
   func resetSearch() {
-    viewStateObservableSubject.onNext(.initial)
+    viewStateObservableSubject.send(.initial)
   }
 
   func recentSearchIsPicked(query: String) {
@@ -64,11 +61,7 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
   }
 
   func getViewState() -> ResultViewState {
-    if let viewState = try? viewStateObservableSubject.value() {
-      return viewState
-    } else {
-      return .empty
-    }
+    return viewStateObservableSubject.value
   }
 
   // MARK: - Private
@@ -82,26 +75,22 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
       .disposed(by: disposeBag)
   }
 
-  private func fetchRecentsShows() -> Observable<[Search]> {
-    return fetchRecentSearchsUseCase.execute(requestValue: FetchSearchsUseCaseRequestValue())
-  }
-
   private func subscribeToRecentsShowsChange() {
     viewStateObservableSubject
-      .distinctUntilChanged()
+      .removeDuplicates()
       .filter { $0 == .initial }
-      .flatMap { [weak self] _ -> Observable<[Search]> in
-        guard let strongSelf = self else { return Observable.just([])}
-        return strongSelf.fetchRecentsShows()
-    }
-    .subscribe(onNext: { [weak self] results in
-      self?.createSectionModel(recentSearchs: results.map { $0.query }, resultShows: [])
-    })
-      .disposed(by: disposeBag)
+      .flatMap { [fetchRecentSearchsUseCase] _ -> AnyPublisher<[Search], CustomError> in
+        return fetchRecentSearchsUseCase.execute(requestValue: FetchSearchsUseCaseRequestValue())
+      }
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] results in
+        self?.createSectionModel(recentSearchs: results.map { $0.query }, resultShows: [])
+      })
+      .store(in: &cancelables)
   }
 
   private func fetchShows(with query: String) {
-    viewStateObservableSubject.onNext(.loading)
+    viewStateObservableSubject.send(.loading)
     createSectionModel(recentSearchs: [], resultShows: [])
 
     let request = SearchTVShowsUseCaseRequestValue(query: query, page: 1)
@@ -111,7 +100,7 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
       .sink(receiveCompletion: { [weak self] completion in
         switch completion {
         case let .failure(error):
-          self?.viewStateObservableSubject.onNext(.error(error.localizedDescription))
+          self?.viewStateObservableSubject.send(.error(error.localizedDescription))
         case .finished:
           break
         }
@@ -125,9 +114,9 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
     let fetchedShows = response.results ?? []
 
     if fetchedShows.isEmpty {
-      viewStateObservableSubject.onNext( .empty )
+      viewStateObservableSubject.send( .empty )
     } else {
-      viewStateObservableSubject.onNext( .populated )
+      viewStateObservableSubject.send( .populated )
     }
 
     createSectionModel(recentSearchs: [], resultShows: fetchedShows)

@@ -14,7 +14,7 @@ import Shared
 public final class DefaultShowsVisitedLocalStorage {
 
   private let store: PersistenceStore<RealmShowVisited>
-  private let recentsShowsSubject = PassthroughSubject<Bool, Never>()
+  private let recentsShowsSubject = CurrentValueSubject<Bool, Never>(true)
 
   public init(realmDataStack: RealmDataStorage) {
     self.store = PersistenceStore(realmDataStack.realm)

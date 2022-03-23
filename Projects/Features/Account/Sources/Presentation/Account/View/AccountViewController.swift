@@ -7,18 +7,15 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 import Shared
 
 class AccountViewController: NiblessViewController {
 
   private let viewModel: AccountViewModelProtocol
-
   private let viewControllersFactory: AccountViewControllerFactory
-
   private var currentChildViewController: UIViewController?
-
-  private let disposeBag = DisposeBag()
+  private var disposeBag = Set<AnyCancellable>()
 
   init(viewModel: AccountViewModelProtocol, viewControllersFactory: AccountViewControllerFactory) {
     self.viewModel = viewModel
@@ -37,16 +34,17 @@ class AccountViewController: NiblessViewController {
   }
 
   // MARK: - Setup UI
-  fileprivate func subscribe() {
+  private func subscribe() {
     viewModel
       .viewState
-      .subscribe(onNext: { [weak self] viewState in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] viewState in
         self?.setupUI(with: viewState)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
-  fileprivate func setupUI(with state: AccountViewState) {
+  private func setupUI(with state: AccountViewState) {
     switch state {
     case .login:
       let loginVC = viewControllersFactory.makeSignInViewController()
@@ -57,7 +55,7 @@ class AccountViewController: NiblessViewController {
     }
   }
 
-  func transition(to viewController: UIViewController, with newTitle: String) {
+  private func transition(to viewController: UIViewController, with newTitle: String) {
     remove(asChildViewController: currentChildViewController)
     add(asChildViewController: viewController)
     title = newTitle

@@ -9,7 +9,6 @@
 import Foundation
 import Combine
 import NetworkingInterface
-import RxSwift
 import Shared
 
 enum AccountViewState: Equatable {
@@ -18,27 +17,20 @@ enum AccountViewState: Equatable {
 }
 
 protocol AccountViewModelProtocol: AuthPermissionViewModelDelegate {
-  var viewState: Observable<AccountViewState> { get }
+  var viewState: CurrentValueSubject<AccountViewState, Never> { get }
 }
 
 final class AccountViewModel: AccountViewModelProtocol {
   private let createNewSession: CreateSessionUseCase
-
   private let fetchLoggedUser: FetchLoggedUser
-
   private let fetchAccountDetails: FetchAccountDetailsUseCase
-
   private let deleteLoguedUser: DeleteLoguedUserUseCase
 
-  private let viewStateSubject: BehaviorSubject<AccountViewState> = .init(value: .login)
-
   weak var coordinator: AccountCoordinatorProtocol?
-
-  private let disposeBag = DisposeBag()
-  private var cancelables = Set<AnyCancellable>()
+  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Public Api
-  let viewState: Observable<AccountViewState>
+  let viewState: CurrentValueSubject<AccountViewState, Never> = .init(.login)
 
   // MARK: - Initializers
   init(createNewSession: CreateSessionUseCase,
@@ -49,9 +41,6 @@ final class AccountViewModel: AccountViewModelProtocol {
     self.fetchAccountDetails = fetchAccountDetails
     self.fetchLoggedUser = fetchLoggedUser
     self.deleteLoguedUser = deleteLoguedUser
-
-    viewState = viewStateSubject.asObservable()
-
     checkIsLogued()
   }
 
@@ -59,7 +48,7 @@ final class AccountViewModel: AccountViewModelProtocol {
     if fetchLoggedUser.execute() != nil {
       fetchUserDetails()
     } else {
-      viewStateSubject.onNext(.login)
+      viewState.send(.login)
     }
   }
 
@@ -69,15 +58,15 @@ final class AccountViewModel: AccountViewModelProtocol {
       .sink(receiveCompletion: { [weak self] completion in
         switch completion {
         case .failure:
-          self?.viewStateSubject.onNext(.login)
+          self?.viewState.send(.login)
         case .finished:
           break
         }
       },
             receiveValue: { [weak self] accountDetails in
-        self?.viewStateSubject.onNext(.profile(account: accountDetails))
+        self?.viewState.send(.profile(account: accountDetails))
       })
-      .store(in: &cancelables)
+      .store(in: &disposeBag)
   }
 
   private func createSession() {
@@ -92,28 +81,28 @@ final class AccountViewModel: AccountViewModelProtocol {
       .sink(receiveCompletion: { [weak self] completion in
         switch completion {
         case .failure:
-          self?.viewStateSubject.onNext(.login)
+          self?.viewState.send(.login)
         case .finished:
           break
         }
       },
             receiveValue: { [weak self] accountDetails in
-        self?.viewStateSubject.onNext(.profile(account: accountDetails))
+        self?.viewState.send(.profile(account: accountDetails))
       })
-      .store(in: &cancelables)
+      .store(in: &disposeBag)
   }
 
   private func fetchDetailsAccount() -> AnyPublisher<AccountResult, DataTransferError> {
     return fetchAccountDetails.execute()
   }
 
-  fileprivate func logoutUser() {
+  private func logoutUser() {
     deleteLoguedUser.execute()
-    viewStateSubject.onNext(.login)
+    viewState.send(.login)
   }
 
   // MARK: - Navigation
-  fileprivate func navigateTo(step: AccountStep) {
+  private func navigateTo(step: AccountStep) {
     coordinator?.navigate(to: step)
   }
 }

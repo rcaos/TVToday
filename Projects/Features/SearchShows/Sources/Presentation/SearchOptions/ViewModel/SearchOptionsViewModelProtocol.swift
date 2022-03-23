@@ -5,7 +5,7 @@
 //  Created by Jeans Ruiz on 8/7/20.
 //
 
-import RxSwift
+import Combine
 
 protocol SearchOptionsViewModelDelegate: AnyObject {
   func searchOptionsViewModel(_ searchOptionsViewModel: SearchOptionsViewModel,
@@ -30,6 +30,6 @@ protocol SearchOptionsViewModelProtocol: VisitedShowViewModelDelegate {
   func modelIsPicked(with item: SearchSectionItem)
 
   // MARK: - Output
-  var viewState: Observable<SearchViewState> { get }
-  var dataSource: Observable<[SearchOptionsSectionModel]> { get }
+  var viewState: CurrentValueSubject<SearchViewState, Never> { get }
+  var dataSource: CurrentValueSubject<[SearchOptionsSectionModel], Never> { get }
 }

@@ -7,7 +7,6 @@
 
 import Foundation
 import Combine
-import RxSwift
 import Shared
 import Persistence
 import NetworkingInterface
@@ -17,25 +16,12 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
   weak var delegate: SearchOptionsViewModelDelegate?
 
   private let fetchGenresUseCase: FetchGenresUseCase
-
   private let fetchVisitedShowsUseCase: FetchVisitedShowsUseCase
-
   private let recentVisitedShowsDidChange: RecentVisitedShowDidChangeUseCase
 
-  private let viewStateObservableSubject = BehaviorSubject<SearchViewState>(value: .loading)
-
-  private let dataSourceObservableSubject = BehaviorSubject<[SearchOptionsSectionModel]>(value: [])
-
-  private let genres: [Genre] = []
-
-  private let visitedShows: [ShowVisited] = []
-
-  private let disposeBag = DisposeBag()
-  private var cancelables = Set<AnyCancellable>()
-
-  var viewState: Observable<SearchViewState>
-
-  var dataSource: Observable<[SearchOptionsSectionModel]>
+  let viewState = CurrentValueSubject<SearchViewState, Never>(.loading)
+  let dataSource = CurrentValueSubject<[SearchOptionsSectionModel], Never>([])
+  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializer
   init(fetchGenresUseCase: FetchGenresUseCase,
@@ -44,9 +30,6 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
     self.fetchGenresUseCase = fetchGenresUseCase
     self.fetchVisitedShowsUseCase = fetchVisitedShowsUseCase
     self.recentVisitedShowsDidChange = recentVisitedShowsDidChange
-
-    viewState = viewStateObservableSubject.asObservable()
-    dataSource = dataSourceObservableSubject.asObservable()
   }
 
   // MARK: - Public
@@ -93,7 +76,7 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
       .sink(receiveCompletion: { [weak self] completion in
         switch completion {
         case let .failure(error):
-          self?.viewStateObservableSubject.onError(error)
+          self?.viewState.send(.error(error.localizedDescription))
         case .finished:
           break
         }
@@ -103,35 +86,34 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
         strongSelf.processFetched(for: resultGenre)
         strongSelf.createSectionModel(showsVisited: visited, genres: resultGenre.genres ?? [])
       })
-      .store(in: &cancelables)
+      .store(in: &disposeBag)
   }
 
   private func processFetched(for response: GenreListResult) {
     let fetchedGenres = (response.genres ?? [])
     if fetchedGenres.isEmpty {
-      viewStateObservableSubject.onNext(.empty)
+      viewState.send(.empty)
     } else {
-      viewStateObservableSubject.onNext( .populated )
+      viewState.send(.populated )
     }
   }
 
   private func createSectionModel(showsVisited: [ShowVisited], genres: [Genre]) {
-
-    var dataSource: [SearchOptionsSectionModel] = []
+    var sectionModel: [SearchOptionsSectionModel] = []
 
     let showsSectionItem = mapRecentShowsToSectionItem(recentsShows: showsVisited)
 
     if let recentShowsSection = showsSectionItem {
-      dataSource.append(.showsVisited(items: [recentShowsSection]))
+      sectionModel.append(.showsVisited(items: [recentShowsSection]))
     }
 
     let genresSectionItem = createSectionFor(genres: genres)
 
     if !genresSectionItem.isEmpty {
-      dataSource.append(.genres(items: genresSectionItem))
+      sectionModel.append(.genres(items: genresSectionItem))
     }
 
-    dataSourceObservableSubject.onNext(dataSource)
+    dataSource.send(sectionModel)
   }
 
   private func createSectionFor(genres: [Genre] ) -> [SearchSectionItem] {

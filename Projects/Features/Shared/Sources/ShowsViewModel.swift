@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import RxSwift
 import Combine
+import RxSwift
 
 public protocol ShowsViewModel: AnyObject {
   associatedtype MovieCellViewModel: Equatable
@@ -19,11 +19,9 @@ public protocol ShowsViewModel: AnyObject {
 
   var showsCells: [MovieCellViewModel] { get set }
 
-  var viewStateObservableSubject: BehaviorSubject<SimpleViewState<MovieCellViewModel>> { get set }
+  var viewStateObservableSubject: CurrentValueSubject<SimpleViewState<MovieCellViewModel>, Never> { get set }
 
-  var disposeBag: DisposeBag { get set }
-
-  var cancellabes: Set<AnyCancellable> { get set }
+  var disposeBag: Set<AnyCancellable> { get set }
 
   func mapToCell(entites: [TVShow]) -> [MovieCellViewModel]
 }
@@ -32,10 +30,8 @@ extension ShowsViewModel {
 
   public func getShows(for page: Int, showLoader: Bool = true) {
 
-    if let state = try? viewStateObservableSubject.value(),
-      state.isInitialPage,
-      showLoader {
-      viewStateObservableSubject.onNext(.loading)
+    if viewStateObservableSubject.value.isInitialPage, showLoader {
+      viewStateObservableSubject.send(.loading)
     }
 
     let request = FetchTVShowsUseCaseRequestValue(page: page)
@@ -45,13 +41,13 @@ extension ShowsViewModel {
       .sink(receiveCompletion: { [weak self] completion in
         switch completion {
         case let .failure(error):
-          self?.viewStateObservableSubject.onNext(.error(error.localizedDescription))
+          self?.viewStateObservableSubject.send(.error(error.localizedDescription))
         case .finished: break
         }
       }, receiveValue: { [weak self] result in
         self?.processFetched(for: result, currentPage: page)
       })
-      .store(in: &cancellabes)
+      .store(in: &disposeBag)
   }
 
   private func processFetched(for response: TVShowResult, currentPage: Int) {
@@ -65,16 +61,16 @@ extension ShowsViewModel {
 
     if self.shows.isEmpty ||
       (fetchedShows.isEmpty && response.page == 1) {
-      viewStateObservableSubject.onNext(.empty)
+      viewStateObservableSubject.send(.empty)
       return
     }
 
     let cellsShows = mapToCell(entites: shows)
 
     if response.hasMorePages {
-      viewStateObservableSubject.onNext( .paging(cellsShows, next: response.nextPage) )
+      viewStateObservableSubject.send( .paging(cellsShows, next: response.nextPage) )
     } else {
-      viewStateObservableSubject.onNext( .populated(cellsShows) )
+      viewStateObservableSubject.send( .populated(cellsShows) )
     }
   }
 }

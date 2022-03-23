@@ -11,6 +11,7 @@ import NetworkingInterface
 import RxSwift
 import Shared
 import Persistence
+import Foundation
 
 public protocol FetchTVShowDetailsUseCase {
   // MARK: - TODO Use another error maybe?
@@ -43,6 +44,7 @@ public final class DefaultFetchTVShowDetailsUseCase: FetchTVShowDetailsUseCase {
 
     return tvShowsRepository
       .fetchTVShowDetails(with: requestValue.identifier)
+      .receive(on: RunLoop.main)
       .flatMap { [tvShowsVisitedRepository] details -> AnyPublisher<TVShowDetailResult, DataTransferError> in
         return tvShowsVisitedRepository.saveShow(id: details.id ?? 0,
                                                  pathImage: details.posterPath ?? "",

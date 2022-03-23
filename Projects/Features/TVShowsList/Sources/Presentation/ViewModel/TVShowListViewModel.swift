@@ -6,11 +6,10 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import Shared
 import ShowDetailsInterface
 import TVShowsListInterface
-import Combine
 
 protocol TVShowListViewModelProtocol {
   // MARK: - Input
@@ -21,28 +20,20 @@ protocol TVShowListViewModelProtocol {
   func viewDidFinish()
 
   // MARK: - Output
-  var viewState: Observable<SimpleViewState<TVShowCellViewModel>> { get }
-  func getCurrentViewState() -> SimpleViewState<TVShowCellViewModel>
+  var viewStateObservableSubject: CurrentValueSubject<SimpleViewState<TVShowCellViewModel>, Never> { get }
 }
 
 final class TVShowListViewModel: TVShowListViewModelProtocol, ShowsViewModel {
-  var fetchTVShowsUseCase: FetchTVShowsUseCase
+  let fetchTVShowsUseCase: FetchTVShowsUseCase
+  let viewStateObservableSubject: CurrentValueSubject<SimpleViewState<TVShowCellViewModel>, Never> = .init(.loading)
 
   var shows: [TVShow]
-
   var showsCells: [TVShowCellViewModel] = []
 
-  var viewStateObservableSubject: BehaviorSubject<SimpleViewState<TVShowCellViewModel>> = .init(value: .loading)
-
-  var viewState: Observable<SimpleViewState<TVShowCellViewModel>>
-
   private weak var coordinator: TVShowListCoordinatorProtocol?
+  private let stepOrigin: TVShowListStepOrigin?
 
-  var disposeBag = DisposeBag()
-
-  var cancellabes = Set<AnyCancellable>()
-
-  let stepOrigin: TVShowListStepOrigin?
+  var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializers
   init(fetchTVShowsUseCase: FetchTVShowsUseCase,
@@ -52,7 +43,6 @@ final class TVShowListViewModel: TVShowListViewModelProtocol, ShowsViewModel {
     self.coordinator = coordinator
     self.shows = []
     self.stepOrigin = stepOrigin
-    viewState = viewStateObservableSubject.asObservable()
   }
 
   deinit {
@@ -71,16 +61,9 @@ final class TVShowListViewModel: TVShowListViewModelProtocol, ShowsViewModel {
   }
 
   func didLoadNextPage() {
-    if case .paging(_, let nextPage) = getCurrentViewState() {
+    if case .paging(_, let nextPage) = viewStateObservableSubject.value {
       getShows(for: nextPage)
     }
-  }
-
-  func getCurrentViewState() -> SimpleViewState<TVShowCellViewModel> {
-    if let state = try? viewStateObservableSubject.value() {
-      return state
-    }
-    return .loading
   }
 
   func refreshView() {
@@ -90,15 +73,11 @@ final class TVShowListViewModel: TVShowListViewModelProtocol, ShowsViewModel {
   // MARK: - Navigation
   public func showIsPicked(with id: Int) {
     let step = TVShowListStep.showIsPicked(showId: id, stepOrigin: stepOrigin, closure: updateTVShow)
-    navigateTo(step: step)
+    coordinator?.navigate(to: step)
   }
 
   public func viewDidFinish() {
-    navigateTo(step: .showListDidFinish)
-  }
-
-  private func navigateTo(step: TVShowListStep) {
-    coordinator?.navigate(to: step)
+    coordinator?.navigate(to: .showListDidFinish)
   }
 
   // MARK: - Updated List from Show Details (Deleted Favorite, Delete WatchList)
@@ -113,19 +92,15 @@ final class TVShowListViewModel: TVShowListViewModelProtocol, ShowsViewModel {
     let cells = mapToCell(entites: shows)
 
     if cells.isEmpty {
-      viewStateObservableSubject.onNext(.empty)
+      viewStateObservableSubject.send(.empty)
       return
     }
 
-    guard let lastViewState = try? viewStateObservableSubject.value() else {
-      return
-    }
-
-    switch lastViewState {
+    switch viewStateObservableSubject.value {
     case .paging(_, let nextPage):
-      viewStateObservableSubject.onNext( .paging(cells, next: nextPage) )
+      viewStateObservableSubject.send( .paging(cells, next: nextPage) )
     case .populated:
-      viewStateObservableSubject.onNext(.populated(cells))
+      viewStateObservableSubject.send(.populated(cells))
     default:
       break
     }

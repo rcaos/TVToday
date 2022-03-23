@@ -21,10 +21,10 @@ protocol PopularViewModelProtocol {
 }
 
 final class PopularViewModel: PopularViewModelProtocol, ShowsViewModel {
-  var fetchTVShowsUseCase: FetchTVShowsUseCase
+  let fetchTVShowsUseCase: FetchTVShowsUseCase
   var shows: [TVShow]
   var showsCells: [TVShowCellViewModel] = []
-  var viewStateObservableSubject: CurrentValueSubject<SimpleViewState<TVShowCellViewModel>, Never> = .init(.loading)
+  let viewStateObservableSubject: CurrentValueSubject<SimpleViewState<TVShowCellViewModel>, Never> = .init(.loading)
   weak var coordinator: PopularCoordinatorProtocol?
   var disposeBag = Set<AnyCancellable>()
 

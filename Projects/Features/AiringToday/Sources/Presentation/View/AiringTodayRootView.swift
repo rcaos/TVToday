@@ -5,13 +5,13 @@
 //  Created by Jeans Ruiz on 8/21/20.
 //
 
-import Shared
 import UIKit
-import RxSwift
+import Combine
+import Shared
 
 class AiringTodayRootView: NiblessView {
 
-  private var viewModel: AiringTodayViewModelProtocol
+  private let viewModel: AiringTodayViewModelProtocol
 
   private let collectionView: UICollectionView = {
     let flowLayout = UICollectionViewFlowLayout()
@@ -32,7 +32,7 @@ class AiringTodayRootView: NiblessView {
   typealias DataSource = UICollectionViewDiffableDataSource<SectionAiringTodayFeed, AiringTodayCollectionViewModel>
   typealias Snapshot = NSDiffableDataSourceSnapshot<SectionAiringTodayFeed, AiringTodayCollectionViewModel>
 
-  private let disposeBag = DisposeBag()
+  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializer
   init(frame: CGRect = .zero, viewModel: AiringTodayViewModelProtocol) {
@@ -86,7 +86,7 @@ class AiringTodayRootView: NiblessView {
 
   private func setupDataSource() {
     viewModel
-      .viewState
+      .viewStateObservableSubject
       .map { $0.currentEntities }
       .map { entities -> Snapshot in
         var snapShot = Snapshot()
@@ -94,10 +94,11 @@ class AiringTodayRootView: NiblessView {
         snapShot.appendItems(entities, toSection: .shows)
         return snapShot
       }
-      .subscribe(onNext: { [weak self] snapshot in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] snapshot in
         self?.dataSource?.apply(snapshot)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
   override func layoutSubviews() {

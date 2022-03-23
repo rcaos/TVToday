@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 import RxSwift
 
 protocol SignInViewModelDelegate: AnyObject {
@@ -14,7 +15,7 @@ protocol SignInViewModelDelegate: AnyObject {
 
 protocol SignInViewModelProtocol {
   // MARK: - Input
-  var tapButton: PublishSubject<Void> { get }
+  func signInDidTapped()
   func changeState(with state: SignInViewState)
 
   // MARK: - Output

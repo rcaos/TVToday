@@ -6,17 +6,14 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 import Shared
 
 class SearchOptionsViewController: NiblessViewController, Loadable {
   private let viewModel: SearchOptionsViewModelProtocol
-
   private var rootView: SearchOptionRootView?
-
   private let messageView = MessageView(frame: .zero)
-
-  private let disposeBag = DisposeBag()
+  private var disposeBag = Set<AnyCancellable>()
 
   init(viewModel: SearchOptionsViewModelProtocol) {
     self.viewModel = viewModel
@@ -46,11 +43,11 @@ class SearchOptionsViewController: NiblessViewController, Loadable {
 
   private func bindViewState() {
     viewModel.viewState
-      .subscribe(onNext: { [weak self] state in
-        guard let strongSelf = self else { return }
-        strongSelf.handleTableState(with: state)
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] viewState in
+        self?.handleTableState(with: viewState)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
   private func handleTableState(with state: SearchViewState) {

@@ -64,23 +64,24 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
   }
 
   // MARK: - Private
-  private func fetchRecentShows() -> Observable<[ShowVisited]> {
+  private func fetchRecentShows() -> AnyPublisher<[ShowVisited], CustomError> {
     return fetchVisitedShowsUseCase.execute(requestValue: FetchVisitedShowsUseCaseRequestValue())
   }
 
-  private func fetchGenres() -> AnyPublisher<GenreListResult, DataTransferError> {
+  private func fetchGenres() -> AnyPublisher<GenreListResult, CustomError> {
     return fetchGenresUseCase.execute(requestValue: FetchGenresUseCaseRequestValue())
+      .mapError { error -> CustomError in return CustomError.transferError(error) }
+      .eraseToAnyPublisher()
   }
 
-  // TODO,
-  private func recentShowsDidChanged() -> AnyPublisher<[ShowVisited], DataTransferError> {
-    return Just([]).setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
-//    recentVisitedShowsDidChange.execute()
-//      .filter { $0 }
-//      .flatMap { [weak self] _ -> Observable<[ShowVisited]> in
-//        guard let strongSelf = self else { return Observable.just([]) }
-//        return strongSelf.fetchRecentShows()
-//    }
+  private func recentShowsDidChanged() -> AnyPublisher<[ShowVisited], CustomError> {
+    return recentVisitedShowsDidChange.execute()
+      .filter { $0 }
+      .flatMap { [weak self] _ -> AnyPublisher<[ShowVisited], CustomError> in
+        guard let strongSelf = self else { return Just([]).setFailureType(to: CustomError.self).eraseToAnyPublisher() }
+        return strongSelf.fetchRecentShows()
+      }
+      .eraseToAnyPublisher()
   }
 
   private func fetchGenresAndRecentShows() {

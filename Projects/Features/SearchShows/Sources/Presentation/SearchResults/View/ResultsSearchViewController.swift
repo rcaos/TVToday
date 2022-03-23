@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Combine
 import RxSwift
 import Shared
 
@@ -23,6 +24,8 @@ class ResultsSearchViewController: NiblessViewController {
   typealias DataSource = UITableViewDiffableDataSource<ResultSearchSectionView, ResultSearchSectionItem>
   typealias Snapshot = NSDiffableDataSourceSnapshot<ResultSearchSectionView, ResultSearchSectionItem>
   private var dataSource: DataSource?
+
+  private var cancelables = Set<AnyCancellable>()
 
   // MARK: - Life Cycle
   init(viewModel: ResultsSearchViewModelProtocol) {
@@ -57,12 +60,12 @@ class ResultsSearchViewController: NiblessViewController {
   // MARK: - SetupViewModel
   private func setupViewModel() {
     viewModel
-      .viewState
-      .subscribe(onNext: { [weak self] state in
-        guard let strongSelf = self else { return }
-        strongSelf.configView(with: state)
+      .viewStateObservableSubject
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] state in
+        self?.configView(with: state)
       })
-      .disposed(by: disposeBag)
+      .store(in: &cancelables)
   }
 
   // MARK: - Setup Table View
@@ -90,6 +93,7 @@ class ResultsSearchViewController: NiblessViewController {
   private func subscribe() {
     viewModel
       .dataSource
+      .observe(on: MainScheduler.instance)
       .map { dataSource -> Snapshot in
         var snapShot = Snapshot()
         for element in dataSource {

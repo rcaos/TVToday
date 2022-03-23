@@ -6,9 +6,11 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
+import Combine
 import RxSwift
 import RealmSwift
 import Persistence
+import Shared
 
 public final class DefaultShowsVisitedLocalStorage {
 
@@ -25,23 +27,20 @@ public final class DefaultShowsVisitedLocalStorage {
 
 extension DefaultShowsVisitedLocalStorage: ShowsVisitedLocalStorage {
 
-  public func saveShow(id: Int, pathImage: String, userId: Int) -> Observable<Void> {
+  public func saveShow(id: Int, pathImage: String, userId: Int) -> AnyPublisher<Void, CustomError> {
+    return Deferred {
+      return Future<Void, CustomError> { [weak self] promise
+        let persistEntity = RealmShowVisited()
+        persistEntity.id = id
+        persistEntity.userId = userId
+        persistEntity.pathImage = pathImage
 
-    return Observable<()>.create { [weak self] (event) -> Disposable in
-      let disposable = Disposables.create()
-
-      let persistEntitie = RealmShowVisited()
-      persistEntitie.id = id
-      persistEntitie.userId = userId
-      persistEntitie.pathImage = pathImage
-
-      self?.store.saveVisit(entitie: persistEntitie) {
-        event.onNext(())
-        event.onCompleted()
+        self?.store.saveVisit(entitie: persistEntity) {
+          promise(.success(()))
+        }
       }
-
-      return disposable
     }
+    .eraseToAnyPublisher()
   }
 
   public func fetchVisitedShows(userId: Int) -> Observable<[ShowVisited]> {

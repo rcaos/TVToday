@@ -12,7 +12,6 @@ class ProfileViewModel: ProfileViewModelProtocol {
   weak var delegate: ProfileViewModelDelegate?
 
   // MARK: - Public Api
-  let tapCellAction = PassthroughSubject<ProfilesSectionItem, Never>()
   let dataSource = CurrentValueSubject<[ProfileSectionModel], Never>([])
   let presentSignOutAlert = CurrentValueSubject<Bool, Never>(false)
   private var disposeBag = Set<AnyCancellable>()

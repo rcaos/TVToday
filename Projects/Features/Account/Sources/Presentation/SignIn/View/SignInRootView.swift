@@ -7,13 +7,10 @@
 
 import UIKit
 import Shared
-import RxSwift
 
 class SignInRootView: NiblessView {
 
   private let viewModel: SignInViewModelProtocol
-
-  private let disposeBag = DisposeBag()
 
   let signInButton: LoadableButton = {
     let button = LoadableButton(type: .custom)
@@ -32,7 +29,7 @@ class SignInRootView: NiblessView {
     return imageView
   }()
 
-  lazy var mainStackView: UIStackView = {
+  private lazy var mainStackView: UIStackView = {
     let stack = UIStackView(arrangedSubviews: [tvImageView, signInButton])
     stack.axis = .vertical
     stack.alignment = .center

@@ -6,16 +6,14 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Foundation
+import Combine
 import Shared
 
 class SignInViewController: NiblessViewController {
-
   private let viewModel: SignInViewModelProtocol
-
   private var rootView: SignInRootView?
-
-  private let disposeBag = DisposeBag()
+  private var disposeBag = Set<AnyCancellable>()
 
   init(viewModel: SignInViewModelProtocol) {
     self.viewModel = viewModel
@@ -36,10 +34,11 @@ class SignInViewController: NiblessViewController {
   fileprivate func subscribe() {
     viewModel
       .viewState
-      .subscribe(onNext: { [weak self] state in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] state in
         self?.setupView(with: state)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
   fileprivate func setupView(with state: SignInViewState) {

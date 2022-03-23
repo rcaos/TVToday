@@ -6,7 +6,7 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
 
 final class SearchViewModel {
 
@@ -14,14 +14,10 @@ final class SearchViewModel {
 
   weak var coordinator: SearchCoordinatorProtocol?
 
-  private let searchBarTextSubject: BehaviorSubject<String> = .init(value: "")
-
-  let searchBarText: Observable<String>
+  let searchBarTextSubject: CurrentValueSubject<String, Never> = .init("")
 
   // MARK: - Initializer
-  init() {
-    searchBarText = searchBarTextSubject.asObservable()
-  }
+  init() { }
 
   // MARK: - Public
   func startSearch(with text: String) {
@@ -60,7 +56,7 @@ extension SearchViewModel: ResultsSearchViewModelDelegate {
 
   func resultsSearchViewModel(_ resultsSearchViewModel: ResultsSearchViewModelProtocol,
                               didSelectRecentSearch query: String) {
-    searchBarTextSubject.onNext(query)
+    searchBarTextSubject.send(query)
     startSearch(with: query)
   }
 }

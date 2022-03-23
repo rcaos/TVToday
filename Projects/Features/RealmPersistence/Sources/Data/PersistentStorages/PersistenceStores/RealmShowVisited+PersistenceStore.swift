@@ -22,7 +22,7 @@ extension PersistenceStore where Entity == RealmShowVisited {
       .sorted(byKeyPath: "date", ascending: ascending).map { $0 }
   }
 
-  func saveVisit(entitie: Entity, completion: @escaping(() -> Void)) {
+  func saveVisit(entity: Entity, completion: @escaping(() -> Void)) {
     guard let realm = realm else {
       completion()
       return
@@ -30,12 +30,12 @@ extension PersistenceStore where Entity == RealmShowVisited {
 
     do {
       try realm.write {
-        realm.add(entitie, update: .modified)
-        toDeleted(entitie.userId, keepElements: maxStorageLimit).forEach {
+        realm.add(entity, update: .modified)
+        toDeleted(entity.userId, keepElements: maxStorageLimit).forEach {
           print("Delete: \($0) OK")
           realm.delete($0)
         }
-        print("Save: \(entitie) OK")
+        print("Save: \(entity) OK")
 
         completion()
       }

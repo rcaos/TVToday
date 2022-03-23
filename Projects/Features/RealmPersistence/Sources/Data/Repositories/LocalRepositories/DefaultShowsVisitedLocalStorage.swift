@@ -34,7 +34,7 @@ extension DefaultShowsVisitedLocalStorage: ShowsVisitedLocalStorage {
         persistEntity.userId = userId
         persistEntity.pathImage = pathImage
 
-        store.saveVisit(entitie: persistEntity) {
+        store.saveVisit(entity: persistEntity) {
           promise(.success(()))
         }
       }

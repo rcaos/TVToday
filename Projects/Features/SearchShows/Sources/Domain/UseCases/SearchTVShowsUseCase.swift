@@ -34,26 +34,23 @@ final class DefaultSearchTVShowsUseCase: SearchTVShowsUseCase {
     self.searchsLocalRepository = searchsLocalRepository
   }
 
-  // MARK: - TODO, implemented this 👇
   func execute(requestValue: SearchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowResult, DataTransferError> {
-
-//    var idLogged = 0
-//    if let userLogged = keychainRepository.fetchLoguedUser() {
-//      idLogged = userLogged.id
-//    }
-
-    return tvShowsRepository.searchShowsFor(query: requestValue.query,
-                                            page: requestValue.page)
-//      .flatMap { resultSearch -> Observable<TVShowResult> in
-
-//        if requestValue.page == 1 {
-//          return self.searchsLocalRepository.saveSearch(query: requestValue.query, userId: idLogged)
-//            .flatMap { _ -> Observable<TVShowResult> in
-//              return Observable.just(resultSearch)
-//          }
-//        } else {
-//          return Observable.just(resultSearch)
-//        }
-//    }
+    var idLogged = 0
+    if let userLogged = keychainRepository.fetchLoguedUser() {
+      idLogged = userLogged.id
+    }
+    
+    return tvShowsRepository.searchShowsFor(query: requestValue.query, page: requestValue.page)
+      .flatMap { resultSearch -> AnyPublisher<TVShowResult, DataTransferError> in
+        if requestValue.page == 1 {
+          return self.searchsLocalRepository.saveSearch(query: requestValue.query, userId: idLogged)
+            .map { _ in resultSearch }
+            .mapError { _ -> DataTransferError in DataTransferError.noResponse  }
+            .eraseToAnyPublisher()
+        } else {
+          return Just(resultSearch).setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
+        }
+      }
+      .eraseToAnyPublisher()
   }
 }

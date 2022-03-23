@@ -7,17 +7,13 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 final class AuthPermissionViewModel: AuthPermissionViewModelProtocol {
-
   weak var delegate: AuthPermissionViewModelDelegate?
-
-  let didSignIn = PublishSubject<Bool>()
-
+  private let didSignIn = PassthroughSubject<Bool, Never>()
   let authPermissionURL: URL
-
-  private let disposeBag = DisposeBag()
+  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializer
   init(url: URL) {
@@ -26,14 +22,14 @@ final class AuthPermissionViewModel: AuthPermissionViewModelProtocol {
   }
 
   func signIn() {
-    didSignIn.onNext(true)
+    didSignIn.send(true)
   }
 
-  fileprivate func subscribe() {
-    didSignIn.asObserver()
-      .subscribe(onNext: { [weak self] signedIn in
+  private func subscribe() {
+    didSignIn
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] signedIn in
         self?.delegate?.authPermissionViewModel(didSignedIn: signedIn)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 }

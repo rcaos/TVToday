@@ -36,24 +36,21 @@ public final class DefaultFetchTVShowDetailsUseCase: FetchTVShowDetailsUseCase {
   }
 
   public func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> AnyPublisher<TVShowDetailResult, DataTransferError> {
-//    var idLogged = 0
-//    if let userLogged = keychainRepository.fetchLoguedUser() {
-//      idLogged = userLogged.id
-//    }
+    var idLogged = 0
+    if let userLogged = keychainRepository.fetchLoguedUser() {
+      idLogged = userLogged.id
+    }
 
     return tvShowsRepository
       .fetchTVShowDetails(with: requestValue.identifier)
-
-//    return tvShowsRepository
-//      .fetchTVShowDetails(with: requestValue.identifier)
-//      .flatMap { details -> Observable<Result<TVShowDetailResult, Error>>  in
-//        self.tvShowsVisitedRepository.saveShow(id: details.id ?? 0,
-//                                               pathImage: details.posterPath ?? "",
-//                                               userId: idLogged)
-//          .flatMap { _ -> Observable<Result<TVShowDetailResult, Error>> in
-//            return Observable.just(.success(details))
-//        }
-//    }
-//    .catchErrorJustReturn(.failure(CustomError.genericError))
+      .flatMap { [tvShowsVisitedRepository] details -> AnyPublisher<TVShowDetailResult, DataTransferError> in
+        return tvShowsVisitedRepository.saveShow(id: details.id ?? 0,
+                                                 pathImage: details.posterPath ?? "",
+                                                 userId: idLogged)
+          .map { _ -> TVShowDetailResult in details }
+          .mapError { _ -> DataTransferError in DataTransferError.noResponse }
+          .eraseToAnyPublisher()
+      }
+      .eraseToAnyPublisher()
   }
 }

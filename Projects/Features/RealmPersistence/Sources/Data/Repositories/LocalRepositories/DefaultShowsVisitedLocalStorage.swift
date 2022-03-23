@@ -25,6 +25,7 @@ public final class DefaultShowsVisitedLocalStorage {
   }
 }
 
+// MARK: - TODO, review, should returns a Defered + Futured or a Just ?
 extension DefaultShowsVisitedLocalStorage: ShowsVisitedLocalStorage {
 
   public func saveShow(id: Int, pathImage: String, userId: Int) -> AnyPublisher<Void, CustomError> {

@@ -5,9 +5,9 @@
 //  Created by Jeans Ruiz on 8/21/20.
 //
 
-import Shared
 import UIKit
-import RxSwift
+import Combine
+import Shared
 
 class ProfileRootView: NiblessView {
 
@@ -25,7 +25,7 @@ class ProfileRootView: NiblessView {
   typealias Snapshot = NSDiffableDataSourceSnapshot<ProfileSectionView, ProfilesSectionItem>
   private var dataSource: DataSource?
 
-  private let disposeBag = DisposeBag()
+  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializer
   init(frame: CGRect = .zero, viewModel: ProfileViewModelProtocol) {
@@ -77,10 +77,11 @@ class ProfileRootView: NiblessView {
         }
         return snapShot
       }
-      .subscribe(onNext: { [weak self] snapshot in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] snapshot in
         self?.dataSource?.apply(snapshot)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
   override func layoutSubviews() {
@@ -116,7 +117,7 @@ extension ProfileRootView: UITableViewDelegate {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
     if let model = dataSource?.itemIdentifier(for: indexPath) {
-      viewModel.tapCellAction.onNext(model)
+      viewModel.didCellTap(model: model)
     }
   }
 }

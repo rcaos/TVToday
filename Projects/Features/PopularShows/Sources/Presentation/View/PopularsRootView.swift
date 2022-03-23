@@ -6,9 +6,9 @@
 //
 
 import UIKit
+import Combine
 import CoreGraphics
 import Shared
-import RxSwift
 
 class PopularsRootView: NiblessView {
 
@@ -27,7 +27,7 @@ class PopularsRootView: NiblessView {
   typealias Snapshot = NSDiffableDataSourceSnapshot<SectionPopularView, TVShowCellViewModel>
   private var dataSource: DataSource?
 
-  private let disposeBag = DisposeBag()
+  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializer
   init(frame: CGRect = .zero, viewModel: PopularViewModelProtocol) {
@@ -72,17 +72,18 @@ class PopularsRootView: NiblessView {
 
   private func subscribe() {
     viewModel
-      .viewState
+      .viewStateObservableSubject
       .map { viewState -> Snapshot in
         var snapShot = Snapshot()
         snapShot.appendSections([.list])
         snapShot.appendItems(viewState.currentEntities, toSection: .list)
         return snapShot
       }
-      .subscribe(onNext: { [weak self] snapshot in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] snapshot in
         self?.dataSource?.apply(snapshot)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
   override func layoutSubviews() {

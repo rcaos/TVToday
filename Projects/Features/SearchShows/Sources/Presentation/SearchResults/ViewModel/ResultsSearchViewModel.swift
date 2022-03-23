@@ -8,48 +8,36 @@
 
 import Foundation
 import Combine
-import RxSwift
 import Shared
 import Persistence
 
 final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
-
   private let searchTVShowsUseCase: SearchTVShowsUseCase
-
   private let fetchRecentSearchsUseCase: FetchSearchsUseCase
+  private var currentSearchSubject = CurrentValueSubject<String, Never>("")  /// ?????
 
-  private let dataSourceObservableSubject = BehaviorSubject<[ResultSearchSectionModel]>(value: [])
+  let viewState  = CurrentValueSubject<ResultViewState, Never>(.initial)
+  let dataSourceObservableSubject = CurrentValueSubject<[ResultSearchSectionModel], Never>([])
 
-  private var currentSearchSubject = BehaviorSubject<String>(value: "")
-
-  private var disposeBag = DisposeBag()
-
-  private var cancelables = Set<AnyCancellable>()
-
-  // MARK: - Public Api
-  let viewStateObservableSubject = CurrentValueSubject<ResultViewState, Never>(.initial)
-  let dataSource: Observable<[ResultSearchSectionModel]>
   weak var delegate: ResultsSearchViewModelDelegate?
+  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Init
   init(searchTVShowsUseCase: SearchTVShowsUseCase,
        fetchRecentSearchsUseCase: FetchSearchsUseCase) {
     self.searchTVShowsUseCase = searchTVShowsUseCase
     self.fetchRecentSearchsUseCase = fetchRecentSearchsUseCase
-
-    dataSource = dataSourceObservableSubject.asObservable()
-
     subscribeToRecentsShowsChange()
     subscribeToSearchInput()
   }
 
   // MARK: - Public
   func searchShows(with query: String) {
-    currentSearchSubject.onNext(query)
+    currentSearchSubject.send(query)
   }
 
   func resetSearch() {
-    viewStateObservableSubject.send(.initial)
+    viewState.send(.initial)
   }
 
   func recentSearchIsPicked(query: String) {
@@ -61,22 +49,22 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
   }
 
   func getViewState() -> ResultViewState {
-    return viewStateObservableSubject.value
+    return viewState.value
   }
 
   // MARK: - Private
   private func subscribeToSearchInput() {
     currentSearchSubject
       .filter { !$0.isEmpty }
-      .subscribe(onNext: { [weak self] query in
-        guard let strongSelf = self else { return }
-        strongSelf.fetchShows(with: query)
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] query in
+        self?.fetchShows(with: query)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
   private func subscribeToRecentsShowsChange() {
-    viewStateObservableSubject
+    viewState
       .removeDuplicates()
       .filter { $0 == .initial }
       .flatMap { [fetchRecentSearchsUseCase] _ -> AnyPublisher<[Search], CustomError> in
@@ -86,11 +74,11 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] results in
         self?.createSectionModel(recentSearchs: results.map { $0.query }, resultShows: [])
       })
-      .store(in: &cancelables)
+      .store(in: &disposeBag)
   }
 
   private func fetchShows(with query: String) {
-    viewStateObservableSubject.send(.loading)
+    viewState.send(.loading)
     createSectionModel(recentSearchs: [], resultShows: [])
 
     let request = SearchTVShowsUseCaseRequestValue(query: query, page: 1)
@@ -107,16 +95,16 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
       }, receiveValue: { [weak self] result in
         self?.processFetched(for: result)
       })
-      .store(in: &cancelables)
+      .store(in: &disposeBag)
   }
 
   private func processFetched(for response: TVShowResult) {
     let fetchedShows = response.results ?? []
 
     if fetchedShows.isEmpty {
-      viewStateObservableSubject.send( .empty )
+      viewState.send( .empty )
     } else {
-      viewStateObservableSubject.send( .populated )
+      viewState.send( .populated )
     }
 
     createSectionModel(recentSearchs: [], resultShows: fetchedShows)
@@ -129,16 +117,16 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
       .map { TVShowCellViewModel(show: $0) }
       .map { ResultSearchSectionItem.results(items: $0) }
 
-    var dataSource: [ResultSearchSectionModel] = []
+    var sectionModel: [ResultSearchSectionModel] = []
 
     if !recentSearchsItem.isEmpty {
-      dataSource.append(.recentSearchs(items: recentSearchsItem))
+      sectionModel.append(.recentSearchs(items: recentSearchsItem))
     }
 
     if !resultsShowsItem.isEmpty {
-      dataSource.append(.results(items: resultsShowsItem))
+      sectionModel.append(.results(items: resultsShowsItem))
     }
 
-    dataSourceObservableSubject.onNext(dataSource)
+    self.dataSource.send(sectionModel)
   }
 }

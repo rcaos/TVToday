@@ -7,14 +7,14 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 import Shared
 
 class TVShowListViewController: NiblessViewController, Loadable, Retryable, Emptiable {
 
   private let viewModel: TVShowListViewModelProtocol
   private var rootView: TVShowListRootView?
-  private let disposeBag = DisposeBag()
+  private var disposeBag = Set<AnyCancellable>()
 
   init(viewModel: TVShowListViewModelProtocol) {
     self.viewModel = viewModel
@@ -38,18 +38,17 @@ class TVShowListViewController: NiblessViewController, Loadable, Retryable, Empt
     print("deinit \(Self.self)")
   }
 
-  fileprivate func subscribeToViewState() {
+  private func subscribeToViewState() {
     viewModel
-      .viewState
-      .subscribe(onNext: { [weak self] state in
-        guard let strongSelf = self else { return }
-        strongSelf.configView(with: state)
+      .viewStateObservableSubject
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] viewState in
+        self?.configView(with: viewState)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
-  fileprivate func configView(with state: SimpleViewState<TVShowCellViewModel>) {
-
+  private func configView(with state: SimpleViewState<TVShowCellViewModel>) {
     rootView?.tableView.refreshControl?.endRefreshing(with: 0.5)
 
     switch state {

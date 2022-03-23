@@ -40,7 +40,7 @@ final class DefaultSearchTVShowsUseCase: SearchTVShowsUseCase {
     if let userLogged = keychainRepository.fetchLoguedUser() {
       idLogged = userLogged.id
     }
-    
+
     return tvShowsRepository.searchShowsFor(query: requestValue.query, page: requestValue.page)
       .receive(on: RunLoop.main)
       .flatMap { resultSearch -> AnyPublisher<TVShowResult, DataTransferError> in

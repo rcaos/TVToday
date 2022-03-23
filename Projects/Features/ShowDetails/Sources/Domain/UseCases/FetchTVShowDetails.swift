@@ -8,7 +8,6 @@
 
 import Combine
 import NetworkingInterface
-import RxSwift
 import Shared
 import Persistence
 import Foundation

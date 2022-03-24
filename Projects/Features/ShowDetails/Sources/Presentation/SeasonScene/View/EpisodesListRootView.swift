@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 import Shared
 
 class EpisodesListRootView: NiblessView {
@@ -29,7 +29,7 @@ class EpisodesListRootView: NiblessView {
   typealias Snapshot = NSDiffableDataSourceSnapshot<SeasonsSectionCollection, SeasonsSectionItem>
   private var dataSource: DataSource?
 
-  private let disposeBag = DisposeBag()
+  private var disposeBag = Set<AnyCancellable>()
 
   init(frame: CGRect = .zero, viewModel: EpisodesListViewModelProtocol) {
     self.viewModel = viewModel
@@ -75,10 +75,11 @@ class EpisodesListRootView: NiblessView {
         }
         return snapShot
       }
-      .subscribe(onNext: { [weak self] snapshot in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] snapshot in
         self?.dataSource?.apply(snapshot)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
   override func layoutSubviews() {

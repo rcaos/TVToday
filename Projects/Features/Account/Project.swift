@@ -19,15 +19,10 @@ let project = Project.framework(
     .project(
       target: "TVShowsListInterface",
       path: .relativeToRoot("Projects/Features/TVShowsList")
-    ),
-    .package(product: "RxSwift")
+    )
   ],
   testFolder: "Tests",
   testDependencies: [
-    .package(product: "RxBlocking"),
-    .package(product: "RxTest"),
-    .package(product: "Quick"),
-    .package(product: "Nimble"),
     .package(product: "SnapshotTesting")
   ]
 )

@@ -6,7 +6,6 @@ let project = Project.framework(
   dependencies: [
     .package(product: "Realm"),
     .package(product: "RealmSwift"),
-    .package(product: "RxSwift"),
     .project(
       target: "Persistence",
       path: .relativeToRoot("Projects/Features/Persistence")

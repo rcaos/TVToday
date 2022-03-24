@@ -3,9 +3,6 @@ import ProjectDescriptionHelpers
 
 let project = Project.framework(
   name: "TVShowsList",
-  dependencies: [
-    .package(product: "RxSwift")
-  ],
   interfaceFolder: "Interface",
   interfaceDependencies: [
     .project(
@@ -27,10 +24,6 @@ let project = Project.framework(
   ],
   testFolder: "Tests",
   testDependencies: [
-    .package(product: "RxBlocking"),
-    .package(product: "RxTest"),
-    .package(product: "Quick"),
-    .package(product: "Nimble"),
     .package(product: "SnapshotTesting")
   ]
 )

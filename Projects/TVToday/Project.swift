@@ -5,10 +5,6 @@ let project = Project.app(
   name: "TVToday",
   packages: [
     .remote(
-      url: "https://github.com/ReactiveX/RxSwift.git",
-      requirement: .upToNextMajor(from: "6.2.0")
-    ),
-    .remote(
       url: "https://github.com/evgenyneu/keychain-swift.git",
       requirement: .upToNextMajor(from: "14.0.0")
     ),
@@ -19,14 +15,6 @@ let project = Project.app(
     .remote(
       url: "https://github.com/realm/realm-cocoa.git",
       requirement: .upToNextMajor(from: "10.5.2")
-    ),
-    .remote(
-      url: "https://github.com/Quick/Quick.git",
-      requirement: .upToNextMajor(from: "4.0.0")
-    ),
-    .remote(
-      url: "https://github.com/Quick/Nimble.git",
-      requirement: .upToNextMajor(from: "9.1.0")
     ),
     .remote(
       url: "https://github.com/pointfreeco/swift-snapshot-testing.git",

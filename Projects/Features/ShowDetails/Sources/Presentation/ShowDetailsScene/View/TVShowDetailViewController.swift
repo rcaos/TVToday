@@ -70,7 +70,7 @@ class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Em
     if viewModel.isUserLogged() {
       setupBindablesForUserLogged()
     }
-    
+
     viewModel.viewState
       .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] state in

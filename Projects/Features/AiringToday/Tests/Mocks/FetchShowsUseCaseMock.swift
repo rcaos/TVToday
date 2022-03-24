@@ -5,25 +5,24 @@
 //  Created by Jeans Ruiz on 7/28/20.
 //
 
-import RxSwift
-import RxTest
-
+import Combine
+import NetworkingInterface
 @testable import Shared
 
 class FetchShowsUseCaseMock: FetchTVShowsUseCase {
 
-  var error: Error?
+  var error: DataTransferError?
   var result: TVShowResult?
 
-  func execute(requestValue: FetchTVShowsUseCaseRequestValue) -> Observable<TVShowResult> {
+  func execute(requestValue: FetchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowResult, DataTransferError> {
     if let error = error {
-      return Observable.error(error)
+      return Fail(error: error).eraseToAnyPublisher()
     }
 
     if let result = result {
-      return Observable.just(result)
+      return Just(result).setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
     }
 
-    return Observable.empty()
+    return Empty().setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
   }
 }

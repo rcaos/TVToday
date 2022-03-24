@@ -56,7 +56,7 @@ final class SeasonListViewModel: SeasonListViewModelProtocol {
     return SeasonEpisodeViewModel(seasonNumber: season)
   }
 
-  // Why two ???, method + Observable
+  // MARK: - TODO Review  method + Observable or Two methods only
   func selectSeason(_ season: Int) {
     if seasonList.contains(season) {
       seasonSelected.send(season)

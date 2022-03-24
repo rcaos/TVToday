@@ -8,7 +8,6 @@
 
 import Foundation
 import Combine
-import RxSwift
 
 public protocol ShowsViewModel: AnyObject {
   associatedtype MovieCellViewModel: Equatable

@@ -61,11 +61,12 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
     seasonSelectedSubject
       .removeDuplicates()
       .filter { $0 >= 1 }
-      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self, allEpisodes] season in
-        if let episodes = allEpisodes[season], episodes.count >= 1 {
-          self?.changeToSeason(number: season, episodes: episodes)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] season in
+        guard let strongSelf = self else { return }
+        if let episodes = strongSelf.allEpisodes[season], episodes.count >= 1 {
+          strongSelf.changeToSeason(number: season, episodes: episodes)
         } else {
-          self?.fetchEpisodesFor(season: season)
+          strongSelf.fetchEpisodesFor(season: season)
         }
       })
       .store(in: &disposeBag)

@@ -7,11 +7,10 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 import Shared
 
 class SeasonListTableViewCell: NiblessTableViewCell {
-
   private let collectionView: UICollectionView = {
     let layout = UICollectionViewFlowLayout()
     layout.scrollDirection = .horizontal
@@ -27,7 +26,7 @@ class SeasonListTableViewCell: NiblessTableViewCell {
 
   var viewModel: SeasonListViewModelProtocol?
 
-  private var disposeBag = DisposeBag()
+  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Life Cycle
   public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -76,18 +75,20 @@ class SeasonListTableViewCell: NiblessTableViewCell {
         snapShot.appendItems(data, toSection: .season)
         return snapShot
       }
-      .subscribe(onNext: { [weak self] snapshot in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] snapshot in
         self?.dataSource?.apply(snapshot)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
 
     viewModel
       .seasonSelected
       .filter { $0 > 0 }
-      .subscribe(onNext: { [weak self] season in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] season in
         self?.selectedSeason(at: season)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
   private func selectedSeason(at index: Int) {
@@ -128,7 +129,7 @@ extension SeasonListTableViewCell: UICollectionViewDelegateFlowLayout {
 
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     if let item = dataSource?.itemIdentifier(for: indexPath) {
-      viewModel?.inputSelectedSeason.onNext(item)
+      viewModel?.inputSelectedSeason.send(item)
     }
   }
 }

@@ -16,7 +16,7 @@ protocol EpisodesListViewModelProtocol: SeasonListViewModelDelegate {
   func refreshView()
 
   // MARK: - Output
-  func buildModelForSeasons(with numberOfSeasons: Int) -> SeasonListViewModelProtocol?
+  func getViewModelForAllSeasons() -> SeasonListViewModelProtocol?
   func getModel(for episode: EpisodeSectionModelType) -> EpisodeItemViewModel?
 
   var viewState: CurrentValueSubject<EpisodesListViewModel.ViewState, Never> { get }
@@ -103,11 +103,16 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
           break
         }
       }, receiveValue: { [weak self] (resultShowDetails, firstSeason) in
-        self?.showDetailResult = resultShowDetails
-        self?.processFetched(with: firstSeason)
-        self?.selectFirstSeason()
+        self?.processResultFirstFetched(resultShowDetails, firstSeason)
       })
       .store(in: &disposeBag)
+  }
+
+  private func processResultFirstFetched(_ detailsShow: TVShowDetailResult, _ firstSeason: SeasonResult) {
+    showDetailResult = detailsShow
+    processFetched(with: firstSeason)
+    createViewModelForSeasons(numberOfSeasons: detailsShow.numberOfSeasons ?? 1)
+    selectFirstSeason()
   }
 
   private func fetchEpisodesFor(season seasonNumber: Int) {
@@ -156,7 +161,7 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
       dataSourceSections.append(headerSection)
     }
 
-    dataSourceSections.append(.seasons(header: "Seasons", items: [.seasons(number: numberOfSeasons)]) )
+    dataSourceSections.append(.seasons(header: "Seasons", items: [.seasons]) )
 
     let episodesSectioned = episodes.map { EpisodeSectionModelType(episode: $0) }
       .map { SeasonsSectionItem.episodes(items: $0) }
@@ -183,10 +188,13 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
     fetchShowDetailsAndFirstSeason(showLoader: false)
   }
 
-  func buildModelForSeasons(with numberOfSeasons: Int) -> SeasonListViewModelProtocol? {
+  private func createViewModelForSeasons(numberOfSeasons: Int) {
     let seasons: [Int] = (1...numberOfSeasons).map { $0 }
     seasonListViewModel = SeasonListViewModel(seasonList: seasons)
     seasonListViewModel?.delegate = self
+  }
+
+  func getViewModelForAllSeasons() -> SeasonListViewModelProtocol? {
     return seasonListViewModel
   }
 

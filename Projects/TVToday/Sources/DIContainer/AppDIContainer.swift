@@ -26,22 +26,9 @@ import TVShowsListInterface
 
 public class AppDIContainer {
 
-  lazy var appConfigurations = AppConfigurations()
+  private lazy var appConfigurations = AppConfigurations()
 
-  // MARK: - TODO, apiCLient remove soon
-  lazy var apiClient: ApiClient = {
-    let queryParameters = [
-      "api_key": appConfigurations.apiKey,
-      "language": NSLocale.preferredLanguages.first ?? "en"]
-
-    let configuration = ApiDataNetworkConfig(
-      baseURL: appConfigurations.apiBaseURL,
-      queryParameters: queryParameters)
-
-    return ApiClient(with: configuration)
-  }()
-
-  lazy var apiDataTransferService: DataTransferService = {
+  private lazy var apiDataTransferService: DataTransferService = {
     let queryParameters = [
       "api_key": appConfigurations.apiKey,
       "language": NSLocale.preferredLanguages.first ?? "en"
@@ -55,7 +42,7 @@ public class AppDIContainer {
       queryParameters: queryParameters
     )
     let networkService = DefaultNetworkService(config: configuration)
-    return DefaultDataTransferService(with: networkService, apiClient: apiClient)
+    return DefaultDataTransferService(with: networkService)
   }()
 
   lazy var realmDataStorage: RealmDataStorage = {

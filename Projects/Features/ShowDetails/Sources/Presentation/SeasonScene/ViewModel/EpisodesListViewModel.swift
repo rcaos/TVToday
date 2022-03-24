@@ -161,12 +161,12 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
       dataSourceSections.append(headerSection)
     }
 
-    dataSourceSections.append(.seasons(header: "Seasons", items: [.seasons]) )
+    dataSourceSections.append(.seasons(items: [.seasons]) )
 
     let episodesSectioned = episodes.map { EpisodeSectionModelType(episode: $0) }
       .map { SeasonsSectionItem.episodes(items: $0) }
 
-    dataSourceSections.append(.episodes(header: "Episodes", items: episodesSectioned) )
+    dataSourceSections.append(.episodes(items: episodesSectioned) )
 
     data.send( dataSourceSections )
     viewState.send( state )
@@ -174,7 +174,7 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
 
   private func createModelForheader() -> SeasonsSectionModel? {
     if let detailShow = showDetailResult {
-      return .headerShow(header: "Header", items: [.headerShow(viewModel: SeasonHeaderViewModel(showDetail: detailShow))])
+      return .headerShow(items: [.headerShow(viewModel: SeasonHeaderViewModel(showDetail: detailShow))])
     }
     return nil
   }

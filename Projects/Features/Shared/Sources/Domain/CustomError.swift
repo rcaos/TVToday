@@ -7,9 +7,11 @@
 //
 
 import Foundation
+import NetworkingInterface
 
 // MARK: - TODO, change for a better name
 
 public enum CustomError: Error {
   case genericError
+  case transferError(DataTransferError)
 }

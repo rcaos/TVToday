@@ -44,6 +44,6 @@ enum SeasonsSectionCollection: Hashable {
 
 enum SeasonsSectionItem: Hashable {
   case headerShow(viewModel: SeasonHeaderViewModel)
-  case seasons(number: Int)
+  case seasons
   case episodes(items: EpisodeSectionModelType)
 }

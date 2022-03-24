@@ -8,33 +8,24 @@
 import Foundation
 import Combine
 import NetworkingInterface
-import RxSwift    // Remove Soon
 
 public final class DefaultDataTransferService {
 
   private let networkService: NetworkService
   private let errorResolver: DataTransferErrorResolver
   private let errorLogger: DataTransferErrorLogger
-  private let apiClient: ApiClient  // remove soon
 
   public init(with networkService: NetworkService,
               errorResolver: DataTransferErrorResolver = DefaultDataTransferErrorResolver(),
-              errorLogger: DataTransferErrorLogger = DefaultDataTransferErrorLogger(),
-              apiClient: ApiClient // remove soon
-  ) {
+              errorLogger: DataTransferErrorLogger = DefaultDataTransferErrorLogger()) {
     self.networkService = networkService
     self.errorResolver = errorResolver
     self.errorLogger = errorLogger
-    self.apiClient = apiClient // remove soon
   }
 }
 
 // MARK: - Renamed
 extension DefaultDataTransferService: DataTransferService {
-
-  public func request<Element>(_ router: EndPoint, _ decodingType: Element.Type) -> Observable<Element> where Element: Decodable {
-    return apiClient.request(router, decodingType)
-  }
 
   // MARK: - Private
   private func decode<T: Decodable>(data: Data, decoder: ResponseDecoder) throws -> T {

@@ -8,16 +8,13 @@
 import UIKit
 import Shared
 import UI
-import RxSwift
 
 class TVShowDetailRootView: NiblessView {
 
-  let viewModel: TVShowDetailViewModelProtocol
+  private let viewModel: TVShowDetailViewModelProtocol
+  private let scrollView: UIScrollView = UIScrollView()
 
-  let scrollView: UIScrollView = UIScrollView()
-
-  lazy var mainStackView: UIStackView = {
-
+  private lazy var mainStackView: UIStackView = {
     let firstSeparatorView = TVShowDetailRootView.buildSeparatorView()
     let secondSeparatorView = TVShowDetailRootView.buildSeparatorView()
     let thirdSeparatorView = TVShowDetailRootView.buildSeparatorView()
@@ -50,7 +47,7 @@ class TVShowDetailRootView: NiblessView {
   }()
 
   // MARK: - Title Stack
-  lazy var titleContainerView: UIView = {
+  private lazy var titleContainerView: UIView = {
     let view = UIView()
     view.addSubview(titleStackView)
     titleStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -58,7 +55,7 @@ class TVShowDetailRootView: NiblessView {
     return view
   }()
 
-  lazy var titleStackView: UIStackView = {
+  private lazy var titleStackView: UIStackView = {
     let stack = UIStackView(arrangedSubviews: [nameLabel, releaseContainerView, genreLabel])
     stack.axis = .vertical
     stack.alignment = .fill

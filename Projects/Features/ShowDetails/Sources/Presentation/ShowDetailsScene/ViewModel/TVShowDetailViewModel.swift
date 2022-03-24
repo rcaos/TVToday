@@ -7,7 +7,6 @@
 //
 
 import Combine
-import RxSwift
 import Shared
 import ShowDetailsInterface
 import NetworkingInterface
@@ -27,7 +26,7 @@ protocol TVShowDetailViewModelProtocol {
   func isUserLogged() -> Bool
   func navigateToSeasons()
 
-  var viewState: Observable<TVShowDetailViewModel.ViewState> { get }
+  var viewState: CurrentValueSubject<TVShowDetailViewModel.ViewState, Never> { get }
   var isFavorite: CurrentValueSubject<Bool, Never> { get }
   var isWatchList: CurrentValueSubject<Bool, Never> { get }
 }
@@ -35,42 +34,31 @@ protocol TVShowDetailViewModelProtocol {
 final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
   private let fetchLoggedUser: FetchLoggedUser
-
   private let fetchDetailShowUseCase: FetchTVShowDetailsUseCase
-
   private let fetchTvShowState: FetchTVAccountStates
-
   private let markAsFavoriteUseCase: MarkAsFavoriteUseCase
-
   private let saveToWatchListUseCase: SaveToWatchListUseCase
 
   private weak var coordinator: TVShowDetailCoordinatorProtocol?
 
   private let showId: Int
-
   private let didLoadView = CurrentValueSubject<Bool, Never>(false)
-
-  private var viewStateObservableSubject = BehaviorSubject<ViewState>(value: .loading)
-
-  private var isLoadingFavoriteSubject = CurrentValueSubject<Bool, Never>(false)
-  private var isLoadingWatchList = CurrentValueSubject<Bool, Never>(false)
 
   private var tapFavoriteButton: PassthroughSubject<Bool, Never>
   private var tapWatchedButton: PassthroughSubject<Bool, Never>
 
   private let closures: TVShowDetailViewModelClosures?
 
-  private var cancelable = Set<AnyCancellable>()
-
   // MARK: - Public Api
-  var viewState: Observable<ViewState>
+  let viewState = CurrentValueSubject<ViewState, Never>(.loading)
 
-  var isFavorite = CurrentValueSubject<Bool, Never>(false)
-  var isWatchList = CurrentValueSubject<Bool, Never>(false)
+  let isFavorite = CurrentValueSubject<Bool, Never>(false)
+  private var isLoadingFavoriteSubject = CurrentValueSubject<Bool, Never>(false)
 
-  private let disposeBag = DisposeBag()
+  let isWatchList = CurrentValueSubject<Bool, Never>(false)
+  private var isLoadingWatchList = CurrentValueSubject<Bool, Never>(false)
 
-  private var cancelables = Set<AnyCancellable>()
+  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializers
   init(_ showId: Int,
@@ -92,8 +80,6 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
     tapFavoriteButton = PassthroughSubject()
     tapWatchedButton = PassthroughSubject()
-
-    viewState = viewStateObservableSubject.asObservable()
     subscribe()
   }
 
@@ -122,14 +108,14 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   }
 
   // MARK: - Private
-  fileprivate func subscribe() {
+  private func subscribe() {
     subscribeToViewAppears()
     subscribeButtonsWhenPopulated()
   }
 
-  fileprivate func subscribeButtonsWhenPopulated() {
-    viewStateObservableSubject
-      .subscribe(onNext: { [weak self] viewState in
+  private func subscribeButtonsWhenPopulated() {
+    viewState
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] viewState in
         switch viewState {
         case .populated:
           self?.subscribeFavoriteTap()
@@ -138,11 +124,11 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
           break
         }
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
   // MARK: - Subscriptions
-  fileprivate func subscribeToViewAppears() {
+  private func subscribeToViewAppears() {
     if isUserLogged() {
       requestTVShowDetailsAndState()
     } else {
@@ -173,7 +159,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
         strongSelf.closures?.updateFavoritesShows?(TVShowUpdated(showId: strongSelf.showId, isActive: newState))
         strongSelf.isLoadingFavoriteSubject.send(false)
       })
-      .store(in: &cancelables)
+      .store(in: &disposeBag)
   }
 
   // MARK: - Handle Watch List Button Tap 🎦
@@ -199,7 +185,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
         strongSelf.closures?.updateWatchListShows?(TVShowUpdated(showId: strongSelf.showId, isActive: newState))
         strongSelf.isLoadingWatchList.send(false)
       })
-      .store(in: &cancelables)
+      .store(in: &disposeBag)
   }
 
   // MARK: - Request For Guest Users
@@ -213,16 +199,16 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
       .sink(receiveCompletion: { [weak self] completion in
         switch completion {
         case let .failure(error):
-          self?.viewStateObservableSubject.onError(error)
+          self?.viewState.send(.error(error.localizedDescription))
         case .finished:
           break
         }
       }, receiveValue: { [weak self] detailResult in
-        self?.viewStateObservableSubject.onNext(
+        self?.viewState.send(
           .populated(TVShowDetailInfo(show: detailResult))
         )
       })
-      .store(in: &cancelable)
+      .store(in: &disposeBag)
   }
 
   // MARK: - Request For Logged Users
@@ -241,14 +227,16 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
       .sink(receiveCompletion: { completion in
         switch completion {
         case let .failure(error):
-          self.viewStateObservableSubject.onError(error)
+          self.viewState.send(.error(error.localizedDescription))
         case .finished:
           break
         }
-      }, receiveValue: { [viewStateObservableSubject] (resultDetails, _) in
-        viewStateObservableSubject.onNext(.populated(TVShowDetailInfo(show: resultDetails)))
+      }, receiveValue: { [viewState] (resultDetails, _) in
+        viewState.send(
+          .populated(TVShowDetailInfo(show: resultDetails))
+        )
       })
-      .store(in: &cancelable)
+      .store(in: &disposeBag)
 
     responses
       .receive(on: RunLoop.main)
@@ -256,7 +244,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
         isFavorite.send(stateShow.isFavorite)
         isWatchList.send(stateShow.isWatchList)
       })
-      .store(in: &cancelable)
+      .store(in: &disposeBag)
   }
 
   // MARK: - Observables

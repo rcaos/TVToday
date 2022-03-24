@@ -8,7 +8,6 @@
 
 import Foundation
 import Combine
-import RxSwift
 import Shared
 
 protocol EpisodesListViewModelProtocol: SeasonListViewModelDelegate {
@@ -20,8 +19,8 @@ protocol EpisodesListViewModelProtocol: SeasonListViewModelDelegate {
   func buildModelForSeasons(with numberOfSeasons: Int) -> SeasonListViewModelProtocol?
   func getModel(for episode: EpisodeSectionModelType) -> EpisodeItemViewModel?
 
-  var viewState: Observable<EpisodesListViewModel.ViewState> { get }
-  var data: Observable<[SeasonsSectionModel]> { get }
+  var viewState: CurrentValueSubject<EpisodesListViewModel.ViewState, Never> { get }
+  var data: CurrentValueSubject<[SeasonsSectionModel], Never> { get }
 }
 
 final class EpisodesListViewModel: EpisodesListViewModelProtocol {
@@ -29,42 +28,28 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
   private let fetchDetailShowUseCase: FetchTVShowDetailsUseCase
   private let fetchEpisodesUseCase: FetchEpisodesUseCase
 
-  private var tvShowId: Int!
+  private let tvShowId: Int
   private var showDetailResult: TVShowDetailResult?
   private var totalSeasons: Int {
     guard let totalSeasons = showDetailResult?.numberOfSeasons else { return 0 }
     return totalSeasons
   }
 
-  private let allEpisodesSubject = BehaviorSubject<[Int: [Episode]]>(value: [:])
-
-  private let dataObservableSubject = BehaviorSubject<[SeasonsSectionModel]>(value: [])
-
-  private let viewStateObservableSubject = BehaviorSubject<ViewState>(value: .loading)
-
-  private let seasonSelectedSubject = BehaviorSubject<Int>(value: 0)
+  private var allEpisodes = [Int: [Episode]]()
+  private let seasonSelectedSubject = CurrentValueSubject<Int, Never>(0)
 
   private var seasonListViewModel: SeasonListViewModelProtocol?
-
-  private var disposeBag = DisposeBag()
-
-  private var cancelable = Set<AnyCancellable>()
+  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Public Api
-  var viewState: Observable<ViewState>
-
-  var data: Observable<[SeasonsSectionModel]>
+  var viewState = CurrentValueSubject<ViewState, Never>(.loading)
+  var data = CurrentValueSubject<[SeasonsSectionModel], Never>([])
 
   // MARK: - Initializers
   init(tvShowId: Int, fetchDetailShowUseCase: FetchTVShowDetailsUseCase, fetchEpisodesUseCase: FetchEpisodesUseCase) {
     self.tvShowId = tvShowId
-
     self.fetchDetailShowUseCase = fetchDetailShowUseCase
     self.fetchEpisodesUseCase = fetchEpisodesUseCase
-
-    data = dataObservableSubject.asObservable()
-    viewState = viewStateObservableSubject.asObservable()
-
     controlSeasons()
   }
 
@@ -72,49 +57,34 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
     print("deinit \(Self.self)")
   }
 
-  fileprivate func controlSeasons() {
-    let episodesObservable = allEpisodesSubject
-      .scan([:], accumulator: { (oldValue, newValue) in
-        var currentEpisodes = oldValue
-        if let season = newValue.keys.first,
-          let episodes = newValue.values.first {
-          currentEpisodes[season] = episodes
-        }
-        return currentEpisodes
-      })
-
-    // MARK: - TODO, withLatestFrom by CombineLatest
+  private func controlSeasons() {
     seasonSelectedSubject
-      .distinctUntilChanged()
+      .removeDuplicates()
       .filter { $0 >= 1 }
-      .withLatestFrom(episodesObservable) { (season: $0, allEpisodes: $1) }
-      .subscribe(onNext: { [weak self] (season, allEpisodes) in
-        guard let strongSelf = self else { return }
-
-        if let episodes = allEpisodes[season] as? [Episode], episodes.count >= 1 {
-          strongSelf.changeToSeason(number: season, episodes: episodes)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self, allEpisodes] season in
+        if let episodes = allEpisodes[season], episodes.count >= 1 {
+          self?.changeToSeason(number: season, episodes: episodes)
         } else {
-          strongSelf.fetchEpisodesFor(season: season)
+          self?.fetchEpisodesFor(season: season)
         }
-
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
-  fileprivate func changeToSeason(number: Int, episodes: [Episode]) {
+  private func changeToSeason(number: Int, episodes: [Episode]) {
     createSectionModel(state: .populated, with: totalSeasons, seasonSelected: number, and: episodes)
   }
 
-  fileprivate func selectFirstSeason() {
+  private func selectFirstSeason() {
     let firstSeason = 1
-    seasonSelectedSubject.onNext(firstSeason)
+    seasonSelectedSubject.send(firstSeason)
     seasonListViewModel?.selectSeason(firstSeason)
   }
 
   // MARK: - Networking
   private func fetchShowDetailsAndFirstSeason(showLoader: Bool = true) {
     if showLoader {
-      viewStateObservableSubject.onNext( .loading )
+      viewState.send( .loading )
     }
 
     let requestDetailsShow = FetchTVShowDetailsUseCaseRequestValue(identifier: tvShowId)
@@ -128,7 +98,7 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
       .sink(receiveCompletion: { [weak self] completion in
         switch completion {
         case let .failure(error):
-          self?.viewStateObservableSubject.onNext( .error(error.localizedDescription) )
+          self?.viewState.send( .error(error.localizedDescription) )
         case .finished:
           break
         }
@@ -137,7 +107,7 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
         self?.processFetched(with: firstSeason)
         self?.selectFirstSeason()
       })
-      .store(in: &cancelable)
+      .store(in: &disposeBag)
   }
 
   private func fetchEpisodesFor(season seasonNumber: Int) {
@@ -161,10 +131,10 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
       }, receiveValue: { [weak self] result in
         self?.processFetched(with: result)
       })
-      .store(in: &cancelable)
+      .store(in: &disposeBag)
   }
 
-  fileprivate func processFetched(with response: SeasonResult) {
+  private func processFetched(with response: SeasonResult) {
     let fetchedEpisodes = response.episodes ?? []
     let seasonFetched = response.seasonNumber
 
@@ -174,12 +144,12 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
     }
 
     let ordered = fetchedEpisodes.sorted(by: { $0.episodeNumber < $1.episodeNumber })
-    allEpisodesSubject.onNext([seasonFetched: ordered])
+    allEpisodes[seasonFetched] = ordered
 
     createSectionModel(state: .populated, with: totalSeasons, seasonSelected: seasonFetched, and: ordered)
   }
 
-  fileprivate func createSectionModel(state: ViewState, with numberOfSeasons: Int, seasonSelected: Int, and episodes: [Episode]) {
+  private func createSectionModel(state: ViewState, with numberOfSeasons: Int, seasonSelected: Int, and episodes: [Episode]) {
     var dataSourceSections: [SeasonsSectionModel] = []
 
     if let headerSection = createModelForheader() {
@@ -193,11 +163,11 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
 
     dataSourceSections.append(.episodes(header: "Episodes", items: episodesSectioned) )
 
-    dataObservableSubject.onNext( dataSourceSections )
-    viewStateObservableSubject.onNext( state )
+    data.send( dataSourceSections )
+    viewState.send( state )
   }
 
-  fileprivate func createModelForheader() -> SeasonsSectionModel? {
+  private func createModelForheader() -> SeasonsSectionModel? {
     if let detailShow = showDetailResult {
       return .headerShow(header: "Header", items: [.headerShow(viewModel: SeasonHeaderViewModel(showDetail: detailShow))])
     }
@@ -228,7 +198,7 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
 // MARK: - SeasonListViewModelDelegate
 extension EpisodesListViewModel {
   func seasonListViewModel(_ seasonListViewModel: SeasonListViewModelProtocol, didSelectSeason number: Int) {
-    seasonSelectedSubject.onNext(number)
+    seasonSelectedSubject.send(number)
   }
 }
 

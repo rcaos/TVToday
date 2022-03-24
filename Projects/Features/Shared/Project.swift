@@ -6,7 +6,6 @@ let project = Project.framework(
   resources: ["Resources/**"],
   dependencies: [
     .package(product: "Kingfisher"),
-    .package(product: "RxSwift"),
     .project(
       target: "UI",
       path: .relativeToRoot("Projects/Features/UI")

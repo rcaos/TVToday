@@ -16,7 +16,7 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol, ShowsViewModel {
   var shows: [TVShow]
   var showsCells: [AiringTodayCollectionViewModel] = []
 
-  weak var coordinator: AiringTodayCoordinatorProtocol?
+  private weak var coordinator: AiringTodayCoordinatorProtocol?
   var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializers

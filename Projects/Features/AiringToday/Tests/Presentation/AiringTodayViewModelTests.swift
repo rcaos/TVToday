@@ -10,6 +10,7 @@
 @testable import AiringToday
 @testable import Shared
 import XCTest
+import Combine
 
 class AiringTodayViewModelTests: XCTestCase {
 
@@ -33,25 +34,68 @@ class AiringTodayViewModelTests: XCTestCase {
   let emptyPage = TVShowResult.stub(page: 1, results: [], totalResults: 0, totalPages: 1)
 
   var fetchUseCaseMock: FetchShowsUseCaseMock!
+  var disposeBag: Set<AnyCancellable>!
 
   override func setUp() {
     super.setUp()
     fetchUseCaseMock = FetchShowsUseCaseMock()
+    disposeBag = []
   }
 
   func test_When_UseCase_Doesnot_Responds_Yet_ViewModel_Should_Contains_Loading_State() {
     // given
     let sut: AiringTodayViewModelProtocol
-    sut = AiringTodayViewModel(
-      fetchTVShowsUseCase: self.fetchUseCaseMock, coordinator: nil)
+    sut = AiringTodayViewModel(fetchTVShowsUseCase: self.fetchUseCaseMock, coordinator: nil)
 
     // when
     sut.viewDidLoad()
 
-    // then
     let expected = SimpleViewState<AiringTodayCollectionViewModel>.loading
-    XCTAssertEqual(expected, sut.viewStateObservableSubject.value,
-                   "AiringTodayViewModel should contains loading State")
+
+    var countValuesReceived = 0
+    sut.viewStateObservableSubject
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+
+        // then
+        countValuesReceived += 1
+        XCTAssertEqual(expected, value, "AiringTodayViewModel should contains loading State")
+      })
+      .store(in: &disposeBag)
+
+    // then
+    XCTAssertEqual(1, countValuesReceived, "Should only receives one Value")
+  }
+
+  func test_when_useCase_respons_with_FirstPage_ViewModel_Should_contains_Populated_State() {
+    // given
+    fetchUseCaseMock.result = self.firstPage
+    let firstPageCells = self.firstPage.results!.map { AiringTodayCollectionViewModel(show: $0) }
+
+    let sut: AiringTodayViewModelProtocol = AiringTodayViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
+
+    let receivedAllValues = expectation(description: "All values received")
+    var expected = [
+      SimpleViewState<AiringTodayCollectionViewModel>.loading,
+      SimpleViewState<AiringTodayCollectionViewModel>.paging(firstPageCells, next: 2)
+    ]
+
+    sut.viewStateObservableSubject
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        XCTAssertEqual(expected.first!, value, "Expected received value doesn't match with receive value" )
+        expected = Array(expected.dropFirst())
+
+        if expected.isEmpty {
+          receivedAllValues.fulfill()
+        }
+      })
+      .store(in: &disposeBag)
+
+    // when
+    sut.viewDidLoad()
+
+    waitForExpectations(timeout: 0.1, handler: nil)
   }
 
 //  override func spec() {

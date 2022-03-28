@@ -36,8 +36,8 @@ final class PopularViewModel: PopularViewModelProtocol, ShowsViewModel {
     shows = []
   }
 
-  func mapToCell(entites: [TVShow]) -> [TVShowCellViewModel] {
-    return entites.map { TVShowCellViewModel(show: $0) }
+  func mapToCell(entities: [TVShow]) -> [TVShowCellViewModel] {
+    return entities.map { TVShowCellViewModel(show: $0) }
   }
 
   func viewDidLoad() {

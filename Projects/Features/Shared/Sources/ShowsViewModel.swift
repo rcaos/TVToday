@@ -22,7 +22,7 @@ public protocol ShowsViewModel: AnyObject {
 
   var disposeBag: Set<AnyCancellable> { get set }
 
-  func mapToCell(entites: [TVShow]) -> [MovieCellViewModel]
+  func mapToCell(entities: [TVShow]) -> [MovieCellViewModel]
 }
 
 extension ShowsViewModel {
@@ -64,7 +64,7 @@ extension ShowsViewModel {
       return
     }
 
-    let cellsShows = mapToCell(entites: shows)
+    let cellsShows = mapToCell(entities: shows)
 
     if response.hasMorePages {
       viewStateObservableSubject.send( .paging(cellsShows, next: response.nextPage) )

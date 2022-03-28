@@ -49,7 +49,7 @@ final class TVShowListViewModel: TVShowListViewModelProtocol, ShowsViewModel {
     print("deinit \(Self.self)")
   }
 
-  func mapToCell(entites: [TVShow]) -> [TVShowCellViewModel] {
+  func mapToCell(entities: [TVShow]) -> [TVShowCellViewModel] {
     return entites
       .filter { $0.isActive }
       .map { TVShowCellViewModel(show: $0) }

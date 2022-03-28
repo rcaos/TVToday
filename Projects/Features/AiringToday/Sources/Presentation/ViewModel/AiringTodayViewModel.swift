@@ -27,8 +27,8 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol, ShowsViewModel {
     shows = []
   }
 
-  func mapToCell(entites: [TVShow]) -> [AiringTodayCollectionViewModel] {
-    return entites.map { AiringTodayCollectionViewModel(show: $0) }
+  func mapToCell(entities: [TVShow]) -> [AiringTodayCollectionViewModel] {
+    return entities.map { AiringTodayCollectionViewModel(show: $0) }
   }
 
   // MARK: Input

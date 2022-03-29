@@ -161,34 +161,31 @@ class AiringTodayViewModelTests: XCTestCase {
     XCTAssertEqual(expected, received, "AiringTodayViewModel should contains Error State")
   }
 
-//  override func spec() {
-//    describe("AiringTodayViewModel") {
-//      var fetchUseCaseMock: FetchShowsUseCaseMock!
-//      beforeEach {
-//        fetchUseCaseMock = FetchShowsUseCaseMock()
-//      }
+  func test_When_UseCase_Responds_With_Zero_Elements_ViewModel_Should_Contains_Empty_State() {
+    // given
+    fetchUseCaseMock.result = self.emptyPage
+    let sut: AiringTodayViewModelProtocol
+    sut = AiringTodayViewModel(fetchTVShowsUseCase: self.fetchUseCaseMock, coordinator: nil)
 
-//      context("When Fetch Use Case Returns Zero Shows") {
-//        it("Should ViewModel contanins Empty State") {
-//          // given
-//          fetchUseCaseMock.result = self.emptyPage
-//
-//          let viewModel = AiringTodayViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
-//
-//          // when
-//          viewModel.viewDidLoad()
-//
-//          // when
-//          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
-//          guard let currentViewState = viewState else {
-//            fail("It should emit a View State")
-//            return
-//          }
-//          let expected = SimpleViewState<AiringTodayCollectionViewModel>.empty
-//
-//          expect(currentViewState).toEventually(equal(expected))
-//        }
-//      }
-//    }
-//  }
+    let expected = [
+      SimpleViewState<AiringTodayCollectionViewModel>.loading,
+      SimpleViewState<AiringTodayCollectionViewModel>.empty
+    ]
+    var received = [SimpleViewState<AiringTodayCollectionViewModel>]()
+
+    sut.viewStateObservableSubject
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    sut.viewDidLoad()
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
+
+    // then
+    XCTAssertEqual(2, received.count, "Should only receives one Value")
+    XCTAssertEqual(expected, received, "AiringTodayViewModel should contains Empty State")
+  }
 }

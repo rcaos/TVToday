@@ -74,28 +74,63 @@ class AiringTodayViewModelTests: XCTestCase {
 
     let sut: AiringTodayViewModelProtocol = AiringTodayViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
 
-    let receivedAllValues = expectation(description: "All values received")
-    var expected = [
+    let expected = [
       SimpleViewState<AiringTodayCollectionViewModel>.loading,
       SimpleViewState<AiringTodayCollectionViewModel>.paging(firstPageCells, next: 2)
     ]
 
+    var received = [SimpleViewState<AiringTodayCollectionViewModel>]()
+
     sut.viewStateObservableSubject
       .removeDuplicates()
       .sink(receiveValue: { value in
-        XCTAssertEqual(expected.first!, value, "Expected received value doesn't match with receive value" )
-        expected = Array(expected.dropFirst())
-
-        if expected.isEmpty {
-          receivedAllValues.fulfill()
-        }
+        received.append(value)
       })
       .store(in: &disposeBag)
 
     // when
     sut.viewDidLoad()
 
-    waitForExpectations(timeout: 0.1, handler: nil)
+    // then
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
+    XCTAssertEqual(expected, received, "Should contains 2 values")
+  }
+
+  func test_When_ask_for_second_page_ViewModel_Should_contains_Populated_State_with_Second_Page() {
+    // given
+    let sut: AiringTodayViewModelProtocol = AiringTodayViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
+    let firstPage = self.firstPage.results!.map { AiringTodayCollectionViewModel(show: $0) }
+    let secondPage = (self.firstPage.results + self.secondPage.results).map { AiringTodayCollectionViewModel(show: $0) }
+
+    let expected = [
+      SimpleViewState<AiringTodayCollectionViewModel>.loading,
+      SimpleViewState<AiringTodayCollectionViewModel>.paging(firstPage, next: 2),
+      SimpleViewState<AiringTodayCollectionViewModel>.populated(secondPage)
+    ]
+
+    var received = [SimpleViewState<AiringTodayCollectionViewModel>]()
+
+    sut.viewStateObservableSubject
+      .removeDuplicates()
+      .print()
+      .sink(receiveCompletion: { _ in } , receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    fetchUseCaseMock.result = self.firstPage
+    sut.viewDidLoad()
+
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
+
+    // and when
+    fetchUseCaseMock.result = self.secondPage
+    sut.didLoadNextPage()
+
+    // then
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
+    XCTAssertEqual(expected, received, "Should contains 3 values")
   }
 
 //  override func spec() {

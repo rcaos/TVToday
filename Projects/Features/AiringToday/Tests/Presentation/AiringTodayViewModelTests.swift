@@ -139,9 +139,6 @@ class AiringTodayViewModelTests: XCTestCase {
     let sut: AiringTodayViewModelProtocol
     sut = AiringTodayViewModel(fetchTVShowsUseCase: self.fetchUseCaseMock, coordinator: nil)
 
-    // when
-    sut.viewDidLoad()
-
     let expected = [
       SimpleViewState<AiringTodayCollectionViewModel>.loading,
       SimpleViewState<AiringTodayCollectionViewModel>.error("")
@@ -152,10 +149,11 @@ class AiringTodayViewModelTests: XCTestCase {
       .removeDuplicates()
       .sink(receiveValue: { value in
         received.append(value)
-
       })
       .store(in: &disposeBag)
 
+    // when
+    sut.viewDidLoad()
     _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
 
     // then

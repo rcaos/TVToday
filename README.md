@@ -14,7 +14,7 @@ March, 2022
 - Swift 5
 - RxSwift
 - Clean + Modular Architecture
-- Cordinator Pattern.
+- Coordinator Pattern.
 - MVVM
 - Dependency Injection
 - Kingfisher

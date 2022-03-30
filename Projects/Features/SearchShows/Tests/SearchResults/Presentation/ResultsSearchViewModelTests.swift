@@ -78,42 +78,32 @@ class ResultsSearchViewModelTests: XCTestCase {
     XCTAssertEqual(expected, received, "Should contains 2 values")
   }
 
-//          // when
-//
-//          // then
-//          let dataSource = try? viewModel.dataSource.toBlocking(timeout: 2).first()
-//          guard let data = dataSource else {
-//            fail("It should emit a View State")
-//            return
-//          }
-//
-//          expect(data).toEventually(equal(expectedData))
-//        }
-//      }
-//
-//      context("When Search Use Case dont response yet") {
-//        it("Should ViewModel contains Loading state") {
-//
-//          // given
-//          let viewModel: ResultsSearchViewModelProtocol = ResultsSearchViewModel(
-//            searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
-//
-//          // when
-//          viewModel.searchShows(with: "something")
-//
-//          // then
-//          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
-//          guard let currentViewState = viewState else {
-//            fail("It should emit a View State")
-//            return
-//          }
-//
-//          let expected = ResultViewState.loading
-//
-//          expect(currentViewState).toEventually(equal(expected))
-//        }
-//      }
-//
+  func test_When_Use_Case_DoestNot_Respond_yet_Should_ViewModel_Contains_Loading_State() {
+    // given
+    sut = ResultsSearchViewModel(
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
+
+    let expected = [
+      ResultViewState.initial,
+      ResultViewState.loading
+    ]
+    var received = [ResultViewState]()
+
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    sut.searchShows(with: "something")
+
+    // then
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
+    XCTAssertEqual(expected, received, "Should contains 2 values")
+  }
+
 //      context("When Search Use Case response with no results") {
 //        it("Should ViewModel contains Empty State") {
 //

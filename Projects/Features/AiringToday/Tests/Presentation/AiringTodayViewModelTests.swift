@@ -14,6 +14,7 @@ import Combine
 
 class AiringTodayViewModelTests: XCTestCase {
 
+  // TODO, use free function and update snapshot tests
   let firstShow = TVShow.stub(id: 1, name: "title1 🐶", posterPath: "/1",
                               backDropPath: "/back1", overview: "overview")
   let secondShow = TVShow.stub(id: 2, name: "title2 🔫", posterPath: "/2",

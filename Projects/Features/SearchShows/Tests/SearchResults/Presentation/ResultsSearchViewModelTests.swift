@@ -197,32 +197,33 @@ class ResultsSearchViewModelTests: XCTestCase {
     XCTAssertEqual(expected, received, "Should contains 2 values")
   }
 
-//      context("When Search Use Case response With Error") {
-//        it("Should ViewModel contains Error State") {
-//
-//          // given
-//          searchTVShowsUseCaseMock.error = CustomError.genericError
-//
-//          let viewModel: ResultsSearchViewModelProtocol = ResultsSearchViewModel(
-//            searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
-//
-//          // when
-//          viewModel.searchShows(with: "something")
-//
-//          // then
-//          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
-//          guard let currentViewState = viewState else {
-//            fail("It should emit a View State")
-//            return
-//          }
-//
-//          let expected = ResultViewState.error(CustomError.genericError.localizedDescription)
-//
-//          expect(currentViewState).toEventually(equal(expected))
-//        }
-//      }
-//    }
-//  }
+  func test_When_Use_Case_Respond_With_Error_Should_ViewModel_Contains_Error_State() {
+    // given
+    searchTVShowsUseCaseMock.error = .noResponse
+    sut = ResultsSearchViewModel(
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
+
+    let expected = [
+      ResultViewState.initial,
+      ResultViewState.loading,
+      ResultViewState.error("")
+    ]
+    var received = [ResultViewState]()
+
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    sut.searchShows(with: "something")
+
+    // then
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
+    XCTAssertEqual(expected, received, "Should contains 3 values")
+  }
 
   // MARK: - Map Results
   private func createSectionModel(recentSearchs: [String], resultShows: [TVShow]) -> [ResultSearchSectionModel] {

@@ -35,7 +35,7 @@ class SearchOptionsViewModelTest: XCTestCase {
     sut = SearchOptionsViewModel(fetchGenresUseCase: fetchGenresUseCaseMock,
                                  fetchVisitedShowsUseCase: fetchVisitedShowsUseCaseMock,
                                  recentVisitedShowsDidChange: recentsDidChangeUseCaseMock)
-    
+
     // when
     sut.viewDidLoad()
 
@@ -55,34 +55,37 @@ class SearchOptionsViewModelTest: XCTestCase {
     XCTAssertEqual(1, countValuesReceived, "Should only receives one Value")
   }
 
-//      context("When Fetch Use Case Retrieve Data") {
-//        it("Should ViewModel contains Populated State") {
-//
-//          // given
-//          fetchGenresUseCaseMock.result = GenreListResult(genres: self.genres )
-//          recentsDidChangeUseCaseMock.result = true
-//          fetchVisitedShowsUseCaseMock.result = self.showsVisited
-//
-//          let viewModel: SearchOptionsViewModelProtocol =  SearchOptionsViewModel(
-//            fetchGenresUseCase: fetchGenresUseCaseMock,
-//            fetchVisitedShowsUseCase: fetchVisitedShowsUseCaseMock,
-//            recentVisitedShowsDidChange: recentsDidChangeUseCaseMock)
-//
-//          // when
-//          viewModel.viewDidLoad()
-//
-//          // then
-//          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
-//          guard let currentViewState = viewState else {
-//            fail("It should emit a View State")
-//            return
-//          }
-//          let expected =  SearchViewState.populated
-//
-//          expect(currentViewState).toEventually(equal(expected))
-//        }
-//      }
-//
+  func test_when_useCase_Responds_Success_ViewModel_Should_contains_Populated_State() {
+    // given
+    fetchGenresUseCaseMock.result = GenreListResult(genres: buildGenres() )
+              recentsDidChangeUseCaseMock.result = true
+              fetchVisitedShowsUseCaseMock.result = buildShowVisited()
+
+    sut = SearchOptionsViewModel(
+                fetchGenresUseCase: fetchGenresUseCaseMock,
+                fetchVisitedShowsUseCase: fetchVisitedShowsUseCaseMock,
+                recentVisitedShowsDidChange: recentsDidChangeUseCaseMock)
+    let expected = [
+      SearchViewState.loading,
+      SearchViewState.populated
+    ]
+    var received = [SearchViewState]()
+
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    sut.viewDidLoad()
+
+    // then
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
+    XCTAssertEqual(expected, received, "Should contains 2 values")
+  }
+
 //      context("When Fetch Use Case Returns Zero elements") {
 //        it("Should ViewModel contanins Empty State") {
 //          // given

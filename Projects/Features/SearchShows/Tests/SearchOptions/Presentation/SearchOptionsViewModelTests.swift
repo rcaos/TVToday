@@ -5,8 +5,6 @@
 //  Created by Jeans Ruiz on 7/28/20.
 //
 
-// swiftlint:disable all
-
 import XCTest
 import Combine
 @testable import SearchShows

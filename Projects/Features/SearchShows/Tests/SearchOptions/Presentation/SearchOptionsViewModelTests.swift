@@ -45,7 +45,7 @@ class SearchOptionsViewModelTest: XCTestCase {
       .sink(receiveValue: { value in
         // then
         countValuesReceived += 1
-        XCTAssertEqual(expected, value, "AiringTodayViewModel should contains loading State")
+        XCTAssertEqual(expected, value, "SearchOptionsViewModel should contains loading State")
       })
       .store(in: &disposeBag)
 

@@ -39,6 +39,7 @@ class PopularViewTestsDark: XCTestCase {
     // when
     let viewController = PopularsViewController(viewModel: viewModel)
     viewController.overrideUserInterfaceStyle = .dark
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))

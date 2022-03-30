@@ -57,7 +57,9 @@ class ResultsSearchViewModelTests: XCTestCase {
     fetchSearchsUseCaseMock.result = recent.map { Search(query: $0) }
 
     sut = ResultsSearchViewModel(
-                searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
+      searchTVShowsUseCase: searchTVShowsUseCaseMock,
+      fetchRecentSearchsUseCase: fetchSearchsUseCaseMock
+    )
 
     // when
     let expected = [

@@ -115,6 +115,33 @@ class PopularViewModelTests: XCTestCase {
     XCTAssertEqual(expected, received, "Should contains 3 values")
   }
 
+  func test_When_UseCase_Responds_Error_ViewModel_Should_Contains_Error_State() {
+    // given
+    fetchUseCaseMock.error = .noResponse
+    let sut: PopularViewModelProtocol
+    sut = PopularViewModel(fetchTVShowsUseCase: self.fetchUseCaseMock, coordinator: nil)
+
+    let expected = [
+      SimpleViewState<TVShowCellViewModel>.loading,
+      SimpleViewState<TVShowCellViewModel>.error("")
+    ]
+    var received = [SimpleViewState<TVShowCellViewModel>]()
+
+    sut.viewStateObservableSubject
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    sut.viewDidLoad()
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
+
+    // then
+    XCTAssertEqual(2, received.count, "Should only receives one Value")
+    XCTAssertEqual(expected, received, "AiringTodayViewModel should contains Error State")
+  }
 
 //      context("When Fetch Use Case Returns Error") {
 //        it("Should ViewModel contanins Error") {

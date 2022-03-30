@@ -132,35 +132,38 @@ class ResultsSearchViewModelTests: XCTestCase {
     XCTAssertEqual(expected, received, "Should contains 2 values")
   }
 
-//      context("When Search Use Case response With Shows") {
-//        it("Should ViewModel contains Populated State") {
-//
-//          // given
-//          let shows: [TVShow] = [
-//            TVShow.stub(id: 1, name: "Show 1"),
-//            TVShow.stub(id: 2, name: "Show 2")
-//          ]
-//          searchTVShowsUseCaseMock.result = TVShowResult(page: 1, results: shows, totalResults: 1, totalPages: 1)
-//
-//          let viewModel: ResultsSearchViewModelProtocol = ResultsSearchViewModel(
-//            searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
-//
-//          // when
-//          viewModel.searchShows(with: "something")
-//
-//          // then
-//          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
-//          guard let currentViewState = viewState else {
-//            fail("It should emit a View State")
-//            return
-//          }
-//
-//          let expected = ResultViewState.populated
-//
-//          expect(currentViewState).toEventually(equal(expected))
-//        }
-//      }
-//
+  func test_When_Use_Case_Respond_With_Data_Should_ViewModel_Contains_Populated_State() {
+    // given
+    let shows: [TVShow] = [
+      TVShow.stub(id: 1, name: "Show 1")
+    ]
+    searchTVShowsUseCaseMock.result = TVShowResult(page: 1, results: shows, totalResults: 1, totalPages: 1)
+
+    sut = ResultsSearchViewModel(
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
+
+    let expected = [
+      ResultViewState.initial,
+      ResultViewState.loading,
+      ResultViewState.populated
+    ]
+    var received = [ResultViewState]()
+
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    sut.searchShows(with: "something")
+
+    // then
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
+    XCTAssertEqual(expected, received, "Should contains 3 values")
+  }
+
 //      context("When Search Use Case response With Shows") {
 //        it("Should ViewModel contains Shows") {
 //

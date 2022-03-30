@@ -50,7 +50,7 @@ final class TVShowListViewModel: TVShowListViewModelProtocol, ShowsViewModel {
   }
 
   func mapToCell(entities: [TVShow]) -> [TVShowCellViewModel] {
-    return entites
+    return entities
       .filter { $0.isActive }
       .map { TVShowCellViewModel(show: $0) }
   }
@@ -89,7 +89,7 @@ final class TVShowListViewModel: TVShowListViewModelProtocol, ShowsViewModel {
   }
 
   private func refreshCells() {
-    let cells = mapToCell(entites: shows)
+    let cells = mapToCell(entities: shows)
 
     if cells.isEmpty {
       viewStateObservableSubject.send(.empty)

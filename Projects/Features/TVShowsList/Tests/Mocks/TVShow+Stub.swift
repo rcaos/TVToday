@@ -12,6 +12,7 @@ extension TVShow {
   static func stub(
     id: Int = 1,
     name: String = "title1",
+    voteAverage: Double = 10.0,
     posterPath: String = "/1",
     backDropPath: String = "/back1",
     overview: String = "overview1"

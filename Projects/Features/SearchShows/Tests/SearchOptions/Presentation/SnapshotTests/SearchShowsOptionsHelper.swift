@@ -5,9 +5,9 @@
 //  Created by Jeans Ruiz on 20/12/21.
 //
 
+import Shared
+import Persistence
 @testable import SearchShows
-@testable import Shared
-@testable import Persistence
 
 public func createSectionModel(showsVisited: [ShowVisited], genres: [Genre]) -> [SearchOptionsSectionModel] {
   var dataSource: [SearchOptionsSectionModel] = []

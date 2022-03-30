@@ -5,29 +5,20 @@
 //  Created by Jeans Ruiz on 8/7/20.
 //
 
-import RxSwift
+import Combine
 @testable import SearchShows
 @testable import Shared
 
 final class SearchOptionsViewModelMock: SearchOptionsViewModelProtocol {
   func viewDidLoad() { }
-
   func modelIsPicked(with item: SearchSectionItem) { }
 
-  var viewState: Observable<SearchViewState>
-
-  var dataSource: Observable<[SearchOptionsSectionModel]>
-
-  var viewStateObservableSubject: BehaviorSubject<SearchViewState>
-
-  var dataSourceSubject: BehaviorSubject<[SearchOptionsSectionModel]>
+  var viewState: CurrentValueSubject<SearchViewState, Never>
+  var dataSource: CurrentValueSubject<[SearchOptionsSectionModel], Never>
 
   init(state: SearchViewState, sections: [SearchOptionsSectionModel] = []) {
-    viewStateObservableSubject = BehaviorSubject(value: state)
-    viewState = viewStateObservableSubject.asObservable()
-
-    dataSourceSubject = BehaviorSubject(value: sections)
-    dataSource = dataSourceSubject.asObservable()
+    viewState = CurrentValueSubject(state)
+    dataSource = CurrentValueSubject(sections)
   }
 
   func visitedShowViewModel(_ visitedShowViewModel: VisitedShowViewModelProtocol,

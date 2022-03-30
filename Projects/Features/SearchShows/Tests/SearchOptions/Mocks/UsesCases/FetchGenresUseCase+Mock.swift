@@ -5,24 +5,23 @@
 //  Created by Jeans Ruiz on 8/7/20.
 //
 
-import RxSwift
+import Combine
+import NetworkingInterface
 @testable import SearchShows
 
 final class FetchGenresUseCaseMock: FetchGenresUseCase {
-
-  var error: Error?
-
+  var error: DataTransferError?
   var result: GenreListResult?
 
-  func execute(requestValue: FetchGenresUseCaseRequestValue) -> Observable<GenreListResult> {
+  func execute(requestValue: FetchGenresUseCaseRequestValue) -> AnyPublisher<GenreListResult, DataTransferError> {
     if let error = error {
-      return Observable.error(error)
+      return Fail(error: error).eraseToAnyPublisher()
     }
 
     if let result = result {
-      return Observable.just(result)
+      return Just(result).setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
     }
 
-    return Observable.empty()
+    return Empty().setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
   }
 }

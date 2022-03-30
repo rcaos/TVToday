@@ -117,32 +117,34 @@ class SearchOptionsViewModelTest: XCTestCase {
     XCTAssertEqual(expected, received, "Should contains 2 values")
   }
 
-//      context("When Fetch Use Case Returns Zero Shows") {
-//        it("Should ViewModel contanins Empty State") {
-//          // given
-//          fetchGenresUseCaseMock.error = CustomError.genericError
-//          recentsDidChangeUseCaseMock.result = true
-//          fetchVisitedShowsUseCaseMock.result = self.showsVisited
-//
-//          let viewModel: SearchOptionsViewModelProtocol =  SearchOptionsViewModel(
-//            fetchGenresUseCase: fetchGenresUseCaseMock,
-//            fetchVisitedShowsUseCase: fetchVisitedShowsUseCaseMock,
-//            recentVisitedShowsDidChange: recentsDidChangeUseCaseMock)
-//
-//          // when
-//          viewModel.viewDidLoad()
-//
-//          // when
-//          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
-//          guard let currentViewState = viewState else {
-//            fail("It should emit a View State")
-//            return
-//          }
-//          let expected = SearchViewState.error(CustomError.genericError.localizedDescription)
-//
-//          expect(currentViewState).toEventually(equal(expected))
-//        }
-//      }
-//    }
-//  }
+  func test_when_useCase_Responds_With_Error_ViewModel_Should_contains_Error_State() {
+    // given
+    fetchGenresUseCaseMock.error = .noResponse
+    recentsDidChangeUseCaseMock.result = true
+    fetchVisitedShowsUseCaseMock.result = buildShowVisited()
+
+    sut = SearchOptionsViewModel(
+                fetchGenresUseCase: fetchGenresUseCaseMock,
+                fetchVisitedShowsUseCase: fetchVisitedShowsUseCaseMock,
+                recentVisitedShowsDidChange: recentsDidChangeUseCaseMock)
+    let expected = [
+      SearchViewState.loading,
+      SearchViewState.error("")
+    ]
+    var received = [SearchViewState]()
+
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    sut.viewDidLoad()
+
+    // then
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
+    XCTAssertEqual(expected, received, "Should contains 2 values")
+  }
 }

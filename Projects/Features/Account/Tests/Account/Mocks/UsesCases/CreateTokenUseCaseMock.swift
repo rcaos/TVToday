@@ -6,23 +6,24 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
+import NetworkingInterface
 @testable import Account
 
 final class CreateTokenUseCaseMock: CreateTokenUseCase {
 
-  var error: Error?
   var result: URL?
+  var error: DataTransferError?
 
-  func execute() -> Observable<URL> {
+  func execute() -> AnyPublisher<URL, DataTransferError> {
     if let error = error {
-      return Observable.error(error)
+      return Fail(error: error).eraseToAnyPublisher()
     }
 
     if let result = result {
-      return Observable.just(result)
+      return Just(result).setFailureType(to: DataTransferError.self) .eraseToAnyPublisher()
     }
 
-    return Observable.empty()
+    return Empty().setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
   }
 }

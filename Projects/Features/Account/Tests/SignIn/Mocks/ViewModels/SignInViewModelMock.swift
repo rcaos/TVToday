@@ -5,20 +5,18 @@
 //  Created by Jeans Ruiz on 8/8/20.
 //
 
-import RxSwift
+import Combine
 @testable import Account
 
 final class SignInViewModelMock: SignInViewModelProtocol {
 
+  func signInDidTapped() { }
   func changeState(with state: SignInViewState) { }
 
-  let tapButton = PublishSubject<Void>()
-
-  let viewState: Observable<SignInViewState>
-
+  let viewState: CurrentValueSubject<SignInViewState, Never>
   weak var delegate: SignInViewModelDelegate?
 
   init(state: SignInViewState) {
-    viewState = Observable.just(state)
+    viewState = CurrentValueSubject(state)
   }
 }

@@ -5,23 +5,24 @@
 //  Created by Jeans Ruiz on 8/8/20.
 //
 
-import RxSwift
+import Combine
+import NetworkingInterface
 @testable import Account
 
 final class FetchAccountDetailsUseCaseMock: FetchAccountDetailsUseCase {
+
   var result: AccountResult?
+  var error: DataTransferError?
 
-  var error: Error?
-
-  func execute() -> Observable<AccountResult> {
+  func execute() -> AnyPublisher<AccountResult, DataTransferError> {
     if let error = error {
-      return Observable.error(error)
+      return Fail(error: error).eraseToAnyPublisher()
     }
 
     if let result = result {
-      return Observable.just(result)
+      return Just(result).setFailureType(to: DataTransferError.self) .eraseToAnyPublisher()
     }
 
-    return Observable.empty()
+    return Empty().setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
   }
 }

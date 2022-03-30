@@ -6,7 +6,6 @@
 //
 
 import SnapshotTesting
-import RxSwift
 import XCTest
 
 @testable import SearchShows
@@ -28,6 +27,7 @@ class ResultsSearchViewLightTests: XCTestCase {
 
     let viewController = ResultsSearchViewController(viewModel: viewModel)
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
@@ -39,6 +39,7 @@ class ResultsSearchViewLightTests: XCTestCase {
     let viewModel = ResultsSearchViewModelMock(state: .loading)
     let viewController = ResultsSearchViewController(viewModel: viewModel)
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
@@ -57,6 +58,7 @@ class ResultsSearchViewLightTests: XCTestCase {
 
     let viewController = ResultsSearchViewController(viewModel: viewModel)
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
@@ -68,6 +70,7 @@ class ResultsSearchViewLightTests: XCTestCase {
     let viewModel = ResultsSearchViewModelMock(state: .empty)
     let viewController = ResultsSearchViewController(viewModel: viewModel)
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
@@ -78,6 +81,7 @@ class ResultsSearchViewLightTests: XCTestCase {
     let viewModel = ResultsSearchViewModelMock(state: .error("Error to Fetch Shows"))
     let viewController = ResultsSearchViewController(viewModel: viewModel)
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))

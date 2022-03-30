@@ -6,7 +6,6 @@
 //
 
 import SnapshotTesting
-import RxSwift
 import XCTest
 
 @testable import SearchShows
@@ -14,17 +13,6 @@ import XCTest
 @testable import Persistence
 
 class SearchShowsOptionsViewDarkTests: XCTestCase {
-
-  private let showsVisited: [ShowVisited] = [
-    ShowVisited.stub(id: 1, pathImage: ""),
-    ShowVisited.stub(id: 2, pathImage: ""),
-    ShowVisited.stub(id: 3, pathImage: "")
-  ]
-
-  private let genres: [Genre] = [
-    Genre.stub(id: 1, name: "Genre 1"),
-    Genre.stub(id: 2, name: "Genre 2")
-  ]
 
   override func setUp() {
     super.setUp()
@@ -35,6 +23,7 @@ class SearchShowsOptionsViewDarkTests: XCTestCase {
     // given
     let viewController = SearchOptionsViewController(viewModel: SearchOptionsViewModelMock(state: .loading) )
     viewController.overrideUserInterfaceStyle = .dark
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
@@ -42,11 +31,12 @@ class SearchShowsOptionsViewDarkTests: XCTestCase {
 
   func test_WhenViewPopulated_thenShowPopulatedScreen() {
     // given
-    let sections = createSectionModel(showsVisited: showsVisited, genres: genres)
+    let sections = createSectionModel(showsVisited: buildShowVisited(), genres: buildGenres())
 
     let viewModel = SearchOptionsViewModelMock(state: .populated, sections: sections)
     let viewController = SearchOptionsViewController(viewModel: viewModel)
     viewController.overrideUserInterfaceStyle = .dark
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
@@ -58,6 +48,7 @@ class SearchShowsOptionsViewDarkTests: XCTestCase {
     let viewModel = SearchOptionsViewModelMock(state: .empty, sections: [])
     let viewController = SearchOptionsViewController(viewModel: viewModel)
     viewController.overrideUserInterfaceStyle = .dark
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
@@ -68,6 +59,7 @@ class SearchShowsOptionsViewDarkTests: XCTestCase {
     let viewModel = SearchOptionsViewModelMock(state: .error("Error to Fetch Genres"), sections: [])
     let viewController = SearchOptionsViewController(viewModel: viewModel)
     viewController.overrideUserInterfaceStyle = .dark
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))

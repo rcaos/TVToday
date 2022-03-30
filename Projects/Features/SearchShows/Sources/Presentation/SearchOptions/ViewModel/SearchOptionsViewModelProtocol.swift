@@ -16,14 +16,6 @@ protocol SearchOptionsViewModelDelegate: AnyObject {
                               didRecentShowPicked idShow: Int)
 }
 
-// MARK: - ViewState
-enum SearchViewState: Equatable {
-  case loading
-  case populated
-  case empty
-  case error(String)
-}
-
 protocol SearchOptionsViewModelProtocol: VisitedShowViewModelDelegate {
   // MARK: - Input
   func viewDidLoad()

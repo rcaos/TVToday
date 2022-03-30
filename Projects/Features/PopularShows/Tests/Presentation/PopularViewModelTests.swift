@@ -50,32 +50,34 @@ class PopularViewModelTests: XCTestCase {
     XCTAssertEqual(1, countValuesReceived, "Should only receives one Value")
   }
 
-//  override func spec() {
-//    describe("PopularsViewModel") {
-//
-//      context("When Fetch Use Case Retrieve First page") {
-//        it("Should ViewModel contains only First page") {
-//          // given
-//          fetchUseCaseMock.result = self.firstPage
-//          let firstPageCells = self.firstPage.results!.map { TVShowCellViewModel(show: $0) }
-//
-//          let viewModel: PopularViewModelProtocol = PopularViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
-//
-//          // when
-//          viewModel.viewDidLoad()
-//
-//          // then
-//          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
-//          guard let currentViewState = viewState else {
-//            fail("It should emit a View State")
-//            return
-//          }
-//          let expected = SimpleViewState<TVShowCellViewModel>.paging(firstPageCells, next: 2)
-//
-//          expect(currentViewState).toEventually(equal(expected))
-//        }
-//      }
-//
+  func test_when_useCase_respons_with_FirstPage_ViewModel_Should_contains_Populated_State() {
+    // given
+    fetchUseCaseMock.result = buildFirstPage()
+    let firstPageCells = buildFirstPage().results!.map { TVShowCellViewModel(show: $0) }
+    
+    let sut: PopularViewModelProtocol = PopularViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
+    
+    let expected = [
+      SimpleViewState<TVShowCellViewModel>.loading,
+      SimpleViewState<TVShowCellViewModel>.paging(firstPageCells, next: 2)
+    ]
+    var received = [SimpleViewState<TVShowCellViewModel>]()
+    
+    sut.viewStateObservableSubject
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+    
+    // when
+    sut.viewDidLoad()
+    
+    // then
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
+    XCTAssertEqual(expected, received, "Should contains 2 values")
+  }
+
 //      context("When Fetch Use Case Retrieve First and Second Page") {
 //        it("Should ViewModel contains First and Second page") {
 //

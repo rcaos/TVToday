@@ -164,35 +164,39 @@ class ResultsSearchViewModelTests: XCTestCase {
     XCTAssertEqual(expected, received, "Should contains 3 values")
   }
 
-//      context("When Search Use Case response With Shows") {
-//        it("Should ViewModel contains Shows") {
-//
-//          // given
-//          let shows: [TVShow] = [
-//            TVShow.stub(id: 1, name: "something Show 1"),
-//            TVShow.stub(id: 2, name: "something Show 2")
-//          ]
-//          let expectedData = self.createSectionModel(recentSearchs: [], resultShows: shows)
-//
-//          searchTVShowsUseCaseMock.result = TVShowResult(page: 1, results: shows, totalResults: 1, totalPages: 1)
-//
-//          let viewModel: ResultsSearchViewModelProtocol = ResultsSearchViewModel(
-//            searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
-//
-//          // when
-//          viewModel.searchShows(with: "something")
-//
-//          // then
-//          let data = try? viewModel.dataSource.toBlocking(timeout: 2).first()
-//          guard let dataSource = data else {
-//            fail("It should emit a View State")
-//            return
-//          }
-//
-//          expect(dataSource).toEventually(equal(expectedData))
-//        }
-//      }
-//
+  func test_When_Use_Case_Respond_With_Data_Should_ViewModel_DataSource_Contains_Data() {
+    // given
+    let shows: [TVShow] = [
+      TVShow.stub(id: 1, name: "something Show 1"),
+      TVShow.stub(id: 2, name: "something Show 2")
+    ]
+
+    searchTVShowsUseCaseMock.result = TVShowResult(page: 1, results: shows, totalResults: 1, totalPages: 1)
+
+    sut = ResultsSearchViewModel(
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
+
+    let expected = [
+      [],
+      createSectionModel(recentSearchs: [], resultShows: shows)
+    ]
+    var received = [[ResultSearchSectionModel]]()
+
+    sut.dataSource
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    sut.searchShows(with: "something")
+
+    // then
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
+    XCTAssertEqual(expected, received, "Should contains 2 values")
+  }
+
 //      context("When Search Use Case response With Error") {
 //        it("Should ViewModel contains Error State") {
 //
@@ -221,7 +225,7 @@ class ResultsSearchViewModelTests: XCTestCase {
 //  }
 
   // MARK: - Map Results
-  fileprivate func createSectionModel(recentSearchs: [String], resultShows: [TVShow]) -> [ResultSearchSectionModel] {
+  private func createSectionModel(recentSearchs: [String], resultShows: [TVShow]) -> [ResultSearchSectionModel] {
     var dataSource: [ResultSearchSectionModel] = []
 
     let recentSearchsItem = recentSearchs.map { ResultSearchSectionItem.recentSearchs(items: $0) }

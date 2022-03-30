@@ -7,7 +7,6 @@
 
 import XCTest
 import SnapshotTesting
-import RxSwift
 
 @testable import AiringToday
 @testable import Shared
@@ -37,69 +36,57 @@ class AiringTodayViewTestsLight: XCTestCase {
   }
 
   func test_WhenViewIsLoading_thenShowLoadingScreen() {
-    // when
     let viewController = AiringTodayViewController(viewModel: AiringTodayViewModelMock(state: .loading) )
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
-    // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewPaging_thenShowPagingScreen_Dark() {
-    // given
     let firsPageCells = firstPage.results!.map { AiringTodayCollectionViewModel(show: $0) }
-
-    // when
     let viewController = AiringTodayViewController(viewModel: AiringTodayViewModelMock(state: .paging(firsPageCells, next: 2) ) )
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
-    // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewPaging_thenShowPagingScreen_Light() {
-    // given
     let firsPageCells = firstPage.results!.map { AiringTodayCollectionViewModel(show: $0) }
-
-    // when
     let viewController = AiringTodayViewController(viewModel: AiringTodayViewModelMock(state: .paging(firsPageCells, next: 2) ) )
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
-    // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewPopulated_thenShowPopulatedScreen() {
-    // given
     let totalCells = (self.firstPage.results + self.secondPage.results)
       .map { AiringTodayCollectionViewModel(show: $0) }
-
-    // when
     let viewController = AiringTodayViewController(viewModel: AiringTodayViewModelMock(state: .populated(totalCells) ))
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
-    // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewIsEmpty_thenShowEmptyScreen() {
-    // when
     let viewController = AiringTodayViewController(viewModel: AiringTodayViewModelMock(state: .empty ) )
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
-    // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewIsError_thenShowErrorScreen() {
-    // when
     let viewController = AiringTodayViewController(viewModel: AiringTodayViewModelMock(state: .error("Error to Fetch Shows") ) )
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
-    // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
   }
 }

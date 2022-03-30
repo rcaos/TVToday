@@ -5,10 +5,9 @@
 //  Created by Jeans Ruiz on 8/7/20.
 //
 
-import RxSwift
-
+import Combine
+import Shared
 @testable import PopularShows
-@testable import Shared
 
 class PopularViewModelMock: PopularViewModelProtocol {
 
@@ -20,19 +19,9 @@ class PopularViewModelMock: PopularViewModelProtocol {
 
   func refreshView() { }
 
-  func getCurrentViewState() -> SimpleViewState<TVShowCellViewModel> {
-    if let currentViewState = try? viewStateObservableSubject.value() {
-      return currentViewState
-    }
-    return .empty
-  }
-
-  var viewState: Observable<SimpleViewState<TVShowCellViewModel>>
-
-  var viewStateObservableSubject: BehaviorSubject<SimpleViewState<TVShowCellViewModel>>
+  var viewStateObservableSubject: CurrentValueSubject<SimpleViewState<TVShowCellViewModel>, Never>
 
   init(state: SimpleViewState<TVShowCellViewModel>) {
-    viewStateObservableSubject = BehaviorSubject(value: state)
-    viewState = viewStateObservableSubject.asObservable()
+    viewStateObservableSubject = CurrentValueSubject(state)
   }
 }

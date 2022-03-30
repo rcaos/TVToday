@@ -104,31 +104,34 @@ class ResultsSearchViewModelTests: XCTestCase {
     XCTAssertEqual(expected, received, "Should contains 2 values")
   }
 
-//      context("When Search Use Case response with no results") {
-//        it("Should ViewModel contains Empty State") {
-//
-//          // given
-//          searchTVShowsUseCaseMock.result = TVShowResult(page: 1, results: [], totalResults: 0, totalPages: 0)
-//
-//          let viewModel: ResultsSearchViewModelProtocol = ResultsSearchViewModel(
-//            searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
-//
-//          // when
-//          viewModel.searchShows(with: "something")
-//
-//          // then
-//          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
-//          guard let currentViewState = viewState else {
-//            fail("It should emit a View State")
-//            return
-//          }
-//
-//          let expected = ResultViewState.empty
-//
-//          expect(currentViewState).toEventually(equal(expected))
-//        }
-//      }
-//
+  func test_When_Use_Case_Respond_with_Zero_Values_Should_ViewModel_Contains_Loading_State() {
+    // given
+    searchTVShowsUseCaseMock.result = TVShowResult(page: 1, results: [], totalResults: 0, totalPages: 0)
+    sut = ResultsSearchViewModel(
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
+
+    let expected = [
+      ResultViewState.initial,
+      ResultViewState.loading,
+      ResultViewState.empty
+    ]
+    var received = [ResultViewState]()
+
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    sut.searchShows(with: "something")
+
+    // then
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
+    XCTAssertEqual(expected, received, "Should contains 2 values")
+  }
+
 //      context("When Search Use Case response With Shows") {
 //        it("Should ViewModel contains Populated State") {
 //

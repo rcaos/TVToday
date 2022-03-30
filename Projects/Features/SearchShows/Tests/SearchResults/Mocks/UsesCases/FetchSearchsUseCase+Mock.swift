@@ -5,24 +5,24 @@
 //  Created by Jeans Ruiz on 8/7/20.
 //
 
-import RxSwift
+import Combine
 @testable import SearchShows
 @testable import Shared
 @testable import Persistence
 
 final class FetchSearchsUseCaseMock: FetchSearchsUseCase {
-  var error: Error?
+  var error: CustomError?
   var result: [Search]?
 
-  public func execute(requestValue: FetchSearchsUseCaseRequestValue) -> Observable<[Search]> {
+  public func execute(requestValue: FetchSearchsUseCaseRequestValue) -> AnyPublisher<[Search], CustomError> {
     if let error = error {
-      return Observable.error(error)
+      return Fail(error: error).eraseToAnyPublisher()
     }
 
     if let result = result {
-      return Observable.just(result)
+      return Just(result).setFailureType(to: CustomError.self).eraseToAnyPublisher()
     }
 
-    return Observable.empty()
+    return Empty().setFailureType(to: CustomError.self).eraseToAnyPublisher()
   }
 }

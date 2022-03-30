@@ -5,22 +5,17 @@
 //  Created by Jeans Ruiz on 20/12/21.
 //
 
-import RxSwift
+import Combine
 @testable import SearchShows
 
 final class ResultsSearchViewModelMock: ResultsSearchViewModelProtocol {
   func recentSearchIsPicked(query: String) { }
-
   func showIsPicked(idShow: Int) { }
-
   func searchShows(with query: String) { }
-
   func resetSearch() { }
 
-  var viewState: Observable<ResultViewState>
-
-  var dataSource: Observable<[ResultSearchSectionModel]>
-
+  var viewState: CurrentValueSubject<ResultViewState, Never>
+  var dataSource: CurrentValueSubject<[ResultSearchSectionModel], Never>
   weak var delegate: ResultsSearchViewModelDelegate?
 
   func getViewState() -> ResultViewState {
@@ -31,8 +26,8 @@ final class ResultsSearchViewModelMock: ResultsSearchViewModelProtocol {
 
   init(state: ResultViewState, source: [ResultSearchSectionModel] = []) {
     self.state = state
-    viewState = Observable.just(state)
+    viewState = CurrentValueSubject(state)
 
-    dataSource = Observable.just(source)
+    dataSource = CurrentValueSubject(source)
   }
 }

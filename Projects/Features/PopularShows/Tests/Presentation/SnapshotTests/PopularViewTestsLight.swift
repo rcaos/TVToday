@@ -13,20 +13,6 @@ import SnapshotTesting
 
 class PopularViewTestsLight: XCTestCase {
 
-  let firstShow = TVShow.stub(id: 1, name: "Dark 🐶", voteAverage: 8.0)
-  let secondShow = TVShow.stub(id: 2, name: "Dragon Ball Z 🔫", voteAverage: 9.0)
-  let thirdShow = TVShow.stub(id: 3, name: "Esto es un TVShow con un título muy grande creado con fines de test 🚨", voteAverage: 10.0)
-
-  lazy var firstPage = TVShowResult.stub(page: 1,
-                                         results: [firstShow, secondShow],
-                                         totalResults: 3,
-                                         totalPages: 2)
-
-  lazy var secondPage = TVShowResult.stub(page: 2,
-                                          results: [thirdShow],
-                                          totalResults: 3,
-                                          totalPages: 2)
-
   override func setUp() {
     super.setUp()
     isRecording = false
@@ -39,6 +25,7 @@ class PopularViewTestsLight: XCTestCase {
     // when
     let viewController = PopularsViewController(viewModel: viewModel)
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
@@ -46,12 +33,13 @@ class PopularViewTestsLight: XCTestCase {
 
   func test_WhenViewPaging_thenShowPagingScreen() {
     // given
-    let firsPageCells = firstPage.results!.map { TVShowCellViewModel(show: $0) }
+    let firsPageCells = buildFirstPage().results!.map { TVShowCellViewModel(show: $0) }
 
     // when
     let viewModel = PopularViewModelMock(state: .paging(firsPageCells, next: 2) )
     let viewController = PopularsViewController(viewModel: viewModel)
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
@@ -60,13 +48,14 @@ class PopularViewTestsLight: XCTestCase {
 
   func test_WhenViewPopulated_thenShowPopulatedScreen() {
     // given
-    let totalCells = (self.firstPage.results + self.secondPage.results)
+    let totalCells = (buildFirstPage().results + buildSecondPage().results)
       .map { TVShowCellViewModel(show: $0) }
 
     // when
     let viewModel = PopularViewModelMock(state: .populated(totalCells) )
     let viewController = PopularsViewController(viewModel: viewModel)
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
@@ -80,6 +69,7 @@ class PopularViewTestsLight: XCTestCase {
     // when
     let viewController = PopularsViewController(viewModel: viewModel)
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
@@ -92,6 +82,7 @@ class PopularViewTestsLight: XCTestCase {
     // when
     let viewController = PopularsViewController(viewModel: viewModel)
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))

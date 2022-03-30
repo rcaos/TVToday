@@ -54,58 +54,68 @@ class PopularViewModelTests: XCTestCase {
     // given
     fetchUseCaseMock.result = buildFirstPage()
     let firstPageCells = buildFirstPage().results!.map { TVShowCellViewModel(show: $0) }
-    
+
     let sut: PopularViewModelProtocol = PopularViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
-    
+
     let expected = [
       SimpleViewState<TVShowCellViewModel>.loading,
       SimpleViewState<TVShowCellViewModel>.paging(firstPageCells, next: 2)
     ]
     var received = [SimpleViewState<TVShowCellViewModel>]()
-    
+
     sut.viewStateObservableSubject
       .removeDuplicates()
       .sink(receiveValue: { value in
         received.append(value)
       })
       .store(in: &disposeBag)
-    
+
     // when
     sut.viewDidLoad()
-    
+
     // then
     _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
     XCTAssertEqual(expected, received, "Should contains 2 values")
   }
 
-//      context("When Fetch Use Case Retrieve First and Second Page") {
-//        it("Should ViewModel contains First and Second page") {
-//
-//          let totalCells = (self.firstPage.results + self.secondPage.results)
-//            .map { TVShowCellViewModel(show: $0) }
-//
-//          // given
-//          fetchUseCaseMock.result = self.firstPage
-//
-//          let viewModel: PopularViewModelProtocol = PopularViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
-//
-//          // when
-//          viewModel.viewDidLoad()
-//          fetchUseCaseMock.result = self.secondPage
-//          viewModel.didLoadNextPage()
-//
-//          // then
-//          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
-//          guard let currentViewState = viewState else {
-//            fail("It should emit a View State")
-//            return
-//          }
-//          let expected = SimpleViewState<TVShowCellViewModel>.populated(totalCells)
-//
-//          expect(currentViewState).toEventually(equal(expected))
-//        }
-//      }
-//
+  func test_When_ask_for_second_page_ViewModel_Should_contains_Populated_State_with_Second_Page() {
+    // given
+    let sut: PopularViewModelProtocol = PopularViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
+    let firstPage = buildFirstPage().results!.map { TVShowCellViewModel(show: $0) }
+    let secondPage = (buildFirstPage().results + buildSecondPage().results).map { TVShowCellViewModel(show: $0) }
+
+    let expected = [
+      SimpleViewState<TVShowCellViewModel>.loading,
+      SimpleViewState<TVShowCellViewModel>.paging(firstPage, next: 2),
+      SimpleViewState<TVShowCellViewModel>.populated(secondPage)
+    ]
+
+    var received = [SimpleViewState<TVShowCellViewModel>]()
+
+    sut.viewStateObservableSubject
+      .removeDuplicates()
+      .print()
+      .sink(receiveCompletion: { _ in } , receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    fetchUseCaseMock.result = buildFirstPage()
+    sut.viewDidLoad()
+
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
+
+    // and when
+    fetchUseCaseMock.result = buildSecondPage()
+    sut.didLoadNextPage()
+
+    // then
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
+    XCTAssertEqual(expected, received, "Should contains 3 values")
+  }
+
+
 //      context("When Fetch Use Case Returns Error") {
 //        it("Should ViewModel contanins Error") {
 //          // given

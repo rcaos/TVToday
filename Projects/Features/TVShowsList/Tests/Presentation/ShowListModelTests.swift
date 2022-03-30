@@ -7,163 +7,165 @@
 
 // swiftlint:disable all
 
-import Quick
-import Nimble
-import RxSwift
-import RxBlocking
-
+import Combine
+import XCTest
 @testable import TVShowsList
 @testable import Shared
 
-class TVShowListViewModelTests: QuickSpec {
+class TVShowListViewModelTests: XCTestCase {
+  private let emptyPage = TVShowResult.stub(page: 1, results: [], totalResults: 0, totalPages: 1)
 
-  let firstShow = TVShow.stub(id: 1, name: "title1 🐶", posterPath: "/1",
-                              backDropPath: "/back1", overview: "overview")
-  let secondShow = TVShow.stub(id: 2, name: "title2 🔫", posterPath: "/2",
-                               backDropPath: "/back2", overview: "overview2")
-  let thirdShow = TVShow.stub(id: 3, name: "title3 🚨", posterPath: "/3",
-                              backDropPath: "/back3", overview: "overview3")
+  private var fetchUseCaseMock: FetchShowsUseCaseMock!
+  private var disposeBag: Set<AnyCancellable>!
 
-  lazy var firstPage = TVShowResult.stub(page: 1,
-                                         results: [firstShow, secondShow],
-                                         totalResults: 3,
-                                         totalPages: 2)
+  override func setUp() {
+    super.setUp()
+    fetchUseCaseMock = FetchShowsUseCaseMock()
+    disposeBag = []
+  }
 
-  lazy var secondPage = TVShowResult.stub(page: 2,
-                                          results: [thirdShow],
-                                          totalResults: 3,
-                                          totalPages: 2)
+  func test_When_UseCase_Doesnot_Responds_Yet_ViewModel_Should_Contains_Loading_State() {
+    // given
+    let sut: TVShowListViewModelProtocol
+    sut = TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
 
-  let emptyPage = TVShowResult.stub(page: 1, results: [], totalResults: 0, totalPages: 1)
+    // when
+    sut.viewDidLoad()
 
-  override func spec() {
-    describe("TVShowListViewModel") {
-      var fetchUseCaseMock: FetchShowsUseCaseMock!
-      beforeEach {
-        fetchUseCaseMock = FetchShowsUseCaseMock()
-      }
+    let expected = SimpleViewState<TVShowCellViewModel>.loading
 
-      context("When waiting for response of Fetch Use Case") {
-        it("Should ViewModel contanins Loading State") {
-          // given
-          // not response yet
+    var countValuesReceived = 0
+    sut.viewStateObservableSubject
+      .removeDuplicates()
+      .sink(receiveValue: { value in
 
-          let viewModel: TVShowListViewModelProtocol =
-            TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
+        // then
+        countValuesReceived += 1
+        XCTAssertEqual(expected, value, "AiringTodayViewModel should contains loading State")
+      })
+      .store(in: &disposeBag)
 
-          // when
-          viewModel.viewDidLoad()
+    // then
+    XCTAssertEqual(1, countValuesReceived, "Should only receives one Value")
+  }
 
-          // when
-          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
-          guard let currentViewState = viewState else {
-            fail("It should emit a View State")
-            return
-          }
-          let expected = SimpleViewState<TVShowCellViewModel>.loading
+  func test_when_useCase_respons_with_FirstPage_ViewModel_Should_contains_Populated_State() {
+    // given
+    fetchUseCaseMock.result = buildFirstPage()
+    let firstPageCells = buildFirstPage().results!.map { TVShowCellViewModel(show: $0) }
 
-          expect(currentViewState).toEventually(equal(expected))
-        }
-      }
+    let sut: TVShowListViewModelProtocol = TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
 
-      context("When Fetch Use Case Retrieve First page") {
-        it("Should ViewModel contains only First page") {
-          // given
-          fetchUseCaseMock.result = self.firstPage
-          let firstPageCells = self.firstPage.results!.map { TVShowCellViewModel(show: $0) }
+    let expected = [
+      SimpleViewState<TVShowCellViewModel>.loading,
+      SimpleViewState<TVShowCellViewModel>.paging(firstPageCells, next: 2)
+    ]
+    var received = [SimpleViewState<TVShowCellViewModel>]()
 
-          let viewModel: TVShowListViewModelProtocol =
-            TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
+    sut.viewStateObservableSubject
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
 
-          // when
-          viewModel.viewDidLoad()
+    // when
+    sut.viewDidLoad()
 
-          // then
-          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
-          guard let currentViewState = viewState else {
-            fail("It should emit a View State")
-            return
-          }
-          let expected = SimpleViewState<TVShowCellViewModel>.paging(firstPageCells, next: 2)
+    // then
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
+    XCTAssertEqual(expected, received, "Should contains 2 values")
+  }
 
-          expect(currentViewState).toEventually(equal(expected))
-        }
-      }
+  func test_When_ask_for_second_page_ViewModel_Should_contains_Populated_State_with_Second_Page() {
+    // given
+    let sut: TVShowListViewModelProtocol = TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
+    let firstPage = buildFirstPage().results!.map { TVShowCellViewModel(show: $0) }
+    let secondPage = (buildFirstPage().results + buildSecondPage().results).map { TVShowCellViewModel(show: $0) }
 
-      context("When Fetch Use Case Retrieve First and Second Page") {
-        it("Should ViewModel contains First and Second page") {
+    let expected = [
+      SimpleViewState<TVShowCellViewModel>.loading,
+      SimpleViewState<TVShowCellViewModel>.paging(firstPage, next: 2),
+      SimpleViewState<TVShowCellViewModel>.populated(secondPage)
+    ]
+    var received = [SimpleViewState<TVShowCellViewModel>]()
 
-          let totalCells = (self.firstPage.results + self.secondPage.results)
-            .map { TVShowCellViewModel(show: $0) }
+    sut.viewStateObservableSubject
+      .removeDuplicates()
+      .print()
+      .sink(receiveCompletion: { _ in } , receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
 
-          // given
-          fetchUseCaseMock.result = self.firstPage
+    // when
+    fetchUseCaseMock.result = buildFirstPage()
+    sut.viewDidLoad()
 
-          let viewModel: TVShowListViewModelProtocol =
-            TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
 
-          // when
-          viewModel.viewDidLoad()
-          fetchUseCaseMock.result = self.secondPage
-          viewModel.didLoadNextPage()
+    // and when
+    fetchUseCaseMock.result = buildSecondPage()
+    sut.didLoadNextPage()
 
-          // then
-          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
-          guard let currentViewState = viewState else {
-            fail("It should emit a View State")
-            return
-          }
-          let expected = SimpleViewState<TVShowCellViewModel>.populated(totalCells)
+    // then
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
+    XCTAssertEqual(expected, received, "Should contains 3 values")
+  }
 
-          expect(currentViewState).toEventually(equal(expected))
-        }
-      }
+  func test_When_UseCase_Responds_Error_ViewModel_Should_Contains_Error_State() {
+    // given
+    fetchUseCaseMock.error = .noResponse
+    let sut: TVShowListViewModelProtocol
+    sut = TVShowListViewModel(fetchTVShowsUseCase: self.fetchUseCaseMock, coordinator: nil)
 
-      context("When Fetch Use Case Returns Error") {
-        it("Should ViewModel contanins Error") {
-          // given
-          fetchUseCaseMock.error = CustomError.genericError
+    let expected = [
+      SimpleViewState<TVShowCellViewModel>.loading,
+      SimpleViewState<TVShowCellViewModel>.error("")
+    ]
+    var received = [SimpleViewState<TVShowCellViewModel>]()
 
-          let viewModel: TVShowListViewModelProtocol =
-            TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
+    sut.viewStateObservableSubject
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
 
-          // when
-          viewModel.viewDidLoad()
+    // when
+    sut.viewDidLoad()
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
 
-          // when
-          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
-          guard let currentViewState = viewState else {
-            fail("It should emit a View State")
-            return
-          }
-          let expected = SimpleViewState<TVShowCellViewModel>.error("")
+    // then
+    XCTAssertEqual(2, received.count, "Should only receives one Value")
+    XCTAssertEqual(expected, received, "AiringTodayViewModel should contains Error State")
+  }
 
-          expect(currentViewState).toEventually(equal(expected))
-        }
-      }
+  func test_When_UseCase_Responds_With_Zero_Elements_ViewModel_Should_Contains_Empty_State() {
+    // given
+    fetchUseCaseMock.result = self.emptyPage
+    let sut: TVShowListViewModelProtocol
+    sut = TVShowListViewModel(fetchTVShowsUseCase: self.fetchUseCaseMock, coordinator: nil)
 
-      context("When Fetch Use Case Returns Zero Shows") {
-        it("Should ViewModel contanins Empty State") {
-          // given
-          fetchUseCaseMock.result = self.emptyPage
+    let expected = [
+      SimpleViewState<TVShowCellViewModel>.loading,
+      SimpleViewState<TVShowCellViewModel>.empty
+    ]
+    var received = [SimpleViewState<TVShowCellViewModel>]()
 
-          let viewModel: TVShowListViewModelProtocol =
-            TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
+    sut.viewStateObservableSubject
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
 
-          // when
-          viewModel.viewDidLoad()
+    // when
+    sut.viewDidLoad()
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
 
-          // when
-          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
-          guard let currentViewState = viewState else {
-            fail("It should emit a View State")
-            return
-          }
-          let expected = SimpleViewState<TVShowCellViewModel>.empty
-
-          expect(currentViewState).toEventually(equal(expected))
-        }
-      }
-    }
+    // then
+    XCTAssertEqual(2, received.count, "Should only receives one Value")
+    XCTAssertEqual(expected, received, "AiringTodayViewModel should contains Empty State")
   }
 }

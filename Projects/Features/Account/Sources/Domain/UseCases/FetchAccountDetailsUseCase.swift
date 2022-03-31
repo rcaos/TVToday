@@ -28,7 +28,7 @@ final class DefaultFetchAccountDetailsUseCase: FetchAccountDetailsUseCase {
     guard let sessionId = keychainRepository.fetchAccessToken() else {
       return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher()
     }
-    
+
     return accountRepository.getAccountDetails(session: sessionId)
       .flatMap { [weak self] accountResult -> AnyPublisher<AccountResult, DataTransferError> in
         guard let fetchedAccount = accountResult.id else {

@@ -90,45 +90,51 @@ class EpisodesListViewModelTests: XCTestCase {
     _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
     XCTAssertEqual(expected, received, "Should contains Populated State")
   }
+
+  func test_when_UseCase_GetData_return_OK_ViewModel_Should_Contains_Data_Of_List_Episodes() {
+    // given
+    let headerViewModel = SeasonHeaderViewModel(showDetail: self.detailResult)
+    let episodesSection = self.episodes
+      .map { EpisodeSectionModelType(episode: $0) }
+      .map { SeasonsSectionItem.episodes(items: $0) }
+    let dataExpected: [SeasonsSectionModel] = [
+      .headerShow(items: [.headerShow(viewModel: headerViewModel)]),
+      .seasons(items: [.seasons]),
+      .episodes(items: episodesSection)
+    ]
+
+    let seasonResult = SeasonResult(id: "1", episodes: self.episodes, seasonNumber: 1)
+
+    fetchTVShowDetailsUseCaseMock.result = self.detailResult
+    fetchEpisodesUseCaseMock.result = seasonResult
+
+    let sut: EpisodesListViewModelProtocol =
+    EpisodesListViewModel(tvShowId: 1,
+                          fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock)
+
+    let expected = [
+      [],
+      dataExpected
+    ]
+    var received = [[SeasonsSectionModel]]()
+
+    sut.data
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    sut.viewDidLoad()
+
+    // then
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
+    XCTAssertEqual(expected, received, "Should contains Populated State")
+  }
 }
 
-//      context("When Uses Cases Retrieve Show Details and Seasons") {
-//        it("Should ViewModel contains List of Episodes") {
-//
-//          // given
-//          let headerViewModel = SeasonHeaderViewModel(showDetail: self.detailResult)
-//          let numberOfSeasons = 9
-//          let episodesSection = self.episodes.map { EpisodeSectionModelType(episode: $0)}
-//            .map { SeasonsSectionItem.episodes(items: $0) }
-//          let dataExpected: [SeasonsSectionModel] = [
-//            .headerShow(header: "Header", items: [.headerShow(viewModel: headerViewModel)]),
-//            .seasons(header: "Seasons", items: [.seasons(number: numberOfSeasons)]),
-//            .episodes(header: "Episodes", items: episodesSection)
-//          ]
-//
-//          let seasonResult = SeasonResult(id: "1", episodes: self.episodes, seasonNumber: 1)
-//
-//          fetchTVShowDetailsUseCaseMock.result = self.detailResult
-//          fetchEpisodesUseCaseMock.result = seasonResult
-//
-//          let viewModel: EpisodesListViewModelProtocol =
-//            EpisodesListViewModel(tvShowId: 1,
-//                                  fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-//                                  fetchEpisodesUseCase: fetchEpisodesUseCaseMock)
-//          // when
-//          viewModel.viewDidLoad()
-//
-//          // when
-//          let dataObservable = try? viewModel.data.toBlocking(timeout: 1).first()
-//          guard let episodes = dataObservable else {
-//            fail("It should emit episodes")
-//            return
-//          }
-//
-//          expect(episodes).toEventually(equal(dataExpected))
-//        }
-//      }
-//
 //      context("When Uses Cases Retrieves Error") {
 //        it("Should ViewModel contains Error State") {
 //

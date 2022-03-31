@@ -135,7 +135,7 @@ class TVShowDetailViewModelGuestUsersTests: XCTestCase {
     XCTAssertEqual(expected, received, "Should contains loading State")
   }
 
-  // TODO, test this case
+  // MARK: - TODO, test this case, Handle the Scheduler
 //  func test_For_Guest_User_When_Error_Happens_And_Refresh_View_Should_Contains_Details_Of_Show() {
 //    // given
 //    fetchTVShowDetailsUseCaseMock.error = .noResponse

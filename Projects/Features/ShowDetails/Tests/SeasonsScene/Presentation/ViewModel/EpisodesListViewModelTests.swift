@@ -199,53 +199,54 @@ class EpisodesListViewModelTests: XCTestCase {
     _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
     XCTAssertEqual(expected, received, "Should contains Loading State")
   }
+
+  // MARK: - TODO, Fix scheduler to test this cases
+  func test_When_Ask_For_Different_Season_And_UseCase_Doesnt_Respond_Yet_ViewModel_Should_Contains_Loading_Season_State() {
+    // given
+    // let statesObserver = scheduler.createObserver(EpisodesListViewModel.ViewState.self)
+
+    let seasonResult = SeasonResult(id: "1", episodes: self.episodes, seasonNumber: 1)
+
+    fetchTVShowDetailsUseCaseMock.result = self.detailResult
+    fetchEpisodesUseCaseMock.result = seasonResult
+
+    let _: EpisodesListViewModelProtocol =
+    EpisodesListViewModel(tvShowId: 1,
+                          fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock)
+    //
+    //          viewModel.viewState
+    //            .distinctUntilChanged()
+    //            .subscribe { event in
+    //              statesObserver.on(event)
+    //            }
+    //            .disposed(by: disposeBag)
+    //
+    //          let seasonViewModel = SeasonListViewModelMock()
+    //
+    //          // when
+    //          viewModel.viewDidLoad()
+    //
+    //          // not response yet
+    //          fetchEpisodesUseCaseMock.result = nil
+    //          fetchEpisodesUseCaseMock.error = nil
+    //
+    //          viewModel.seasonListViewModel(seasonViewModel, didSelectSeason: 2)
+    //
+    //          // when
+    //          let expected: [Recorded<Event<EpisodesListViewModel.ViewState>>] = [
+    //            .next(0, .loading) ,
+    //            .next(0, .populated) ,
+    //            .next(0, .loadingSeason)
+    //          ]
+    //
+    //          expect(statesObserver.events).toEventually(equal(expected))
+  }
 }
 
-//      context("When Ask for Diferent Season and Use Case dont respond yet") {
-//        it("Should ViewModel contains Loading Season State") {
-//
-//          // given
-//          let statesObserver = scheduler.createObserver(EpisodesListViewModel.ViewState.self)
-//
-//          let seasonResult = SeasonResult(id: "1", episodes: self.episodes, seasonNumber: 1)
-//
-//          fetchTVShowDetailsUseCaseMock.result = self.detailResult
-//          fetchEpisodesUseCaseMock.result = seasonResult
-//
-//          let viewModel: EpisodesListViewModelProtocol =
-//            EpisodesListViewModel(tvShowId: 1,
-//                                  fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-//                                  fetchEpisodesUseCase: fetchEpisodesUseCaseMock)
-//
-//          viewModel.viewState
-//            .distinctUntilChanged()
-//            .subscribe { event in
-//              statesObserver.on(event)
-//            }
-//            .disposed(by: disposeBag)
-//
-//          let seasonViewModel = SeasonListViewModelMock()
-//
-//          // when
-//          viewModel.viewDidLoad()
-//
-//          // not response yet
-//          fetchEpisodesUseCaseMock.result = nil
-//          fetchEpisodesUseCaseMock.error = nil
-//
-//          viewModel.seasonListViewModel(seasonViewModel, didSelectSeason: 2)
-//
-//          // when
-//          let expected: [Recorded<Event<EpisodesListViewModel.ViewState>>] = [
-//            .next(0, .loading) ,
-//            .next(0, .populated) ,
-//            .next(0, .loadingSeason)
-//          ]
-//
-//          expect(statesObserver.events).toEventually(equal(expected))
-//        }
-//      }
-//
+
+
+
 //      context("When Ask for Diferent Season And Use Case Returns Error") {
 //        it("Should ViewModel contains Error Season State") {
 //          // given

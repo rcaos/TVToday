@@ -99,37 +99,42 @@ class TVShowDetailViewModelGuestUsersTests: XCTestCase {
     XCTAssertEqual(expected, received, "Should contains loading State")
   }
 
-//      context("When Fetch Use Case Retrieve Error") {
-//        it("Should ViewModel contains Error State") {
-//          // given
-//
-//          fetchTVShowDetailsUseCaseMock.error = CustomError.genericError
-//
-//          let viewModel: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
-//            1,
-//            fetchLoggedUser: fetchLoggedUserMock,
-//            fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-//            fetchTvShowState: fetchTVAccountStateMock,
-//            markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
-//            saveToWatchListUseCase: saveToWatchListUseCaseMock,
-//            coordinator: nil
-//          )
-//
-//          // when
-//          viewModel.viewDidLoad()
-//
-//          // then
-//          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
-//          guard let currentViewState = viewState else {
-//            fail("It should emit a View State")
-//            return
-//          }
-//          let expected = TVShowDetailViewModel.ViewState.error("")
-//
-//          expect(currentViewState).toEventually(equal(expected))
-//        }
-//      }
-//
+  func test_For_Guest_User_When_UseCase_Respons_Error_ViewModel_Should_Contains_Error_State() {
+    // given
+    fetchTVShowDetailsUseCaseMock.error = .noResponse
+
+    let sut: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
+      1,
+      fetchLoggedUser: fetchLoggedUserMock,
+      fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+      fetchTvShowState: fetchTVAccountStateMock,
+      markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
+      saveToWatchListUseCase: saveToWatchListUseCaseMock,
+      coordinator: nil
+    )
+
+    let expected = [
+      TVShowDetailViewModel.ViewState.loading,
+      TVShowDetailViewModel.ViewState.error("")
+    ]
+    var received = [TVShowDetailViewModel.ViewState]()
+
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    sut.viewDidLoad()
+
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
+
+    // then
+    XCTAssertEqual(expected, received, "Should contains loading State")
+  }
+
 //      context("When Error Happens and did RefreshView") {
 //        it("Should ViewModel contains Details of TV Show") {
 //          // given

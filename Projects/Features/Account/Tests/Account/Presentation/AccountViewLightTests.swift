@@ -8,8 +8,6 @@
 
 import XCTest
 import SnapshotTesting
-import RxSwift
-
 @testable import Account
 
 class AccountViewLightTests: XCTestCase {
@@ -27,6 +25,7 @@ class AccountViewLightTests: XCTestCase {
 
     let viewController = AccountViewController(viewModel: accountViewModel, viewControllersFactory: factory)
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
@@ -38,6 +37,7 @@ class AccountViewLightTests: XCTestCase {
 
     let viewController = AccountViewController(viewModel: accountViewModel, viewControllersFactory: factory)
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))

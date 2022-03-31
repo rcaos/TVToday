@@ -62,38 +62,43 @@ class TVShowDetailViewModelGuestUsersTests: XCTestCase {
     XCTAssertEqual(expected, received, "Should contains loading State")
   }
 
-//      context("When User Fetch Use Case Retrieve Show Details") {
-//        it("Should ViewModel contains the Details of TVShow") {
-//          // given
-//          let showDetails = TVShowDetailInfo(show: self.detailResult)
-//
-//          fetchTVShowDetailsUseCaseMock.result = self.detailResult
-//
-//          let viewModel: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
-//            1,
-//            fetchLoggedUser: fetchLoggedUserMock,
-//            fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-//            fetchTvShowState: fetchTVAccountStateMock,
-//            markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
-//            saveToWatchListUseCase: saveToWatchListUseCaseMock,
-//            coordinator: nil
-//          )
-//
-//          // when
-//          viewModel.viewDidLoad()
-//
-//          // then
-//          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
-//          guard let currentViewState = viewState else {
-//            fail("It should emit a View State")
-//            return
-//          }
-//          let expected = TVShowDetailViewModel.ViewState.populated(showDetails)
-//
-//          expect(currentViewState).toEventually(equal(expected))
-//        }
-//      }
-//
+  func test_For_Guest_User_When_UseCase_Respons_OK_ViewModel_Should_Contains_Detiails_Of_Show() {
+    // given
+    let showDetails = TVShowDetailInfo(show: self.detailResult)
+    fetchTVShowDetailsUseCaseMock.result = self.detailResult
+
+    let sut: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
+      1,
+      fetchLoggedUser: fetchLoggedUserMock,
+      fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+      fetchTvShowState: fetchTVAccountStateMock,
+      markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
+      saveToWatchListUseCase: saveToWatchListUseCaseMock,
+      coordinator: nil
+    )
+
+    let expected = [
+      TVShowDetailViewModel.ViewState.loading,
+      TVShowDetailViewModel.ViewState.populated(showDetails)
+    ]
+    var received = [TVShowDetailViewModel.ViewState]()
+
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    sut.viewDidLoad()
+
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
+
+    // then
+    XCTAssertEqual(expected, received, "Should contains loading State")
+  }
+
 //      context("When Fetch Use Case Retrieve Error") {
 //        it("Should ViewModel contains Error State") {
 //          // given

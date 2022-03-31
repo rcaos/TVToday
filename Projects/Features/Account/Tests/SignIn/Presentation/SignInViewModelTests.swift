@@ -68,29 +68,24 @@ class SignInViewModelTests: XCTestCase {
     // then
     XCTAssertEqual(expected, received, "Should only receives two Value")
   }
-}
 
-//      context("When UseCase RequestToken Repond with URL") {
-//        it("Should ViewModel send URL to Delegate") {
-//          // given
-//          let expectedURL = URL(string: "someURL")
-//          createTokenUseCase.result = expectedURL
-//
-//          let delegate = SignInViewModelDelegateMock()
-//
-//          var viewModel: SignInViewModelProtocol = SignInViewModel(createTokenUseCase: createTokenUseCase)
-//          viewModel.delegate = delegate
-//
-//          // when
-//          // Tap Button
-//          scheduler.createColdObservable([.next(10, ())])
-//            .subscribe { event in
-//              viewModel.tapButton.on(event)
-//            }
-//            .disposed(by: disposeBag)
-//          scheduler.start()
-//
-//          // then
-//          expect(delegate.url).toEventually(equal(expectedURL))
-//        }
-//      }
+  func test_UseCase_Respond_Successfully_ViewModel_Should_Calls_To_Delegate() {
+    // given
+    let expectedURL = URL(string: "someURL")
+    createTokenUseCase.result = expectedURL
+    let delegate = SignInViewModelDelegateMock()
+
+    var sut: SignInViewModelProtocol = SignInViewModel(createTokenUseCase: createTokenUseCase)
+    sut.delegate = delegate
+
+    // when
+
+    // when
+    sut.signInDidTapped()
+
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
+
+    // then
+    XCTAssertEqual(expectedURL, delegate.url, "SignInViewModel should calls to delegate")
+  }
+}

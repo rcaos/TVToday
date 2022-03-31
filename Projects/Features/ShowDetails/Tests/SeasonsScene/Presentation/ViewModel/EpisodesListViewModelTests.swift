@@ -164,35 +164,43 @@ class EpisodesListViewModelTests: XCTestCase {
     _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
     XCTAssertEqual(expected, received, "Should contains Loading State")
   }
+
+  func test_when_useCase_Returns_Zero_Episodes_Viewmodel_should_Contains_Empty_State() {
+    // given
+    let seasonResult = SeasonResult(id: "1", episodes: [], seasonNumber: 1)
+    fetchTVShowDetailsUseCaseMock.result = self.detailResult
+    fetchEpisodesUseCaseMock.result = seasonResult
+
+    let sut: EpisodesListViewModelProtocol =
+    EpisodesListViewModel(tvShowId: 1,
+                          fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock)
+
+    // MARK: - TODO
+    let expected = [
+      EpisodesListViewModel.ViewState.loading,
+      EpisodesListViewModel.ViewState.empty,
+      EpisodesListViewModel.ViewState.loadingSeason,
+      EpisodesListViewModel.ViewState.empty
+    ]
+    var received = [EpisodesListViewModel.ViewState]()
+
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    sut.viewDidLoad()
+
+    // then
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
+    XCTAssertEqual(expected, received, "Should contains Loading State")
+  }
 }
 
-//      context("When Use Case returns empty Episodes") {
-//        it("Should ViewModel contains Empty State") {
-//          // given
-//          let seasonResult = SeasonResult(id: "1", episodes: [], seasonNumber: 1)
-//
-//          fetchTVShowDetailsUseCaseMock.result = self.detailResult
-//          fetchEpisodesUseCaseMock.result = seasonResult
-//
-//          let viewModel: EpisodesListViewModelProtocol =
-//            EpisodesListViewModel(tvShowId: 1,
-//                                  fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-//                                  fetchEpisodesUseCase: fetchEpisodesUseCaseMock)
-//          // when
-//          viewModel.viewDidLoad()
-//
-//          // when
-//          let viewState = try? viewModel.viewState.toBlocking(timeout: 1).first()
-//          guard let currentViewState = viewState else {
-//            fail("It should emit a View State")
-//            return
-//          }
-//          let expected = EpisodesListViewModel.ViewState.empty
-//
-//          expect(currentViewState).toEventually(equal(expected))
-//        }
-//      }
-//
 //      context("When Ask for Diferent Season and Use Case dont respond yet") {
 //        it("Should ViewModel contains Loading Season State") {
 //

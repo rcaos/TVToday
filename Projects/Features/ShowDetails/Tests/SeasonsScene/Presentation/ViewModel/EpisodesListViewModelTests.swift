@@ -133,34 +133,39 @@ class EpisodesListViewModelTests: XCTestCase {
     _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
     XCTAssertEqual(expected, received, "Should contains Populated State")
   }
+
+  func test_when_useCase_Is_Not_Responds_Yet_ViewModel_Should_contains_Error_State() {
+    // given
+    fetchTVShowDetailsUseCaseMock.error = .noResponse
+    fetchEpisodesUseCaseMock.error = .noResponse
+
+    let sut: EpisodesListViewModelProtocol =
+    EpisodesListViewModel(tvShowId: 1,
+                          fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock)
+
+    let expected = [
+      EpisodesListViewModel.ViewState.loading,
+      EpisodesListViewModel.ViewState.error("")
+    ]
+    var received = [EpisodesListViewModel.ViewState]()
+
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    sut.viewDidLoad()
+
+    // then
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
+    XCTAssertEqual(expected, received, "Should contains Loading State")
+  }
 }
 
-//      context("When Uses Cases Retrieves Error") {
-//        it("Should ViewModel contains Error State") {
-//
-//          // given
-//          fetchTVShowDetailsUseCaseMock.error = CustomError.genericError
-//          fetchEpisodesUseCaseMock.error = CustomError.genericError
-//
-//          let viewModel: EpisodesListViewModelProtocol =
-//            EpisodesListViewModel(tvShowId: 1,
-//                                  fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-//                                  fetchEpisodesUseCase: fetchEpisodesUseCaseMock)
-//          // when
-//          viewModel.viewDidLoad()
-//
-//          // when
-//          let viewState = try? viewModel.viewState.toBlocking(timeout: 1).first()
-//          guard let currentViewState = viewState else {
-//            fail("It should emit a View State")
-//            return
-//          }
-//          let expected = EpisodesListViewModel.ViewState.error(CustomError.genericError.localizedDescription)
-//
-//          expect(currentViewState).toEventually(equal(expected))
-//        }
-//      }
-//
 //      context("When Use Case returns empty Episodes") {
 //        it("Should ViewModel contains Empty State") {
 //          // given

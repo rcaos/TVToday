@@ -242,55 +242,56 @@ class EpisodesListViewModelTests: XCTestCase {
     //
     //          expect(statesObserver.events).toEventually(equal(expected))
   }
+
+  // MARK: - TODO, Fix scheduler
+  func test_When_Ask_For_Different_Season_And_UseCase_Return_Error_ViewModel_Should_Contains_Loading_Season_State() {
+    // given
+//    let statesObserver = scheduler.createObserver(EpisodesListViewModel.ViewState.self)
+
+    let seasonResult = SeasonResult(id: "1", episodes: self.episodes, seasonNumber: 1)
+
+    fetchTVShowDetailsUseCaseMock.result = self.detailResult
+    fetchEpisodesUseCaseMock.result = seasonResult
+
+    let sut: EpisodesListViewModelProtocol =
+    EpisodesListViewModel(tvShowId: 1,
+                          fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock)
+    //
+    //          viewModel.viewState
+    //            .distinctUntilChanged()
+    //            .subscribe { event in
+    //              statesObserver.on(event)
+    //            }
+    //            .disposed(by: disposeBag)
+    //
+    //          let seasonViewModel = SeasonListViewModelMock()
+    //
+    //          // when
+    //          viewModel.viewDidLoad()
+    //
+    //          // not response yet
+    //          fetchEpisodesUseCaseMock.error = CustomError.genericError
+    //
+    //          // select next Season
+    //          viewModel.seasonListViewModel(seasonViewModel, didSelectSeason: 2)
+    //
+    //          // when
+    //          let expected: [Recorded<Event<EpisodesListViewModel.ViewState>>] = [
+    //            .next(0, .loading),
+    //            .next(0, .populated),
+    //            .next(0, .loadingSeason),
+    //            .next(0, .errorSeason(CustomError.genericError.localizedDescription))
+    //          ]
+    //
+    //          expect(statesObserver.events).toEventually(equal(expected))
+    //        }
+    //      }
+  }
 }
 
 
 
-
-//      context("When Ask for Diferent Season And Use Case Returns Error") {
-//        it("Should ViewModel contains Error Season State") {
-//          // given
-//          let statesObserver = scheduler.createObserver(EpisodesListViewModel.ViewState.self)
-//
-//          let seasonResult = SeasonResult(id: "1", episodes: self.episodes, seasonNumber: 1)
-//
-//          fetchTVShowDetailsUseCaseMock.result = self.detailResult
-//          fetchEpisodesUseCaseMock.result = seasonResult
-//
-//          let viewModel: EpisodesListViewModelProtocol =
-//            EpisodesListViewModel(tvShowId: 1,
-//                                  fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-//                                  fetchEpisodesUseCase: fetchEpisodesUseCaseMock)
-//
-//          viewModel.viewState
-//            .distinctUntilChanged()
-//            .subscribe { event in
-//              statesObserver.on(event)
-//            }
-//            .disposed(by: disposeBag)
-//
-//          let seasonViewModel = SeasonListViewModelMock()
-//
-//          // when
-//          viewModel.viewDidLoad()
-//
-//          // not response yet
-//          fetchEpisodesUseCaseMock.error = CustomError.genericError
-//
-//          // select next Season
-//          viewModel.seasonListViewModel(seasonViewModel, didSelectSeason: 2)
-//
-//          // when
-//          let expected: [Recorded<Event<EpisodesListViewModel.ViewState>>] = [
-//            .next(0, .loading),
-//            .next(0, .populated),
-//            .next(0, .loadingSeason),
-//            .next(0, .errorSeason(CustomError.genericError.localizedDescription))
-//          ]
-//
-//          expect(statesObserver.events).toEventually(equal(expected))
-//        }
-//      }
 //
 //      context("When Ask for Diferent Season And UseCase returns Episodes") {
 //        it("Should ViewModel contains Populated tate") {

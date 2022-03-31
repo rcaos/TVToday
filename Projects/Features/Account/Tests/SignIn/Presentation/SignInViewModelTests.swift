@@ -41,39 +41,35 @@ class SignInViewModelTests: XCTestCase {
     // then
     XCTAssertEqual(expected, received, "Should only receives two Value")
   }
+
+  func test_UseCase_Doesnot_Responds_Yet_ViewModel_Should_Contains_Loading_State() {
+    // given
+    let sut: SignInViewModelProtocol = SignInViewModel(createTokenUseCase: createTokenUseCase)
+
+    // when
+    let expected = [
+      SignInViewState.initial,
+      SignInViewState.loading
+    ]
+    var received = [SignInViewState]()
+
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    sut.signInDidTapped()
+
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
+
+    // then
+    XCTAssertEqual(expected, received, "Should only receives two Value")
+  }
 }
 
-//      context("When UseCase RequestToken dont Respond yet") {
-//        it("Should ViewModel contanins Loading State") {
-//          // given
-//          let viewStateObserver = scheduler.createObserver(SignInViewState.self)
-//
-//          let viewModel: SignInViewModelProtocol = SignInViewModel(createTokenUseCase: createTokenUseCase)
-//
-//          viewModel.viewState
-//            .subscribe { event in
-//              viewStateObserver.on(event)
-//            }
-//            .disposed(by: disposeBag)
-//
-//          // when
-//          // Tap Button
-//          scheduler.createColdObservable([.next(10, ())])
-//            .subscribe { event in
-//              viewModel.tapButton.on(event)
-//            }
-//            .disposed(by: disposeBag)
-//          scheduler.start()
-//
-//          // then
-//          let expected: [Recorded<Event<SignInViewState>>] = [
-//            .next(0, .initial),
-//            .next(10, .loading)
-//          ]
-//          expect(viewStateObserver.events).toEventually(equal(expected))
-//        }
-//      }
-//
 //      context("When UseCase RequestToken Repond with URL") {
 //        it("Should ViewModel send URL to Delegate") {
 //          // given

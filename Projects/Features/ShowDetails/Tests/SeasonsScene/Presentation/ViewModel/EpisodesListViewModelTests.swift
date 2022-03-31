@@ -57,35 +57,41 @@ class EpisodesListViewModelTests: XCTestCase {
     _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
     XCTAssertEqual(expected, received, "Should contains Loading State")
   }
+
+  func test_when_ShowDetails_useCase_And_Seasons_useCase_return_OK_ViewModel_Should_Contains_Populated_State() {
+    // given
+    let seasonResult = SeasonResult(id: "1", episodes: self.episodes, seasonNumber: 1)
+
+    fetchTVShowDetailsUseCaseMock.result = self.detailResult
+    fetchEpisodesUseCaseMock.result = seasonResult
+
+    let sut: EpisodesListViewModelProtocol =
+    EpisodesListViewModel(tvShowId: 1,
+                          fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock)
+
+    let expected = [
+      EpisodesListViewModel.ViewState.loading,
+      EpisodesListViewModel.ViewState.populated
+    ]
+    var received = [EpisodesListViewModel.ViewState]()
+
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    sut.viewDidLoad()
+
+    // then
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
+    XCTAssertEqual(expected, received, "Should contains Populated State")
+  }
 }
 
-//      context("When Uses Cases Retrieve Show Details and Seasons") {
-//        it("Should ViewModel contains Populated State") {
-//          // given
-//          let seasonResult = SeasonResult(id: "1", episodes: self.episodes, seasonNumber: 1)
-//
-//          fetchTVShowDetailsUseCaseMock.result = self.detailResult
-//          fetchEpisodesUseCaseMock.result = seasonResult
-//
-//          let viewModel: EpisodesListViewModelProtocol =
-//            EpisodesListViewModel(tvShowId: 1,
-//                                  fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-//                                  fetchEpisodesUseCase: fetchEpisodesUseCaseMock)
-//          // when
-//          viewModel.viewDidLoad()
-//
-//          // when
-//          let viewState = try? viewModel.viewState.toBlocking(timeout: 1).first()
-//          guard let currentViewState = viewState else {
-//            fail("It should emit a View State")
-//            return
-//          }
-//          let expected = EpisodesListViewModel.ViewState.populated
-//
-//          expect(currentViewState).toEventually(equal(expected))
-//        }
-//      }
-//
 //      context("When Uses Cases Retrieve Show Details and Seasons") {
 //        it("Should ViewModel contains List of Episodes") {
 //

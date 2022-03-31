@@ -47,23 +47,21 @@ class EpisodesListViewModelMock: EpisodesListViewModelProtocol {
        seasonSelected: Int = 1,
        episodes: [Episode] = [],
        headerViewModel: SeasonHeaderViewModel? = nil) {
+
+    // MARK: - TODO
     viewState = CurrentValueSubject(state)
     data = CurrentValueSubject([])
 
-    self.seasonListViewModel = buildSeasonViewModel(for: numberOfSeasons)
+    seasonListViewModel = SeasonListViewModel(seasonList: (1...numberOfSeasons).map { $0 })
     seasonListViewModel?.selectSeason(seasonSelected)
 
-    let dataSource = createSectionModel(headerViewModel, with: numberOfSeasons, and: episodes)
+    let dataSource = createSectionModel(headerViewModel, and: episodes)
     data.send(dataSource)
-
-    viewState.send(.populated)
-    viewState.send(state)
   }
 }
 
 // MARK: - Helpers
 private func createSectionModel(_ headerViewModel: SeasonHeaderViewModel?,
-                                with numberOfSeasons: Int,
                                 and episodes: [Episode]) -> [SeasonsSectionModel] {
   var dataSourceSections = [SeasonsSectionModel]()
 
@@ -79,9 +77,4 @@ private func createSectionModel(_ headerViewModel: SeasonHeaderViewModel?,
 
   dataSourceSections.append(.episodes(items: episodesSectioned))
   return dataSourceSections
-}
-
-private func buildSeasonViewModel(for numberOfSeasons: Int) -> SeasonListViewModel {
-  let seasons: [Int] = (1...numberOfSeasons).map { $0 }
-  return SeasonListViewModel(seasonList: seasons)
 }

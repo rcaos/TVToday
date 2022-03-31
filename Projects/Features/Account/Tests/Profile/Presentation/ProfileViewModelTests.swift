@@ -5,63 +5,54 @@
 //  Created by Jeans Ruiz on 8/8/20.
 //
 
-import Quick
-import Nimble
-import RxSwift
-import RxBlocking
-import RxTest
-
+import Combine
+import XCTest
 @testable import Account
 @testable import Shared
 
-class ProfileViewModelTests: QuickSpec {
+class ProfileViewModelTests: XCTestCase {
 
-  override func spec() {
-    describe("ProfileViewModel") {
-      var scheduler: TestScheduler!
-      var disposeBag: DisposeBag!
+  private var disposeBag: Set<AnyCancellable>!
 
-      beforeEach {
-        scheduler = TestScheduler(initialClock: 0)
-        disposeBag = DisposeBag()
-      }
-
-      context("When call createSectionModel with AccountResult") {
-        it("Should ViewModel contanins Sections in DataSource") {
-          // given
-          let dataSourceObserver = scheduler.createObserver([ProfileSectionModel].self)
-
-          let accountResult = AccountResult.stub(hash: "", id: 1, userName: "UserName")
-          let viewModel: ProfileViewModelProtocol = ProfileViewModel(account: accountResult)
-
-          // when
-          viewModel.dataSource
-            .subscribe { event in
-              dataSourceObserver.on(event)
-            }
-            .disposed(by: disposeBag)
-
-          // then
-          let sectionExpected = ProfileViewModelTests.createSectionModel(with: accountResult)
-          let expected: [Recorded<Event<[ProfileSectionModel]>>] = [.next(0, sectionExpected)]
-
-          expect(dataSourceObserver.events).toEventually(equal(expected))
-        }
-      }
-    }
+  override func setUp() {
+    super.setUp()
+    disposeBag = []
   }
 
-  static func createSectionModel(with account: AccountResult) -> [ProfileSectionModel] {
-    let items: [ProfilesSectionItem] = [
-      .userLists(items: .favorites),
-      .userLists(items: .watchList)
-    ]
+  func test_When_User_Is_Logged_Should_Contains_Sections_On_DataSource() {
+    // given
+    let accountResult = AccountResult.stub(hash: "", id: 1, userName: "UserName")
+    let sut: ProfileViewModelProtocol = ProfileViewModel(account: accountResult)
 
-    let sectionProfile: [ProfileSectionModel] = [
-      .userInfo(items: [.userInfo(number: account)]),
-      .userLists(items: items),
-      .logout(items: [.logout(items: "Log Out")])
-    ]
-    return sectionProfile
+    // when
+    let expected = [createSectionModel(with: accountResult)]
+    var received = [[ProfileSectionModel]]()
+
+    sut.dataSource
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
+
+    // then
+    XCTAssertEqual(expected, received, "Should only receives one Value")
   }
+}
+
+// MARK: - Helpers
+private func createSectionModel(with account: AccountResult) -> [ProfileSectionModel] {
+  let items: [ProfilesSectionItem] = [
+    .userLists(items: .favorites),
+    .userLists(items: .watchList)
+  ]
+
+  let sectionProfile: [ProfileSectionModel] = [
+    .userInfo(items: [.userInfo(number: account)]),
+    .userLists(items: items),
+    .logout(items: [.logout(items: "Log Out")])
+  ]
+  return sectionProfile
 }

@@ -121,37 +121,36 @@ class AccountViewModelTests: XCTestCase {
     XCTAssertEqual(expected, received, "Should receives two values")
   }
 
-//      context("When UseCase Create Session returns Error") {
-//        it("Should ViewModel should contains Login View State") {
-//          // given
-//          let authPermission = AuthPermissionViewModelMock()
-//
-//          createSessionUseCaseMock.error = CustomError.genericError
-//          fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
-//
-//          let viewModel: AccountViewModelProtocol =
-//            AccountViewModel(createNewSession: createSessionUseCaseMock,
-//                             fetchAccountDetails: fetchAccountDetailsUseCaseMock,
-//                             fetchLoggedUser: fetchLoggedUserMock,
-//                             deleteLoguedUser: deleteLoguedUserUseCaseMock)
-//
-//          authPermission.delegate = viewModel
-//
-//          // when
-//          authPermission.signIn()
-//
-//          // then
-//          let viewState = try? viewModel.viewState.toBlocking(timeout: 1).first()
-//          guard let currentViewState = viewState else {
-//            fail("It should emit a View State")
-//            return
-//          }
-//          let expected = AccountViewState.login
-//
-//          expect(currentViewState).toEventually(equal(expected))
-//        }
-//      }
-//
-//    }
-//  }
+  func test_when_CreateSession_Returns_Error_ViewModel_Should_contains_Login_State() {
+    // given
+    let authPermission = AuthPermissionViewModelMock()
+    createSessionUseCaseMock.error = .noResponse
+    fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
+
+    sut = AccountViewModel(createNewSession: createSessionUseCaseMock,
+                     fetchAccountDetails: fetchAccountDetailsUseCaseMock,
+                     fetchLoggedUser: fetchLoggedUserMock,
+                     deleteLoguedUser: deleteLoguedUserUseCaseMock)
+    authPermission.delegate = sut
+
+    let expected = [
+      AccountViewState.login
+    ]
+    var received = [AccountViewState]()
+
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    authPermission.signIn()
+
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
+
+    // then
+    XCTAssertEqual(expected, received, "Should receives two values")
+  }
 }

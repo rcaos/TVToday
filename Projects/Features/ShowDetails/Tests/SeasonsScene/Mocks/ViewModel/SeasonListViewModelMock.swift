@@ -5,23 +5,21 @@
 //  Created by Jeans Ruiz on 8/8/20.
 //
 
-import RxSwift
+import Combine
 @testable import ShowDetails
 
 class SeasonListViewModelMock: SeasonListViewModelProtocol {
-  var inputSelectedSeason: BehaviorSubject<Int> = BehaviorSubject(value: 0)
+  var inputSelectedSeason = CurrentValueSubject<Int, Never>(0)
 
   func selectSeason(_ season: Int) { }
 
-  var seasons: Observable<[Int]> = Observable.just([])
+  var seasons = CurrentValueSubject<[Int], Never>([])
 
-  var seasonSelected: Observable<Int> = Observable.just(0)
+  var seasonSelected = CurrentValueSubject<Int, Never>(0)
 
   func getModel(for season: Int) -> SeasonEpisodeViewModel {
     return SeasonEpisodeViewModel(seasonNumber: season)
   }
-
-  var disposeBag = DisposeBag()
 
   weak var delegate: SeasonListViewModelDelegate?
 }

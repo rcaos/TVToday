@@ -260,6 +260,40 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
     // then
     XCTAssertEqual(expected, received, "Should contains Favorite State")
   }
+
+  func test_For_Logged_When_Usecase_get_Favorite_State_ViewModel_Should_Contains_isFavorite_False_Value() {
+    // given
+    fetchTVShowDetailsUseCaseMock.result = self.detailResult
+    fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: false, isWatchList: true)
+
+    let sut: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
+      1,
+      fetchLoggedUser: fetchLoggedUserMock,
+      fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+      fetchTvShowState: fetchTVAccountStateMock,
+      markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
+      saveToWatchListUseCase: saveToWatchListUseCaseMock,
+      coordinator: nil
+    )
+
+    let expected = [false]
+    var received = [Bool]()
+
+    sut.isFavorite
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    sut.viewDidLoad()
+
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
+
+    // then
+    XCTAssertEqual(expected, received, "Should contains Favorite State to false")
+  }
 }
 
 //

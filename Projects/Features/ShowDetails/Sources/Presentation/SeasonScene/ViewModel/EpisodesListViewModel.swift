@@ -219,5 +219,24 @@ extension EpisodesListViewModel {
     case loadingSeason
     case empty
     case errorSeason(String)
+
+    static public func == (lhs: ViewState, rhs: ViewState) -> Bool {
+      switch (lhs, rhs) {
+      case (.loading, .loading):
+        return true
+      case (.populated, .populated):
+        return true
+      case (.error, .error):
+        return true
+      case (.loadingSeason, .loadingSeason):
+        return true
+      case (.empty, .empty):
+        return true
+      case (.errorSeason, .errorSeason):
+        return true
+      default:
+        return false
+      }
+    }
   }
 }

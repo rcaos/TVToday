@@ -45,6 +45,8 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   private let didLoadView = CurrentValueSubject<Bool, Never>(false)
 
   private var tapFavoriteButton: PassthroughSubject<Bool, Never>
+  private var markAsFavoriteOnFlight = CurrentValueSubject<Bool, Never>(false)
+
   private var tapWatchedButton: PassthroughSubject<Bool, Never>
 
   private let closures: TVShowDetailViewModelClosures?
@@ -53,7 +55,6 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   let viewState = CurrentValueSubject<ViewState, Never>(.loading)
 
   let isFavorite = CurrentValueSubject<Bool, Never>(false)
-  private var isLoadingFavoriteSubject = CurrentValueSubject<Bool, Never>(false)
 
   let isWatchList = CurrentValueSubject<Bool, Never>(false)
   private var isLoadingWatchList = CurrentValueSubject<Bool, Never>(false)
@@ -138,18 +139,19 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
   // MARK: - Handle Favorite Tap Button ❤️
   private func subscribeFavoriteTap() {
-    Publishers.CombineLatest3(
-      tapFavoriteButton
-        .debounce(for: .milliseconds(300), scheduler: RunLoop.main),
-      self.isLoadingFavoriteSubject,
-      self.isFavorite
+    Publishers.CombineLatest(
+      tapFavoriteButton,
+      markAsFavoriteOnFlight
     )
-      .filter { $0.0 == true && $0.1 == false }
-      .flatMap { [weak self] (_, _, isFavorite) -> AnyPublisher<Bool, DataTransferError> in
+      .filter { didSendTap, isLoading in
+        return didSendTap && isLoading == false
+      }
+      .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
+      .flatMap { [weak self] _ -> AnyPublisher<Bool, DataTransferError> in
         guard let strongSelf = self else { return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher() }
+        strongSelf.markAsFavoriteOnFlight.send(true)
         strongSelf.tapFavoriteButton.send(false)
-        strongSelf.isLoadingFavoriteSubject.send(true)
-        return strongSelf.markAsFavorite(state: isFavorite)
+        return strongSelf.markAsFavorite(state: strongSelf.isFavorite.value)
       }
       .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in },
@@ -157,7 +159,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
         guard let strongSelf = self else { return }
         strongSelf.isFavorite.send(newState)
         strongSelf.closures?.updateFavoritesShows?(TVShowUpdated(showId: strongSelf.showId, isActive: newState))
-        strongSelf.isLoadingFavoriteSubject.send(false)
+        strongSelf.markAsFavoriteOnFlight.send(false)
       })
       .store(in: &disposeBag)
   }

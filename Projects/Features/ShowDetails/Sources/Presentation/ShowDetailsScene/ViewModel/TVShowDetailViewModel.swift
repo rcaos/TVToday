@@ -48,16 +48,14 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   private var markAsFavoriteOnFlight = CurrentValueSubject<Bool, Never>(false)
 
   private var tapWatchedButton: PassthroughSubject<Bool, Never>
+  private var addToWatchListOnFlight = CurrentValueSubject<Bool, Never>(false)
 
   private let closures: TVShowDetailViewModelClosures?
 
   // MARK: - Public Api
   let viewState = CurrentValueSubject<ViewState, Never>(.loading)
-
   let isFavorite = CurrentValueSubject<Bool, Never>(false)
-
   let isWatchList = CurrentValueSubject<Bool, Never>(false)
-  private var isLoadingWatchList = CurrentValueSubject<Bool, Never>(false)
 
   private var disposeBag = Set<AnyCancellable>()
 
@@ -167,25 +165,29 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   // MARK: - Handle Watch List Button Tap 🎦
   private func subscribeWatchListTap() {
     Publishers.CombineLatest3(
-      tapWatchedButton
-        .debounce(for: .milliseconds(300), scheduler: RunLoop.main),
-      self.isLoadingWatchList,
-      self.isWatchList
+      tapWatchedButton,
+      addToWatchListOnFlight,
+
+      // different approach, same result, compared with subscribeFavoriteTap()
+      isWatchList
     )
-      .filter { $0.0 == true && $0.1 == false }
-      .flatMap { [weak self] (_, _, isOnWatchList) -> AnyPublisher<Bool, DataTransferError> in
+      .filter { didUserTap, isOnFlight, _ in
+        return didUserTap && isOnFlight == false
+      }
+      .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
+      .flatMap { [weak self] (_, _, isOnWatchListState) -> AnyPublisher<Bool, DataTransferError> in
         guard let strongSelf = self else { return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher() }
         strongSelf.tapWatchedButton.send(false)
-        strongSelf.isLoadingWatchList.send(true)
-        return strongSelf.saveToWatchList(state: isOnWatchList)
+        strongSelf.addToWatchListOnFlight.send(true)
+        return strongSelf.saveToWatchList(state: isOnWatchListState)
       }
-      .receive(on: RunLoop.main)
+      .receive(on: DispatchQueue.main)
       .sink(receiveCompletion: { _ in },
             receiveValue: { [weak self] newState in
         guard let strongSelf = self else { return }
         strongSelf.isWatchList.send(newState)
         strongSelf.closures?.updateWatchListShows?(TVShowUpdated(showId: strongSelf.showId, isActive: newState))
-        strongSelf.isLoadingWatchList.send(false)
+        strongSelf.addToWatchListOnFlight.send(false)
       })
       .store(in: &disposeBag)
   }

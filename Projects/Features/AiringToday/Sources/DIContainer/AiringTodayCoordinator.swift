@@ -12,7 +12,7 @@ import ShowDetailsInterface
 
 class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinatorProtocol {
 
-  public var navigationController: UINavigationController
+  public let navigationController: UINavigationController
 
   private let dependencies: AiringTodayCoordinatorDependencies
 

@@ -5,25 +5,24 @@
 //  Created by Jeans Ruiz on 8/4/20.
 //
 
-import RxSwift
-@testable import ShowDetails
-@testable import Shared
+import Combine
+import NetworkingInterface
+import ShowDetails
+import Shared
 
 class MarkAsFavoriteUseCaseMock: MarkAsFavoriteUseCase {
-  typealias Response = Result<Bool, Error>
-
-  var error: Error?
   var result: Bool?
+  var error: DataTransferError?
 
-  func execute(requestValue: MarkAsFavoriteUseCaseRequestValue) -> Observable<Response> {
+  func execute(requestValue: MarkAsFavoriteUseCaseRequestValue) -> AnyPublisher<Bool, DataTransferError> {
     if let error = error {
-      return Observable.just(.failure(error))
+      return Fail(error: error).eraseToAnyPublisher()
     }
 
     if let result = result {
-      return Observable.just(.success(result))
+      return Just(result).setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
     }
 
-    return Observable.empty()
+    return Empty().setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
   }
 }

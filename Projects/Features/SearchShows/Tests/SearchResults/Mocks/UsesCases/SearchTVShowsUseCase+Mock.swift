@@ -5,24 +5,24 @@
 //  Created by Jeans Ruiz on 8/7/20.
 //
 
-import RxSwift
-@testable import SearchShows
-@testable import Shared
+import Combine
+import SearchShows
+import Shared
+import NetworkingInterface
 
 final class SearchTVShowsUseCaseMock: SearchTVShowsUseCase {
-  var error: Error?
-
+  var error: DataTransferError?
   var result: TVShowResult?
 
-  func execute(requestValue: SearchTVShowsUseCaseRequestValue) -> Observable<TVShowResult> {
+  func execute(requestValue: SearchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowResult, DataTransferError> {
     if let error = error {
-      return Observable.error(error)
+      return Fail(error: error).eraseToAnyPublisher()
     }
 
     if let result = result {
-      return Observable.just(result)
+      return Just(result).setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
     }
 
-    return Observable.empty()
+    return Empty().setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
   }
 }

@@ -7,14 +7,13 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 import Shared
 
 class AiringTodayViewController: NiblessViewController, Loadable, Retryable, Emptiable {
 
   private var viewModel: AiringTodayViewModelProtocol
-
-  private let disposeBag = DisposeBag()
+  private var disposeBag = Set<AnyCancellable>()
 
   init(viewModel: AiringTodayViewModelProtocol) {
     self.viewModel = viewModel
@@ -33,16 +32,17 @@ class AiringTodayViewController: NiblessViewController, Loadable, Retryable, Emp
     viewModel.viewDidLoad()
   }
 
-  fileprivate func subscribeToViewState() {
+  private func subscribeToViewState() {
     viewModel
-      .viewState
-      .subscribe(onNext: { [weak self] viewstate in
+      .viewStateObservableSubject
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] viewstate in
         self?.handleViewState(with: viewstate)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
-  fileprivate func handleViewState(with state: SimpleViewState<AiringTodayCollectionViewModel>) {
+  private func handleViewState(with state: SimpleViewState<AiringTodayCollectionViewModel>) {
     stopRefresh()
 
     switch state {
@@ -67,7 +67,7 @@ class AiringTodayViewController: NiblessViewController, Loadable, Retryable, Emp
     }
   }
 
-  fileprivate func stopRefresh() {
+  private func stopRefresh() {
     (view as! AiringTodayRootView).stopRefresh()
   }
 }

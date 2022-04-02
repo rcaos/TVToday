@@ -8,6 +8,8 @@
 
 import Foundation
 
+// MARK: - TODO, integrate APIError with NetworkError
+
 enum APIError: Error {
   case networkProblem
   case requestFailed

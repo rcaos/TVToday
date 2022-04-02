@@ -5,24 +5,23 @@
 //  Created by Jeans Ruiz on 8/7/20.
 //
 
-import RxSwift
-@testable import Persistence
+import Combine
+import Persistence
+import Shared
 
-public final class FetchVisitedShowsUseCaseMock: FetchVisitedShowsUseCase {
-
-  var error: Error?
-
+final class FetchVisitedShowsUseCaseMock: FetchVisitedShowsUseCase {
+  var error: CustomError?
   var result: [ShowVisited]?
 
-  public func execute(requestValue: FetchVisitedShowsUseCaseRequestValue) -> Observable<[ShowVisited]> {
+  func execute(requestValue: FetchVisitedShowsUseCaseRequestValue) -> AnyPublisher<[ShowVisited], CustomError> {
     if let error = error {
-      return Observable.error(error)
+      return Fail(error: error).eraseToAnyPublisher()
     }
 
     if let result = result {
-      return Observable.just(result)
+      return Just(result).setFailureType(to: CustomError.self).eraseToAnyPublisher()
     }
 
-    return Observable.empty()
+    return Empty().setFailureType(to: CustomError.self).eraseToAnyPublisher()
   }
 }

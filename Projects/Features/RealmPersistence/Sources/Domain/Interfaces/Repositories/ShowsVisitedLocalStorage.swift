@@ -6,13 +6,14 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import Persistence
+import Shared
 
 public protocol ShowsVisitedLocalStorage {
-  func saveShow(id: Int, pathImage: String, userId: Int) -> Observable<Void>
+  func saveShow(id: Int, pathImage: String, userId: Int) -> AnyPublisher<Void, CustomError>
 
-  func fetchVisitedShows(userId: Int) -> Observable<[ShowVisited]>
+  func fetchVisitedShows(userId: Int) -> AnyPublisher<[ShowVisited], CustomError>
 
-  func recentVisitedShowsDidChange() -> Observable<Bool>
+  func recentVisitedShowsDidChange() -> AnyPublisher<Bool, Never>
 }

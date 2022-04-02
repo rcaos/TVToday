@@ -6,8 +6,9 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
+import NetworkingInterface
 
 protocol GenresRepository {
-  func genresList() -> Observable<GenreListResult>
+  func genresList() -> AnyPublisher<GenreListResult, DataTransferError>
 }

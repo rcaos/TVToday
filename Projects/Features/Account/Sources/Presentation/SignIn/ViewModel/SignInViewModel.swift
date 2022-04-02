@@ -7,56 +7,55 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 import Shared
+import NetworkingInterface
 
 class SignInViewModel: SignInViewModelProtocol {
-
   private let createTokenUseCase: CreateTokenUseCase
+  private let tapButton = PassthroughSubject<Void, Never>()
 
-  private let viewStateSubject: BehaviorSubject<SignInViewState> = .init(value: .initial)
-
-  private let disposeBag = DisposeBag()
-
+  let viewState: CurrentValueSubject<SignInViewState, Never> = .init(.initial)
   weak var delegate: SignInViewModelDelegate?
-
-  let tapButton = PublishSubject<Void>()
-
-  let viewState: Observable<SignInViewState>
+  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializers
   init(createTokenUseCase: CreateTokenUseCase) {
     self.createTokenUseCase = createTokenUseCase
-    viewState = viewStateSubject.asObservable()
     subscribe()
   }
 
   // MARK: - Public
+  func signInDidTapped() {
+    tapButton.send(())
+  }
+
   public func changeState(with state: SignInViewState) {
-    viewStateSubject.onNext(state)
+    viewState.send(state)
   }
 
   // MARK: - Private
-  fileprivate func subscribe() {
+  private func subscribe() {
     // MARK: - TODO, test handle several taps
     tapButton
-      .flatMap { [weak self] () -> Observable<URL> in
-        guard let strongSelf = self else { return Observable.error(CustomError.genericError)}
-        self?.viewStateSubject.onNext(.loading)
-        return strongSelf.requestCreateToken()
-    }
-    .subscribe(onNext: { [weak self] url in
-      guard let strongSelf = self else { return }
-      strongSelf.delegate?.signInViewModel(strongSelf, didTapSignInButton: url)
-
-      }, onError: { [weak self] error in
-        print("error to request token: \(error)")
-        self?.viewStateSubject.onNext(.loading)
-    })
-      .disposed(by: disposeBag)
-  }
-
-  fileprivate func requestCreateToken() -> Observable<URL> {
-    return createTokenUseCase.execute()
+      .flatMap { [viewState, createTokenUseCase] () -> AnyPublisher<URL, DataTransferError> in
+        viewState.send(.loading)
+        return createTokenUseCase.execute()
+      }
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { [weak self] completion in
+        switch completion {
+        case let .failure(error):
+          print("error to request token: \(error)")
+          self?.viewState.send(.loading)
+        case .finished:
+          break
+        }
+      },
+            receiveValue: { [weak self] url in
+        guard let strongSelf = self else { return }
+        strongSelf.delegate?.signInViewModel(strongSelf, didTapSignInButton: url)
+      })
+      .store(in: &disposeBag)
   }
 }

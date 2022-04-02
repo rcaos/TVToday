@@ -6,11 +6,10 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import Shared
 
 protocol PopularViewModelProtocol {
-
   // MARK: - Input
   func viewDidLoad()
   func didLoadNextPage()
@@ -18,25 +17,16 @@ protocol PopularViewModelProtocol {
   func refreshView()
 
   // MARK: - Output
-  var viewState: Observable<SimpleViewState<TVShowCellViewModel>> { get }
-  func getCurrentViewState() -> SimpleViewState<TVShowCellViewModel>
+  var viewStateObservableSubject: CurrentValueSubject<SimpleViewState<TVShowCellViewModel>, Never> { get }
 }
 
 final class PopularViewModel: PopularViewModelProtocol, ShowsViewModel {
-
-  var fetchTVShowsUseCase: FetchTVShowsUseCase
-
+  let fetchTVShowsUseCase: FetchTVShowsUseCase
   var shows: [TVShow]
-
   var showsCells: [TVShowCellViewModel] = []
-
-  var viewStateObservableSubject: BehaviorSubject<SimpleViewState<TVShowCellViewModel>> = .init(value: .loading)
-
-  let viewState: Observable<SimpleViewState<TVShowCellViewModel>>
-
+  let viewStateObservableSubject: CurrentValueSubject<SimpleViewState<TVShowCellViewModel>, Never> = .init(.loading)
   weak var coordinator: PopularCoordinatorProtocol?
-
-  var disposeBag = DisposeBag()
+  var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializers
   init(fetchTVShowsUseCase: FetchTVShowsUseCase,
@@ -44,21 +34,18 @@ final class PopularViewModel: PopularViewModelProtocol, ShowsViewModel {
     self.fetchTVShowsUseCase = fetchTVShowsUseCase
     self.coordinator = coordinator
     shows = []
-
-    viewState = viewStateObservableSubject.asObservable()
   }
 
-  func mapToCell(entites: [TVShow]) -> [TVShowCellViewModel] {
-    return entites.map { TVShowCellViewModel(show: $0) }
+  func mapToCell(entities: [TVShow]) -> [TVShowCellViewModel] {
+    return entities.map { TVShowCellViewModel(show: $0) }
   }
 
-  // MARK: Input
   func viewDidLoad() {
     getShows(for: 1)
   }
 
   func didLoadNextPage() {
-    if case .paging(_, let nextPage) = getCurrentViewState() {
+    if case .paging(_, let nextPage) = viewStateObservableSubject.value {
       getShows(for: nextPage)
     }
   }
@@ -67,18 +54,7 @@ final class PopularViewModel: PopularViewModelProtocol, ShowsViewModel {
     getShows(for: 1, showLoader: false)
   }
 
-  // MARK: - Output
-  func getCurrentViewState() -> SimpleViewState<TVShowCellViewModel> {
-    guard let currentState = try? viewStateObservableSubject.value() else { return .loading }
-    return currentState
-  }
-
   func showIsPicked(with id: Int) {
-    navigateTo(step: .showIsPicked(id) )
-  }
-
-  // MARK: - Navigation
-  private func navigateTo(step: PopularStep) {
-    coordinator?.navigate(to: step)
+    coordinator?.navigate(to: .showIsPicked(id))
   }
 }

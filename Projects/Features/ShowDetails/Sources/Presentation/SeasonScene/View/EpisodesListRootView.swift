@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 import Shared
 
 class EpisodesListRootView: NiblessView {
@@ -29,7 +29,7 @@ class EpisodesListRootView: NiblessView {
   typealias Snapshot = NSDiffableDataSourceSnapshot<SeasonsSectionCollection, SeasonsSectionItem>
   private var dataSource: DataSource?
 
-  private let disposeBag = DisposeBag()
+  private var disposeBag = Set<AnyCancellable>()
 
   init(frame: CGRect = .zero, viewModel: EpisodesListViewModelProtocol) {
     self.viewModel = viewModel
@@ -56,8 +56,8 @@ class EpisodesListRootView: NiblessView {
       switch section {
       case .headerShow(viewModel: let viewModel):
         return strongSelf.makeCellForHeaderShow(at: indexPath, viewModel: viewModel)
-      case .seasons(number: let numberOfSeasons):
-        return strongSelf.makeCellForSeasonNumber(at: indexPath, element: numberOfSeasons)
+      case .seasons:
+        return strongSelf.makeCellForSeasonNumber(at: indexPath)
       case .episodes(items: let episode):
         return strongSelf.makeCellForEpisode(at: indexPath, element: episode)
       }
@@ -75,10 +75,11 @@ class EpisodesListRootView: NiblessView {
         }
         return snapShot
       }
-      .subscribe(onNext: { [weak self] snapshot in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] snapshot in
         self?.dataSource?.apply(snapshot)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
   override func layoutSubviews() {
@@ -97,10 +98,10 @@ extension EpisodesListRootView {
     return cell
   }
 
-  private func makeCellForSeasonNumber(at indexPath: IndexPath, element: Int) -> UITableViewCell {
+  private func makeCellForSeasonNumber(at indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: SeasonListTableViewCell.self, for: indexPath)
     if cell.viewModel == nil {
-      cell.setViewModel(viewModel: viewModel.buildModelForSeasons(with: element))
+      cell.setViewModel(viewModel: viewModel.getViewModelForAllSeasons() )
     }
     return cell
   }

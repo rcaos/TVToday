@@ -6,9 +6,10 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
+import NetworkingInterface
 
 protocol AuthRepository {
-  func requestToken() -> Observable<CreateTokenResult>
-  func createSession(requestToken: String) -> Observable<CreateSessionResult>
+  func requestToken() -> AnyPublisher<CreateTokenResult, DataTransferError>
+  func createSession(requestToken: String) -> AnyPublisher<CreateSessionResult, DataTransferError>
 }

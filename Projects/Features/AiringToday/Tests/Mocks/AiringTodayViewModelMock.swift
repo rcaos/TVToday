@@ -6,7 +6,7 @@
 //
 
 import Shared
-import RxSwift
+import Combine
 @testable import AiringToday
 
 class AiringTodayViewModelMock: AiringTodayViewModelProtocol {
@@ -20,18 +20,12 @@ class AiringTodayViewModelMock: AiringTodayViewModelProtocol {
   func refreshView() { }
 
   func getCurrentViewState() -> SimpleViewState<AiringTodayCollectionViewModel> {
-    if let currentViewState = try? viewStateObservableSubject.value() {
-      return currentViewState
-    }
-    return .empty
+    return viewStateObservableSubject.value
   }
 
-  var viewState: Observable<SimpleViewState<AiringTodayCollectionViewModel>>
-
-  var viewStateObservableSubject: BehaviorSubject<SimpleViewState<AiringTodayCollectionViewModel>>
+  let viewStateObservableSubject: CurrentValueSubject<SimpleViewState<AiringTodayCollectionViewModel>, Never>
 
   init(state: SimpleViewState<AiringTodayCollectionViewModel>) {
-    viewStateObservableSubject = BehaviorSubject(value: state)
-    viewState = viewStateObservableSubject.asObservable()
+    viewStateObservableSubject = CurrentValueSubject(state)
   }
 }

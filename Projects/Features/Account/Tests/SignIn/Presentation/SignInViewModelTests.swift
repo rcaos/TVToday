@@ -5,105 +5,87 @@
 //  Created by Jeans Ruiz on 8/8/20.
 //
 
-import Foundation
-import Quick
-import Nimble
-import RxSwift
-import RxBlocking
-import RxTest
-
+import Combine
 @testable import Account
 @testable import Shared
+import XCTest
 
-class SignInViewModelTests: QuickSpec {
+class SignInViewModelTests: XCTestCase {
 
-  override func spec() {
-    describe("SignInViewModel") {
+  var createTokenUseCase: CreateTokenUseCaseMock!
+  private var disposeBag: Set<AnyCancellable>!
 
-      var createTokenUseCase: CreateTokenUseCaseMock!
+  override func setUp() {
+    super.setUp()
+    createTokenUseCase = CreateTokenUseCaseMock()
+    disposeBag = []
+  }
 
-      var scheduler: TestScheduler!
-      var disposeBag: DisposeBag!
+  func test_UseCase_Doesnot_Called_ViewModel_Should_Contains_Initial_State() {
+    // given
+    let sut: SignInViewModelProtocol = SignInViewModel(createTokenUseCase: createTokenUseCase)
 
-      beforeEach {
-        createTokenUseCase = CreateTokenUseCaseMock()
-        scheduler = TestScheduler(initialClock: 0)
-        disposeBag = DisposeBag()
-      }
+    // when
+    let expected = [SignInViewState.initial]
+    var received = [SignInViewState]()
 
-      context("When dont called to UseCase yet") {
-        it("Should ViewModel contanins Initial State") {
-          // given
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
 
-          let viewModel: SignInViewModelProtocol = SignInViewModel(createTokenUseCase: createTokenUseCase)
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
-          // then
-          let viewState = try? viewModel.viewState.toBlocking(timeout: 1).first()
-          guard let currentViewState = viewState else {
-            fail("It should emit a View State")
-            return
-          }
-          let expected = SignInViewState.initial
+    // then
+    XCTAssertEqual(expected, received, "Should only receives two Value")
+  }
 
-          expect(currentViewState).toEventually(equal(expected))
-        }
-      }
+  func test_UseCase_Doesnot_Responds_Yet_ViewModel_Should_Contains_Loading_State() {
+    // given
+    let sut: SignInViewModelProtocol = SignInViewModel(createTokenUseCase: createTokenUseCase)
 
-      context("When UseCase RequestToken dont Respond yet") {
-        it("Should ViewModel contanins Loading State") {
-          // given
-          let viewStateObserver = scheduler.createObserver(SignInViewState.self)
+    // when
+    let expected = [
+      SignInViewState.initial,
+      SignInViewState.loading
+    ]
+    var received = [SignInViewState]()
 
-          let viewModel: SignInViewModelProtocol = SignInViewModel(createTokenUseCase: createTokenUseCase)
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
 
-          viewModel.viewState
-            .subscribe { event in
-              viewStateObserver.on(event)
-            }
-            .disposed(by: disposeBag)
+    // when
+    sut.signInDidTapped()
 
-          // when
-          // Tap Button
-          scheduler.createColdObservable([.next(10, ())])
-            .subscribe { event in
-              viewModel.tapButton.on(event)
-            }
-            .disposed(by: disposeBag)
-          scheduler.start()
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
-          // then
-          let expected: [Recorded<Event<SignInViewState>>] = [
-            .next(0, .initial),
-            .next(10, .loading)
-          ]
-          expect(viewStateObserver.events).toEventually(equal(expected))
-        }
-      }
+    // then
+    XCTAssertEqual(expected, received, "Should only receives two Value")
+  }
 
-      context("When UseCase RequestToken Repond with URL") {
-        it("Should ViewModel send URL to Delegate") {
-          // given
-          let expectedURL = URL(string: "someURL")
-          createTokenUseCase.result = expectedURL
+  func test_UseCase_Respond_Successfully_ViewModel_Should_Calls_To_Delegate() {
+    // given
+    let expectedURL = URL(string: "someURL")
+    createTokenUseCase.result = expectedURL
+    let delegate = SignInViewModelDelegateMock()
 
-          let delegate = SignInViewModelDelegateMock()
+    var sut: SignInViewModelProtocol = SignInViewModel(createTokenUseCase: createTokenUseCase)
+    sut.delegate = delegate
 
-          var viewModel: SignInViewModelProtocol = SignInViewModel(createTokenUseCase: createTokenUseCase)
-          viewModel.delegate = delegate
+    // when
 
-          // when
-          // Tap Button
-          scheduler.createColdObservable([.next(10, ())])
-            .subscribe { event in
-              viewModel.tapButton.on(event)
-            }
-            .disposed(by: disposeBag)
-          scheduler.start()
+    // when
+    sut.signInDidTapped()
 
-          // then
-          expect(delegate.url).toEventually(equal(expectedURL))
-        }
-      }
-    }
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
+
+    // then
+    XCTAssertEqual(expectedURL, delegate.url, "SignInViewModel should calls to delegate")
   }
 }

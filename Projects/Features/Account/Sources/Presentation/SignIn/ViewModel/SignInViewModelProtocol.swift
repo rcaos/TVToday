@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 protocol SignInViewModelDelegate: AnyObject {
   func signInViewModel(_ signInViewModel: SignInViewModel, didTapSignInButton url: URL)
@@ -14,11 +14,11 @@ protocol SignInViewModelDelegate: AnyObject {
 
 protocol SignInViewModelProtocol {
   // MARK: - Input
-  var tapButton: PublishSubject<Void> { get }
+  func signInDidTapped()
   func changeState(with state: SignInViewState)
 
   // MARK: - Output
-  var viewState: Observable<SignInViewState> { get }
+  var viewState: CurrentValueSubject<SignInViewState, Never> { get }
   var delegate: SignInViewModelDelegate? { get set }
 }
 

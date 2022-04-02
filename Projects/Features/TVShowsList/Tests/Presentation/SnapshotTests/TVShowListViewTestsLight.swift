@@ -7,29 +7,11 @@
 
 import SnapshotTesting
 import XCTest
-import RxSwift
 
 @testable import TVShowsList
 @testable import Shared
 
 class TVShowListViewTestsLight: XCTestCase {
-
-  let firstShow = TVShow.stub(id: 1, name: "title1 🐶", posterPath: "/1",
-                              backDropPath: "/back1", overview: "overview")
-  let secondShow = TVShow.stub(id: 2, name: "title2 🔫", posterPath: "/2",
-                               backDropPath: "/back2", overview: "overview2")
-  let thirdShow = TVShow.stub(id: 3, name: "title3 🚨", posterPath: "/3",
-                              backDropPath: "/back3", overview: "overview3")
-
-  lazy var firstPage = TVShowResult.stub(page: 1,
-                                         results: [firstShow, secondShow],
-                                         totalResults: 3,
-                                         totalPages: 2)
-
-  lazy var secondPage = TVShowResult.stub(page: 2,
-                                          results: [thirdShow],
-                                          totalResults: 3,
-                                          totalPages: 2)
 
   override func setUp() {
     super.setUp()
@@ -43,6 +25,7 @@ class TVShowListViewTestsLight: XCTestCase {
     // when
     let viewController = TVShowListViewController(viewModel: viewModel)
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
@@ -50,12 +33,13 @@ class TVShowListViewTestsLight: XCTestCase {
 
   func test_WhenViewPaging_thenShowPagingScreen() {
     // given
-    let firsPageCells = firstPage.results!.map { TVShowCellViewModel(show: $0) }
+    let firsPageCells = buildFirstPage().results!.map { TVShowCellViewModel(show: $0) }
     let viewModel = TVShowListViewModelMock(state: .paging(firsPageCells, next: 2) )
 
     // when
     let viewController = TVShowListViewController(viewModel: viewModel)
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
@@ -64,13 +48,14 @@ class TVShowListViewTestsLight: XCTestCase {
 
   func test_WhenViewPopulated_thenShowPopulatedScreen() {
     // given
-    let totalCells = (self.firstPage.results + self.secondPage.results)
+    let totalCells = (buildFirstPage().results + buildSecondPage().results)
       .map { TVShowCellViewModel(show: $0) }
     let viewModel = TVShowListViewModelMock(state: .populated(totalCells) )
 
     // when
     let viewController = TVShowListViewController(viewModel: viewModel)
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
@@ -84,6 +69,7 @@ class TVShowListViewTestsLight: XCTestCase {
     // when
     let viewController = TVShowListViewController(viewModel: viewModel)
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
@@ -96,6 +82,7 @@ class TVShowListViewTestsLight: XCTestCase {
     // when
     let viewController = TVShowListViewController(viewModel: viewModel)
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))

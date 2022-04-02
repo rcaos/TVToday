@@ -5,8 +5,9 @@
 //  Created by Jeans Ruiz on 7/2/20.
 //
 
-import RxSwift
+import Combine
 import Persistence
+import Shared
 
 public final class DefaultShowsVisitedLocalRepository {
 
@@ -19,15 +20,15 @@ public final class DefaultShowsVisitedLocalRepository {
 
 extension DefaultShowsVisitedLocalRepository: ShowsVisitedLocalRepository {
 
-  public func saveShow(id: Int, pathImage: String, userId: Int) -> Observable<Void> {
+  public func saveShow(id: Int, pathImage: String, userId: Int) -> AnyPublisher<Void, CustomError> {
     return showsVisitedLocalStorage.saveShow(id: id, pathImage: pathImage, userId: userId)
   }
 
-  public func fetchVisitedShows(userId: Int) -> Observable<[ShowVisited]> {
+  public func fetchVisitedShows(userId: Int) -> AnyPublisher<[ShowVisited], CustomError> {
     return showsVisitedLocalStorage.fetchVisitedShows(userId: userId)
   }
 
-  public func recentVisitedShowsDidChange() -> Observable<Bool> {
+  public func recentVisitedShowsDidChange() -> AnyPublisher<Bool, Never> {
     return showsVisitedLocalStorage.recentVisitedShowsDidChange()
   }
 }

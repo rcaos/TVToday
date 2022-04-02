@@ -7,45 +7,46 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 public protocol ShowsViewModel: AnyObject {
   associatedtype MovieCellViewModel: Equatable
 
-  var fetchTVShowsUseCase: FetchTVShowsUseCase { get set }
+  var fetchTVShowsUseCase: FetchTVShowsUseCase { get }
 
   var shows: [TVShow] { get set }
 
   var showsCells: [MovieCellViewModel] { get set }
 
-  var viewStateObservableSubject: BehaviorSubject<SimpleViewState<MovieCellViewModel>> { get set }
+  var viewStateObservableSubject: CurrentValueSubject<SimpleViewState<MovieCellViewModel>, Never> { get }
 
-  var disposeBag: DisposeBag { get set }
+  var disposeBag: Set<AnyCancellable> { get set }
 
-  func mapToCell(entites: [TVShow]) -> [MovieCellViewModel]
+  func mapToCell(entities: [TVShow]) -> [MovieCellViewModel]
 }
 
 extension ShowsViewModel {
 
   public func getShows(for page: Int, showLoader: Bool = true) {
 
-    if let state = try? viewStateObservableSubject.value(),
-      state.isInitialPage,
-      showLoader {
-      viewStateObservableSubject.onNext(.loading)
+    if viewStateObservableSubject.value.isInitialPage, showLoader {
+      viewStateObservableSubject.send(.loading)
     }
 
     let request = FetchTVShowsUseCaseRequestValue(page: page)
 
     fetchTVShowsUseCase.execute(requestValue: request)
-      .subscribe(onNext: { [weak self] result in
-        guard let strongSelf = self else { return }
-        strongSelf.processFetched(for: result, currentPage: page)
-        }, onError: { [weak self] error in
-          guard let strongSelf = self else { return }
-          strongSelf.viewStateObservableSubject.onNext(.error(error.localizedDescription))
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { [weak self] completion in
+        switch completion {
+        case let .failure(error):
+          self?.viewStateObservableSubject.send(.error(error.localizedDescription))
+        case .finished: break
+        }
+      }, receiveValue: { [weak self] result in
+        self?.processFetched(for: result, currentPage: page)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
   private func processFetched(for response: TVShowResult, currentPage: Int) {
@@ -59,16 +60,16 @@ extension ShowsViewModel {
 
     if self.shows.isEmpty ||
       (fetchedShows.isEmpty && response.page == 1) {
-      viewStateObservableSubject.onNext(.empty)
+      viewStateObservableSubject.send(.empty)
       return
     }
 
-    let cellsShows = mapToCell(entites: shows)
+    let cellsShows = mapToCell(entities: shows)
 
     if response.hasMorePages {
-      viewStateObservableSubject.onNext( .paging(cellsShows, next: response.nextPage) )
+      viewStateObservableSubject.send( .paging(cellsShows, next: response.nextPage) )
     } else {
-      viewStateObservableSubject.onNext( .populated(cellsShows) )
+      viewStateObservableSubject.send( .populated(cellsShows) )
     }
   }
 }

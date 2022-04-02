@@ -23,15 +23,10 @@ let project = Project.framework(
     .project(
       target: "ShowDetailsInterface",
       path: .relativeToRoot("Projects/Features/ShowDetails")
-    ),
-    .package(product: "RxSwift")
+    )
   ],
   testFolder: "Tests",
   testDependencies: [
-    .package(product: "RxBlocking"),
-    .package(product: "RxTest"),
-    .package(product: "Quick"),
-    .package(product: "Nimble"),
     .package(product: "SnapshotTesting")
   ]
 )

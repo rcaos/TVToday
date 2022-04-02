@@ -5,15 +5,15 @@
 //  Created by Jeans Ruiz on 8/8/20.
 //
 
-import RxSwift
+import Combine
 @testable import Account
 
 final class AccountViewModelMock: AccountViewModelProtocol {
 
-  let viewState: Observable<AccountViewState>
+  let viewState: CurrentValueSubject<AccountViewState, Never>
 
   init(state: AccountViewState) {
-    viewState = Observable.just(state)
+    viewState = CurrentValueSubject(state)
   }
 
   func authPermissionViewModel(didSignedIn signedIn: Bool) { }

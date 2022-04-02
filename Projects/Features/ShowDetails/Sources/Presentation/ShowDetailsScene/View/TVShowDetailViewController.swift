@@ -6,29 +6,24 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 import Shared
 import UI
 
 class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Emptiable {
 
-  let viewModel: TVShowDetailViewModelProtocol
+  private let viewModel: TVShowDetailViewModelProtocol
+  private var rootView: TVShowDetailRootView?
 
-  var rootView: TVShowDetailRootView?
-
-  lazy var favoriteButton: UIBarButtonItem = {
-    let barButtonItem = UIBarButtonItem(image: UIImage(systemName: "heart.fill"),
-                                        style: .plain, target: nil, action: nil)
-    return barButtonItem
+  private lazy var favoriteButton: UIBarButtonItem = {
+    return UIBarButtonItem()
   }()
 
-  lazy var watchListButton: UIBarButtonItem = {
-    let bookmarkButton = UIBarButtonItem(image: UIImage(systemName: "bookmark.fill"),
-                                         style: .plain, target: nil, action: nil)
-    return bookmarkButton
+  private lazy var watchListButton: UIBarButtonItem = {
+    return UIBarButtonItem()
   }()
 
-  let disposeBag = DisposeBag()
+  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializer
   init(viewModel: TVShowDetailViewModelProtocol) {
@@ -59,7 +54,7 @@ class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Em
     print("deinit \(Self.self)")
   }
 
-  fileprivate func setupNavigationBar() {
+  private func setupNavigationBar() {
     if viewModel.isUserLogged() {
       navigationItem.rightBarButtonItems = [favoriteButton, watchListButton]
     } else {
@@ -67,48 +62,56 @@ class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Em
     }
   }
 
-  fileprivate func setupViewModel() {
+  private func setupViewModel() {
     setupBindables()
   }
 
-  fileprivate func setupBindables() {
+  private func setupBindables() {
     if viewModel.isUserLogged() {
       setupBindablesForUserLogged()
     }
 
     viewModel.viewState
-      .subscribe(onNext: { [weak self] state in
-        guard let strongSelf = self else { return }
-        strongSelf.configView(with: state)
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] state in
+        self?.configView(with: state)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
   private func setupBindablesForUserLogged() {
-    favoriteButton.primaryAction = UIAction(handler: { [weak self] _ in
-      self?.viewModel.tapFavoriteButton.onNext(())
-    })
+    favoriteButton.primaryAction = UIAction(
+      image: UIImage(systemName: "heart.fill"),
+      handler: { [weak self] _ in
+        self?.viewModel.favoriteButtonDidTapped()
+      })
 
-    watchListButton.primaryAction = UIAction(handler: { [weak self] _ in
-      self?.viewModel.tapWatchedButton.onNext(())
-    })
+    watchListButton.primaryAction = UIAction(
+      image: UIImage(systemName: "bookmark.fill"),
+      handler: { [weak self] _ in
+        self?.viewModel.watchedButtonDidTapped()
+      })
 
     viewModel
       .isFavorite
-      .subscribe(onNext: { [weak self] isFavorite in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in },
+            receiveValue: { [weak self] isFavorite in
         self?.favoriteButton.tintColor = isFavorite ? .systemRed : .systemGray
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
 
     viewModel
       .isWatchList
-      .subscribe(onNext: { [weak self] isWatchList in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in },
+            receiveValue: { [weak self] isWatchList in
         self?.watchListButton.tintColor = isWatchList ? .systemGreen : .systemGray
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
-  fileprivate func configView(with state: TVShowDetailViewModel.ViewState) {
+  private func configView(with state: TVShowDetailViewModel.ViewState) {
     switch state {
     case .loading:
       showLoadingView()

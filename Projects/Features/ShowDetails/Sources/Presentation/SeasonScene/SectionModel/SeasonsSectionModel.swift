@@ -9,9 +9,9 @@
 import Foundation
 
 enum SeasonsSectionModel: Hashable {
-  case headerShow(header: String, items: [SeasonsSectionItem])
-  case seasons(header: String, items: [SeasonsSectionItem])
-  case episodes(header: String, items: [SeasonsSectionItem])
+  case headerShow(items: [SeasonsSectionItem])
+  case seasons(items: [SeasonsSectionItem])
+  case episodes(items: [SeasonsSectionItem])
 
   var sectionCollection: SeasonsSectionCollection {
     switch self {
@@ -26,11 +26,11 @@ enum SeasonsSectionModel: Hashable {
 
   var items: [SeasonsSectionItem] {
     switch self {
-    case let .headerShow(_, items):
+    case let .headerShow(items):
       return items
-    case let .seasons(_, items):
+    case let .seasons(items):
       return items
-    case let .episodes(_, items):
+    case let .episodes(items):
       return items
     }
   }
@@ -44,6 +44,6 @@ enum SeasonsSectionCollection: Hashable {
 
 enum SeasonsSectionItem: Hashable {
   case headerShow(viewModel: SeasonHeaderViewModel)
-  case seasons(number: Int)
+  case seasons
   case episodes(items: EpisodeSectionModelType)
 }

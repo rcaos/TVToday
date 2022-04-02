@@ -1,6 +1,7 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-let project = Project.framework(name: "UI",
-                                resources: ["Resources/**"]
+let project = Project.framework(
+  name: "UI",
+  resources: ["Resources/**"]
 )

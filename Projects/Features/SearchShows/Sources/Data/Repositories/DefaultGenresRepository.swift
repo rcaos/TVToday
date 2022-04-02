@@ -6,8 +6,9 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import NetworkingInterface
+import Networking
 
 final class DefaultGenreRepository {
   private let dataTransferService: DataTransferService
@@ -20,8 +21,11 @@ final class DefaultGenreRepository {
 // MARK: - GenresRepository
 extension DefaultGenreRepository: GenresRepository {
 
-  func genresList() -> Observable<GenreListResult> {
-    let endPoint = GenreProvider.getAll
-    return dataTransferService.request(endPoint, GenreListResult.self)
+  func genresList() -> AnyPublisher<GenreListResult, DataTransferError> {
+    let endpoint = Endpoint<GenreListResult>(
+      path: "3/genre/tv/list",
+      method: .get
+    )
+    return dataTransferService.request(with: endpoint)
   }
 }

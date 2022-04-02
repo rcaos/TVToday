@@ -6,9 +6,10 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import Shared
+import NetworkingInterface
 
 public protocol AccountRepository {
-  func getAccountDetails(session: String) -> Observable<AccountResult>
+  func getAccountDetails(session: String) -> AnyPublisher<AccountResult, DataTransferError>
 }

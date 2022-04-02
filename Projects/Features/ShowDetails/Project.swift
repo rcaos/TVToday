@@ -7,8 +7,7 @@ let project = Project.framework(
     .project(
       target: "UI",
       path: .relativeToRoot("Projects/Features/UI")
-    ),
-    .package(product: "RxSwift")
+    )
   ],
   interfaceFolder: "Interface",
   interfaceDependencies: [
@@ -27,10 +26,6 @@ let project = Project.framework(
   ],
   testFolder: "Tests",
   testDependencies: [
-    .package(product: "RxBlocking"),
-    .package(product: "RxTest"),
-    .package(product: "Quick"),
-    .package(product: "Nimble"),
     .package(product: "SnapshotTesting")
   ]
 )

@@ -6,41 +6,40 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
 
 class ProfileViewModel: ProfileViewModelProtocol {
-
   weak var delegate: ProfileViewModelDelegate?
 
-  private let sectionsSubject = BehaviorSubject<[ProfileSectionModel]>(value: [])
-
-  private let presentSignOutAlertSubject = PublishSubject<Bool>()
-
-  private let tapLogoutAction = PublishSubject<Void>()
-
-  private let disposeBag = DisposeBag()
-
   // MARK: - Public Api
-  let tapCellAction = PublishSubject<ProfilesSectionItem>()
-  let dataSource: Observable<[ProfileSectionModel]>
-  let presentSignOutAlert: Observable<Bool>
+  let dataSource = CurrentValueSubject<[ProfileSectionModel], Never>([])
+  let presentSignOutAlert = CurrentValueSubject<Bool, Never>(false)
+  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializer
   init(account: AccountResult) {
-    dataSource = sectionsSubject.asObservable()
-    presentSignOutAlert = presentSignOutAlertSubject.asObservable()
-
-    createSectionModel(account: account)
-    subscribe()
+    let section = createSectionModel(account: account)
+    dataSource.send(section)
   }
 
   // MARK: - Public
   func didTapLogoutButton() {
-    tapLogoutAction.onNext(())
+    delegate?.profileViewModel(didTapLogoutButton: true)
+  }
+
+  func didCellTap(model: ProfilesSectionItem) {
+    switch model {
+    case .userLists(items: let cellType):
+      delegate?.profileViewModel(didUserList: cellType)
+    case .logout:
+      presentSignOutAlert.send(true)
+    default:
+      break
+    }
   }
 
   // MARK: - Private
-  private func createSectionModel(account: AccountResult) {
+  private func createSectionModel(account: AccountResult) -> [ProfileSectionModel] {
     let items: [ProfilesSectionItem] = [
       .userLists(items: .favorites),
       .userLists(items: .watchList)
@@ -51,33 +50,6 @@ class ProfileViewModel: ProfileViewModelProtocol {
       .userLists(items: items),
       .logout(items: [.logout(items: "Log Out")])
     ]
-
-    sectionsSubject.onNext(sectionProfile)
-  }
-
-  private func subscribe() {
-    tapLogoutAction.asObserver()
-      .subscribe(onNext: { [weak self] in
-        guard let strongSelf = self else { return }
-        strongSelf.delegate?.profileViewModel(didTapLogoutButton: true)
-      })
-      .disposed(by: disposeBag)
-
-    tapCellAction.asObserver()
-      .subscribe(onNext: { [weak self] model in
-        self?.didSelectedCell(model)
-      })
-      .disposed(by: disposeBag)
-  }
-
-  private func didSelectedCell(_ model: ProfilesSectionItem) {
-    switch model {
-    case .userLists(items: let cellType):
-      delegate?.profileViewModel(didUserList: cellType)
-    case .logout:
-      presentSignOutAlertSubject.onNext(true)
-    default:
-      break
-    }
+    return sectionProfile
   }
 }

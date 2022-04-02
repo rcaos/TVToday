@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 @testable import Account
 
 class AuthPermissionViewModelMock: AuthPermissionViewModelProtocol {

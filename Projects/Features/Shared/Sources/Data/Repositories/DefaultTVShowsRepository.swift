@@ -6,8 +6,9 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import NetworkingInterface
+import Networking
 
 public final class DefaultTVShowsRepository {
   private let dataTransferService: DataTransferService
@@ -23,44 +24,62 @@ public final class DefaultTVShowsRepository {
 // MARK: - TVShowsRepository
 extension DefaultTVShowsRepository: TVShowsRepository {
 
-  public func fetchAiringTodayShows(page: Int) -> Observable<TVShowResult> {
-    let endPoint = TVShowsProvider.getAiringTodayShows(page)
-
-    return dataTransferService.request(endPoint, TVShowResult.self)
-      .flatMap { response -> Observable<TVShowResult> in
-        Observable.just( self.mapShowDetailsWithBasePath(response: response) )
-    }
+  public func fetchAiringTodayShows(page: Int) -> AnyPublisher<TVShowResult, DataTransferError> {
+    let endpoint = Endpoint<TVShowResult>(
+      path: "3/tv/airing_today",
+      method: .get,
+      queryParameters: ["page": page]
+    )
+    return dataTransferService.request(with: endpoint)
+      .map { self.mapShowDetailsWithBasePath(response: $0) }
+      .eraseToAnyPublisher()
   }
 
-  public func fetchPopularShows(page: Int) -> Observable<TVShowResult> {
-    let endPoint = TVShowsProvider.getPopularTVShows(page)
-
-    return dataTransferService.request(endPoint, TVShowResult.self)
-      .flatMap { response -> Observable<TVShowResult> in
-        Observable.just( self.mapShowDetailsWithBasePath(response: response) )
-    }
+  public func fetchPopularShows(page: Int) -> AnyPublisher<TVShowResult, DataTransferError> {
+    let endpoint = Endpoint<TVShowResult>(
+      path: "3/tv/popular",
+      method: .get,
+      queryParameters: ["page": page]
+    )
+    return dataTransferService.request(with: endpoint)
+      .map { self.mapShowDetailsWithBasePath(response: $0) }
+      .eraseToAnyPublisher()
   }
 
-  public func fetchShowsByGenre(genreId: Int, page: Int) -> Observable<TVShowResult> {
-    let endPoint = TVShowsProvider.listTVShowsBy(genreId, page)
+  public func fetchShowsByGenre(genreId: Int, page: Int) -> AnyPublisher<TVShowResult, DataTransferError> {
+    let endpoint = Endpoint<TVShowResult>(
+      path: "3/discover/tv",
+      method: .get,
+      queryParameters: [
+        "with_genres": genreId,
+        "page": page,
+        "sort_by": "popularity.desc",
+        "timezone": "America%2FNew_York",
+        "include_null_first_air_dates": "false"
+      ]
+    )
 
-    return dataTransferService.request(endPoint, TVShowResult.self)
-      .flatMap { response -> Observable<TVShowResult> in
-        Observable.just( self.mapShowDetailsWithBasePath(response: response) )
-    }
+    return dataTransferService.request(with: endpoint)
+      .map { self.mapShowDetailsWithBasePath(response: $0) }
+      .eraseToAnyPublisher()
   }
 
-  public func searchShowsFor(query: String, page: Int) -> Observable<TVShowResult> {
-    let endPoint = TVShowsProvider.searchTVShow(query, page)
-
-    return dataTransferService.request(endPoint, TVShowResult.self)
-      .flatMap { response -> Observable<TVShowResult> in
-        Observable.just( self.mapShowDetailsWithBasePath(response: response) )
-    }
+  public func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowResult, DataTransferError> {
+    let endpoint = Endpoint<TVShowResult>(
+      path: "3/search/tv",
+      method: .get,
+      queryParameters: [
+        "query": query,
+        "page": page
+      ]
+    )
+    return dataTransferService.request(with: endpoint)
+      .map { self.mapShowDetailsWithBasePath(response: $0) }
+      .eraseToAnyPublisher()
   }
 
   // MARK: - Map responses with ImageBase URL
-  fileprivate func mapShowDetailsWithBasePath(response: TVShowResult) -> TVShowResult {
+  private func mapShowDetailsWithBasePath(response: TVShowResult) -> TVShowResult {
     guard let basePath = basePath else { return response }
 
     var newResponse = response
@@ -76,16 +95,18 @@ extension DefaultTVShowsRepository: TVShowsRepository {
   }
 
   // MARK: - Fetch TVShow Details
-  public func fetchTVShowDetails(with showId: Int) -> Observable<TVShowDetailResult> {
-    let endPoint = TVShowsProvider.getTVShowDetail(showId)
+  public func fetchTVShowDetails(with showId: Int) -> AnyPublisher<TVShowDetailResult, DataTransferError> {
+    let endpoint = Endpoint<TVShowDetailResult>(
+      path: "3/tv/\(showId)",
+      method: .get
+    )
 
-    return dataTransferService.request(endPoint, TVShowDetailResult.self)
-      .flatMap { response -> Observable<TVShowDetailResult> in
-        Observable.just( self.mapShowDetailsWithBasePath(response: response))
-      }
+    return dataTransferService.request(with: endpoint)
+      .map { self.mapShowDetailsWithBasePath(response: $0) }
+      .eraseToAnyPublisher()
   }
 
-  fileprivate func mapShowDetailsWithBasePath(response: TVShowDetailResult) -> TVShowDetailResult {
+  private func mapShowDetailsWithBasePath(response: TVShowDetailResult) -> TVShowDetailResult {
     guard let basePath = basePath else { return response }
 
     var newResponse = response

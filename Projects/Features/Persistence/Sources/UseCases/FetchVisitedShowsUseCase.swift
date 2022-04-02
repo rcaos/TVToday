@@ -5,11 +5,11 @@
 //  Created by Jeans Ruiz on 7/3/20.
 //
 
-import RxSwift
+import Combine
 import Shared
 
 public protocol FetchVisitedShowsUseCase {
-  func execute(requestValue: FetchVisitedShowsUseCaseRequestValue) -> Observable<[ShowVisited]>
+  func execute(requestValue: FetchVisitedShowsUseCaseRequestValue) -> AnyPublisher<[ShowVisited], CustomError>
 }
 
 public struct FetchVisitedShowsUseCaseRequestValue {
@@ -27,7 +27,7 @@ public final class DefaultFetchVisitedShowsUseCase: FetchVisitedShowsUseCase {
     self.keychainRepository = keychainRepository
   }
 
-  public func execute(requestValue: FetchVisitedShowsUseCaseRequestValue) -> Observable<[ShowVisited]> {
+  public func execute(requestValue: FetchVisitedShowsUseCaseRequestValue) -> AnyPublisher<[ShowVisited], CustomError> {
 
     var idLogged = 0
     if let userLogged = keychainRepository.fetchLoguedUser() {

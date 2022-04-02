@@ -8,7 +8,6 @@
 import Foundation
 import Combine
 import NetworkingInterface
-import RxSwift    // Remove Soon
 
 public final class DefaultDataTransferService {
 
@@ -27,10 +26,6 @@ public final class DefaultDataTransferService {
 
 // MARK: - Renamed
 extension DefaultDataTransferService: DataTransferService {
-
-  public func request<Element>(_ router: EndPoint, _ decodingType: Element.Type) -> Observable<Element> where Element: Decodable {
-    return Observable.empty()
-  }
 
   // MARK: - Private
   private func decode<T: Decodable>(data: Data, decoder: ResponseDecoder) throws -> T {

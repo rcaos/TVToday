@@ -7,13 +7,9 @@
 
 import XCTest
 import SnapshotTesting
-import RxSwift
-
 @testable import Account
 
 class SignInViewDarkTests: XCTestCase {
-
-  private var rootWindow: UIWindow!
 
   override func setUp() {
     super.setUp()
@@ -25,6 +21,7 @@ class SignInViewDarkTests: XCTestCase {
     let signInViewModel = SignInViewModelMock(state: .initial)
     let viewController = SignInViewController(viewModel: signInViewModel)
     viewController.overrideUserInterfaceStyle = .dark
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
@@ -35,6 +32,7 @@ class SignInViewDarkTests: XCTestCase {
     let signInViewModel = SignInViewModelMock(state: .loading)
     let viewController = SignInViewController(viewModel: signInViewModel)
     viewController.overrideUserInterfaceStyle = .dark
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
@@ -45,6 +43,7 @@ class SignInViewDarkTests: XCTestCase {
     let signInViewModel = SignInViewModelMock(state: .error)
     let viewController = SignInViewController(viewModel: signInViewModel)
     viewController.overrideUserInterfaceStyle = .dark
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))

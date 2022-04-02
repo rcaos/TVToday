@@ -25,6 +25,7 @@ class TVShowDetailViewTestsLight: XCTestCase {
     // when
     let viewController = TVShowDetailViewController(viewModel: initialState)
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
@@ -37,6 +38,7 @@ class TVShowDetailViewTestsLight: XCTestCase {
     // when
     let viewController = TVShowDetailViewController(viewModel: initialState)
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
@@ -50,6 +52,7 @@ class TVShowDetailViewTestsLight: XCTestCase {
     // when
     let viewController = TVShowDetailViewController(viewModel: initialState)
     viewController.overrideUserInterfaceStyle = .light
+    _ = viewController.view
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))

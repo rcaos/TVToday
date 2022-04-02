@@ -6,7 +6,8 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Foundation
+import Combine
 import Shared
 
 protocol EpisodesListViewModelProtocol: SeasonListViewModelDelegate {
@@ -15,11 +16,11 @@ protocol EpisodesListViewModelProtocol: SeasonListViewModelDelegate {
   func refreshView()
 
   // MARK: - Output
-  func buildModelForSeasons(with numberOfSeasons: Int) -> SeasonListViewModelProtocol?
+  func getViewModelForAllSeasons() -> SeasonListViewModelProtocol?
   func getModel(for episode: EpisodeSectionModelType) -> EpisodeItemViewModel?
 
-  var viewState: Observable<EpisodesListViewModel.ViewState> { get }
-  var data: Observable<[SeasonsSectionModel]> { get }
+  var viewState: CurrentValueSubject<EpisodesListViewModel.ViewState, Never> { get }
+  var data: CurrentValueSubject<[SeasonsSectionModel], Never> { get }
 }
 
 final class EpisodesListViewModel: EpisodesListViewModelProtocol {
@@ -27,40 +28,28 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
   private let fetchDetailShowUseCase: FetchTVShowDetailsUseCase
   private let fetchEpisodesUseCase: FetchEpisodesUseCase
 
-  private var tvShowId: Int!
+  private let tvShowId: Int
   private var showDetailResult: TVShowDetailResult?
   private var totalSeasons: Int {
     guard let totalSeasons = showDetailResult?.numberOfSeasons else { return 0 }
     return totalSeasons
   }
 
-  private let allEpisodesSubject = BehaviorSubject<[Int: [Episode]]>(value: [:])
-
-  private var disposeBag = DisposeBag()
-
-  private let dataObservableSubject = BehaviorSubject<[SeasonsSectionModel]>(value: [])
-
-  private let viewStateObservableSubject = BehaviorSubject<ViewState>(value: .loading)
-
-  private let seasonSelectedSubject = BehaviorSubject<Int>(value: 0)
+  private var allEpisodes = [Int: [Episode]]()
+  private let seasonSelectedSubject = CurrentValueSubject<Int, Never>(0)
 
   private var seasonListViewModel: SeasonListViewModelProtocol?
+  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Public Api
-  var viewState: Observable<ViewState>
-
-  var data: Observable<[SeasonsSectionModel]>
+  var viewState = CurrentValueSubject<ViewState, Never>(.loading)
+  var data = CurrentValueSubject<[SeasonsSectionModel], Never>([])
 
   // MARK: - Initializers
   init(tvShowId: Int, fetchDetailShowUseCase: FetchTVShowDetailsUseCase, fetchEpisodesUseCase: FetchEpisodesUseCase) {
     self.tvShowId = tvShowId
-
     self.fetchDetailShowUseCase = fetchDetailShowUseCase
     self.fetchEpisodesUseCase = fetchEpisodesUseCase
-
-    data = dataObservableSubject.asObservable()
-    viewState = viewStateObservableSubject.asObservable()
-
     controlSeasons()
   }
 
@@ -68,95 +57,90 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
     print("deinit \(Self.self)")
   }
 
-  fileprivate func controlSeasons() {
-    let episodesObservable = allEpisodesSubject
-      .scan([:], accumulator: { (oldValue, newValue) in
-        var currentEpisodes = oldValue
-        if let season = newValue.keys.first,
-          let episodes = newValue.values.first {
-          currentEpisodes[season] = episodes
-        }
-        return currentEpisodes
-      })
-
+  private func controlSeasons() {
     seasonSelectedSubject
-      .distinctUntilChanged()
+      .removeDuplicates()
       .filter { $0 >= 1 }
-      .withLatestFrom(episodesObservable) { (season: $0, allEpisodes: $1) }
-      .subscribe(onNext: { [weak self] (season, allEpisodes) in
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] season in
         guard let strongSelf = self else { return }
-
-        if let episodes = allEpisodes[season] as? [Episode], episodes.count >= 1 {
+        if let episodes = strongSelf.allEpisodes[season], episodes.count >= 1 {
           strongSelf.changeToSeason(number: season, episodes: episodes)
         } else {
           strongSelf.fetchEpisodesFor(season: season)
         }
-
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
-  fileprivate func changeToSeason(number: Int, episodes: [Episode]) {
+  private func changeToSeason(number: Int, episodes: [Episode]) {
     createSectionModel(state: .populated, with: totalSeasons, seasonSelected: number, and: episodes)
   }
 
-  fileprivate func selectFirstSeason() {
+  private func selectFirstSeason() {
     let firstSeason = 1
-    seasonSelectedSubject.onNext(firstSeason)
+    seasonSelectedSubject.send(firstSeason)
     seasonListViewModel?.selectSeason(firstSeason)
   }
 
   // MARK: - Networking
-  fileprivate func fetchShowDetailsAndFirstSeason(showLoader: Bool = true) {
+  private func fetchShowDetailsAndFirstSeason(showLoader: Bool = true) {
     if showLoader {
-      viewStateObservableSubject.onNext( .loading )
+      viewState.send( .loading )
     }
 
     let requestDetailsShow = FetchTVShowDetailsUseCaseRequestValue(identifier: tvShowId)
     let requestFirstSeason = FetchEpisodesUseCaseRequestValue(showIdentifier: tvShowId, seasonNumber: 1)
 
-    Observable.zip(
+    Publishers.Zip(
       fetchDetailShowUseCase.execute(requestValue: requestDetailsShow),
-      fetchEpisodesUseCase.execute(requestValue: requestFirstSeason))
-      .subscribe(onNext: { [weak self] (resultShowDetails, firstSeason) in
-        guard let strongSelf = self else { return }
-
-        // MARK: - TODO, refactor this
-        switch resultShowDetails {
-        case .success(let detailResult):
-          strongSelf.showDetailResult = detailResult
-          strongSelf.processFetched(with: firstSeason)
-          strongSelf.selectFirstSeason()
-        case .failure:
-          strongSelf.viewStateObservableSubject.onNext( .error(CustomError.genericError.localizedDescription) )
+      fetchEpisodesUseCase.execute(requestValue: requestFirstSeason)
+    )
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { [weak self] completion in
+        switch completion {
+        case let .failure(error):
+          self?.viewState.send( .error(error.localizedDescription) )
+        case .finished:
+          break
         }
-        }, onError: {[weak self] error in
-          guard let strongSelf = self else { return }
-          strongSelf.viewStateObservableSubject.onNext( .error(CustomError.genericError.localizedDescription) )
+      }, receiveValue: { [weak self] (resultShowDetails, firstSeason) in
+        self?.processResultFirstFetched(resultShowDetails, firstSeason)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
-  fileprivate func fetchEpisodesFor(season seasonNumber: Int) {
+  private func processResultFirstFetched(_ detailsShow: TVShowDetailResult, _ firstSeason: SeasonResult) {
+    showDetailResult = detailsShow
+    processFetched(with: firstSeason)
+    createViewModelForSeasons(numberOfSeasons: detailsShow.numberOfSeasons ?? 1)
+    selectFirstSeason()
+  }
+
+  private func fetchEpisodesFor(season seasonNumber: Int) {
     createSectionModel(state: .loadingSeason, with: totalSeasons, seasonSelected: seasonNumber, and: [])
 
     let request = FetchEpisodesUseCaseRequestValue(showIdentifier: tvShowId, seasonNumber: seasonNumber)
 
     fetchEpisodesUseCase.execute(requestValue: request)
-      .subscribe(onNext: { [weak self] result in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { [weak self] completion in
         guard let strongSelf = self else { return }
-        strongSelf.processFetched(with: result)
 
-        }, onError: { [weak self] error in
-          guard let strongSelf = self else { return }
+        switch completion {
+        case let .failure(error):
           strongSelf.createSectionModel(state: .errorSeason(error.localizedDescription),
                                         with: strongSelf.totalSeasons,
                                         seasonSelected: seasonNumber, and: [])
+        case .finished:
+          break
+        }
+      }, receiveValue: { [weak self] result in
+        self?.processFetched(with: result)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
-  fileprivate func processFetched(with response: SeasonResult) {
+  private func processFetched(with response: SeasonResult) {
     let fetchedEpisodes = response.episodes ?? []
     let seasonFetched = response.seasonNumber
 
@@ -166,32 +150,32 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
     }
 
     let ordered = fetchedEpisodes.sorted(by: { $0.episodeNumber < $1.episodeNumber })
-    allEpisodesSubject.onNext([seasonFetched: ordered])
+    allEpisodes[seasonFetched] = ordered
 
     createSectionModel(state: .populated, with: totalSeasons, seasonSelected: seasonFetched, and: ordered)
   }
 
-  fileprivate func createSectionModel(state: ViewState, with numberOfSeasons: Int, seasonSelected: Int, and episodes: [Episode]) {
+  private func createSectionModel(state: ViewState, with numberOfSeasons: Int, seasonSelected: Int, and episodes: [Episode]) {
     var dataSourceSections: [SeasonsSectionModel] = []
 
     if let headerSection = createModelForheader() {
       dataSourceSections.append(headerSection)
     }
 
-    dataSourceSections.append(.seasons(header: "Seasons", items: [.seasons(number: numberOfSeasons)]) )
+    dataSourceSections.append(.seasons(items: [.seasons]) )
 
     let episodesSectioned = episodes.map { EpisodeSectionModelType(episode: $0) }
       .map { SeasonsSectionItem.episodes(items: $0) }
 
-    dataSourceSections.append(.episodes(header: "Episodes", items: episodesSectioned) )
+    dataSourceSections.append(.episodes(items: episodesSectioned) )
 
-    dataObservableSubject.onNext( dataSourceSections )
-    viewStateObservableSubject.onNext( state )
+    data.send( dataSourceSections )
+    viewState.send( state )
   }
 
-  fileprivate func createModelForheader() -> SeasonsSectionModel? {
+  private func createModelForheader() -> SeasonsSectionModel? {
     if let detailShow = showDetailResult {
-      return .headerShow(header: "Header", items: [.headerShow(viewModel: SeasonHeaderViewModel(showDetail: detailShow))])
+      return .headerShow(items: [.headerShow(viewModel: SeasonHeaderViewModel(showDetail: detailShow))])
     }
     return nil
   }
@@ -205,10 +189,13 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
     fetchShowDetailsAndFirstSeason(showLoader: false)
   }
 
-  func buildModelForSeasons(with numberOfSeasons: Int) -> SeasonListViewModelProtocol? {
+  private func createViewModelForSeasons(numberOfSeasons: Int) {
     let seasons: [Int] = (1...numberOfSeasons).map { $0 }
     seasonListViewModel = SeasonListViewModel(seasonList: seasons)
     seasonListViewModel?.delegate = self
+  }
+
+  func getViewModelForAllSeasons() -> SeasonListViewModelProtocol? {
     return seasonListViewModel
   }
 
@@ -220,7 +207,7 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
 // MARK: - SeasonListViewModelDelegate
 extension EpisodesListViewModel {
   func seasonListViewModel(_ seasonListViewModel: SeasonListViewModelProtocol, didSelectSeason number: Int) {
-    seasonSelectedSubject.onNext(number)
+    seasonSelectedSubject.send(number)
   }
 }
 
@@ -232,5 +219,24 @@ extension EpisodesListViewModel {
     case loadingSeason
     case empty
     case errorSeason(String)
+
+    static public func == (lhs: ViewState, rhs: ViewState) -> Bool {
+      switch (lhs, rhs) {
+      case (.loading, .loading):
+        return true
+      case (.populated, .populated):
+        return true
+      case (.error, .error):
+        return true
+      case (.loadingSeason, .loadingSeason):
+        return true
+      case (.empty, .empty):
+        return true
+      case (.errorSeason, .errorSeason):
+        return true
+      default:
+        return false
+      }
+    }
   }
 }

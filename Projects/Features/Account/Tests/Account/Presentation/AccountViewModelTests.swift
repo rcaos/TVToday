@@ -6,142 +6,151 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-// swiftlint:disable all
-
-import Quick
-import Nimble
-import RxSwift
-import RxBlocking
-
+import Combine
+import XCTest
 @testable import Account
 @testable import Shared
 
-class AccountViewModelTests: QuickSpec {
+class AccountViewModelTests: XCTestCase {
 
-  override func spec() {
-    describe("AccountViewModel") {
+  var sut: AccountViewModelProtocol!
+  var createSessionUseCaseMock: CreateSessionUseCaseMock!
+  var fetchAccountDetailsUseCaseMock: FetchAccountDetailsUseCaseMock!
+  var fetchLoggedUserMock: FetchLoggedUserMock!
+  var deleteLoguedUserUseCaseMock: DeleteLoguedUserUseCaseMock!
+  private var disposeBag: Set<AnyCancellable>!
 
-      var createSessionUseCaseMock: CreateSessionUseCaseMock!
-      var fetchAccountDetailsUseCaseMock: FetchAccountDetailsUseCaseMock!
-      var fetchLoggedUserMock: FetchLoggedUserMock!
-      var deleteLoguedUserUseCaseMock: DeleteLoguedUserUseCaseMock!
+  override func setUp() {
+    super.setUp()
+    sut = nil
+    createSessionUseCaseMock = CreateSessionUseCaseMock()
+    fetchAccountDetailsUseCaseMock = FetchAccountDetailsUseCaseMock()
+    fetchLoggedUserMock = FetchLoggedUserMock()
+    deleteLoguedUserUseCaseMock = DeleteLoguedUserUseCaseMock()
+    disposeBag = []
+  }
 
-      beforeEach {
-        createSessionUseCaseMock = CreateSessionUseCaseMock()
-        fetchAccountDetailsUseCaseMock = FetchAccountDetailsUseCaseMock()
-        fetchLoggedUserMock = FetchLoggedUserMock()
-        deleteLoguedUserUseCaseMock = DeleteLoguedUserUseCaseMock()
-      }
+  func test_When_Session_DoesNot_Exits_Should_Be_Login_State() {
+    // given
+    fetchLoggedUserMock.account = nil
+    sut = AccountViewModel(createNewSession: createSessionUseCaseMock,
+                     fetchAccountDetails: fetchAccountDetailsUseCaseMock,
+                     fetchLoggedUser: fetchLoggedUserMock,
+                     deleteLoguedUser: deleteLoguedUserUseCaseMock)
 
-      context("When FetcLoggedUser UseCase respond nil") {
-        it("Should ViewModel contanins Login State") {
-          // given
-          fetchLoggedUserMock.account = nil
+    // when
 
-          let viewModel: AccountViewModelProtocol =
-            AccountViewModel(createNewSession: createSessionUseCaseMock,
-                             fetchAccountDetails: fetchAccountDetailsUseCaseMock,
-                             fetchLoggedUser: fetchLoggedUserMock,
-                             deleteLoguedUser: deleteLoguedUserUseCaseMock)
+    let expected = [AccountViewState.login]
+    var received = [AccountViewState]()
 
-          // then
-          let viewState = try? viewModel.viewState.toBlocking(timeout: 1).first()
-          guard let currentViewState = viewState else {
-            fail("It should emit a View State")
-            return
-          }
-          let expected = AccountViewState.login
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
 
-          expect(currentViewState).toEventually(equal(expected))
-        }
-      }
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
-      context("When FetcLoggedUser UseCase respond With Account") {
-        it("Should ViewModel contanins Profile State") {
-          // given
-          fetchLoggedUserMock.account = AccountDomain(id: 1, sessionId: "1")
-          fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
+    // then
+    XCTAssertEqual(expected, received, "Should only receives one Value")
+  }
 
-          let viewModel: AccountViewModelProtocol =
-            AccountViewModel(createNewSession: createSessionUseCaseMock,
-                             fetchAccountDetails: fetchAccountDetailsUseCaseMock,
-                             fetchLoggedUser: fetchLoggedUserMock,
-                             deleteLoguedUser: deleteLoguedUserUseCaseMock)
+  func test_When_Session_Exits_Should_Be_Profile_State() {
+    // given
+    fetchLoggedUserMock.account = AccountDomain(id: 1, sessionId: "1")
+    fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
 
-          // then
-          let viewState = try? viewModel.viewState.toBlocking(timeout: 1).first()
-          guard let currentViewState = viewState else {
-            fail("It should emit a View State")
-            return
-          }
-          let expected = AccountViewState.profile(account: AccountResult.stub())
+    sut = AccountViewModel(createNewSession: createSessionUseCaseMock,
+                     fetchAccountDetails: fetchAccountDetailsUseCaseMock,
+                     fetchLoggedUser: fetchLoggedUserMock,
+                     deleteLoguedUser: deleteLoguedUserUseCaseMock)
 
-          expect(currentViewState).toEventually(equal(expected))
-        }
-      }
+    // when
 
-      context("When UseCase Create Session returns Ok") {
-        it("Should ViewModel should contains Profile View State") {
-          // given
-          let authPermission = AuthPermissionViewModelMock()
+    let expected = [
+      AccountViewState.login,
+      AccountViewState.profile(account: AccountResult.stub())
+    ]
+    var received = [AccountViewState]()
 
-          createSessionUseCaseMock.result = ()
-          fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
 
-          let viewModel: AccountViewModelProtocol =
-            AccountViewModel(createNewSession: createSessionUseCaseMock,
-                             fetchAccountDetails: fetchAccountDetailsUseCaseMock,
-                             fetchLoggedUser: fetchLoggedUserMock,
-                             deleteLoguedUser: deleteLoguedUserUseCaseMock)
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
-          authPermission.delegate = viewModel
+    // then
+    XCTAssertEqual(expected, received, "Should receives two values")
+  }
 
-          // when
-          authPermission.signIn()
+  func test_when_CreateSession_Returns_OK_ViewModel_Should_contains_Profile_State() {
+    // given
+    let authPermission = AuthPermissionViewModelMock()
+    createSessionUseCaseMock.result = ()
+    fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
 
-          // then
-          let viewState = try? viewModel.viewState.toBlocking(timeout: 1).first()
-          guard let currentViewState = viewState else {
-            fail("It should emit a View State")
-            return
-          }
-          let expected = AccountViewState.profile(account: AccountResult.stub())
+    sut = AccountViewModel(createNewSession: createSessionUseCaseMock,
+                     fetchAccountDetails: fetchAccountDetailsUseCaseMock,
+                     fetchLoggedUser: fetchLoggedUserMock,
+                     deleteLoguedUser: deleteLoguedUserUseCaseMock)
+    authPermission.delegate = sut
 
-          expect(currentViewState).toEventually(equal(expected))
-        }
-      }
+    let expected = [
+      AccountViewState.login,
+      AccountViewState.profile(account: AccountResult.stub())
+    ]
+    var received = [AccountViewState]()
 
-      context("When UseCase Create Session returns Error") {
-        it("Should ViewModel should contains Login View State") {
-          // given
-          let authPermission = AuthPermissionViewModelMock()
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
 
-          createSessionUseCaseMock.error = CustomError.genericError
-          fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
+    // when
+    authPermission.signIn()
 
-          let viewModel: AccountViewModelProtocol =
-            AccountViewModel(createNewSession: createSessionUseCaseMock,
-                             fetchAccountDetails: fetchAccountDetailsUseCaseMock,
-                             fetchLoggedUser: fetchLoggedUserMock,
-                             deleteLoguedUser: deleteLoguedUserUseCaseMock)
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
-          authPermission.delegate = viewModel
+    // then
+    XCTAssertEqual(expected, received, "Should receives two values")
+  }
 
-          // when
-          authPermission.signIn()
+  func test_when_CreateSession_Returns_Error_ViewModel_Should_contains_Login_State() {
+    // given
+    let authPermission = AuthPermissionViewModelMock()
+    createSessionUseCaseMock.error = .noResponse
+    fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
 
-          // then
-          let viewState = try? viewModel.viewState.toBlocking(timeout: 1).first()
-          guard let currentViewState = viewState else {
-            fail("It should emit a View State")
-            return
-          }
-          let expected = AccountViewState.login
+    sut = AccountViewModel(createNewSession: createSessionUseCaseMock,
+                     fetchAccountDetails: fetchAccountDetailsUseCaseMock,
+                     fetchLoggedUser: fetchLoggedUserMock,
+                     deleteLoguedUser: deleteLoguedUserUseCaseMock)
+    authPermission.delegate = sut
 
-          expect(currentViewState).toEventually(equal(expected))
-        }
-      }
+    let expected = [
+      AccountViewState.login
+    ]
+    var received = [AccountViewState]()
 
-    }
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    authPermission.signIn()
+
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
+
+    // then
+    XCTAssertEqual(expected, received, "Should receives two values")
   }
 }

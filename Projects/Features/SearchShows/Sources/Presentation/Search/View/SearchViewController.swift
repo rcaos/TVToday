@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 import Shared
 
 class SearchViewController: NiblessViewController {
@@ -15,8 +15,7 @@ class SearchViewController: NiblessViewController {
   private let viewModel: SearchViewModel
   private let searchController: UISearchController
   private let searchControllerFactory: SearchViewControllerFactory
-
-  private let disposeBag = DisposeBag()
+  private var disposeBag = Set<AnyCancellable>()
 
   init(viewModel: SearchViewModel,
        searchController: UISearchController,
@@ -64,12 +63,12 @@ class SearchViewController: NiblessViewController {
   }
 
   private func bindSearchBarText() {
-    viewModel.searchBarText
-      .observe(on: MainScheduler.instance)
-      .subscribe(onNext: { [searchController] value in
-        searchController.searchBar.text = value
+    viewModel.searchBarTextSubject
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] value in
+        self?.searchController.searchBar.text = value
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 }
 

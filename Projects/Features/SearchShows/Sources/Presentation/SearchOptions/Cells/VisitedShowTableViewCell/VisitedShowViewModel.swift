@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 import Persistence
 
 protocol VisitedShowViewModelDelegate: AnyObject {
@@ -16,53 +16,45 @@ protocol VisitedShowViewModelDelegate: AnyObject {
 
 protocol VisitedShowViewModelProtocol {
   // MARK: - Input
-  var selectedShow: BehaviorSubject<Int> { get }
+  func showDidSelected(id: Int)
 
   // MARK: - Output
-  var shows: Observable<[ShowVisited]> { get }
+  var shows: CurrentValueSubject<[ShowVisited], Never> { get }
   var delegate: VisitedShowViewModelDelegate? { get set }
 }
 
 final class VisitedShowViewModel: VisitedShowViewModelProtocol, Hashable {
-
   weak var delegate: VisitedShowViewModelDelegate?
-
-  let selectedShow = BehaviorSubject<Int>(value: 0)
-
-  let shows: Observable<[ShowVisited]>
-
-  private var showsObservableSubject: BehaviorSubject<[ShowVisited]>
-
-  private var disposeBag = DisposeBag()
-
-  internal let hashValue: Int
+  private let selectedShow = CurrentValueSubject<Int, Never>(0)
+  let shows: CurrentValueSubject<[ShowVisited], Never>
+  var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializer
   init(shows: [ShowVisited]) {
-    self.showsObservableSubject = BehaviorSubject(value: shows)
-
-    self.shows = showsObservableSubject.asObservable()
-
-    self.hashValue = shows.hashValue
-
+    self.shows = CurrentValueSubject<[ShowVisited], Never>(shows)
     subscribe()
+  }
+
+  func showDidSelected(id: Int) {
+    selectedShow.send(id)
   }
 
   private func subscribe() {
     selectedShow
       .filter { $0 != 0 }
-      .subscribe(onNext: { [weak self] showId in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] showId in
         guard let strongSelf = self else { return }
         strongSelf.delegate?.visitedShowViewModel(strongSelf, didSelectRecentlyVisitedShow: showId)
       })
-      .disposed(by: disposeBag)
-  }
-
-  func hash(into hasher: inout Hasher) {
-    hasher.combine(hashValue)
+      .store(in: &disposeBag)
   }
 
   static func == (lhs: VisitedShowViewModel, rhs: VisitedShowViewModel) -> Bool {
     return lhs.hashValue == rhs.hashValue
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(shows.value.hashValue)
   }
 }

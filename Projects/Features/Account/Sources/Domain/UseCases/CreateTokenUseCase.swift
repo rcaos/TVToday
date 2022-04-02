@@ -7,17 +7,16 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 import Shared
+import NetworkingInterface
 
 protocol CreateTokenUseCase {
-  func execute() -> Observable<URL>
+  func execute() -> AnyPublisher<URL, DataTransferError>
 }
 
 final class DefaultCreateTokenUseCase: CreateTokenUseCase {
-
   private let authRepository: AuthRepository
-
   private let keyChainRepository: KeychainRepository
 
   init(authRepository: AuthRepository, keyChainRepository: KeychainRepository) {
@@ -25,14 +24,18 @@ final class DefaultCreateTokenUseCase: CreateTokenUseCase {
     self.keyChainRepository = keyChainRepository
   }
 
-  func execute() -> Observable<URL> {
-    return
-      authRepository.requestToken()
-        .map { [weak self] in
-          guard let token = $0.token else { throw CustomError.genericError }
-          guard let url = URL(string: "https://www.themoviedb.org/authenticate/\(token)") else { throw CustomError.genericError }
-          self?.keyChainRepository.saveRequestToken(token)
-          return url
-    }
+  func execute() -> AnyPublisher<URL, DataTransferError> {
+    authRepository.requestToken()
+      .flatMap { [weak self] result -> AnyPublisher<URL, DataTransferError> in
+        guard let token = result.token,
+              let url = URL(string: "https://www.themoviedb.org/authenticate/\(token)") else {
+                return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher()
+              }
+
+        self?.keyChainRepository.saveRequestToken(token)
+
+        return Just(url).setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
+      }
+      .eraseToAnyPublisher()
   }
 }

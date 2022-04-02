@@ -6,13 +6,12 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import Shared
+import NetworkingInterface
 
 protocol FetchTVAccountStates {
-  typealias Response = Result<TVShowAccountStateResult, Error>
-
-  func execute(requestValue: FetchTVAccountStatesRequestValue) -> Observable<Response>
+  func execute(requestValue: FetchTVAccountStatesRequestValue) -> AnyPublisher<TVShowAccountStateResult, DataTransferError>
 }
 
 struct FetchTVAccountStatesRequestValue {
@@ -21,7 +20,6 @@ struct FetchTVAccountStatesRequestValue {
 
 final class DefaultFetchTVAccountStates: FetchTVAccountStates {
   private let accountShowsRepository: AccountTVShowsRepository
-
   private let keychainRepository: KeychainRepository
 
   init(accountShowsRepository: AccountTVShowsRepository,
@@ -30,17 +28,14 @@ final class DefaultFetchTVAccountStates: FetchTVAccountStates {
     self.keychainRepository = keychainRepository
   }
 
-  func execute(requestValue: FetchTVAccountStatesRequestValue) -> Observable<Response> {
+  func execute(requestValue: FetchTVAccountStatesRequestValue) -> AnyPublisher<TVShowAccountStateResult, DataTransferError> {
     guard let account = keychainRepository.fetchLoguedUser() else {
-      return Observable.just( .failure(CustomError.genericError) )
+      return Fail(error: .noResponse).eraseToAnyPublisher()
     }
 
     return accountShowsRepository.fetchTVAccountStates(
       tvShowId: requestValue.showId,
-      sessionId: account.sessionId)
-      .flatMap { detailState -> Observable<Result<TVShowAccountStateResult, Error>> in
-        return Observable.just(.success(detailState))
-    }
-    .catchErrorJustReturn(.failure(CustomError.genericError))
+      sessionId: account.sessionId
+    )
   }
 }

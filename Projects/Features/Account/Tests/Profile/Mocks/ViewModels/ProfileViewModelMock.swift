@@ -5,28 +5,23 @@
 //  Created by Jeans Ruiz on 8/8/20.
 //
 
-import RxSwift
+import Combine
 @testable import Account
 
 final class ProfileViewModelMock: ProfileViewModelProtocol {
 
-  func createSectionModel(account: AccountResult) { }
-
-  let tapCellAction = PublishSubject<ProfilesSectionItem>()
-
   func didTapLogoutButton() { }
+  func didCellTap(model: ProfilesSectionItem) { }
 
   weak var delegate: ProfileViewModelDelegate?
-
-  let dataSource: Observable<[ProfileSectionModel]>
-
-  let presentSignOutAlert: Observable<Bool>
+  let dataSource: CurrentValueSubject<[ProfileSectionModel], Never>
+  let presentSignOutAlert: CurrentValueSubject<Bool, Never>
 
   init(account: AccountResult) {
     let accountSection = ProfileViewModelMock.createSectionModel(account: account)
 
-    dataSource = Observable.just( accountSection )
-    presentSignOutAlert = Observable.just(false)
+    dataSource = CurrentValueSubject(accountSection)
+    presentSignOutAlert = CurrentValueSubject(false)
   }
 
   static func createSectionModel(account: AccountResult) -> [ProfileSectionModel] {

@@ -6,8 +6,6 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
-
 public protocol FetchLoggedUser {
   func execute() -> AccountDomain?
 }

@@ -5,26 +5,25 @@
 //  Created by Jeans Ruiz on 8/4/20.
 //
 
-import RxSwift
+import Combine
+import NetworkingInterface
+import Shared
 @testable import ShowDetails
-@testable import Shared
 
 class FetchTVAccountStateMock: FetchTVAccountStates {
 
-  typealias ResultForShowState = (Result<TVShowAccountStateResult, Error>)
-
-  var error: Error?
   var result: TVShowAccountStateResult?
+  var error: DataTransferError?
 
-  func execute(requestValue: FetchTVAccountStatesRequestValue) -> Observable<ResultForShowState> {
+  func execute(requestValue: FetchTVAccountStatesRequestValue) -> AnyPublisher<TVShowAccountStateResult, DataTransferError> {
     if let error = error {
-      return Observable.just(.failure(error))
+      return Fail(error: error).eraseToAnyPublisher()
     }
 
     if let result = result {
-      return Observable.just(.success(result))
+      return Just(result).setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
     }
 
-    return Observable.empty()
+    return Empty().setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
   }
 }

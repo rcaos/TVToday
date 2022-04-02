@@ -5,334 +5,361 @@
 //  Created by Jeans Ruiz on 8/4/20.
 //
 
-// swiftlint:disable all
-import Quick
-import Nimble
-import RxSwift
-import RxBlocking
-import RxTest
-
+import Combine
+import XCTest
 @testable import ShowDetails
 @testable import Shared
 
-class TVShowDetailViewModelLoggedUsersTests: QuickSpec {
+class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
 
   let detailResult = TVShowDetailResult.stub()
 
-  override func spec() {
-    describe("TVShowDetailViewModel for Logged Users") {
-      var fetchLoggedUserMock: FetchLoggedUserMock!
-      var fetchTVShowDetailsUseCaseMock: FetchTVShowDetailsUseCaseMock!
-      var fetchTVAccountStateMock: FetchTVAccountStateMock!
-      var markAsFavoriteUseCaseMock: MarkAsFavoriteUseCaseMock!
-      var saveToWatchListUseCaseMock: SaveToWatchListUseCaseMock!
+  var fetchLoggedUserMock: FetchLoggedUserMock!
+  var fetchTVShowDetailsUseCaseMock: FetchTVShowDetailsUseCaseMock!
+  var fetchTVAccountStateMock: FetchTVAccountStateMock!
+  var markAsFavoriteUseCaseMock: MarkAsFavoriteUseCaseMock!
+  var saveToWatchListUseCaseMock: SaveToWatchListUseCaseMock!
+  private var disposeBag: Set<AnyCancellable>!
 
-      beforeEach {
-        fetchLoggedUserMock = FetchLoggedUserMock()
-        fetchLoggedUserMock.account = AccountDomain.stub(id: 1, sessionId: "")
+  override func setUp() {
+    super.setUp()
+    fetchLoggedUserMock = FetchLoggedUserMock()
+    fetchLoggedUserMock.account = AccountDomain.stub(id: 1, sessionId: "")
 
-        fetchTVShowDetailsUseCaseMock = FetchTVShowDetailsUseCaseMock()
-        fetchTVAccountStateMock = FetchTVAccountStateMock()
-        markAsFavoriteUseCaseMock = MarkAsFavoriteUseCaseMock()
-        saveToWatchListUseCaseMock = SaveToWatchListUseCaseMock()
-      }
+    fetchTVShowDetailsUseCaseMock = FetchTVShowDetailsUseCaseMock()
+    fetchTVAccountStateMock = FetchTVAccountStateMock()
+    markAsFavoriteUseCaseMock = MarkAsFavoriteUseCaseMock()
+    saveToWatchListUseCaseMock = SaveToWatchListUseCaseMock()
+    disposeBag = []
+  }
 
-      context("When waiting for response of Fetch Use Case") {
-        it("Should ViewModel contanins Loading State") {
-          // given
-          // not response yet
+  func test_For_Logged_User_When_UseCase_Doesnot_Respond_Yet_ViewModel_Should_Contains_Loading_State() {
+    // given
+    let sut: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
+      1,
+      fetchLoggedUser: fetchLoggedUserMock,
+      fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+      fetchTvShowState: fetchTVAccountStateMock,
+      markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
+      saveToWatchListUseCase: saveToWatchListUseCaseMock,
+      coordinator: nil
+    )
 
-          let viewModel: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
-            1,
-            fetchLoggedUser: fetchLoggedUserMock,
-            fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-            fetchTvShowState: fetchTVAccountStateMock,
-            markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
-            saveToWatchListUseCase: saveToWatchListUseCaseMock,
-            coordinator: nil
-          )
+    let expected = [TVShowDetailViewModel.ViewState.loading]
+    var received = [TVShowDetailViewModel.ViewState]()
 
-          // when
-          viewModel.viewDidLoad()
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
 
-          // when
-          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
-          guard let currentViewState = viewState else {
-            fail("It should emit a View State")
-            return
-          }
-          let expected = TVShowDetailViewModel.ViewState.loading
+    // when
+    sut.viewDidLoad()
 
-          expect(currentViewState).toEventually(equal(expected))
-        }
-      }
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
-      context("When User Fetch Use Case Retrieve Show Details") {
-        it("Should ViewModel contains the Details of TVShow") {
-          // given
-          fetchTVShowDetailsUseCaseMock.result = self.detailResult
-          fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: true, isWatchList: true)
+    // then
+    XCTAssertEqual(expected, received, "Should contains loading State")
+  }
 
-          let showDetails = TVShowDetailInfo(show: self.detailResult)
+  func test_For_Logged_User_When_UseCase_Respond_OK_ViewModel_Should_Contains_Populated_State() {
+    // given
+    fetchTVShowDetailsUseCaseMock.result = self.detailResult
+    fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: true, isWatchList: true)
 
-          let viewModel: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
-            1,
-            fetchLoggedUser: fetchLoggedUserMock,
-            fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-            fetchTvShowState: fetchTVAccountStateMock,
-            markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
-            saveToWatchListUseCase: saveToWatchListUseCaseMock,
-            coordinator: nil
-          )
+    let sut: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
+      1,
+      fetchLoggedUser: fetchLoggedUserMock,
+      fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+      fetchTvShowState: fetchTVAccountStateMock,
+      markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
+      saveToWatchListUseCase: saveToWatchListUseCaseMock,
+      coordinator: nil
+    )
 
-          // when
-          viewModel.viewDidLoad()
+    let expected = [
+      TVShowDetailViewModel.ViewState.loading,
+      TVShowDetailViewModel.ViewState.populated(TVShowDetailInfo(show: self.detailResult))
+    ]
+    var received = [TVShowDetailViewModel.ViewState]()
 
-          // then
-          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
-          guard let currentViewState = viewState else {
-            fail("It should emit a View State")
-            return
-          }
-          let expected = TVShowDetailViewModel.ViewState.populated(showDetails)
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
 
-          expect(currentViewState).toEventually(equal(expected))
-        }
-      }
+    // when
+    sut.viewDidLoad()
 
-      context("When Show Details Use Case Retrieve Error") {
-        it("Should ViewModel contains Error State") {
-          // given
-          fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: true, isWatchList: true)
-          fetchTVShowDetailsUseCaseMock.error = CustomError.genericError
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
-          let viewModel: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
-            1,
-            fetchLoggedUser: fetchLoggedUserMock,
-            fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-            fetchTvShowState: fetchTVAccountStateMock,
-            markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
-            saveToWatchListUseCase: saveToWatchListUseCaseMock,
-            coordinator: nil
-          )
+    // then
+    XCTAssertEqual(expected, received, "Should contains loading State")
+  }
 
-          // when
-          viewModel.viewDidLoad()
+  func test_For_Logged_User_When_ShowDetails_UseCase_Respond_Error_ViewModel_Should_Contains_Error_State() {
+    // given
+    fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: true, isWatchList: true)
+    fetchTVShowDetailsUseCaseMock.error = .noResponse
 
-          // then
-          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
-          guard let currentViewState = viewState else {
-            fail("It should emit a View State")
-            return
-          }
-          let expected = TVShowDetailViewModel.ViewState.error("")
+    let sut: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
+      1,
+      fetchLoggedUser: fetchLoggedUserMock,
+      fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+      fetchTvShowState: fetchTVAccountStateMock,
+      markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
+      saveToWatchListUseCase: saveToWatchListUseCaseMock,
+      coordinator: nil
+    )
 
-          expect(currentViewState).toEventually(equal(expected))
-        }
-      }
+    let expected = [
+      TVShowDetailViewModel.ViewState.loading,
+      TVShowDetailViewModel.ViewState.error("")
+    ]
+    var received = [TVShowDetailViewModel.ViewState]()
 
-      context("When Account State Use Case Retrieve Error") {
-        it("Should ViewModel contains Error State") {
-          // given
-          fetchTVAccountStateMock.error = CustomError.genericError
-          fetchTVShowDetailsUseCaseMock.result = self.detailResult
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
 
-          let viewModel: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
-            1,
-            fetchLoggedUser: fetchLoggedUserMock,
-            fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-            fetchTvShowState: fetchTVAccountStateMock,
-            markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
-            saveToWatchListUseCase: saveToWatchListUseCaseMock,
-            coordinator: nil
-          )
+    // when
+    sut.viewDidLoad()
 
-          // when
-          viewModel.viewDidLoad()
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
-          // then
-          let viewState = try? viewModel.viewState.toBlocking(timeout: 2).first()
-          guard let currentViewState = viewState else {
-            fail("It should emit a View State")
-            return
-          }
-          let expected = TVShowDetailViewModel.ViewState.error("")
+    // then
+    XCTAssertEqual(expected, received, "Should contains Error State")
+  }
 
-          expect(currentViewState).toEventually(equal(expected))
-        }
-      }
+  func test_For_Logged_User_When_Account_UseCase_Respond_Error_ViewModel_Should_Contains_Error_State() {
+    // given
+    fetchTVAccountStateMock.error = .noResponse
+    fetchTVShowDetailsUseCaseMock.result = self.detailResult
 
-      context("When Error Happens and did RefreshView") {
-        it("Should ViewModel contains Details of TVShow") {
-          // given
-          fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: true, isWatchList: true)
-          fetchTVShowDetailsUseCaseMock.error = CustomError.genericError
+    let sut: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
+      1,
+      fetchLoggedUser: fetchLoggedUserMock,
+      fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+      fetchTvShowState: fetchTVAccountStateMock,
+      markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
+      saveToWatchListUseCase: saveToWatchListUseCaseMock,
+      coordinator: nil
+    )
 
-          let scheduler = TestScheduler(initialClock: 0)
-          let disposeBag = DisposeBag()
-          let viewStateObserver = scheduler.createObserver(TVShowDetailViewModel.ViewState.self)
+    let expected = [
+      TVShowDetailViewModel.ViewState.loading,
+      TVShowDetailViewModel.ViewState.error("")
+    ]
+    var received = [TVShowDetailViewModel.ViewState]()
 
-          let viewModel: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
-            1,
-            fetchLoggedUser: fetchLoggedUserMock,
-            fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-            fetchTvShowState: fetchTVAccountStateMock,
-            markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
-            saveToWatchListUseCase: saveToWatchListUseCaseMock,
-            coordinator: nil
-          )
+    sut.viewState
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
 
-          viewModel.viewState
-            .subscribe { event in
-              viewStateObserver.on(event)
-            }
-            .disposed(by: disposeBag)
+    // when
+    sut.viewDidLoad()
 
-          // when
-          viewModel.viewDidLoad()
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
-          fetchTVShowDetailsUseCaseMock.error = nil
-          fetchTVShowDetailsUseCaseMock.result = self.detailResult
-          viewModel.refreshView()
+    // then
+    XCTAssertEqual(expected, received, "Should contains Error State")
+  }
 
-          // then
-          let showDetails = TVShowDetailInfo(show: self.detailResult)
-          let populatedState = TVShowDetailViewModel.ViewState.populated(showDetails)
+  // MARK: - TODO, look the way of thest this case
+//  func test_For_Logged_When_Error_Happens_And_Did_Refresh_ViewModel_Should_Contains_Populated() {
+//    // given
+//    fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: true, isWatchList: true)
+//    fetchTVShowDetailsUseCaseMock.error = .noResponse
+//
+//    // let viewStateObserver = scheduler.createObserver(TVShowDetailViewModel.ViewState.self)
+//
+//    let sut: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
+//      1,
+//      fetchLoggedUser: fetchLoggedUserMock,
+//      fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+//      fetchTvShowState: fetchTVAccountStateMock,
+//      markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
+//      saveToWatchListUseCase: saveToWatchListUseCaseMock,
+//      coordinator: nil
+//    )
+//
+//    let expected = [
+//      TVShowDetailViewModel.ViewState.loading,
+//      TVShowDetailViewModel.ViewState.error(""),
+//      TVShowDetailViewModel.ViewState.populated(TVShowDetailInfo(show: detailResult))
+//    ]
+//    var received = [TVShowDetailViewModel.ViewState]()
+//
+//    sut.viewState
+//      .removeDuplicates()
+//      .sink(receiveValue: { value in
+//        received.append(value)
+//      })
+//      .store(in: &disposeBag)
+//
+//    //          viewModel.viewState
+//    //            .subscribe { event in
+//    //              viewStateObserver.on(event)
+//    //            }
+//    //            .disposed(by: disposeBag)
+//    //
+//
+//    // when
+//    sut.viewDidLoad()
+//    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
+//
+//    fetchTVShowDetailsUseCaseMock.error = nil
+//    fetchTVShowDetailsUseCaseMock.result = self.detailResult
+//    sut.refreshView()
+//    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
+//
+//    // then
+//    XCTAssertEqual(expected, received, "Should contains Populated State")
+//  }
 
-          let expectedStates: [Recorded<Event<TVShowDetailViewModel.ViewState>>] =
-            [ .next(0, .loading),
-              .next(0, .error("")) ,
-              .next(0, populatedState) ]
+  func test_For_Logged_When_Usecase_get_Favorite_State_ViewModel_Should_Contains_isFavorite_Value() {
+    // given
+    fetchTVShowDetailsUseCaseMock.result = self.detailResult
+    fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: true, isWatchList: true)
 
-          expect(viewStateObserver.events).toEventually(equal(expectedStates))
-        }
-      }
+    let sut: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
+      1,
+      fetchLoggedUser: fetchLoggedUserMock,
+      fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+      fetchTvShowState: fetchTVAccountStateMock,
+      markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
+      saveToWatchListUseCase: saveToWatchListUseCaseMock,
+      coordinator: nil
+    )
 
-      context("When Account Use Case State Retrieves isFavorite State") {
-        it("Should ViewModel isFavorite contains True") {
-          // given
-          fetchTVShowDetailsUseCaseMock.result = self.detailResult
-          fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: true, isWatchList: true)
+    let expected = [false, true]
+    var received = [Bool]()
 
-          let viewModel: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
-            1,
-            fetchLoggedUser: fetchLoggedUserMock,
-            fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-            fetchTvShowState: fetchTVAccountStateMock,
-            markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
-            saveToWatchListUseCase: saveToWatchListUseCaseMock,
-            coordinator: nil
-          )
+    sut.isFavorite
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
 
-          // when
-          viewModel.viewDidLoad()
+    // when
+    sut.viewDidLoad()
 
-          // then
-          let isFavoriteSubject = try? viewModel.isFavorite.toBlocking(timeout: 2).first()
-          guard let isFavorite = isFavoriteSubject else {
-            fail("It should emit a View State")
-            return
-          }
-          let expected = true
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
-          expect(isFavorite).toEventually(equal(expected))
-        }
-      }
+    // then
+    XCTAssertEqual(expected, received, "Should contains Favorite State")
+  }
 
-      context("When Account Use Case State Retrieves isFavorite State") {
-        it("Should ViewModel isFavorite contains False") {
-          // given
-          fetchTVShowDetailsUseCaseMock.result = self.detailResult
-          fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: false, isWatchList: true)
+  func test_For_Logged_When_Usecase_get_Favorite_State_ViewModel_Should_Contains_isFavorite_False_Value() {
+    // given
+    fetchTVShowDetailsUseCaseMock.result = self.detailResult
+    fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: false, isWatchList: true)
 
-          let viewModel: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
-            1,
-            fetchLoggedUser: fetchLoggedUserMock,
-            fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-            fetchTvShowState: fetchTVAccountStateMock,
-            markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
-            saveToWatchListUseCase: saveToWatchListUseCaseMock,
-            coordinator: nil
-          )
+    let sut: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
+      1,
+      fetchLoggedUser: fetchLoggedUserMock,
+      fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+      fetchTvShowState: fetchTVAccountStateMock,
+      markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
+      saveToWatchListUseCase: saveToWatchListUseCaseMock,
+      coordinator: nil
+    )
 
-          // when
-          viewModel.viewDidLoad()
+    let expected = [false]
+    var received = [Bool]()
 
-          // then
-          let isFavoriteSubject = try? viewModel.isFavorite.toBlocking(timeout: 2).first()
-          guard let isFavorite = isFavoriteSubject else {
-            fail("It should emit a View State")
-            return
-          }
-          let expected = false
+    sut.isFavorite
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
 
-          expect(isFavorite).toEventually(equal(expected))
-        }
-      }
+    // when
+    sut.viewDidLoad()
 
-      context("When Account Use Case State Retrieves isWatchList State") {
-        it("Should ViewModel isWatchList contains True") {
-          // given
-          let isInitialWatchList = true
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
-          fetchTVShowDetailsUseCaseMock.result = self.detailResult
-          fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: true, isWatchList: isInitialWatchList)
+    // then
+    XCTAssertEqual(expected, received, "Should contains Favorite State to false")
+  }
 
-          let viewModel: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
-            1,
-            fetchLoggedUser: fetchLoggedUserMock,
-            fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-            fetchTvShowState: fetchTVAccountStateMock,
-            markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
-            saveToWatchListUseCase: saveToWatchListUseCaseMock,
-            coordinator: nil
-          )
+  func test_For_Logged_When_Usecase_get_WatchList_State_ViewModel_Should_Contains_isFavorite_Value() {
+    // given
+    fetchTVShowDetailsUseCaseMock.result = self.detailResult
+    fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: true, isWatchList: true)
 
-          // when
-          viewModel.viewDidLoad()
+    let sut: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
+      1,
+      fetchLoggedUser: fetchLoggedUserMock,
+      fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+      fetchTvShowState: fetchTVAccountStateMock,
+      markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
+      saveToWatchListUseCase: saveToWatchListUseCaseMock,
+      coordinator: nil
+    )
 
-          // then
-          let isWatchListSubject = try? viewModel.isWatchList.toBlocking(timeout: 2).first()
-          guard let isWatchListObserver = isWatchListSubject else {
-            fail("It should emit a View State")
-            return
-          }
+    let expected = [false, true]
+    var received = [Bool]()
 
-          expect(isWatchListObserver).toEventually(equal(isInitialWatchList))
-        }
-      }
+    sut.isWatchList
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
 
-      context("When Account Use Case State Retrieves isWatchList State") {
-        it("Should ViewModel isWatchList contains False") {
-          // given
-          let isInitialWatchList = false
+    // when
+    sut.viewDidLoad()
 
-          fetchTVShowDetailsUseCaseMock.result = self.detailResult
-          fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: true, isWatchList: isInitialWatchList)
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
-          let viewModel: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
-            1,
-            fetchLoggedUser: fetchLoggedUserMock,
-            fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-            fetchTvShowState: fetchTVAccountStateMock,
-            markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
-            saveToWatchListUseCase: saveToWatchListUseCaseMock,
-            coordinator: nil
-          )
+    // then
+    XCTAssertEqual(expected, received, "Should contains Favorite State")
+  }
 
-          // when
-          viewModel.viewDidLoad()
+  func test_For_Logged_When_Usecase_get_WatchList_State_ViewModel_Should_Contains_isFavorite_False_Value() {
+    // given
+    fetchTVShowDetailsUseCaseMock.result = self.detailResult
+    fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: true, isWatchList: false)
 
-          // then
-          let isWatchListSubject = try? viewModel.isWatchList.toBlocking(timeout: 2).first()
-          guard let isWatchListObserver = isWatchListSubject else {
-            fail("It should emit a View State")
-            return
-          }
+    let sut: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
+      1,
+      fetchLoggedUser: fetchLoggedUserMock,
+      fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+      fetchTvShowState: fetchTVAccountStateMock,
+      markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
+      saveToWatchListUseCase: saveToWatchListUseCaseMock,
+      coordinator: nil
+    )
 
-          expect(isWatchListObserver).toEventually(equal(isInitialWatchList))
-        }
-      }
-    }
+    let expected = [false]
+    var received = [Bool]()
+
+    sut.isWatchList
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    sut.viewDidLoad()
+
+    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
+
+    // then
+    XCTAssertEqual(expected, received, "Should contains Favorite State to false")
   }
 }

@@ -5,33 +5,23 @@
 //  Created by Jeans Ruiz on 7/7/20.
 //
 
-import RxSwift
+import Foundation
+import Combine
 import Shared
 import Persistence
+import NetworkingInterface
 
 final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
 
   weak var delegate: SearchOptionsViewModelDelegate?
 
   private let fetchGenresUseCase: FetchGenresUseCase
-
   private let fetchVisitedShowsUseCase: FetchVisitedShowsUseCase
-
   private let recentVisitedShowsDidChange: RecentVisitedShowDidChangeUseCase
 
-  private let viewStateObservableSubject = BehaviorSubject<SearchViewState>(value: .loading)
-
-  private let dataSourceObservableSubject = BehaviorSubject<[SearchOptionsSectionModel]>(value: [])
-
-  private let genres: [Genre] = []
-
-  private let visitedShows: [ShowVisited] = []
-
-  private let disposeBag = DisposeBag()
-
-  var viewState: Observable<SearchViewState>
-
-  var dataSource: Observable<[SearchOptionsSectionModel]>
+  let viewState = CurrentValueSubject<SearchViewState, Never>(.loading)
+  let dataSource = CurrentValueSubject<[SearchOptionsSectionModel], Never>([])
+  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializer
   init(fetchGenresUseCase: FetchGenresUseCase,
@@ -40,9 +30,6 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
     self.fetchGenresUseCase = fetchGenresUseCase
     self.fetchVisitedShowsUseCase = fetchVisitedShowsUseCase
     self.recentVisitedShowsDidChange = recentVisitedShowsDidChange
-
-    viewState = viewStateObservableSubject.asObservable()
-    dataSource = dataSourceObservableSubject.asObservable()
   }
 
   // MARK: - Public
@@ -60,64 +47,73 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
   }
 
   // MARK: - Private
-  private func fetchRecentShows() -> Observable<[ShowVisited]> {
+  private func fetchRecentShows() -> AnyPublisher<[ShowVisited], CustomError> {
     return fetchVisitedShowsUseCase.execute(requestValue: FetchVisitedShowsUseCaseRequestValue())
   }
 
-  private func fetchGenres() -> Observable<GenreListResult> {
+  private func fetchGenres() -> AnyPublisher<GenreListResult, CustomError> {
     return fetchGenresUseCase.execute(requestValue: FetchGenresUseCaseRequestValue())
+      .mapError { error -> CustomError in return CustomError.transferError(error) }
+      .eraseToAnyPublisher()
   }
 
-  private func recentShowsDidChanged() -> Observable<[ShowVisited]> {
-    recentVisitedShowsDidChange.execute()
+  private func recentShowsDidChanged() -> AnyPublisher<[ShowVisited], CustomError> {
+    return recentVisitedShowsDidChange.execute()
       .filter { $0 }
-      .flatMap { [weak self] _ -> Observable<[ShowVisited]> in
-        guard let strongSelf = self else { return Observable.just([]) }
+      .flatMap { [weak self] _ -> AnyPublisher<[ShowVisited], CustomError> in
+        guard let strongSelf = self else { return Just([]).setFailureType(to: CustomError.self).eraseToAnyPublisher() }
         return strongSelf.fetchRecentShows()
-    }
+      }
+      .eraseToAnyPublisher()
   }
 
   private func fetchGenresAndRecentShows() {
-    Observable.combineLatest(recentShowsDidChanged(), fetchGenres())
-      .subscribe(onNext: { [weak self] (visited, resultGenre) in
+    Publishers.CombineLatest(
+      recentShowsDidChanged(),
+      fetchGenres()
+    )
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { [weak self] completion in
+        switch completion {
+        case let .failure(error):
+          self?.viewState.send(.error(error.localizedDescription))
+        case .finished:
+          break
+        }
+      },
+            receiveValue: { [weak self] (visited, resultGenre) in
         guard let strongSelf = self else { return }
         strongSelf.processFetched(for: resultGenre)
         strongSelf.createSectionModel(showsVisited: visited, genres: resultGenre.genres ?? [])
-
-        }, onError: { [weak self] error in
-          guard let strongSelf = self else { return }
-          print("Error to fetch Case use \(error)")
-          strongSelf.viewStateObservableSubject.onNext( .error(CustomError.genericError.localizedDescription) )
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
   private func processFetched(for response: GenreListResult) {
     let fetchedGenres = (response.genres ?? [])
     if fetchedGenres.isEmpty {
-      viewStateObservableSubject.onNext(.empty)
+      viewState.send(.empty)
     } else {
-      viewStateObservableSubject.onNext( .populated )
+      viewState.send(.populated )
     }
   }
 
   private func createSectionModel(showsVisited: [ShowVisited], genres: [Genre]) {
-
-    var dataSource: [SearchOptionsSectionModel] = []
+    var sectionModel: [SearchOptionsSectionModel] = []
 
     let showsSectionItem = mapRecentShowsToSectionItem(recentsShows: showsVisited)
 
     if let recentShowsSection = showsSectionItem {
-      dataSource.append(.showsVisited(items: [recentShowsSection]))
+      sectionModel.append(.showsVisited(items: [recentShowsSection]))
     }
 
     let genresSectionItem = createSectionFor(genres: genres)
 
     if !genresSectionItem.isEmpty {
-      dataSource.append(.genres(items: genresSectionItem))
+      sectionModel.append(.genres(items: genresSectionItem))
     }
 
-    dataSourceObservableSubject.onNext(dataSource)
+    dataSource.send(sectionModel)
   }
 
   private func createSectionFor(genres: [Genre] ) -> [SearchSectionItem] {

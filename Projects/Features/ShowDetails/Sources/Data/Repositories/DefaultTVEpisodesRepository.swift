@@ -6,8 +6,9 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import NetworkingInterface
+import Networking
 import Shared
 
 public final class DefaultTVEpisodesRepository {
@@ -25,15 +26,18 @@ public final class DefaultTVEpisodesRepository {
 // MARK: - TVEpisodesRepository
 extension DefaultTVEpisodesRepository: TVEpisodesRepository {
 
-  func fetchEpisodesList(for show: Int, season: Int) -> Observable<SeasonResult> {
-    let endPoint = TVShowsProvider.getEpisodesFor(show, season)
-    return dataTransferService.request(endPoint, SeasonResult.self)
-      .flatMap { response -> Observable<SeasonResult> in
-          Observable.just( self.mapEpisodesWithBasePath(response: response) )
-      }
+  func fetchEpisodesList(for show: Int, season: Int) -> AnyPublisher<SeasonResult, DataTransferError> {
+    let endpoint = Endpoint<SeasonResult>(
+      path: "3/tv/\(show)/season/\(season)",
+      method: .get
+    )
+
+    return dataTransferService.request(with: endpoint)
+      .map { self.mapEpisodesWithBasePath(response: $0) }
+      .eraseToAnyPublisher()
   }
 
-  fileprivate func mapEpisodesWithBasePath(response: SeasonResult) -> SeasonResult {
+  private func mapEpisodesWithBasePath(response: SeasonResult) -> SeasonResult {
     guard let basePath = basePath else {
       return response
     }

@@ -5,7 +5,7 @@
 //  Created by Jeans Ruiz on 8/7/20.
 //
 
-import RxSwift
+import Combine
 import Shared
 
 protocol ResultsSearchViewModelDelegate: AnyObject {
@@ -17,7 +17,6 @@ protocol ResultsSearchViewModelDelegate: AnyObject {
 }
 
 protocol ResultsSearchViewModelProtocol {
-
   // MARK: - Input
   func recentSearchIsPicked(query: String)
   func showIsPicked(idShow: Int)
@@ -25,8 +24,8 @@ protocol ResultsSearchViewModelProtocol {
   func resetSearch()
 
   // MARK: - Output
-  var viewState: Observable<ResultViewState> { get }
-  var dataSource: Observable<[ResultSearchSectionModel]> { get }
+  var viewState: CurrentValueSubject<ResultViewState, Never> { get }
+  var dataSource: CurrentValueSubject<[ResultSearchSectionModel], Never> { get }
   var delegate: ResultsSearchViewModelDelegate? { get set }
   func getViewState() -> ResultViewState
 }

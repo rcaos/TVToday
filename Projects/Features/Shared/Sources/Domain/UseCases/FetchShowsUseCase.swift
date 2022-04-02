@@ -6,13 +6,17 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
+import NetworkingInterface
 
 public protocol FetchTVShowsUseCase {
-
-  func execute(requestValue: FetchTVShowsUseCaseRequestValue) -> Observable<TVShowResult>
+  func execute(requestValue: FetchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowResult, DataTransferError>
 }
 
 public struct FetchTVShowsUseCaseRequestValue {
   public let page: Int
+
+  public init(page: Int) {
+    self.page = page
+  }
 }

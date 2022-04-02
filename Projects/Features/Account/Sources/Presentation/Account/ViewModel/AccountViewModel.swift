@@ -7,7 +7,8 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
+import NetworkingInterface
 import Shared
 
 enum AccountViewState: Equatable {
@@ -16,26 +17,20 @@ enum AccountViewState: Equatable {
 }
 
 protocol AccountViewModelProtocol: AuthPermissionViewModelDelegate {
-  var viewState: Observable<AccountViewState> { get }
+  var viewState: CurrentValueSubject<AccountViewState, Never> { get }
 }
 
 final class AccountViewModel: AccountViewModelProtocol {
   private let createNewSession: CreateSessionUseCase
-
   private let fetchLoggedUser: FetchLoggedUser
-
   private let fetchAccountDetails: FetchAccountDetailsUseCase
-
   private let deleteLoguedUser: DeleteLoguedUserUseCase
 
-  private let viewStateSubject: BehaviorSubject<AccountViewState> = .init(value: .login)
-
   weak var coordinator: AccountCoordinatorProtocol?
-
-  private let disposeBag = DisposeBag()
+  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Public Api
-  let viewState: Observable<AccountViewState>
+  let viewState: CurrentValueSubject<AccountViewState, Never> = .init(.login)
 
   // MARK: - Initializers
   init(createNewSession: CreateSessionUseCase,
@@ -46,9 +41,6 @@ final class AccountViewModel: AccountViewModelProtocol {
     self.fetchAccountDetails = fetchAccountDetails
     self.fetchLoggedUser = fetchLoggedUser
     self.deleteLoguedUser = deleteLoguedUser
-
-    viewState = viewStateSubject.asObservable()
-
     checkIsLogued()
   }
 
@@ -56,45 +48,61 @@ final class AccountViewModel: AccountViewModelProtocol {
     if fetchLoggedUser.execute() != nil {
       fetchUserDetails()
     } else {
-      viewStateSubject.onNext(.login)
+      viewState.send(.login)
     }
   }
 
-  fileprivate func fetchUserDetails() {
+  private func fetchUserDetails() {
     fetchDetailsAccount()
-      .subscribe(onNext: { [weak self] accountDetails in
-        self?.viewStateSubject.onNext(.profile(account: accountDetails))
-        }, onError: { [weak self] _ in
-          self?.viewStateSubject.onNext(.login)
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { [weak self] completion in
+        switch completion {
+        case .failure:
+          self?.viewState.send(.login)
+        case .finished:
+          break
+        }
+      },
+            receiveValue: { [weak self] accountDetails in
+        self?.viewState.send(.profile(account: accountDetails))
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
-  fileprivate func createSession() {
+  private func createSession() {
     createNewSession.execute()
-      .flatMap { [weak self] () -> Observable<AccountResult> in
-        guard let strongSelf = self else { return Observable.error(CustomError.genericError) }
+      .flatMap { [weak self] () -> AnyPublisher<AccountResult, DataTransferError> in
+        guard let strongSelf = self else {
+          return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher()
+        }
         return strongSelf.fetchDetailsAccount()
-    }
-    .subscribe(onNext: { [weak self] accountDetails in
-      self?.viewStateSubject.onNext(.profile(account: accountDetails))
-      }, onError: { [weak self] _ in
-        self?.viewStateSubject.onNext(.login)
-    })
-      .disposed(by: disposeBag)
+      }
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { [weak self] completion in
+        switch completion {
+        case .failure:
+          self?.viewState.send(.login)
+        case .finished:
+          break
+        }
+      },
+            receiveValue: { [weak self] accountDetails in
+        self?.viewState.send(.profile(account: accountDetails))
+      })
+      .store(in: &disposeBag)
   }
 
-  fileprivate func fetchDetailsAccount() -> Observable<AccountResult> {
+  private func fetchDetailsAccount() -> AnyPublisher<AccountResult, DataTransferError> {
     return fetchAccountDetails.execute()
   }
 
-  fileprivate func logoutUser() {
+  private func logoutUser() {
     deleteLoguedUser.execute()
-    viewStateSubject.onNext(.login)
+    viewState.send(.login)
   }
 
   // MARK: - Navigation
-  fileprivate func navigateTo(step: AccountStep) {
+  private func navigateTo(step: AccountStep) {
     coordinator?.navigate(to: step)
   }
 }

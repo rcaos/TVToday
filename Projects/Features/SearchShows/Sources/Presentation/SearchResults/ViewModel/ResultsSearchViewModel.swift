@@ -6,49 +6,38 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Foundation
+import Combine
 import Shared
 import Persistence
 
 final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
-
   private let searchTVShowsUseCase: SearchTVShowsUseCase
-
   private let fetchRecentSearchsUseCase: FetchSearchsUseCase
+  private var currentSearchSubject = CurrentValueSubject<String, Never>("")  /// ?????
 
-  private let dataSourceObservableSubject = BehaviorSubject<[ResultSearchSectionModel]>(value: [])
+  let viewState  = CurrentValueSubject<ResultViewState, Never>(.initial)
+  let dataSource = CurrentValueSubject<[ResultSearchSectionModel], Never>([])
 
-  private var currentSearchSubject = BehaviorSubject<String>(value: "")
-
-  private let viewStateObservableSubject: BehaviorSubject<ResultViewState> = .init(value: .initial)
-
-  private var disposeBag = DisposeBag()
-
-  // MARK: - Public Api
-  let viewState: Observable<ResultViewState>
-  let dataSource: Observable<[ResultSearchSectionModel]>
   weak var delegate: ResultsSearchViewModelDelegate?
+  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Init
   init(searchTVShowsUseCase: SearchTVShowsUseCase,
        fetchRecentSearchsUseCase: FetchSearchsUseCase) {
     self.searchTVShowsUseCase = searchTVShowsUseCase
     self.fetchRecentSearchsUseCase = fetchRecentSearchsUseCase
-
-    viewState = viewStateObservableSubject.asObservable()
-    dataSource = dataSourceObservableSubject.asObservable()
-
     subscribeToRecentsShowsChange()
     subscribeToSearchInput()
   }
 
   // MARK: - Public
   func searchShows(with query: String) {
-    currentSearchSubject.onNext(query)
+    currentSearchSubject.send(query)
   }
 
   func resetSearch() {
-    viewStateObservableSubject.onNext(.initial)
+    viewState.send(.initial)
   }
 
   func recentSearchIsPicked(query: String) {
@@ -60,66 +49,62 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
   }
 
   func getViewState() -> ResultViewState {
-    if let viewState = try? viewStateObservableSubject.value() {
-      return viewState
-    } else {
-      return .empty
-    }
+    return viewState.value
   }
 
   // MARK: - Private
   private func subscribeToSearchInput() {
     currentSearchSubject
       .filter { !$0.isEmpty }
-      .subscribe(onNext: { [weak self] query in
-        guard let strongSelf = self else { return }
-        strongSelf.fetchShows(with: query)
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] query in
+        self?.fetchShows(with: query)
       })
-      .disposed(by: disposeBag)
-  }
-
-  private func fetchRecentsShows() -> Observable<[Search]> {
-    return fetchRecentSearchsUseCase.execute(requestValue: FetchSearchsUseCaseRequestValue())
+      .store(in: &disposeBag)
   }
 
   private func subscribeToRecentsShowsChange() {
-    viewStateObservableSubject
-      .distinctUntilChanged()
+    viewState
+      .removeDuplicates()
       .filter { $0 == .initial }
-      .flatMap { [weak self] _ -> Observable<[Search]> in
-        guard let strongSelf = self else { return Observable.just([])}
-        return strongSelf.fetchRecentsShows()
-    }
-    .subscribe(onNext: { [weak self] results in
-      self?.createSectionModel(recentSearchs: results.map { $0.query }, resultShows: [])
-    })
-      .disposed(by: disposeBag)
+      .flatMap { [fetchRecentSearchsUseCase] _ -> AnyPublisher<[Search], CustomError> in
+        return fetchRecentSearchsUseCase.execute(requestValue: FetchSearchsUseCaseRequestValue())
+      }
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] results in
+        self?.createSectionModel(recentSearchs: results.map { $0.query }, resultShows: [])
+      })
+      .store(in: &disposeBag)
   }
 
   private func fetchShows(with query: String) {
-    viewStateObservableSubject.onNext(.loading)
+    viewState.send(.loading)
     createSectionModel(recentSearchs: [], resultShows: [])
 
     let request = SearchTVShowsUseCaseRequestValue(query: query, page: 1)
 
     searchTVShowsUseCase.execute(requestValue: request)
-      .subscribe(onNext: { [weak self] result in
-        guard let strongSelf = self else { return }
-        strongSelf.processFetched(for: result)
-        }, onError: { [weak self] error in
-          guard let strongSelf = self else { return }
-          strongSelf.viewStateObservableSubject.onNext(.error(error.localizedDescription))
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { [weak self] completion in
+        switch completion {
+        case let .failure(error):
+          self?.viewState.send(.error(error.localizedDescription))
+        case .finished:
+          break
+        }
+      }, receiveValue: { [weak self] result in
+        self?.processFetched(for: result)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
   private func processFetched(for response: TVShowResult) {
     let fetchedShows = response.results ?? []
 
     if fetchedShows.isEmpty {
-      viewStateObservableSubject.onNext( .empty )
+      viewState.send( .empty )
     } else {
-      viewStateObservableSubject.onNext( .populated )
+      viewState.send( .populated )
     }
 
     createSectionModel(recentSearchs: [], resultShows: fetchedShows)
@@ -132,16 +117,16 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
       .map { TVShowCellViewModel(show: $0) }
       .map { ResultSearchSectionItem.results(items: $0) }
 
-    var dataSource: [ResultSearchSectionModel] = []
+    var sectionModel: [ResultSearchSectionModel] = []
 
     if !recentSearchsItem.isEmpty {
-      dataSource.append(.recentSearchs(items: recentSearchsItem))
+      sectionModel.append(.recentSearchs(items: recentSearchsItem))
     }
 
     if !resultsShowsItem.isEmpty {
-      dataSource.append(.results(items: resultsShowsItem))
+      sectionModel.append(.results(items: resultsShowsItem))
     }
 
-    dataSourceObservableSubject.onNext(dataSource)
+    dataSource.send(sectionModel)
   }
 }

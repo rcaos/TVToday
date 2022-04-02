@@ -7,8 +7,8 @@
 //
 
 import UIKit
+import Combine
 import CoreGraphics
-import RxSwift
 import Shared
 
 class EpisodesListViewController: NiblessViewController, Loadable, Retryable {
@@ -21,7 +21,7 @@ class EpisodesListViewController: NiblessViewController, Loadable, Retryable {
   private let emptyView = MessageImageView(message: "No episodes available", image: "tvshowEmpty")
   private let errorView = MessageImageView(message: "Unable to connect to server", image: "error")
 
-  private let disposeBag = DisposeBag()
+  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializer
   init(viewModel: EpisodesListViewModelProtocol) {
@@ -52,11 +52,11 @@ class EpisodesListViewController: NiblessViewController, Loadable, Retryable {
   private func subscribeToViewState() {
     viewModel
       .viewState
-      .subscribe(onNext: { [weak self] state in
-        guard let strongSelf = self else { return }
-        strongSelf.configureView(with: state)
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] state in
+        self?.configureView(with: state)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
   private func configureView(with state: EpisodesListViewModel.ViewState) {

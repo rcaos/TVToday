@@ -7,22 +7,18 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 import Shared
 
 class ResultsSearchViewController: NiblessViewController {
-
-  private let disposeBag = DisposeBag()
-
-  private let resultView: ResultListView = ResultListView()
-
   private let viewModel: ResultsSearchViewModelProtocol
-
+  private let resultView: ResultListView = ResultListView()
   private let messageView = MessageView()
-
   typealias DataSource = UITableViewDiffableDataSource<ResultSearchSectionView, ResultSearchSectionItem>
   typealias Snapshot = NSDiffableDataSourceSnapshot<ResultSearchSectionView, ResultSearchSectionItem>
   private var dataSource: DataSource?
+
+  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Life Cycle
   init(viewModel: ResultsSearchViewModelProtocol) {
@@ -58,11 +54,11 @@ class ResultsSearchViewController: NiblessViewController {
   private func setupViewModel() {
     viewModel
       .viewState
-      .subscribe(onNext: { [weak self] state in
-        guard let strongSelf = self else { return }
-        strongSelf.configView(with: state)
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] state in
+        self?.configView(with: state)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
   // MARK: - Setup Table View
@@ -98,10 +94,11 @@ class ResultsSearchViewController: NiblessViewController {
         }
         return snapShot
       }
-      .subscribe(onNext: { [weak self] snapshot in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] snapshot in
         self?.dataSource?.apply(snapshot)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
   // MARK: - Handle View State

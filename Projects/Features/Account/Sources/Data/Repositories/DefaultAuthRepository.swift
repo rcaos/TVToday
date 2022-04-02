@@ -6,8 +6,9 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
 import NetworkingInterface
+import Networking
 
 final class DefaultAuthRepository {
 
@@ -21,13 +22,22 @@ final class DefaultAuthRepository {
 // MARK: - AuthRepository
 extension DefaultAuthRepository: AuthRepository {
 
-  func requestToken() -> Observable<CreateTokenResult> {
-    let endPoint = AuthProvider.createRequestToken
-    return dataTransferService.request(endPoint, CreateTokenResult.self)
+  func requestToken() -> AnyPublisher<CreateTokenResult, DataTransferError> {
+    let endpoint = Endpoint<CreateTokenResult>(
+      path: "3/authentication/token/new",
+      method: .get
+    )
+    return dataTransferService.request(with: endpoint)
   }
 
-  func createSession(requestToken: String) -> Observable<CreateSessionResult> {
-    let endPoint = AuthProvider.createSession(requestToken: requestToken)
-    return dataTransferService.request(endPoint, CreateSessionResult.self)
+  func createSession(requestToken: String) -> AnyPublisher<CreateSessionResult, DataTransferError> {
+    let endpoint = Endpoint<CreateSessionResult>(
+      path: "3/authentication/session/new",
+      method: .post,
+      queryParameters: [
+        "request_token": requestToken
+      ]
+    )
+    return dataTransferService.request(with: endpoint)
   }
 }

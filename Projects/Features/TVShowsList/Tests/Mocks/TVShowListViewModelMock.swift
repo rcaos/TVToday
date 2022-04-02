@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import RxSwift
+import Combine
 import Shared
 
 @testable import TVShowsList
@@ -23,19 +23,9 @@ class TVShowListViewModelMock: TVShowListViewModelProtocol {
 
   func viewDidFinish() { }
 
-  func getCurrentViewState() -> SimpleViewState<TVShowCellViewModel> {
-    if let currentViewState = try? viewStateObservableSubject.value() {
-      return currentViewState
-    }
-    return .empty
-  }
-
-  var viewState: Observable<SimpleViewState<TVShowCellViewModel>>
-
-  var viewStateObservableSubject: BehaviorSubject<SimpleViewState<TVShowCellViewModel>>
+  var viewStateObservableSubject: CurrentValueSubject<SimpleViewState<TVShowCellViewModel>, Never>
 
   init(state: SimpleViewState<TVShowCellViewModel>) {
-    viewStateObservableSubject = BehaviorSubject(value: state)
-    viewState = viewStateObservableSubject.asObservable()
+    viewStateObservableSubject = CurrentValueSubject(state)
   }
 }

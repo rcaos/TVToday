@@ -6,8 +6,8 @@
 //
 
 import UIKit
+import Combine
 import Shared
-import RxSwift
 
 class SearchOptionRootView: NiblessView {
 
@@ -25,7 +25,7 @@ class SearchOptionRootView: NiblessView {
   typealias Snapshot = NSDiffableDataSourceSnapshot<SearchOptionsSectionView, SearchSectionItem>
   private var dataSource: DataSource?
 
-  private let disposeBag = DisposeBag()
+  private var disposeBag = Set<AnyCancellable>()
 
   init(frame: CGRect = .zero, viewModel: SearchOptionsViewModelProtocol) {
     self.viewModel = viewModel
@@ -70,10 +70,11 @@ class SearchOptionRootView: NiblessView {
         }
         return snapShot
       }
-      .subscribe(onNext: { [weak self] snapshot in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] snapshot in
         self?.dataSource?.apply(snapshot)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
   override func layoutSubviews() {

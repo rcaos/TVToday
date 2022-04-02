@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import RxSwift
 
 public protocol AuthPermissionViewModelDelegate: AnyObject {
   func authPermissionViewModel(didSignedIn signedIn: Bool)

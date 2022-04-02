@@ -6,7 +6,8 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Foundation
+import Combine
 import Shared
 
 protocol SeasonListViewModelDelegate: AnyObject {
@@ -16,43 +17,32 @@ protocol SeasonListViewModelDelegate: AnyObject {
 protocol SeasonListViewModelProtocol {
 
   // MARK: - Input
-  var inputSelectedSeason: BehaviorSubject<Int> { get }
+  var inputSelectedSeason: CurrentValueSubject<Int, Never> { get }
   func selectSeason(_ season: Int)
 
   // MARK: - Output
-  var seasons: Observable<[Int]> { get }
-  var seasonSelected: Observable<Int> { get }
+  var seasons: CurrentValueSubject<[Int], Never> { get }
+  var seasonSelected: CurrentValueSubject<Int, Never> { get }
   func getModel(for season: Int) -> SeasonEpisodeViewModel
-  var disposeBag: DisposeBag { get }
+
   var delegate: SeasonListViewModelDelegate? { get set }
 }
 
 final class SeasonListViewModel: SeasonListViewModelProtocol {
 
   private var seasonList: [Int]
-
-  private var seasonsObservableSubject: BehaviorSubject<[Int]>
-
-  private var seasonSelectedObservableSubject = BehaviorSubject<Int>(value: 0)
-
-  var disposeBag = DisposeBag()
+  var seasons: CurrentValueSubject<[Int], Never>
+  var seasonSelected = CurrentValueSubject<Int, Never>(0)
+  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Public Api
-  var seasons: Observable<[Int]>
-  var seasonSelected: Observable<Int>
-  var inputSelectedSeason: BehaviorSubject<Int>
+  let inputSelectedSeason = CurrentValueSubject<Int, Never>(0)
   weak var delegate: SeasonListViewModelDelegate?
 
   // MARK: Initalizer
   init(seasonList: [Int] ) {
     self.seasonList = seasonList
-    seasonsObservableSubject = BehaviorSubject(value: seasonList)
-    seasons = seasonsObservableSubject.asObservable()
-
-    seasonSelected = seasonSelectedObservableSubject.asObservable()
-
-    inputSelectedSeason = BehaviorSubject(value: 0)
-
+    seasons = CurrentValueSubject(seasonList)
     subscribe()
   }
 
@@ -66,19 +56,21 @@ final class SeasonListViewModel: SeasonListViewModelProtocol {
     return SeasonEpisodeViewModel(seasonNumber: season)
   }
 
+  // MARK: - TODO Review  method + Observable or Two methods only
   func selectSeason(_ season: Int) {
     if seasonList.contains(season) {
-      seasonSelectedObservableSubject.onNext(season)
+      seasonSelected.send(season)
     }
   }
 
-  fileprivate func subscribe() {
+  private func subscribe() {
     inputSelectedSeason
-      .subscribe(onNext: { [weak self] season in
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] season in
         guard let strongSelf = self else { return }
         strongSelf.delegate?.seasonListViewModel(strongSelf, didSelectSeason: season)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 }
 

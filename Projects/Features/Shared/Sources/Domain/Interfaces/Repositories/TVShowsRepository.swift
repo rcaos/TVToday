@@ -6,16 +6,17 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
+import NetworkingInterface
 
 public protocol TVShowsRepository {
-  func fetchAiringTodayShows(page: Int) -> Observable<TVShowResult>
+  func fetchAiringTodayShows(page: Int) -> AnyPublisher<TVShowResult, DataTransferError>
 
-  func fetchPopularShows(page: Int) -> Observable<TVShowResult>
+  func fetchPopularShows(page: Int) -> AnyPublisher<TVShowResult, DataTransferError>
 
-  func fetchShowsByGenre(genreId: Int, page: Int) -> Observable<TVShowResult>
+  func fetchShowsByGenre(genreId: Int, page: Int) -> AnyPublisher<TVShowResult, DataTransferError>
 
-  func searchShowsFor(query: String, page: Int) -> Observable<TVShowResult>
+  func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowResult, DataTransferError>
 
-  func fetchTVShowDetails(with showId: Int) -> Observable<TVShowDetailResult>
+  func fetchTVShowDetails(with showId: Int) -> AnyPublisher<TVShowDetailResult, DataTransferError>
 }

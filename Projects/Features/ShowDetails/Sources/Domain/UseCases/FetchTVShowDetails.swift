@@ -6,14 +6,15 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import RxSwift
+import Combine
+import NetworkingInterface
 import Shared
 import Persistence
+import Foundation
 
 public protocol FetchTVShowDetailsUseCase {
-  typealias Response = Result<TVShowDetailResult, Error>
-
-  func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> Observable<Response>
+  // MARK: - TODO Use another error maybe?
+  func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> AnyPublisher<TVShowDetailResult, DataTransferError>
 }
 
 public struct FetchTVShowDetailsUseCaseRequestValue {
@@ -34,7 +35,7 @@ public final class DefaultFetchTVShowDetailsUseCase: FetchTVShowDetailsUseCase {
     self.tvShowsVisitedRepository = tvShowsVisitedRepository
   }
 
-  public func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> Observable<Response> {
+  public func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> AnyPublisher<TVShowDetailResult, DataTransferError> {
     var idLogged = 0
     if let userLogged = keychainRepository.fetchLoguedUser() {
       idLogged = userLogged.id
@@ -42,14 +43,15 @@ public final class DefaultFetchTVShowDetailsUseCase: FetchTVShowDetailsUseCase {
 
     return tvShowsRepository
       .fetchTVShowDetails(with: requestValue.identifier)
-      .flatMap { details -> Observable<Result<TVShowDetailResult, Error>>  in
-        self.tvShowsVisitedRepository.saveShow(id: details.id ?? 0,
-                                               pathImage: details.posterPath ?? "",
-                                               userId: idLogged)
-          .flatMap { _ -> Observable<Result<TVShowDetailResult, Error>> in
-            return Observable.just(.success(details))
-        }
-    }
-    .catchErrorJustReturn(.failure(CustomError.genericError))
+      .receive(on: RunLoop.main)
+      .flatMap { [tvShowsVisitedRepository] details -> AnyPublisher<TVShowDetailResult, DataTransferError> in
+        return tvShowsVisitedRepository.saveShow(id: details.id ?? 0,
+                                                 pathImage: details.posterPath ?? "",
+                                                 userId: idLogged)
+          .map { _ -> TVShowDetailResult in details }
+          .mapError { _ -> DataTransferError in DataTransferError.noResponse }
+          .eraseToAnyPublisher()
+      }
+      .eraseToAnyPublisher()
   }
 }

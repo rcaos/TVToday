@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import RxSwift
+import Combine
 import Shared
 
 class PopularsViewController: NiblessViewController, Loadable, Retryable, Emptiable {
@@ -16,7 +16,7 @@ class PopularsViewController: NiblessViewController, Loadable, Retryable, Emptia
 
   private var rootView: PopularsRootView?
 
-  private let disposeBag = DisposeBag()
+  private var disposeBag = Set<AnyCancellable>()
 
   init(viewModel: PopularViewModelProtocol) {
     self.viewModel = viewModel
@@ -35,18 +35,17 @@ class PopularsViewController: NiblessViewController, Loadable, Retryable, Emptia
     viewModel.viewDidLoad()
   }
 
-  fileprivate func subscribe() {
+  private func subscribe() {
     viewModel
-      .viewState
-      .subscribe(onNext: { [weak self] state in
-        guard let strongSelf = self else { return }
-        strongSelf.handleTableState(with: state)
+      .viewStateObservableSubject
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] state in
+        self?.handleTableState(with: state)
       })
-      .disposed(by: disposeBag)
+      .store(in: &disposeBag)
   }
 
-  fileprivate func handleTableState(with state: SimpleViewState<TVShowCellViewModel>) {
-
+  private func handleTableState(with state: SimpleViewState<TVShowCellViewModel>) {
     rootView?.stopRefresh()
 
     switch state {
@@ -84,7 +83,7 @@ class PopularsViewController: NiblessViewController, Loadable, Retryable, Emptia
     }
   }
 
-  fileprivate func stopRefreshControl() {
+  private func stopRefreshControl() {
     rootView?.stopRefresh()
   }
 }

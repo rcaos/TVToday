@@ -75,7 +75,8 @@ class SeasonListTableViewCell: NiblessTableViewCell {
         snapShot.appendItems(data, toSection: .season)
         return snapShot
       }
-      .receive(on: RunLoop.main)
+    // MARK: - TODO, this cause snapshot tests fails
+      .receive(on: DispatchQueue.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] snapshot in
         self?.dataSource?.apply(snapshot)
       })
@@ -84,7 +85,8 @@ class SeasonListTableViewCell: NiblessTableViewCell {
     viewModel
       .seasonSelected
       .filter { $0 > 0 }
-      .receive(on: RunLoop.main)
+    // MARK: - TODO, this cause snapshot tests fails
+      .receive(on: DispatchQueue.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] season in
         self?.selectedSeason(at: season)
       })

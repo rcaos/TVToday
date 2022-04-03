@@ -47,12 +47,8 @@ class TVShowDetailViewModelGuestUsersTests: XCTestCase {
     let expected = [TVShowDetailViewModel.ViewState.loading]
     var received = [TVShowDetailViewModel.ViewState]()
 
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.viewDidLoad()
@@ -83,12 +79,8 @@ class TVShowDetailViewModelGuestUsersTests: XCTestCase {
     ]
     var received = [TVShowDetailViewModel.ViewState]()
 
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.viewDidLoad()
@@ -118,12 +110,8 @@ class TVShowDetailViewModelGuestUsersTests: XCTestCase {
     ]
     var received = [TVShowDetailViewModel.ViewState]()
 
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.viewDidLoad()

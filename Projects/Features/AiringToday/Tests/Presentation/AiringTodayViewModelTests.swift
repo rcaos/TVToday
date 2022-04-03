@@ -184,7 +184,7 @@ class AiringTodayViewModelTests: XCTestCase {
     XCTAssertEqual(expected, received, "AiringTodayViewModel should contains Paginated State")
   }
 
-  func test_Jum_from_State_Paginated_Error_Populated() {
+  func test_Jump_from_States_Paginated_Error_Populated() {
     // given
     let firstPageVM = buildFirstPage().results!.map { AiringTodayCollectionViewModel(show: $0) }
     let secondPageVM = (buildFirstPage().results + buildSecondPage().results).map { AiringTodayCollectionViewModel(show: $0) }

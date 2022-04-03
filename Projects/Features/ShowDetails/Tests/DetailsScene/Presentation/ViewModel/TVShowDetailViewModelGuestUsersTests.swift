@@ -40,7 +40,8 @@ class TVShowDetailViewModelGuestUsersTests: XCTestCase {
       fetchTvShowState: fetchTVAccountStateMock,
       markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
       saveToWatchListUseCase: saveToWatchListUseCaseMock,
-      coordinator: nil
+      coordinator: nil,
+      scheduler: .immediate
     )
 
     let expected = [TVShowDetailViewModel.ViewState.loading]
@@ -55,8 +56,6 @@ class TVShowDetailViewModelGuestUsersTests: XCTestCase {
 
     // when
     sut.viewDidLoad()
-
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
     // then
     XCTAssertEqual(expected, received, "Should contains loading State")
@@ -74,7 +73,8 @@ class TVShowDetailViewModelGuestUsersTests: XCTestCase {
       fetchTvShowState: fetchTVAccountStateMock,
       markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
       saveToWatchListUseCase: saveToWatchListUseCaseMock,
-      coordinator: nil
+      coordinator: nil,
+      scheduler: .immediate
     )
 
     let expected = [
@@ -93,8 +93,6 @@ class TVShowDetailViewModelGuestUsersTests: XCTestCase {
     // when
     sut.viewDidLoad()
 
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
-
     // then
     XCTAssertEqual(expected, received, "Should contains loading State")
   }
@@ -110,7 +108,8 @@ class TVShowDetailViewModelGuestUsersTests: XCTestCase {
       fetchTvShowState: fetchTVAccountStateMock,
       markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
       saveToWatchListUseCase: saveToWatchListUseCaseMock,
-      coordinator: nil
+      coordinator: nil,
+      scheduler: .immediate
     )
 
     let expected = [
@@ -128,8 +127,6 @@ class TVShowDetailViewModelGuestUsersTests: XCTestCase {
 
     // when
     sut.viewDidLoad()
-
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
     // then
     XCTAssertEqual(expected, received, "Should contains loading State")

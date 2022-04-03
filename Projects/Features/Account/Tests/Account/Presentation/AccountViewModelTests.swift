@@ -45,6 +45,9 @@ class AccountViewModelTests: XCTestCase {
     sut.viewState.removeDuplicates()
       .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
+    // when
+    sut.viewDidLoad()
+
     // then
     XCTAssertEqual(expected, received, "Should only receives one Value")
   }
@@ -61,11 +64,17 @@ class AccountViewModelTests: XCTestCase {
                            scheduler: .immediate)
 
     // when
-    let expected = [AccountViewState.profile(account: AccountResult.stub())]
+    let expected = [
+      AccountViewState.login,
+      AccountViewState.profile(account: AccountResult.stub())
+    ]
     var received = [AccountViewState]()
 
     sut.viewState.removeDuplicates()
       .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
+
+    // when
+    sut.viewDidLoad()
 
     // then
     XCTAssertEqual(expected, received, "Should receives two values")
@@ -94,6 +103,7 @@ class AccountViewModelTests: XCTestCase {
       .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
+    sut.viewDidLoad()
     authPermission.signIn()
 
     // then
@@ -122,6 +132,7 @@ class AccountViewModelTests: XCTestCase {
       .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
+    sut.viewDidLoad()
     authPermission.signIn()
 
     // then

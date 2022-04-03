@@ -6,6 +6,10 @@
 TVShows iOS app built with Combine, using the [TMDb API](https://www.themoviedb.org/).
 
 ## What I'm working on
+April, 2022
+* [ ] Fix testability on Schedulers *(wip*
+* [ ] Add demo apps for feature modules.
+
 March, 2022
 * [x] Migrate from RxDataSources to UICollectionViewDiffableDataSource
 * [x] Migrate from RxSwift to Combine

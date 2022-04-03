@@ -70,37 +70,35 @@ class AiringTodayViewModelTests: XCTestCase {
     XCTAssertEqual(expected, received, "AiringTodayViewModel should contains loading State")
   }
 
-//  func test_when_useCase_respons_with_FirstPage_ViewModel_Should_contains_Populated_State() {
-//    // given
-//    fetchUseCaseMock.result = self.firstPage
-//    let firstPageCells = self.firstPage.results!.map { AiringTodayCollectionViewModel(show: $0) }
-//
-//    let sut: AiringTodayViewModelProtocol =
-//    AiringTodayViewModel(fetchTVShowsUseCase: fetchUseCaseMock,
-//                         scheduler: .immediate,
-//                         coordinator: nil)
-//
-//    let expected = [
-//      SimpleViewState<AiringTodayCollectionViewModel>.loading,
-//      SimpleViewState<AiringTodayCollectionViewModel>.paging(firstPageCells, next: 2)
-//    ]
-//
-//    var received = [SimpleViewState<AiringTodayCollectionViewModel>]()
-//
-//    sut.viewStateObservableSubject
-//      .removeDuplicates()
-//      .sink(receiveValue: { value in
-//        received.append(value)
-//      })
-//      .store(in: &disposeBag)
-//
-//    // when
-//    sut.viewDidLoad()
-//
-//    // then
-////    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
-//    XCTAssertEqual(expected, received, "Should contains 2 values")
-//  }
+  func test_when_useCase_respons_with_FirstPage_ViewModel_Should_contains_Populated_State() {
+    // given
+    fetchUseCaseMock.result = self.firstPage
+    let firstPageCells = self.firstPage.results!.map { AiringTodayCollectionViewModel(show: $0) }
+
+    let sut: AiringTodayViewModelProtocol =
+    AiringTodayViewModel(fetchTVShowsUseCase: fetchUseCaseMock,
+                         scheduler: .immediate,
+                         coordinator: nil)
+
+    let expected = [
+      SimpleViewState<AiringTodayCollectionViewModel>.loading,
+      SimpleViewState<AiringTodayCollectionViewModel>.paging(firstPageCells, next: 2)
+    ]
+    var received = [SimpleViewState<AiringTodayCollectionViewModel>]()
+
+    sut.viewStateObservableSubject
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    sut.viewDidLoad()
+
+    // then
+    XCTAssertEqual(expected, received, "AiringTodayViewModel Should contains 2 values")
+  }
 
 //  func test_When_ask_for_second_page_ViewModel_Should_contains_Populated_State_with_Second_Page() {
 //    // given

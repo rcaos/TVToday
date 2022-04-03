@@ -28,7 +28,7 @@ class TVShowListViewTestsLight: XCTestCase {
     _ = viewController.view
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewPaging_thenShowPagingScreen() {
@@ -42,8 +42,8 @@ class TVShowListViewTestsLight: XCTestCase {
     _ = viewController.view
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
-    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneXsMax)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewPopulated_thenShowPopulatedScreen() {
@@ -58,8 +58,8 @@ class TVShowListViewTestsLight: XCTestCase {
     _ = viewController.view
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
-    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneXsMax)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewIsEmpty_thenShowEmptyScreen() {
@@ -72,7 +72,7 @@ class TVShowListViewTestsLight: XCTestCase {
     _ = viewController.view
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewIsError_thenShowErrorScreen() {
@@ -85,6 +85,6 @@ class TVShowListViewTestsLight: XCTestCase {
     _ = viewController.view
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
   }
 }

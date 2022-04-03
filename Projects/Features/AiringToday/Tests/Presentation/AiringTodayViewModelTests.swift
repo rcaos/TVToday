@@ -100,42 +100,41 @@ class AiringTodayViewModelTests: XCTestCase {
     XCTAssertEqual(expected, received, "AiringTodayViewModel Should contains 2 values")
   }
 
-//  func test_When_ask_for_second_page_ViewModel_Should_contains_Populated_State_with_Second_Page() {
-//    // given
-//    let sut: AiringTodayViewModelProtocol = AiringTodayViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
-//    let firstPage = self.firstPage.results!.map { AiringTodayCollectionViewModel(show: $0) }
-//    let secondPage = (self.firstPage.results + self.secondPage.results).map { AiringTodayCollectionViewModel(show: $0) }
-//
-//    let expected = [
-//      SimpleViewState<AiringTodayCollectionViewModel>.loading,
-//      SimpleViewState<AiringTodayCollectionViewModel>.paging(firstPage, next: 2),
-//      SimpleViewState<AiringTodayCollectionViewModel>.populated(secondPage)
-//    ]
-//
-//    var received = [SimpleViewState<AiringTodayCollectionViewModel>]()
-//
-//    sut.viewStateObservableSubject
-//      .removeDuplicates()
-//      .print()
-//      .sink(receiveCompletion: { _ in } , receiveValue: { value in
-//        received.append(value)
-//      })
-//      .store(in: &disposeBag)
-//
-//    // when
-//    fetchUseCaseMock.result = self.firstPage
-//    sut.viewDidLoad()
-//
-//    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
-//
-//    // and when
-//    fetchUseCaseMock.result = self.secondPage
-//    sut.didLoadNextPage()
-//
-//    // then
-//    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
-//    XCTAssertEqual(expected, received, "Should contains 3 values")
-//  }
+  func test_When_ask_for_second_page_ViewModel_Should_contains_Populated_State_with_Second_Page() {
+    // given
+    let sut: AiringTodayViewModelProtocol
+    sut = AiringTodayViewModel(fetchTVShowsUseCase: fetchUseCaseMock,
+                         scheduler: .immediate,
+                         coordinator: nil)
+
+    let firstPage = self.firstPage.results!.map { AiringTodayCollectionViewModel(show: $0) }
+    let secondPage = (self.firstPage.results + self.secondPage.results).map { AiringTodayCollectionViewModel(show: $0) }
+
+    let expected = [
+      SimpleViewState<AiringTodayCollectionViewModel>.loading,
+      SimpleViewState<AiringTodayCollectionViewModel>.paging(firstPage, next: 2),
+      SimpleViewState<AiringTodayCollectionViewModel>.populated(secondPage)
+    ]
+    var received = [SimpleViewState<AiringTodayCollectionViewModel>]()
+
+    sut.viewStateObservableSubject
+      .removeDuplicates()
+      .sink(receiveCompletion: { _ in } , receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    fetchUseCaseMock.result = self.firstPage
+    sut.viewDidLoad()
+
+    // and
+    fetchUseCaseMock.result = self.secondPage
+    sut.didLoadNextPage()
+
+    // then
+    XCTAssertEqual(expected, received, "Should contains 3 values")
+  }
 //
 //  func test_When_UseCase_Responds_Error_ViewModel_Should_Contains_Error_State() {
 //    // given

@@ -8,20 +8,18 @@
 
 import Foundation
 import Combine
+import CombineSchedulers
+import NetworkingInterface
 
 public protocol ShowsViewModel: AnyObject {
   associatedtype MovieCellViewModel: Equatable
 
   var fetchTVShowsUseCase: FetchTVShowsUseCase { get }
-
   var shows: [TVShow] { get set }
-
   var showsCells: [MovieCellViewModel] { get set }
-
   var viewStateObservableSubject: CurrentValueSubject<SimpleViewState<MovieCellViewModel>, Never> { get }
-
+  var scheduler: AnySchedulerOf<DispatchQueue> { get }
   var disposeBag: Set<AnyCancellable> { get set }
-
   func mapToCell(entities: [TVShow]) -> [MovieCellViewModel]
 }
 
@@ -36,17 +34,23 @@ extension ShowsViewModel {
     let request = FetchTVShowsUseCaseRequestValue(page: page)
 
     fetchTVShowsUseCase.execute(requestValue: request)
-      .receive(on: RunLoop.main)
+      .receive(on: scheduler)
       .sink(receiveCompletion: { [weak self] completion in
         switch completion {
         case let .failure(error):
-          self?.viewStateObservableSubject.send(.error(error.localizedDescription))
+          self?.handleError(error)
         case .finished: break
         }
       }, receiveValue: { [weak self] result in
         self?.processFetched(for: result, currentPage: page)
       })
       .store(in: &disposeBag)
+  }
+
+  private func handleError(_ error: DataTransferError) {
+    if viewStateObservableSubject.value.isInitialPage {
+      viewStateObservableSubject.send(.error(error.localizedDescription))
+    }
   }
 
   private func processFetched(for response: TVShowResult, currentPage: Int) {
@@ -58,8 +62,7 @@ extension ShowsViewModel {
 
     self.shows.append(contentsOf: fetchedShows)
 
-    if self.shows.isEmpty ||
-      (fetchedShows.isEmpty && response.page == 1) {
+    if self.shows.isEmpty {
       viewStateObservableSubject.send(.empty)
       return
     }

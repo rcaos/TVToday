@@ -227,4 +227,47 @@ class AiringTodayViewModelTests: XCTestCase {
     // then
     XCTAssertEqual(expected, received, "AiringTodayViewModel should contains Paginated State")
   }
+
+  func test_Jum_from_State_Paginated_Error_Populated() {
+    // given
+    let firstPageVM = self.firstPage.results!.map { AiringTodayCollectionViewModel(show: $0) }
+    let secondPageVM = (self.firstPage.results + self.secondPage.results).map { AiringTodayCollectionViewModel(show: $0) }
+
+    let sut: AiringTodayViewModelProtocol
+    sut = AiringTodayViewModel(fetchTVShowsUseCase: self.fetchUseCaseMock,
+                               scheduler: .immediate,
+                               coordinator: nil)
+
+    let expected = [
+      SimpleViewState<AiringTodayCollectionViewModel>.loading,
+      SimpleViewState<AiringTodayCollectionViewModel>.paging(firstPageVM, next: 2),
+      SimpleViewState<AiringTodayCollectionViewModel>.populated(secondPageVM)
+    ]
+    var received = [SimpleViewState<AiringTodayCollectionViewModel>]()
+
+    sut.viewStateObservableSubject
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    fetchUseCaseMock.result = self.firstPage
+    sut.viewDidLoad()
+
+    // and
+    fetchUseCaseMock.result = nil
+    fetchUseCaseMock.error = .noResponse
+    sut.didLoadNextPage()
+
+    // again
+    fetchUseCaseMock.result = self.secondPage
+    fetchUseCaseMock.error = nil
+    sut.didLoadNextPage()
+
+    // then
+    XCTAssertEqual(expected, received, "AiringTodayViewModel should contains Paginated State")
+  }
+
 }

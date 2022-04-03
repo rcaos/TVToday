@@ -13,8 +13,6 @@ import XCTest
 @testable import Shared
 
 class TVShowListViewModelTests: XCTestCase {
-  private let emptyPage = TVShowResult.stub(page: 1, results: [], totalResults: 0, totalPages: 1)
-
   private var fetchUseCaseMock: FetchShowsUseCaseMock!
   private var disposeBag: Set<AnyCancellable>!
 
@@ -117,7 +115,7 @@ class TVShowListViewModelTests: XCTestCase {
 
   func test_When_UseCase_Responds_With_Zero_Elements_ViewModel_Should_Contains_Empty_State() {
     // given
-    fetchUseCaseMock.result = self.emptyPage
+    fetchUseCaseMock.result = .empty
     let sut: TVShowListViewModelProtocol
     sut = TVShowListViewModel(fetchTVShowsUseCase: self.fetchUseCaseMock, scheduler: .immediate, coordinator: nil)
 

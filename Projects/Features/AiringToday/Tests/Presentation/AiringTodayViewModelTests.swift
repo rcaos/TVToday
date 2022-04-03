@@ -58,12 +58,8 @@ class AiringTodayViewModelTests: XCTestCase {
     let expected = [SimpleViewState<AiringTodayCollectionViewModel>.loading]
     var received = [SimpleViewState<AiringTodayCollectionViewModel>]()
 
-    sut.viewStateObservableSubject
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewStateObservableSubject.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // then
     XCTAssertEqual(1, received.count, "Should only receives one Value")
@@ -86,12 +82,8 @@ class AiringTodayViewModelTests: XCTestCase {
     ]
     var received = [SimpleViewState<AiringTodayCollectionViewModel>]()
 
-    sut.viewStateObservableSubject
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewStateObservableSubject.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &self.disposeBag)
 
     // when
     sut.viewDidLoad()
@@ -117,12 +109,8 @@ class AiringTodayViewModelTests: XCTestCase {
     ]
     var received = [SimpleViewState<AiringTodayCollectionViewModel>]()
 
-    sut.viewStateObservableSubject
-      .removeDuplicates()
-      .sink(receiveCompletion: { _ in } , receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewStateObservableSubject.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &self.disposeBag)
 
     // when
     fetchUseCaseMock.result = self.firstPage
@@ -150,12 +138,8 @@ class AiringTodayViewModelTests: XCTestCase {
     ]
     var received = [SimpleViewState<AiringTodayCollectionViewModel>]()
 
-    sut.viewStateObservableSubject
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewStateObservableSubject.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.viewDidLoad()
@@ -179,12 +163,8 @@ class AiringTodayViewModelTests: XCTestCase {
     ]
     var received = [SimpleViewState<AiringTodayCollectionViewModel>]()
 
-    sut.viewStateObservableSubject
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewStateObservableSubject.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.viewDidLoad()
@@ -209,12 +189,8 @@ class AiringTodayViewModelTests: XCTestCase {
     ]
     var received = [SimpleViewState<AiringTodayCollectionViewModel>]()
 
-    sut.viewStateObservableSubject
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewStateObservableSubject.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.viewDidLoad()
@@ -245,12 +221,8 @@ class AiringTodayViewModelTests: XCTestCase {
     ]
     var received = [SimpleViewState<AiringTodayCollectionViewModel>]()
 
-    sut.viewStateObservableSubject
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewStateObservableSubject.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     fetchUseCaseMock.result = self.firstPage

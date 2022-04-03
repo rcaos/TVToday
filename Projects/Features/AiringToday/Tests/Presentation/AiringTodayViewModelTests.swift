@@ -14,26 +14,6 @@ import Combine
 
 class AiringTodayViewModelTests: XCTestCase {
 
-  // TODO, use free function and update snapshot tests
-  let firstShow = TVShow.stub(id: 1, name: "title1 🐶", posterPath: "/1",
-                              backDropPath: "/back1", overview: "overview")
-  let secondShow = TVShow.stub(id: 2, name: "title2 🔫", posterPath: "/2",
-                               backDropPath: "/back2", overview: "overview2")
-  let thirdShow = TVShow.stub(id: 3, name: "title3 🚨", posterPath: "/3",
-                              backDropPath: "/back3", overview: "overview3")
-
-  lazy var firstPage = TVShowResult.stub(page: 1,
-                                         results: [firstShow, secondShow],
-                                         totalResults: 3,
-                                         totalPages: 2)
-
-  lazy var secondPage = TVShowResult.stub(page: 2,
-                                          results: [thirdShow],
-                                          totalResults: 3,
-                                          totalPages: 2)
-
-  let emptyPage = TVShowResult.stub(page: 1, results: [], totalResults: 0, totalPages: 1)
-
   var fetchUseCaseMock: FetchShowsUseCaseMock!
   var disposeBag: Set<AnyCancellable>!
 
@@ -68,8 +48,8 @@ class AiringTodayViewModelTests: XCTestCase {
 
   func test_when_useCase_respons_with_FirstPage_ViewModel_Should_contains_Populated_State() {
     // given
-    fetchUseCaseMock.result = self.firstPage
-    let firstPageCells = self.firstPage.results!.map { AiringTodayCollectionViewModel(show: $0) }
+    fetchUseCaseMock.result = buildFirstPage()
+    let firstPageCells = buildFirstPage().results!.map { AiringTodayCollectionViewModel(show: $0) }
 
     let sut: AiringTodayViewModelProtocol =
     AiringTodayViewModel(fetchTVShowsUseCase: fetchUseCaseMock,
@@ -99,8 +79,8 @@ class AiringTodayViewModelTests: XCTestCase {
                          scheduler: .immediate,
                          coordinator: nil)
 
-    let firstPage = self.firstPage.results!.map { AiringTodayCollectionViewModel(show: $0) }
-    let secondPage = (self.firstPage.results + self.secondPage.results).map { AiringTodayCollectionViewModel(show: $0) }
+    let firstPage = buildFirstPage().results!.map { AiringTodayCollectionViewModel(show: $0) }
+    let secondPage = (buildFirstPage().results + buildSecondPage().results).map { AiringTodayCollectionViewModel(show: $0) }
 
     let expected = [
       SimpleViewState<AiringTodayCollectionViewModel>.loading,
@@ -113,11 +93,11 @@ class AiringTodayViewModelTests: XCTestCase {
       .sink(receiveValue: { received.append($0) }).store(in: &self.disposeBag)
 
     // when
-    fetchUseCaseMock.result = self.firstPage
+    fetchUseCaseMock.result = buildFirstPage()
     sut.viewDidLoad()
 
     // and
-    fetchUseCaseMock.result = self.secondPage
+    fetchUseCaseMock.result = buildSecondPage()
     sut.didLoadNextPage()
 
     // then
@@ -150,7 +130,7 @@ class AiringTodayViewModelTests: XCTestCase {
 
   func test_When_UseCase_Responds_With_Zero_Elements_ViewModel_Should_Contains_Empty_State() {
     // given
-    fetchUseCaseMock.result = self.emptyPage
+    fetchUseCaseMock.result = .empty
     let sut: AiringTodayViewModelProtocol
     sut = AiringTodayViewModel(
       fetchTVShowsUseCase: self.fetchUseCaseMock,
@@ -185,7 +165,7 @@ class AiringTodayViewModelTests: XCTestCase {
       SimpleViewState<AiringTodayCollectionViewModel>.loading,
       SimpleViewState<AiringTodayCollectionViewModel>.error(""),
       SimpleViewState<AiringTodayCollectionViewModel>.paging(
-        firstPage.results!.map { AiringTodayCollectionViewModel(show: $0) }, next: 2)
+        buildFirstPage().results!.map { AiringTodayCollectionViewModel(show: $0) }, next: 2)
     ]
     var received = [SimpleViewState<AiringTodayCollectionViewModel>]()
 
@@ -196,7 +176,7 @@ class AiringTodayViewModelTests: XCTestCase {
     sut.viewDidLoad()
 
     // and
-    fetchUseCaseMock.result = self.firstPage
+    fetchUseCaseMock.result = buildFirstPage()
     fetchUseCaseMock.error = nil
     sut.refreshView()
 
@@ -206,8 +186,8 @@ class AiringTodayViewModelTests: XCTestCase {
 
   func test_Jum_from_State_Paginated_Error_Populated() {
     // given
-    let firstPageVM = self.firstPage.results!.map { AiringTodayCollectionViewModel(show: $0) }
-    let secondPageVM = (self.firstPage.results + self.secondPage.results).map { AiringTodayCollectionViewModel(show: $0) }
+    let firstPageVM = buildFirstPage().results!.map { AiringTodayCollectionViewModel(show: $0) }
+    let secondPageVM = (buildFirstPage().results + buildSecondPage().results).map { AiringTodayCollectionViewModel(show: $0) }
 
     let sut: AiringTodayViewModelProtocol
     sut = AiringTodayViewModel(fetchTVShowsUseCase: self.fetchUseCaseMock,
@@ -225,7 +205,7 @@ class AiringTodayViewModelTests: XCTestCase {
       .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
-    fetchUseCaseMock.result = self.firstPage
+    fetchUseCaseMock.result = buildFirstPage()
     sut.viewDidLoad()
 
     // and
@@ -234,7 +214,7 @@ class AiringTodayViewModelTests: XCTestCase {
     sut.didLoadNextPage()
 
     // again
-    fetchUseCaseMock.result = self.secondPage
+    fetchUseCaseMock.result = buildSecondPage()
     fetchUseCaseMock.error = nil
     sut.didLoadNextPage()
 

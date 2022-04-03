@@ -3,16 +3,16 @@
 ![Platforms](https://img.shields.io/badge/platform-iOS-lightgrey.svg)
 [![Swift Version](https://img.shields.io/badge/Swift-5-F16D39.svg?style=flat)](https://developer.apple.com/swift)
 
-TVShows iOS app built with RxSwift, using the [TMDb API](https://www.themoviedb.org/).
+TVShows iOS app built with Combine, using the [TMDb API](https://www.themoviedb.org/).
 
 ## What I'm working on
 March, 2022
 * [x] Migrate from RxDataSources to UICollectionViewDiffableDataSource
-* [ ] Migrate from RxSwift to Combine
+* [x] Migrate from RxSwift to Combine
 
 ## Built with
 - Swift 5
-- RxSwift
+- Combine
 - Clean + Modular Architecture
 - Coordinator Pattern.
 - MVVM
@@ -38,7 +38,8 @@ March, 2022
 ## Tuist
 This project is setup with [Tuist](https://tuist.io). Therefore no `xcodeproj`/`xcworkspace` is committed to this repo.
 
-
+## Snapshot Tests
+Last tests were created using `Xcode 13.2.1`, with Simulator `iPhone SE (2nd generation) iOS 15.2`
 
 
 ## Screenshots

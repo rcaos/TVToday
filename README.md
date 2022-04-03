@@ -46,6 +46,11 @@ This project is setup with [Tuist](https://tuist.io). Therefore no `xcodeproj`/`
 ## Snapshot Tests
 Last snapshot tests were created using `Xcode 13.2.1`, with Simulator `iPhone SE (2nd generation) iOS 15.2`
 
+## Project evolution
+- Monolith: https://github.com/rcaos/TVToday/releases/tag/v0.3.0
+- CocoaPods + RxSwift: https://github.com/rcaos/TVToday/releases/tag/v.0.4.0
+- RxSwift + SPM + Tuist: https://github.com/rcaos/TVToday/releases/tag/v0.5.0
+- Current branch: Combine + SPM + Tuist
 
 ## Screenshots
 
@@ -72,9 +77,6 @@ Last snapshot tests were created using `Xcode 13.2.1`, with Simulator `iPhone SE
 <img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/light/07.png" width="215" height="383">
 <img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/light/08.png" width="215" height="383">
 </p>
-
-## CocoaPods branch
-- Old version built with CocoaPods: https://github.com/rcaos/TVToday/releases/tag/v.0.4.0
 
 # Author
 Jeans Ruiz, jeansruiz.c@gmail.com

@@ -163,32 +163,33 @@ class AiringTodayViewModelTests: XCTestCase {
     // then
     XCTAssertEqual(expected, received, "AiringTodayViewModel should contains Error State")
   }
-//
-//  func test_When_UseCase_Responds_With_Zero_Elements_ViewModel_Should_Contains_Empty_State() {
-//    // given
-//    fetchUseCaseMock.result = self.emptyPage
-//    let sut: AiringTodayViewModelProtocol
-//    sut = AiringTodayViewModel(fetchTVShowsUseCase: self.fetchUseCaseMock, coordinator: nil)
-//
-//    let expected = [
-//      SimpleViewState<AiringTodayCollectionViewModel>.loading,
-//      SimpleViewState<AiringTodayCollectionViewModel>.empty
-//    ]
-//    var received = [SimpleViewState<AiringTodayCollectionViewModel>]()
-//
-//    sut.viewStateObservableSubject
-//      .removeDuplicates()
-//      .sink(receiveValue: { value in
-//        received.append(value)
-//      })
-//      .store(in: &disposeBag)
-//
-//    // when
-//    sut.viewDidLoad()
-//    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
-//
-//    // then
-//    XCTAssertEqual(2, received.count, "Should only receives one Value")
-//    XCTAssertEqual(expected, received, "AiringTodayViewModel should contains Empty State")
-//  }
+
+  func test_When_UseCase_Responds_With_Zero_Elements_ViewModel_Should_Contains_Empty_State() {
+    // given
+    fetchUseCaseMock.result = self.emptyPage
+    let sut: AiringTodayViewModelProtocol
+    sut = AiringTodayViewModel(
+      fetchTVShowsUseCase: self.fetchUseCaseMock,
+      scheduler: .immediate,
+      coordinator: nil)
+
+    let expected = [
+      SimpleViewState<AiringTodayCollectionViewModel>.loading,
+      SimpleViewState<AiringTodayCollectionViewModel>.empty
+    ]
+    var received = [SimpleViewState<AiringTodayCollectionViewModel>]()
+
+    sut.viewStateObservableSubject
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    sut.viewDidLoad()
+
+    // then
+    XCTAssertEqual(expected, received, "AiringTodayViewModel should contains Empty State")
+  }
 }

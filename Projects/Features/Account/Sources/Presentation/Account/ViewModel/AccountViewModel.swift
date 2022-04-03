@@ -18,6 +18,7 @@ enum AccountViewState: Equatable {
 }
 
 protocol AccountViewModelProtocol: AuthPermissionViewModelDelegate {
+  func viewDidLoad()
   var viewState: CurrentValueSubject<AccountViewState, Never> { get }
 }
 
@@ -46,10 +47,13 @@ final class AccountViewModel: AccountViewModelProtocol {
     self.fetchLoggedUser = fetchLoggedUser
     self.deleteLoguedUser = deleteLoguedUser
     self.scheduler = scheduler
+  }
+
+  func viewDidLoad() {
     checkIsLogued()
   }
 
-  fileprivate func checkIsLogued() {
+  private func checkIsLogued() {
     if fetchLoggedUser.execute() != nil {
       fetchUserDetails()
     } else {

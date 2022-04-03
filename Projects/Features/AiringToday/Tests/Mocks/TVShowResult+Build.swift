@@ -8,7 +8,7 @@
 import Foundation
 @testable import Shared
 
-func makeFirstPage() -> TVShowResult {
+func buildFirstPage() -> TVShowResult {
   let firstShow = TVShow.stub(
     id: 1,
     name: "title1 🐶",
@@ -16,13 +16,20 @@ func makeFirstPage() -> TVShowResult {
     backDropPath: "/back1",
     overview: "overview"
   )
+  let secondShow = TVShow.stub(
+    id: 2,
+    name: "title2 🔫",
+    posterPath: "/2",
+    backDropPath: "/back2",
+    overview: "overview2"
+  )
   return TVShowResult.stub(page: 1,
-                           results: [firstShow],
+                           results: [firstShow, secondShow],
                            totalResults: 3,
                            totalPages: 2)
 }
 
-func makeSecondPage() -> TVShowResult {
+func buildSecondPage() -> TVShowResult {
   let thirdShow = TVShow.stub(
     id: 3,
     name: "title3 🚨",

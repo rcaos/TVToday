@@ -192,4 +192,39 @@ class AiringTodayViewModelTests: XCTestCase {
     // then
     XCTAssertEqual(expected, received, "AiringTodayViewModel should contains Empty State")
   }
+
+  func test_When_UseCase_Responds_Error_And_User_Retry_ViewModel_Should_Contains_Paginated_State() {
+    // given
+    fetchUseCaseMock.error = .noResponse
+    let sut: AiringTodayViewModelProtocol
+    sut = AiringTodayViewModel(fetchTVShowsUseCase: self.fetchUseCaseMock,
+                               scheduler: .immediate,
+                               coordinator: nil)
+
+    let expected = [
+      SimpleViewState<AiringTodayCollectionViewModel>.loading,
+      SimpleViewState<AiringTodayCollectionViewModel>.error(""),
+      SimpleViewState<AiringTodayCollectionViewModel>.paging(
+        firstPage.results!.map { AiringTodayCollectionViewModel(show: $0) }, next: 2)
+    ]
+    var received = [SimpleViewState<AiringTodayCollectionViewModel>]()
+
+    sut.viewStateObservableSubject
+      .removeDuplicates()
+      .sink(receiveValue: { value in
+        received.append(value)
+      })
+      .store(in: &disposeBag)
+
+    // when
+    sut.viewDidLoad()
+
+    // and
+    fetchUseCaseMock.result = self.firstPage
+    fetchUseCaseMock.error = nil
+    sut.refreshView()
+
+    // then
+    XCTAssertEqual(expected, received, "AiringTodayViewModel should contains Paginated State")
+  }
 }

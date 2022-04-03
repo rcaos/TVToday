@@ -7,6 +7,7 @@
 //
 
 import Combine
+import CombineSchedulers
 import Shared
 
 final class AiringTodayViewModel: AiringTodayViewModelProtocol, ShowsViewModel {
@@ -16,13 +17,16 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol, ShowsViewModel {
   var shows: [TVShow]
   var showsCells: [AiringTodayCollectionViewModel] = []
 
+  let scheduler: AnySchedulerOf<DispatchQueue>
   private weak var coordinator: AiringTodayCoordinatorProtocol?
   var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializers
   init(fetchTVShowsUseCase: FetchTVShowsUseCase,
+       scheduler: AnySchedulerOf<DispatchQueue> = .main,
        coordinator: AiringTodayCoordinatorProtocol?) {
     self.fetchTVShowsUseCase = fetchTVShowsUseCase
+    self.scheduler = scheduler
     self.coordinator = coordinator
     shows = []
   }

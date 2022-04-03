@@ -8,6 +8,7 @@
 
 import Foundation
 import Combine
+import CombineSchedulers
 import NetworkingInterface
 import Shared
 
@@ -28,6 +29,7 @@ final class AccountViewModel: AccountViewModelProtocol {
 
   weak var coordinator: AccountCoordinatorProtocol?
   private var disposeBag = Set<AnyCancellable>()
+  private let scheduler: AnySchedulerOf<DispatchQueue>
 
   // MARK: - Public Api
   let viewState: CurrentValueSubject<AccountViewState, Never> = .init(.login)
@@ -36,11 +38,14 @@ final class AccountViewModel: AccountViewModelProtocol {
   init(createNewSession: CreateSessionUseCase,
        fetchAccountDetails: FetchAccountDetailsUseCase,
        fetchLoggedUser: FetchLoggedUser,
-       deleteLoguedUser: DeleteLoguedUserUseCase) {
+       deleteLoguedUser: DeleteLoguedUserUseCase,
+       scheduler: AnySchedulerOf<DispatchQueue> = .main
+  ) {
     self.createNewSession = createNewSession
     self.fetchAccountDetails = fetchAccountDetails
     self.fetchLoggedUser = fetchLoggedUser
     self.deleteLoguedUser = deleteLoguedUser
+    self.scheduler = scheduler
     checkIsLogued()
   }
 
@@ -54,7 +59,7 @@ final class AccountViewModel: AccountViewModelProtocol {
 
   private func fetchUserDetails() {
     fetchDetailsAccount()
-      .receive(on: RunLoop.main)
+      .receive(on: scheduler)
       .sink(receiveCompletion: { [weak self] completion in
         switch completion {
         case .failure:
@@ -77,7 +82,7 @@ final class AccountViewModel: AccountViewModelProtocol {
         }
         return strongSelf.fetchDetailsAccount()
       }
-      .receive(on: RunLoop.main)
+      .receive(on: scheduler)
       .sink(receiveCompletion: { [weak self] completion in
         switch completion {
         case .failure:

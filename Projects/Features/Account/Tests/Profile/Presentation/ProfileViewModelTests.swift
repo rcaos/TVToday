@@ -28,14 +28,8 @@ class ProfileViewModelTests: XCTestCase {
     let expected = [createSectionModel(with: accountResult)]
     var received = [[ProfileSectionModel]]()
 
-    sut.dataSource
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
-
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
+    sut.dataSource.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // then
     XCTAssertEqual(expected, received, "Should only receives one Value")

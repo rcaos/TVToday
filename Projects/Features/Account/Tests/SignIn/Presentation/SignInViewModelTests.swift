@@ -29,12 +29,8 @@ class SignInViewModelTests: XCTestCase {
     let expected = [SignInViewState.initial]
     var received = [SignInViewState]()
 
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // then
     XCTAssertEqual(expected, received, "Should only receives two Value")
@@ -51,12 +47,8 @@ class SignInViewModelTests: XCTestCase {
     ]
     var received = [SignInViewState]()
 
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.signInDidTapped()

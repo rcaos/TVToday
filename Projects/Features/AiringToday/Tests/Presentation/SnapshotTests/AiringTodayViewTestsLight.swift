@@ -27,7 +27,7 @@ class AiringTodayViewTestsLight: XCTestCase {
   }
 
   func test_WhenViewPaging_thenShowPagingScreen_Dark() {
-    let firsPageCells = makeFirstPage().results!.map { AiringTodayCollectionViewModel(show: $0) }
+    let firsPageCells = buildFirstPageSnapshot().results!.map { AiringTodayCollectionViewModel(show: $0) }
     let viewController = AiringTodayViewController(viewModel: AiringTodayViewModelMock(state: .paging(firsPageCells, next: 2) ) )
     viewController.overrideUserInterfaceStyle = .light
     _ = viewController.view
@@ -37,7 +37,7 @@ class AiringTodayViewTestsLight: XCTestCase {
   }
 
   func test_WhenViewPaging_thenShowPagingScreen_Light() {
-    let firsPageCells = makeFirstPage().results!.map { AiringTodayCollectionViewModel(show: $0) }
+    let firsPageCells = buildFirstPageSnapshot().results!.map { AiringTodayCollectionViewModel(show: $0) }
     let viewController = AiringTodayViewController(viewModel: AiringTodayViewModelMock(state: .paging(firsPageCells, next: 2) ) )
     viewController.overrideUserInterfaceStyle = .light
     _ = viewController.view
@@ -47,7 +47,7 @@ class AiringTodayViewTestsLight: XCTestCase {
   }
 
   func test_WhenViewPopulated_thenShowPopulatedScreen() {
-    let totalCells = (makeFirstPage().results + makeSecondPage().results)
+    let totalCells = (buildFirstPageSnapshot().results + buildSecondPageSnapshot().results)
       .map { AiringTodayCollectionViewModel(show: $0) }
     let viewController = AiringTodayViewController(viewModel: AiringTodayViewModelMock(state: .populated(totalCells) ))
     viewController.overrideUserInterfaceStyle = .light

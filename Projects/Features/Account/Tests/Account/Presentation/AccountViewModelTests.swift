@@ -28,16 +28,18 @@ class AccountViewModelTests: XCTestCase {
     fetchLoggedUserMock = FetchLoggedUserMock()
     deleteLoguedUserUseCaseMock = DeleteLoguedUserUseCaseMock()
     disposeBag = []
+    sut = AccountViewModel(
+      createNewSession: createSessionUseCaseMock,
+      fetchAccountDetails: fetchAccountDetailsUseCaseMock,
+      fetchLoggedUser: fetchLoggedUserMock,
+      deleteLoguedUser: deleteLoguedUserUseCaseMock,
+      scheduler: .immediate
+    )
   }
 
   func test_When_Session_DoesNot_Exits_Should_Be_Login_State() {
     // given
     fetchLoggedUserMock.account = nil
-    sut = AccountViewModel(createNewSession: createSessionUseCaseMock,
-                           fetchAccountDetails: fetchAccountDetailsUseCaseMock,
-                           fetchLoggedUser: fetchLoggedUserMock,
-                           deleteLoguedUser: deleteLoguedUserUseCaseMock,
-                           scheduler: .immediate)
 
     let expected = [AccountViewState.login]
     var received = [AccountViewState]()
@@ -56,12 +58,6 @@ class AccountViewModelTests: XCTestCase {
     // given
     fetchLoggedUserMock.account = AccountDomain(id: 1, sessionId: "1")
     fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
-
-    sut = AccountViewModel(createNewSession: createSessionUseCaseMock,
-                           fetchAccountDetails: fetchAccountDetailsUseCaseMock,
-                           fetchLoggedUser: fetchLoggedUserMock,
-                           deleteLoguedUser: deleteLoguedUserUseCaseMock,
-                           scheduler: .immediate)
 
     // when
     let expected = [
@@ -86,11 +82,6 @@ class AccountViewModelTests: XCTestCase {
     createSessionUseCaseMock.result = ()
     fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
 
-    sut = AccountViewModel(createNewSession: createSessionUseCaseMock,
-                           fetchAccountDetails: fetchAccountDetailsUseCaseMock,
-                           fetchLoggedUser: fetchLoggedUserMock,
-                           deleteLoguedUser: deleteLoguedUserUseCaseMock,
-                           scheduler: .immediate)
     authPermission.delegate = sut
 
     let expected = [
@@ -116,16 +107,9 @@ class AccountViewModelTests: XCTestCase {
     createSessionUseCaseMock.error = .noResponse
     fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
 
-    sut = AccountViewModel(createNewSession: createSessionUseCaseMock,
-                           fetchAccountDetails: fetchAccountDetailsUseCaseMock,
-                           fetchLoggedUser: fetchLoggedUserMock,
-                           deleteLoguedUser: deleteLoguedUserUseCaseMock,
-                           scheduler: .immediate)
     authPermission.delegate = sut
 
-    let expected = [
-      AccountViewState.login
-    ]
+    let expected = [AccountViewState.login]
     var received = [AccountViewState]()
 
     sut.viewState.removeDuplicates()

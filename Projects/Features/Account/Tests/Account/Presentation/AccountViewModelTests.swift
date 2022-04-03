@@ -34,9 +34,10 @@ class AccountViewModelTests: XCTestCase {
     // given
     fetchLoggedUserMock.account = nil
     sut = AccountViewModel(createNewSession: createSessionUseCaseMock,
-                     fetchAccountDetails: fetchAccountDetailsUseCaseMock,
-                     fetchLoggedUser: fetchLoggedUserMock,
-                     deleteLoguedUser: deleteLoguedUserUseCaseMock)
+                           fetchAccountDetails: fetchAccountDetailsUseCaseMock,
+                           fetchLoggedUser: fetchLoggedUserMock,
+                           deleteLoguedUser: deleteLoguedUserUseCaseMock,
+                           scheduler: .immediate)
 
     // when
 
@@ -50,8 +51,6 @@ class AccountViewModelTests: XCTestCase {
       })
       .store(in: &disposeBag)
 
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
-
     // then
     XCTAssertEqual(expected, received, "Should only receives one Value")
   }
@@ -62,16 +61,14 @@ class AccountViewModelTests: XCTestCase {
     fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
 
     sut = AccountViewModel(createNewSession: createSessionUseCaseMock,
-                     fetchAccountDetails: fetchAccountDetailsUseCaseMock,
-                     fetchLoggedUser: fetchLoggedUserMock,
-                     deleteLoguedUser: deleteLoguedUserUseCaseMock)
+                           fetchAccountDetails: fetchAccountDetailsUseCaseMock,
+                           fetchLoggedUser: fetchLoggedUserMock,
+                           deleteLoguedUser: deleteLoguedUserUseCaseMock,
+                           scheduler: .immediate)
 
     // when
 
-    let expected = [
-      AccountViewState.login,
-      AccountViewState.profile(account: AccountResult.stub())
-    ]
+    let expected = [AccountViewState.profile(account: AccountResult.stub())]
     var received = [AccountViewState]()
 
     sut.viewState
@@ -80,8 +77,6 @@ class AccountViewModelTests: XCTestCase {
         received.append(value)
       })
       .store(in: &disposeBag)
-
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
     // then
     XCTAssertEqual(expected, received, "Should receives two values")
@@ -94,9 +89,10 @@ class AccountViewModelTests: XCTestCase {
     fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
 
     sut = AccountViewModel(createNewSession: createSessionUseCaseMock,
-                     fetchAccountDetails: fetchAccountDetailsUseCaseMock,
-                     fetchLoggedUser: fetchLoggedUserMock,
-                     deleteLoguedUser: deleteLoguedUserUseCaseMock)
+                           fetchAccountDetails: fetchAccountDetailsUseCaseMock,
+                           fetchLoggedUser: fetchLoggedUserMock,
+                           deleteLoguedUser: deleteLoguedUserUseCaseMock,
+                           scheduler: .immediate)
     authPermission.delegate = sut
 
     let expected = [
@@ -115,8 +111,6 @@ class AccountViewModelTests: XCTestCase {
     // when
     authPermission.signIn()
 
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
-
     // then
     XCTAssertEqual(expected, received, "Should receives two values")
   }
@@ -128,9 +122,10 @@ class AccountViewModelTests: XCTestCase {
     fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
 
     sut = AccountViewModel(createNewSession: createSessionUseCaseMock,
-                     fetchAccountDetails: fetchAccountDetailsUseCaseMock,
-                     fetchLoggedUser: fetchLoggedUserMock,
-                     deleteLoguedUser: deleteLoguedUserUseCaseMock)
+                           fetchAccountDetails: fetchAccountDetailsUseCaseMock,
+                           fetchLoggedUser: fetchLoggedUserMock,
+                           deleteLoguedUser: deleteLoguedUserUseCaseMock,
+                           scheduler: .immediate)
     authPermission.delegate = sut
 
     let expected = [
@@ -147,8 +142,6 @@ class AccountViewModelTests: XCTestCase {
 
     // when
     authPermission.signIn()
-
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
     // then
     XCTAssertEqual(expected, received, "Should receives two values")

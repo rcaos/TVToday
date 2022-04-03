@@ -30,6 +30,7 @@ class AccountViewController: NiblessViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    viewModel.viewDidLoad()
     subscribe()
   }
 

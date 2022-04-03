@@ -39,17 +39,11 @@ class AccountViewModelTests: XCTestCase {
                            deleteLoguedUser: deleteLoguedUserUseCaseMock,
                            scheduler: .immediate)
 
-    // when
-
     let expected = [AccountViewState.login]
     var received = [AccountViewState]()
 
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // then
     XCTAssertEqual(expected, received, "Should only receives one Value")
@@ -67,16 +61,11 @@ class AccountViewModelTests: XCTestCase {
                            scheduler: .immediate)
 
     // when
-
     let expected = [AccountViewState.profile(account: AccountResult.stub())]
     var received = [AccountViewState]()
 
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // then
     XCTAssertEqual(expected, received, "Should receives two values")
@@ -101,12 +90,8 @@ class AccountViewModelTests: XCTestCase {
     ]
     var received = [AccountViewState]()
 
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     authPermission.signIn()
@@ -133,12 +118,8 @@ class AccountViewModelTests: XCTestCase {
     ]
     var received = [AccountViewState]()
 
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     authPermission.signIn()

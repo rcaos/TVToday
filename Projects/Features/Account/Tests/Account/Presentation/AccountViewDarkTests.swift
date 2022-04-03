@@ -27,7 +27,7 @@ class AccountViewDarkTests: XCTestCase {
     _ = viewController.view
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewIsLogged_thenShowProfileScreen() {
@@ -39,6 +39,6 @@ class AccountViewDarkTests: XCTestCase {
     _ = viewController.view
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
   }
 }

@@ -24,7 +24,7 @@ class SignInViewLightTests: XCTestCase {
     _ = viewController.view
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewIsLoading_thenShowLoadingScreen() {
@@ -35,7 +35,7 @@ class SignInViewLightTests: XCTestCase {
     _ = viewController.view
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewIsError_thenShowErrorScreen() {
@@ -46,6 +46,6 @@ class SignInViewLightTests: XCTestCase {
     _ = viewController.view
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
   }
 }

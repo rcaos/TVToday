@@ -6,11 +6,12 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
+import Foundation
 import Combine
+import CombineSchedulers
 import Shared
 import ShowDetailsInterface
 import NetworkingInterface
-import Foundation
 
 protocol TVShowDetailViewModelProtocol {
 
@@ -57,6 +58,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   let isFavorite = CurrentValueSubject<Bool, Never>(false)
   let isWatchList = CurrentValueSubject<Bool, Never>(false)
 
+  private let scheduler: AnySchedulerOf<DispatchQueue>
   private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializers
@@ -67,6 +69,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
        markAsFavoriteUseCase: MarkAsFavoriteUseCase,
        saveToWatchListUseCase: SaveToWatchListUseCase,
        coordinator: TVShowDetailCoordinatorProtocol?,
+       scheduler: AnySchedulerOf<DispatchQueue> = .main,
        closures: TVShowDetailViewModelClosures? = nil) {
     self.showId = showId
     self.fetchLoggedUser = fetchLoggedUser
@@ -75,6 +78,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
     self.markAsFavoriteUseCase = markAsFavoriteUseCase
     self.saveToWatchListUseCase = saveToWatchListUseCase
     self.coordinator = coordinator
+    self.scheduler = scheduler
     self.closures = closures
 
     tapFavoriteButton = PassthroughSubject()
@@ -144,14 +148,14 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
       .filter { didSendTap, isLoading in
         return didSendTap && isLoading == false
       }
-      .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
+      .debounce(for: .milliseconds(300), scheduler: scheduler)
       .flatMap { [weak self] _ -> AnyPublisher<Bool, DataTransferError> in
         guard let strongSelf = self else { return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher() }
         strongSelf.markAsFavoriteOnFlight.send(true)
         strongSelf.tapFavoriteButton.send(false)
         return strongSelf.markAsFavorite(state: strongSelf.isFavorite.value)
       }
-      .receive(on: RunLoop.main)
+      .receive(on: scheduler)
       .sink(receiveCompletion: { _ in },
             receiveValue: { [weak self] newState in
         guard let strongSelf = self else { return }
@@ -181,7 +185,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
         strongSelf.addToWatchListOnFlight.send(true)
         return strongSelf.saveToWatchList(state: isOnWatchListState)
       }
-      .receive(on: DispatchQueue.main)
+      .receive(on: scheduler)
       .sink(receiveCompletion: { _ in },
             receiveValue: { [weak self] newState in
         guard let strongSelf = self else { return }
@@ -199,7 +203,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
       .flatMap { _ -> AnyPublisher<TVShowDetailResult, DataTransferError> in
         return self.fetchShowDetails()
       }
-      .receive(on: RunLoop.main)
+      .receive(on: scheduler)
       .sink(receiveCompletion: { [weak self] completion in
         switch completion {
         case let .failure(error):
@@ -227,7 +231,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
       .share()
 
     responses
-      .receive(on: RunLoop.main)
+      .receive(on: scheduler)
       .sink(receiveCompletion: { completion in
         switch completion {
         case let .failure(error):
@@ -243,7 +247,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
       .store(in: &disposeBag)
 
     responses
-      .receive(on: RunLoop.main)
+      .receive(on: scheduler)
       .sink(receiveCompletion: { _ in }, receiveValue: { [isFavorite, isWatchList]  (_, stateShow) in
         isFavorite.send(stateShow.isFavorite)
         isWatchList.send(stateShow.isWatchList)

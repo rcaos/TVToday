@@ -57,7 +57,7 @@ class TVShowDetailViewModelFavoriteTapsTests: XCTestCase {
       scheduler: scheduler.eraseToAnyScheduler()
     )
 
-    let expected = [false, true, false]
+    let expected = [false, initialFavoriteState, !initialFavoriteState]
     var received = [Bool]()
 
     sut.isFavorite.removeDuplicates()
@@ -95,7 +95,7 @@ class TVShowDetailViewModelFavoriteTapsTests: XCTestCase {
       scheduler: scheduler.eraseToAnyScheduler()
     )
 
-    let expected = [false, true]
+    let expected = [false, !initialFavoriteState]
     var received = [Bool]()
 
     sut.isFavorite.removeDuplicates()

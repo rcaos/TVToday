@@ -43,7 +43,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   private weak var coordinator: TVShowDetailCoordinatorProtocol?
 
   private let showId: Int
-  private let didLoadView = CurrentValueSubject<Bool, Never>(false)
+  private let didLoadView = CurrentValueSubject<Bool, Never>(false)   // MARK: - TODO, remove
 
   private var tapFavoriteButton: PassthroughSubject<Bool, Never>
   private var markAsFavoriteOnFlight = CurrentValueSubject<Bool, Never>(false)
@@ -83,7 +83,6 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
     tapFavoriteButton = PassthroughSubject()
     tapWatchedButton = PassthroughSubject()
-    subscribe()
   }
 
   deinit {
@@ -91,11 +90,11 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   }
 
   func viewDidLoad() {
-    didLoadView.send(true)
+    subscribe()
   }
 
   public func refreshView() {
-    didLoadView.send(true)
+    subscribeToViewAppears()
   }
 
   public func isUserLogged() -> Bool {
@@ -198,11 +197,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
   // MARK: - Request For Guest Users
   private func requestTVShowDetails() {
-    didLoadView
-      .filter { $0 == true }
-      .flatMap { _ -> AnyPublisher<TVShowDetailResult, DataTransferError> in
-        return self.fetchShowDetails()
-      }
+    fetchShowDetails()
       .receive(on: scheduler)
       .sink(receiveCompletion: { [weak self] completion in
         switch completion {
@@ -221,16 +216,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
   // MARK: - Request For Logged Users
   private func requestTVShowDetailsAndState() {
-    let responses =
-    didLoadView
-      .filter { $0 == true }
-      .flatMap { _ -> AnyPublisher<(TVShowDetailResult, TVShowAccountStateResult), DataTransferError> in
-        Publishers.Zip(self.fetchShowDetails(), self.fetchTVShowState())
-          .eraseToAnyPublisher()
-      }
-      .share()
-
-    responses
+    Publishers.Zip(fetchShowDetails(), fetchTVShowState())
       .receive(on: scheduler)
       .sink(receiveCompletion: { completion in
         switch completion {
@@ -239,16 +225,8 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
         case .finished:
           break
         }
-      }, receiveValue: { [viewState] (resultDetails, _) in
-        viewState.send(
-          .populated(TVShowDetailInfo(show: resultDetails))
-        )
-      })
-      .store(in: &disposeBag)
-
-    responses
-      .receive(on: scheduler)
-      .sink(receiveCompletion: { _ in }, receiveValue: { [isFavorite, isWatchList]  (_, stateShow) in
+      }, receiveValue: { [viewState, isFavorite, isWatchList] (resultDetails, stateShow) in
+        viewState.send( .populated(TVShowDetailInfo(show: resultDetails)) )
         isFavorite.send(stateShow.isFavorite)
         isWatchList.send(stateShow.isWatchList)
       })

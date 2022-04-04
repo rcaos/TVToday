@@ -117,7 +117,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
   private func subscribeButtonsWhenPopulated() {
     viewState
-      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] viewState in
+      .sink(receiveValue: { [weak self] viewState in
         switch viewState {
         case .populated:
           self?.subscribeFavoriteTap()

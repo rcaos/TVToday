@@ -131,7 +131,7 @@ extension SeasonListTableViewCell: UICollectionViewDelegateFlowLayout {
 
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     if let item = dataSource?.itemIdentifier(for: indexPath) {
-      viewModel?.inputSelectedSeason.send(item)
+      viewModel?.selectSeason(seasonNumber: item)
     }
   }
 }

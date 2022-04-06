@@ -11,10 +11,14 @@ import NetworkingInterface
 @testable import Shared
 
 class SaveToWatchListUseCaseMock: SaveToWatchListUseCase {
+  let subject = PassthroughSubject<Bool, DataTransferError>()
   var result: Bool?
   var error: DataTransferError?
+  var calledCounter = 0
 
   func execute(requestValue: SaveToWatchListUseCaseRequestValue) -> AnyPublisher<Bool, DataTransferError> {
+    calledCounter += 1
+
     if let error = error {
       return Fail(error: error).eraseToAnyPublisher()
     }
@@ -23,6 +27,6 @@ class SaveToWatchListUseCaseMock: SaveToWatchListUseCase {
       return Just(result).setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
     }
 
-    return Empty().setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
+    return subject.eraseToAnyPublisher()
   }
 }

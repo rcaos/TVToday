@@ -34,6 +34,12 @@ protocol TVShowDetailViewModelProtocol {
 
 final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
+  // MARK: - Public Api
+  let viewState = CurrentValueSubject<ViewState, Never>(.loading)
+  let isFavorite = CurrentValueSubject<Bool, Never>(false)
+  let isWatchList = CurrentValueSubject<Bool, Never>(false)
+
+  // MARK: - Private
   private let fetchLoggedUser: FetchLoggedUser
   private let fetchDetailShowUseCase: FetchTVShowDetailsUseCase
   private let fetchTvShowState: FetchTVAccountStates
@@ -43,8 +49,6 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   private weak var coordinator: TVShowDetailCoordinatorProtocol?
 
   private let showId: Int
-  private let didLoadView = CurrentValueSubject<Bool, Never>(false)   // MARK: - TODO, remove
-
   private let tapFavoriteButton: PassthroughSubject<Bool, Never>
   private let markAsFavoriteOnFlight = CurrentValueSubject<Bool, Never>(false)
 
@@ -52,16 +56,10 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   private let addToWatchListOnFlight = CurrentValueSubject<Bool, Never>(false)
 
   private let closures: TVShowDetailViewModelClosures?
-
-  // MARK: - Public Api
-  let viewState = CurrentValueSubject<ViewState, Never>(.loading)
-  let isFavorite = CurrentValueSubject<Bool, Never>(false)
-  let isWatchList = CurrentValueSubject<Bool, Never>(false)
-
   private let scheduler: AnySchedulerOf<DispatchQueue>
   private var disposeBag = Set<AnyCancellable>()
 
-  // MARK: - Initializers
+  // MARK: - Initializer
   init(_ showId: Int,
        fetchLoggedUser: FetchLoggedUser,
        fetchDetailShowUseCase: FetchTVShowDetailsUseCase,
@@ -155,8 +153,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
         return strongSelf.markAsFavorite(state: strongSelf.isFavorite.value)
       }
       .receive(on: scheduler)
-      .sink(receiveCompletion: { _ in },
-            receiveValue: { [weak self] result in
+      .sink(receiveValue: { [weak self] result in
         guard let strongSelf = self else { return }
         strongSelf.markAsFavoriteOnFlight.send(false)
 
@@ -176,7 +173,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
     Publishers.CombineLatest3(
       tapWatchedButton,
       addToWatchListOnFlight,
-
+      
       // different approach, same result, compared with subscribeFavoriteTap()
       isWatchList
     )
@@ -191,8 +188,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
         return strongSelf.saveToWatchList(state: isOnWatchListState)
       }
       .receive(on: scheduler)
-      .sink(receiveCompletion: { _ in },
-            receiveValue: { [weak self] result in
+      .sink(receiveValue: { [weak self] result in
         guard let strongSelf = self else { return }
         strongSelf.addToWatchListOnFlight.send(false)
         switch result {

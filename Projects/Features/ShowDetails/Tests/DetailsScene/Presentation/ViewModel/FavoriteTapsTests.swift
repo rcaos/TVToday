@@ -12,7 +12,7 @@ import XCTest
 @testable import ShowDetails
 @testable import Shared
 
-class TVShowDetailViewModelFavoriteTapsTests: XCTestCase {
+class FavoriteTapsTests: XCTestCase {
 
   let detailResult = TVShowDetailResult.stub()
 

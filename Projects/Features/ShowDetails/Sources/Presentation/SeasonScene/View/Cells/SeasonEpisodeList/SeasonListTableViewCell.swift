@@ -57,16 +57,15 @@ class SeasonListTableViewCell: NiblessTableViewCell {
   }
 
   public func setViewModel(viewModel: SeasonListViewModelProtocol?) {
-    self.viewModel = viewModel
-    setupDataSource()
-    setupBindables()
-  }
-
-  private func setupBindables() {
     guard let viewModel = viewModel else {
       return
     }
+    self.viewModel = viewModel
+    self.dataSource = configureDataSource()
+    bind(with: viewModel)
+  }
 
+  private func bind(with viewModel: SeasonListViewModelProtocol) {
     viewModel
       .seasons
       .map { data -> Snapshot in
@@ -76,8 +75,8 @@ class SeasonListTableViewCell: NiblessTableViewCell {
         return snapShot
       }
     // MARK: - TODO, this cause snapshot tests fails
-      .receive(on: DispatchQueue.main)
-      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] snapshot in
+    // .receive(on: DispatchQueue.main)
+      .sink(receiveValue: { [weak self] snapshot in
         self?.dataSource?.apply(snapshot)
       })
       .store(in: &disposeBag)
@@ -85,9 +84,9 @@ class SeasonListTableViewCell: NiblessTableViewCell {
     viewModel
       .seasonSelected
       .filter { $0 > 0 }
-    // MARK: - TODO, this cause snapshot tests fails
-      .receive(on: DispatchQueue.main)
-      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] season in
+    // MARK: - TODO, Recive using scheduler causes snapshot test fails
+    // .receive(on: DispatchQueue.main)
+      .sink(receiveValue: { [weak self] season in
         self?.selectedSeason(at: season)
       })
       .store(in: &disposeBag)
@@ -100,11 +99,9 @@ class SeasonListTableViewCell: NiblessTableViewCell {
     }
   }
 
-  private func setupDataSource() {
-    dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView, cellProvider: { [weak self] collectionView, indexPath, season in
-      guard let strongSelf = self else {
-        fatalError()
-      }
+  private func configureDataSource() -> DataSource {
+    return UICollectionViewDiffableDataSource(collectionView: collectionView, cellProvider: { [weak self] collectionView, indexPath, season in
+      guard let strongSelf = self else { fatalError() }
       let cell = collectionView.dequeueReusableCell(with: SeasonEpisodeCollectionViewCell.self, for: indexPath)
       cell.setViewModel(viewModel: strongSelf.viewModel?.getModel(for: season))
       return cell

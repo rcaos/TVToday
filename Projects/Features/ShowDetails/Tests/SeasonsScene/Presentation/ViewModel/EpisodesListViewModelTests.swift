@@ -232,7 +232,6 @@ class EpisodesListViewModelTests: XCTestCase {
     sut.viewState.removeDuplicates()
       .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
-    // when
     sut.viewDidLoad()
     scheduler.advance(by: 1)
 
@@ -240,9 +239,11 @@ class EpisodesListViewModelTests: XCTestCase {
     fetchEpisodesUseCaseMock.result = nil
     fetchEpisodesUseCaseMock.error = .noResponse
 
+    // when
     sut.getViewModelForAllSeasons()?.selectSeason(seasonNumber: 2)
     scheduler.advance(by: 1)
 
+    // then
     XCTAssertEqual([.loading, .populated, .loadingSeason, .errorSeason("")], received)
   }
 
@@ -271,79 +272,63 @@ class EpisodesListViewModelTests: XCTestCase {
     sut.getViewModelForAllSeasons()?.selectSeason(seasonNumber: 2)
     scheduler.advance(by: 1)
 
+    // Then
     XCTAssertEqual([.loading, .populated, .loadingSeason, .populated], received)
   }
 
-//  func test_When_Ask_For_Different_Season_And_UseCase_Return_OK_ViewModel_Should_Contains_Data_With_Episodes() {
-//    // given
-////    let episodesObserver = scheduler.createObserver([SeasonsSectionModel].self)
-//
-//    let numberOfSeasons = 9
-//
-//    let firstEpisodes = self.episodes
-//      .map { EpisodeSectionModelType(episode: $0)}
-//      .map { SeasonsSectionItem.episodes(items: $0) }
-//    let headerViewModel = SeasonHeaderViewModel(showDetail: self.detailResult)
-//
-//    let firstSeason: [SeasonsSectionModel] = [
-//      .headerShow(items: [.headerShow(viewModel: headerViewModel)]),
-//      .seasons(items: [.seasons]),
-//      .episodes(items: firstEpisodes)
-//    ]
-//
-//    let loadingSection: [SeasonsSectionModel] = [
-//      .headerShow(items: [.headerShow(viewModel: headerViewModel)]),
-//      .seasons(items: [.seasons]),
-//      .episodes(items: [])
-//    ]
-//
-//    let secondEpisodes = self.episodes
-//      .map { EpisodeSectionModelType(episode: $0)}
-//      .map { SeasonsSectionItem.episodes(items: $0) }
-//    let secondSeason: [SeasonsSectionModel] = [
-//      .headerShow(items: [.headerShow(viewModel: headerViewModel)]),
-//      .seasons(items: [.seasons]),
-//      .episodes(items: secondEpisodes)
-//    ]
-//
-//    let seasonResult = SeasonResult(id: "1", episodes: self.episodes, seasonNumber: 1)
-//
-//    fetchTVShowDetailsUseCaseMock.result = self.detailResult
-//    fetchEpisodesUseCaseMock.result = seasonResult
-//
-//    let sut: EpisodesListViewModelProtocol =
-//    EpisodesListViewModel(tvShowId: 1,
-//                          fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-//                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock,
-//                          scheduler: .immediate)
-//    //
-//    //          viewModel.data
-//    //            .distinctUntilChanged()
-//    //            .subscribe { event in
-//    //              episodesObserver.on(event)
-//    //            }
-//    //            .disposed(by: disposeBag)
-//    //
-//    //          let seasonViewModel = SeasonListViewModelMock()
-//    //
-//    //          // when
-//    //          viewModel.viewDidLoad()
-//    //
-//    //          let secondSeasonResult = SeasonResult(id: "2", episodes: self.episodes, seasonNumber: 2)
-//    //          fetchEpisodesUseCaseMock.result = secondSeasonResult
-//    //          fetchEpisodesUseCaseMock.error = nil
-//    //
-//    //          // select next Season
-//    //          viewModel.seasonListViewModel(seasonViewModel, didSelectSeason: 2)
-//    //
-//    //          // when
-//    //          let expected: [Recorded<Event<[SeasonsSectionModel]>>] = [
-//    //            .next(0, []),
-//    //            .next(0, firstSeason),
-//    //            .next(0, loadingSection),
-//    //            .next(0, secondSeason)
-//    //          ]
-//    //
-//    //          expect(episodesObserver.events).toEventually(equal(expected))
-//  }
+  func test_When_Ask_For_Different_Season_And_UseCase_Return_OK_ViewModel_Should_Contains_Data_With_Episodes() {
+    let firstEpisodes = self.episodes
+      .map { EpisodeSectionModelType(episode: $0)}
+      .map { SeasonsSectionItem.episodes(items: $0) }
+    let headerViewModel = SeasonHeaderViewModel(showDetail: self.detailResult)
+
+    let firstSeason: [SeasonsSectionModel] = [
+      .headerShow(items: [.headerShow(viewModel: headerViewModel)]),
+      .seasons(items: [.seasons]),
+      .episodes(items: firstEpisodes)
+    ]
+
+    let loadingSection: [SeasonsSectionModel] = [
+      .headerShow(items: [.headerShow(viewModel: headerViewModel)]),
+      .seasons(items: [.seasons]),
+      .episodes(items: [])
+    ]
+
+    let secondEpisodes = self.episodes
+      .map { EpisodeSectionModelType(episode: $0)}
+      .map { SeasonsSectionItem.episodes(items: $0) }
+    let secondSeason: [SeasonsSectionModel] = [
+      .headerShow(items: [.headerShow(viewModel: headerViewModel)]),
+      .seasons(items: [.seasons]),
+      .episodes(items: secondEpisodes)
+    ]
+
+    fetchTVShowDetailsUseCaseMock.result = self.detailResult
+    fetchEpisodesUseCaseMock.result = SeasonResult(id: "1", episodes: self.episodes, seasonNumber: 1)
+
+    // Given
+    let scheduler = DispatchQueue.test
+    let sut: EpisodesListViewModelProtocol =
+    EpisodesListViewModel(tvShowId: 1,
+                          fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock,
+                          scheduler: scheduler.eraseToAnyScheduler())
+    var received = [[SeasonsSectionModel]]()
+    sut.data.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
+
+    sut.viewDidLoad()
+    scheduler.advance(by: 1)
+
+    // Second Season responds
+    fetchEpisodesUseCaseMock.result = SeasonResult(id: "2", episodes: self.episodes, seasonNumber: 2)
+    fetchEpisodesUseCaseMock.error = nil
+
+    // When
+    sut.getViewModelForAllSeasons()?.selectSeason(seasonNumber: 2)
+    scheduler.advance(by: 1)
+
+    // Then
+    XCTAssertEqual([[], firstSeason, loadingSection, secondSeason], received)
+  }
 }

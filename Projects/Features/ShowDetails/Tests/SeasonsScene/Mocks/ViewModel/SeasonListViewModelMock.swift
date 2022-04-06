@@ -13,6 +13,8 @@ class SeasonListViewModelMock: SeasonListViewModelProtocol {
 
   func selectSeason(_ season: Int) { }
 
+  func selectSeason(seasonNumber: Int) { }
+
   var seasons = CurrentValueSubject<[Int], Never>([])
 
   var seasonSelected = CurrentValueSubject<Int, Never>(0)

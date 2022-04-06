@@ -72,7 +72,7 @@ final class SeasonListViewModel: SeasonListViewModelProtocol {
   private func subscribe() {
     inputSelectedSeason
       .receive(on: scheduler)
-      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] season in
+      .sink(receiveValue: { [weak self] season in
         guard let strongSelf = self else { return }
         strongSelf.delegate?.seasonListViewModel(strongSelf, didSelectSeason: season)
       })

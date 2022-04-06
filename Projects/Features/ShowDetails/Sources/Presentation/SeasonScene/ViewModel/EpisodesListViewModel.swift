@@ -198,7 +198,7 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
 
   private func createViewModelForSeasons(numberOfSeasons: Int) {
     let seasons: [Int] = (1...numberOfSeasons).map { $0 }
-    seasonListViewModel = SeasonListViewModel(seasonList: seasons)
+    seasonListViewModel = SeasonListViewModel(seasonList: seasons, scheduler: scheduler)
     seasonListViewModel?.delegate = self
   }
 

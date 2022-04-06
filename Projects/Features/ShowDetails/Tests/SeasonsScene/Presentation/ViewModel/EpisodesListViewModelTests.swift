@@ -246,51 +246,34 @@ class EpisodesListViewModelTests: XCTestCase {
     XCTAssertEqual([.loading, .populated, .loadingSeason, .errorSeason("")], received)
   }
 
-//  func test_When_Ask_For_Different_Season_And_UseCase_Return_OK_ViewModel_Should_Contains_populated() {
-//    // given
-////    let statesObserver = scheduler.createObserver(EpisodesListViewModel.ViewState.self)
-//
-//    let seasonResult = SeasonResult(id: "1", episodes: self.episodes, seasonNumber: 1)
-//
-//    fetchTVShowDetailsUseCaseMock.result = self.detailResult
-//    fetchEpisodesUseCaseMock.result = seasonResult
-//
-//    let _: EpisodesListViewModelProtocol =
-//    EpisodesListViewModel(tvShowId: 1,
-//                          fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-//                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock,
-//                          scheduler: .immediate)
-//    //
-//    //          viewModel.viewState
-//    //            .distinctUntilChanged()
-//    //            .subscribe { event in
-//    //              statesObserver.on(event)
-//    //            }
-//    //            .disposed(by: disposeBag)
-//    //
-//    //          let seasonViewModel = SeasonListViewModelMock()
-//    //
-//    //          // when
-//    //          viewModel.viewDidLoad()
-//    //
-//    //          let secondSeason = SeasonResult(id: "2", episodes: self.episodes, seasonNumber: 2)
-//    //          fetchEpisodesUseCaseMock.result = secondSeason
-//    //          fetchEpisodesUseCaseMock.error = nil
-//    //
-//    //          // select next Season
-//    //          viewModel.seasonListViewModel(seasonViewModel, didSelectSeason: 2)
-//    //
-//    //          // when
-//    //          let expected: [Recorded<Event<EpisodesListViewModel.ViewState>>] = [
-//    //            .next(0, .loading),
-//    //            .next(0, .populated),
-//    //            .next(0, .loadingSeason),
-//    //            .next(0, .populated)
-//    //          ]
-//    //
-//    //          expect(statesObserver.events).toEventually(equal(expected))
-//  }
-//
+  func test_When_Ask_For_Different_Season_And_UseCase_Return_OK_ViewModel_Should_Contains_populated() {
+    let scheduler = DispatchQueue.test
+    fetchTVShowDetailsUseCaseMock.result = self.detailResult
+    fetchEpisodesUseCaseMock.result = SeasonResult(id: "1", episodes: self.episodes, seasonNumber: 1)
+
+    let sut: EpisodesListViewModelProtocol =
+    EpisodesListViewModel(tvShowId: 1,
+                          fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock,
+                          scheduler: .immediate)
+    var received = [EpisodesListViewModel.ViewState]()
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
+
+    sut.viewDidLoad()
+    scheduler.advance(by: 1)
+
+    // Given UseCase responds with Data
+    fetchEpisodesUseCaseMock.result = SeasonResult(id: "2", episodes: self.episodes, seasonNumber: 2)
+    fetchEpisodesUseCaseMock.error = nil
+
+    // When
+    sut.getViewModelForAllSeasons()?.selectSeason(seasonNumber: 2)
+    scheduler.advance(by: 1)
+
+    XCTAssertEqual([.loading, .populated, .loadingSeason, .populated], received)
+  }
+
 //  func test_When_Ask_For_Different_Season_And_UseCase_Return_OK_ViewModel_Should_Contains_Data_With_Episodes() {
 //    // given
 ////    let episodesObserver = scheduler.createObserver([SeasonsSectionModel].self)

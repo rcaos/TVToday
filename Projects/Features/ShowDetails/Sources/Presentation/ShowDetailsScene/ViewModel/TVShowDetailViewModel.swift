@@ -183,20 +183,25 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
       .filter { didUserTap, isOnFlight, _ in
         return didUserTap && isOnFlight == false
       }
-      .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
-      .flatMap { [weak self] (_, _, isOnWatchListState) -> AnyPublisher<Bool, DataTransferError> in
-        guard let strongSelf = self else { return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher() }
+      .debounce(for: .milliseconds(300), scheduler: scheduler)
+      .flatMap { [weak self] (_, _, isOnWatchListState) -> AnyPublisher<Result<Bool, DataTransferError>, Never> in
+        guard let strongSelf = self else { return Empty().eraseToAnyPublisher() }
         strongSelf.tapWatchedButton.send(false)
         strongSelf.addToWatchListOnFlight.send(true)
         return strongSelf.saveToWatchList(state: isOnWatchListState)
       }
       .receive(on: scheduler)
       .sink(receiveCompletion: { _ in },
-            receiveValue: { [weak self] newState in
+            receiveValue: { [weak self] result in
         guard let strongSelf = self else { return }
-        strongSelf.isWatchList.send(newState)
-        strongSelf.closures?.updateWatchListShows?(TVShowUpdated(showId: strongSelf.showId, isActive: newState))
         strongSelf.addToWatchListOnFlight.send(false)
+        switch result {
+        case .failure:
+          break
+        case .success(let newState):
+          strongSelf.isWatchList.send(newState)
+          strongSelf.closures?.updateWatchListShows?(TVShowUpdated(showId: strongSelf.showId, isActive: newState))
+        }
       })
       .store(in: &disposeBag)
   }
@@ -239,13 +244,13 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
       .store(in: &disposeBag)
   }
 
-  // MARK: - Observables
+  // MARK: - Use Cases
   private func fetchShowDetails() -> AnyPublisher<TVShowDetailResult, DataTransferError> {
     let request = FetchTVShowDetailsUseCaseRequestValue(identifier: showId)
     return fetchDetailShowUseCase.execute(requestValue: request)
   }
 
-  fileprivate func fetchTVShowState() -> AnyPublisher<TVShowAccountStateResult, DataTransferError> {
+  private func fetchTVShowState() -> AnyPublisher<TVShowAccountStateResult, DataTransferError> {
     let request = FetchTVAccountStatesRequestValue(showId: showId)
     return fetchTvShowState.execute(requestValue: request)
   }
@@ -258,9 +263,12 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
       .eraseToAnyPublisher()
   }
 
-  private func saveToWatchList(state: Bool) -> AnyPublisher<Bool, DataTransferError> {
+  private func saveToWatchList(state: Bool) -> AnyPublisher<Result<Bool, DataTransferError>, Never> {
     let request = SaveToWatchListUseCaseRequestValue(showId: showId, watchList: !state)
     return saveToWatchListUseCase.execute(requestValue: request)
+      .map { .success($0) }
+      .replaceError(with: .failure(DataTransferError.noResponse))
+      .eraseToAnyPublisher()
   }
 }
 

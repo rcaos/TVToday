@@ -8,6 +8,7 @@
 
 import Foundation
 import Combine
+import CombineSchedulers
 import Shared
 
 protocol SeasonListViewModelDelegate: AnyObject {
@@ -17,8 +18,9 @@ protocol SeasonListViewModelDelegate: AnyObject {
 protocol SeasonListViewModelProtocol {
 
   // MARK: - Input
-  var inputSelectedSeason: CurrentValueSubject<Int, Never> { get }
+  // MARK: - TODO, refactor this, change signature, choice between delegate and Streams.
   func selectSeason(_ season: Int)
+  func selectSeason(seasonNumber: Int)
 
   // MARK: - Output
   var seasons: CurrentValueSubject<[Int], Never> { get }
@@ -29,19 +31,20 @@ protocol SeasonListViewModelProtocol {
 }
 
 final class SeasonListViewModel: SeasonListViewModelProtocol {
-
   private var seasonList: [Int]
-  var seasons: CurrentValueSubject<[Int], Never>
-  var seasonSelected = CurrentValueSubject<Int, Never>(0)
-  private var disposeBag = Set<AnyCancellable>()
+  private let inputSelectedSeason = CurrentValueSubject<Int, Never>(0)
 
-  // MARK: - Public Api
-  let inputSelectedSeason = CurrentValueSubject<Int, Never>(0)
   weak var delegate: SeasonListViewModelDelegate?
+  private var disposeBag = Set<AnyCancellable>()
+  private let scheduler: AnySchedulerOf<DispatchQueue>
+
+  let seasons: CurrentValueSubject<[Int], Never>
+  let seasonSelected = CurrentValueSubject<Int, Never>(0)
 
   // MARK: Initalizer
-  init(seasonList: [Int] ) {
+  init(seasonList: [Int], scheduler: AnySchedulerOf<DispatchQueue> = .main) {
     self.seasonList = seasonList
+    self.scheduler = scheduler
     seasons = CurrentValueSubject(seasonList)
     subscribe()
   }
@@ -51,7 +54,6 @@ final class SeasonListViewModel: SeasonListViewModelProtocol {
   }
 
   // MARK: - Public
-
   func getModel(for season: Int) -> SeasonEpisodeViewModel {
     return SeasonEpisodeViewModel(seasonNumber: season)
   }
@@ -63,9 +65,13 @@ final class SeasonListViewModel: SeasonListViewModelProtocol {
     }
   }
 
+  func selectSeason(seasonNumber: Int) {
+    inputSelectedSeason.send(seasonNumber)
+  }
+
   private func subscribe() {
     inputSelectedSeason
-      .receive(on: RunLoop.main)
+      .receive(on: scheduler)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] season in
         guard let strongSelf = self else { return }
         strongSelf.delegate?.seasonListViewModel(strongSelf, didSelectSeason: season)

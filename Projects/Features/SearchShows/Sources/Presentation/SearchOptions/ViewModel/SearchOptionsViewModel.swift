@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import CombineSchedulers
 import Shared
 import Persistence
 import NetworkingInterface
@@ -21,15 +22,18 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
 
   let viewState = CurrentValueSubject<SearchViewState, Never>(.loading)
   let dataSource = CurrentValueSubject<[SearchOptionsSectionModel], Never>([])
+  private let scheduler: AnySchedulerOf<DispatchQueue>
   private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializer
   init(fetchGenresUseCase: FetchGenresUseCase,
        fetchVisitedShowsUseCase: FetchVisitedShowsUseCase,
-       recentVisitedShowsDidChange: RecentVisitedShowDidChangeUseCase) {
+       recentVisitedShowsDidChange: RecentVisitedShowDidChangeUseCase,
+       scheduler: AnySchedulerOf<DispatchQueue> = .main) {
     self.fetchGenresUseCase = fetchGenresUseCase
     self.fetchVisitedShowsUseCase = fetchVisitedShowsUseCase
     self.recentVisitedShowsDidChange = recentVisitedShowsDidChange
+    self.scheduler = scheduler
   }
 
   // MARK: - Public
@@ -72,7 +76,7 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
       recentShowsDidChanged(),
       fetchGenres()
     )
-      .receive(on: RunLoop.main)
+      .receive(on: scheduler)
       .sink(receiveCompletion: { [weak self] completion in
         switch completion {
         case let .failure(error):

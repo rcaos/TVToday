@@ -123,15 +123,14 @@ class ResultsSearchViewModelTests: XCTestCase {
 
   func test_When_Use_Case_Respond_With_Data_Should_ViewModel_DataSource_Contains_Data() {
     // given
-    let shows: [TVShow] = [
+    let shows = [
       TVShow.stub(id: 1, name: "something Show 1"),
       TVShow.stub(id: 2, name: "something Show 2")
     ]
 
     searchTVShowsUseCaseMock.result = TVShowResult(page: 1, results: shows, totalResults: 1, totalPages: 1)
-
     sut = ResultsSearchViewModel(
-      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
 
     let expected = [
       [],
@@ -139,12 +138,8 @@ class ResultsSearchViewModelTests: XCTestCase {
     ]
     var received = [[ResultSearchSectionModel]]()
 
-    sut.dataSource
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.dataSource.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.searchShows(with: "something")

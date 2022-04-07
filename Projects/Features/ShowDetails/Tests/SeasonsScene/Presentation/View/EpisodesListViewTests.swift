@@ -12,6 +12,11 @@ import CombineSchedulers
 @testable import ShowDetails
 @testable import Shared
 
+func configureWith(_ viewController: UIViewController, style: UIUserInterfaceStyle) {
+  viewController.overrideUserInterfaceStyle = style
+  _ = viewController.view
+}
+
 class EpisodesListViewTests: XCTestCase {
 
   private var headerViewModel: SeasonHeaderViewModel!
@@ -37,11 +42,6 @@ class EpisodesListViewTests: XCTestCase {
 
     // then
     assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
-  }
-
-  private func configureWith(_ viewController: UIViewController, style: UIUserInterfaceStyle) {
-    viewController.overrideUserInterfaceStyle = style
-    _ = viewController.view
   }
 
   func test_WhenViewModelDidPopulated_thenShow_PopulatedScreen() {

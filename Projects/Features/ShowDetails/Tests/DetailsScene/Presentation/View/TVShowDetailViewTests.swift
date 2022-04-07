@@ -1,5 +1,5 @@
 //
-//  TVShowDetailViewTestsDark.swift
+//  TVShowDetailViewTests.swift
 //  ShowDetailsTests
 //
 //  Created by Jeans Ruiz on 19/12/21.
@@ -11,7 +11,7 @@ import XCTest
 @testable import ShowDetails
 @testable import Shared
 
-class TVShowDetailViewTestsDark: XCTestCase {
+class TVShowDetailViewTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
@@ -24,11 +24,17 @@ class TVShowDetailViewTestsDark: XCTestCase {
 
     // when
     let viewController = TVShowDetailViewController(viewModel: initialState)
-    viewController.overrideUserInterfaceStyle = .dark
-    _ = viewController.view
+    configureWith(viewController, style: .dark)
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+
+    // when
+    let lightViewController = TVShowDetailViewController(viewModel: initialState)
+    configureWith(lightViewController, style: .light)
+
+    // then
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewPopulated_thenShowPopulatedScreen() {
@@ -37,12 +43,19 @@ class TVShowDetailViewTestsDark: XCTestCase {
 
     // when
     let viewController = TVShowDetailViewController(viewModel: initialState)
-    viewController.overrideUserInterfaceStyle = .dark
-    _ = viewController.view
+    configureWith(viewController, style: .dark)
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
     assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneXsMax)))
+
+    // when
+    let lightViewController = TVShowDetailViewController(viewModel: initialState)
+    configureWith(lightViewController, style: .light)
+
+    // then
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewIsError_thenShowErrorScreen() {
@@ -51,10 +64,16 @@ class TVShowDetailViewTestsDark: XCTestCase {
 
     // when
     let viewController = TVShowDetailViewController(viewModel: initialState)
-    viewController.overrideUserInterfaceStyle = .dark
-    _ = viewController.view
+    configureWith(viewController, style: .dark)
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+
+    // when
+    let lightViewController = TVShowDetailViewController(viewModel: initialState)
+    configureWith(lightViewController, style: .light)
+
+    // then
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
   }
 }

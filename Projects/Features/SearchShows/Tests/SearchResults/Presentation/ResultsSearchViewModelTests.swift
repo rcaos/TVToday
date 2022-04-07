@@ -92,7 +92,6 @@ class ResultsSearchViewModelTests: XCTestCase {
       searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
 
     var received = [ResultViewState]()
-
     sut.viewState.removeDuplicates()
       .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
@@ -105,33 +104,21 @@ class ResultsSearchViewModelTests: XCTestCase {
 
   func test_When_Use_Case_Respond_With_Data_Should_ViewModel_Contains_Populated_State() {
     // given
-    let shows: [TVShow] = [
-      TVShow.stub(id: 1, name: "Show 1")
-    ]
+    let shows = [TVShow.stub(id: 1, name: "Show 1")]
     searchTVShowsUseCaseMock.result = TVShowResult(page: 1, results: shows, totalResults: 1, totalPages: 1)
 
     sut = ResultsSearchViewModel(
-      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
 
-    let expected = [
-      ResultViewState.initial,
-      ResultViewState.loading,
-      ResultViewState.populated
-    ]
     var received = [ResultViewState]()
-
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.searchShows(with: "something")
 
     // then
-    XCTAssertEqual(expected, received, "Should contains 3 values")
+    XCTAssertEqual([.initial, .loading, .populated], received)
   }
 
   func test_When_Use_Case_Respond_With_Data_Should_ViewModel_DataSource_Contains_Data() {

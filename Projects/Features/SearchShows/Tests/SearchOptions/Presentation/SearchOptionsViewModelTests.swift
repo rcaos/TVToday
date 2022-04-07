@@ -78,25 +78,18 @@ class SearchOptionsViewModelTest: XCTestCase {
     sut = SearchOptionsViewModel(
                 fetchGenresUseCase: fetchGenresUseCaseMock,
                 fetchVisitedShowsUseCase: fetchVisitedShowsUseCaseMock,
-                recentVisitedShowsDidChange: recentsDidChangeUseCaseMock)
-    let expected = [
-      SearchViewState.loading,
-      SearchViewState.empty
-    ]
-    var received = [SearchViewState]()
+                recentVisitedShowsDidChange: recentsDidChangeUseCaseMock,
+                scheduler: .immediate)
 
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    var received = [SearchViewState]()
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.viewDidLoad()
 
     // then
-    XCTAssertEqual(expected, received, "Should contains 2 values")
+    XCTAssertEqual([.loading, .empty], received)
   }
 
   func test_when_useCase_Responds_With_Error_ViewModel_Should_contains_Error_State() {

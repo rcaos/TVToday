@@ -89,27 +89,18 @@ class ResultsSearchViewModelTests: XCTestCase {
     // given
     searchTVShowsUseCaseMock.result = TVShowResult(page: 1, results: [], totalResults: 0, totalPages: 0)
     sut = ResultsSearchViewModel(
-      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
 
-    let expected = [
-      ResultViewState.initial,
-      ResultViewState.loading,
-      ResultViewState.empty
-    ]
     var received = [ResultViewState]()
 
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.searchShows(with: "something")
 
     // then
-    XCTAssertEqual(expected, received, "Should contains 2 values")
+    XCTAssertEqual([.initial, .loading, .empty], received)
   }
 
   func test_When_Use_Case_Respond_With_Data_Should_ViewModel_Contains_Populated_State() {

@@ -71,26 +71,18 @@ class ResultsSearchViewModelTests: XCTestCase {
   func test_When_Use_Case_DoestNot_Respond_yet_Should_ViewModel_Contains_Loading_State() {
     // given
     sut = ResultsSearchViewModel(
-      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
 
-    let expected = [
-      ResultViewState.initial,
-      ResultViewState.loading
-    ]
     var received = [ResultViewState]()
 
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.searchShows(with: "something")
 
     // then
-    XCTAssertEqual(expected, received, "Should contains 2 values")
+    XCTAssertEqual([.initial, .loading], received)
   }
 
   func test_When_Use_Case_Respond_with_Zero_Values_Should_ViewModel_Contains_Loading_State() {

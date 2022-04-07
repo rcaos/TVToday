@@ -161,6 +161,8 @@ class ResultsSearchViewModelTests: XCTestCase {
     // when
     sut.searchShows(with: "something")
 
+    // MARK: - TODO, test, recovery from error also
+
     // then
     XCTAssertEqual([.initial, .loading, .error("")], received)
   }

@@ -111,6 +111,8 @@ class SearchOptionsViewModelTest: XCTestCase {
     // when
     sut.viewDidLoad()
 
+    // MARK: - TODO, test recovery from error also
+
     // then
     XCTAssertEqual([.loading, .error("")], received, "Should contains 2 values")
   }

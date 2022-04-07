@@ -1,5 +1,5 @@
 //
-//  ResultsSearchViewDarkTests.swift
+//  ResultsSearchViewTests.swift
 //  SearchShowsTests
 //
 //  Created by Jeans Ruiz on 20/12/21.
@@ -12,7 +12,7 @@ import XCTest
 @testable import Shared
 @testable import Persistence
 
-class ResultsSearchViewDarkTests: XCTestCase {
+class ResultsSearchViewTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
@@ -26,23 +26,37 @@ class ResultsSearchViewDarkTests: XCTestCase {
     let viewModel = ResultsSearchViewModelMock(state: .initial, source: dataSource)
 
     let viewController = ResultsSearchViewController(viewModel: viewModel)
-    viewController.overrideUserInterfaceStyle = .dark
-    _ = viewController.view
+    configureWith(viewController, style: .dark)
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneXsMax)))
+
+    let lightViewController = ResultsSearchViewController(viewModel: viewModel)
+    configureWith(lightViewController, style: .dark)
+
+    // then
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.1, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewIsLoading_thenShowLoadingScreen() {
     // given
     let viewModel = ResultsSearchViewModelMock(state: .loading)
+
+    // when
     let viewController = ResultsSearchViewController(viewModel: viewModel)
-    viewController.overrideUserInterfaceStyle = .dark
-    _ = viewController.view
+    configureWith(viewController, style: .dark)
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+
+    // when
+    let lightViewController = ResultsSearchViewController(viewModel: viewModel)
+    configureWith(lightViewController, style: .dark)
+
+    // then
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewIsPopulated_thenShowPopulatedScreen() {
@@ -56,34 +70,58 @@ class ResultsSearchViewDarkTests: XCTestCase {
 
     let viewModel = ResultsSearchViewModelMock(state: .populated, source: dataSource)
 
+    // when
     let viewController = ResultsSearchViewController(viewModel: viewModel)
-    viewController.overrideUserInterfaceStyle = .dark
-    _ = viewController.view
+    configureWith(viewController, style: .dark)
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneXsMax)))
+
+    // when
+    let lightViewController = ResultsSearchViewController(viewModel: viewModel)
+    configureWith(lightViewController, style: .dark)
+
+    // then
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.1, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewIsEmpty_thenShowEmptyScreen() {
     // given
     let viewModel = ResultsSearchViewModelMock(state: .empty)
+
+    // given
     let viewController = ResultsSearchViewController(viewModel: viewModel)
-    viewController.overrideUserInterfaceStyle = .dark
-    _ = viewController.view
+    configureWith(viewController, style: .dark)
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+
+    // given
+    let lightViewController = ResultsSearchViewController(viewModel: viewModel)
+    configureWith(lightViewController, style: .dark)
+
+    // then
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewDidError_thenShowErrorScreen() {
     // given
     let viewModel = ResultsSearchViewModelMock(state: .error("Error to Fetch Shows"))
+
+    // when
     let viewController = ResultsSearchViewController(viewModel: viewModel)
-    viewController.overrideUserInterfaceStyle = .dark
-    _ = viewController.view
+    configureWith(viewController, style: .dark)
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+
+    // when
+    let lightViewController = ResultsSearchViewController(viewModel: viewModel)
+    configureWith(lightViewController, style: .dark)
+
+    // then
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
   }
 }

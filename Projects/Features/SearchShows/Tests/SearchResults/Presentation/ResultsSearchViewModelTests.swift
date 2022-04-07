@@ -145,34 +145,24 @@ class ResultsSearchViewModelTests: XCTestCase {
     sut.searchShows(with: "something")
 
     // then
-    XCTAssertEqual(expected, received, "Should contains 2 values")
+    XCTAssertEqual(expected, received)
   }
 
   func test_When_Use_Case_Respond_With_Error_Should_ViewModel_Contains_Error_State() {
     // given
     searchTVShowsUseCaseMock.error = .noResponse
     sut = ResultsSearchViewModel(
-      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
 
-    let expected = [
-      ResultViewState.initial,
-      ResultViewState.loading,
-      ResultViewState.error("")
-    ]
     var received = [ResultViewState]()
-
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.searchShows(with: "something")
 
     // then
-    XCTAssertEqual(expected, received, "Should contains 3 values")
+    XCTAssertEqual([.initial, .loading, .error("")], received)
   }
 
   // MARK: - Map Results

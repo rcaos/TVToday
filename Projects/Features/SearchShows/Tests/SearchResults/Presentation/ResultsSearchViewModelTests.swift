@@ -31,24 +31,17 @@ class ResultsSearchViewModelTests: XCTestCase {
   func test_Restuts_is_Create_Should_Contains_Initial_State() {
     // given
     sut = ResultsSearchViewModel(
-      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
+
+    var received = [ResultViewState]()
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0)}).store(in: &disposeBag)
 
     // when
-
-    let expected = ResultViewState.initial
-    var countValuesReceived = 0
-
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        // then
-        countValuesReceived += 1
-        XCTAssertEqual(expected, value, "ResultsSearchViewModel should contains loading State")
-      })
-      .store(in: &disposeBag)
+    // anything
 
     // then
-    XCTAssertEqual(1, countValuesReceived, "Should only receives one Value")
+    XCTAssertEqual([.initial], received)
   }
 
   func test_When_Use_Case_Responds_Successfully_Should_ViewModel_Contains_Recents_Searchs() {
@@ -76,7 +69,6 @@ class ResultsSearchViewModelTests: XCTestCase {
       .store(in: &disposeBag)
 
     // then
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
     XCTAssertEqual(expected, received, "Should contains 2 values")
   }
 
@@ -102,7 +94,6 @@ class ResultsSearchViewModelTests: XCTestCase {
     sut.searchShows(with: "something")
 
     // then
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
     XCTAssertEqual(expected, received, "Should contains 2 values")
   }
 
@@ -130,7 +121,6 @@ class ResultsSearchViewModelTests: XCTestCase {
     sut.searchShows(with: "something")
 
     // then
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
     XCTAssertEqual(expected, received, "Should contains 2 values")
   }
 
@@ -162,7 +152,6 @@ class ResultsSearchViewModelTests: XCTestCase {
     sut.searchShows(with: "something")
 
     // then
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
     XCTAssertEqual(expected, received, "Should contains 3 values")
   }
 
@@ -195,7 +184,6 @@ class ResultsSearchViewModelTests: XCTestCase {
     sut.searchShows(with: "something")
 
     // then
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
     XCTAssertEqual(expected, received, "Should contains 2 values")
   }
 
@@ -223,7 +211,6 @@ class ResultsSearchViewModelTests: XCTestCase {
     sut.searchShows(with: "something")
 
     // then
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
     XCTAssertEqual(expected, received, "Should contains 3 values")
   }
 

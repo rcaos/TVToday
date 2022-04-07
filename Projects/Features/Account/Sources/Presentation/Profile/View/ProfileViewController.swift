@@ -34,7 +34,7 @@ class ProfileViewController: NiblessViewController {
     viewModel
       .presentSignOutAlert
       .filter { $0 == true }
-      .receive(on: RunLoop.main)
+      .receive(on: DispatchQueue.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] _ in
         self?.showSignOutActionSheet()
       })

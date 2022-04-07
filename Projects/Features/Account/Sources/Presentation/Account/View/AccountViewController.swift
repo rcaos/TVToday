@@ -38,7 +38,7 @@ class AccountViewController: NiblessViewController {
   private func subscribe() {
     viewModel
       .viewState
-      .receive(on: RunLoop.main)
+      .receive(on: DispatchQueue.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] viewState in
         self?.setupUI(with: viewState)
       })

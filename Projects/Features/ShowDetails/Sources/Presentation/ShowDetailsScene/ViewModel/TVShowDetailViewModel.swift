@@ -173,7 +173,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
     Publishers.CombineLatest3(
       tapWatchedButton,
       addToWatchListOnFlight,
-      
+
       // different approach, same result, compared with subscribeFavoriteTap()
       isWatchList
     )

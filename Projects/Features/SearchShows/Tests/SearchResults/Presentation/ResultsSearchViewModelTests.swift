@@ -51,25 +51,21 @@ class ResultsSearchViewModelTests: XCTestCase {
 
     sut = ResultsSearchViewModel(
       searchTVShowsUseCase: searchTVShowsUseCaseMock,
-      fetchRecentSearchsUseCase: fetchSearchsUseCaseMock
+      fetchRecentSearchsUseCase: fetchSearchsUseCaseMock,
+      scheduler: .immediate
     )
 
     // when
     let expected = [
-      [],
       createSectionModel(recentSearchs: recent, resultShows: [])
     ]
     var received = [[ResultSearchSectionModel]]()
 
-    sut.dataSource
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.dataSource.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // then
-    XCTAssertEqual(expected, received, "Should contains 2 values")
+    XCTAssertEqual(expected, received)
   }
 
   func test_When_Use_Case_DoestNot_Respond_yet_Should_ViewModel_Contains_Loading_State() {

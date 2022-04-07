@@ -1,5 +1,5 @@
 //
-//  EpisodesListViewTestsDark.swift
+//  EpisodesListViewTests.swift
 //  ShowDetailsTests
 //
 //  Created by Jeans Ruiz on 19/12/21.
@@ -12,7 +12,7 @@ import CombineSchedulers
 @testable import ShowDetails
 @testable import Shared
 
-class EpisodesListViewTestsDark: XCTestCase {
+class EpisodesListViewTests: XCTestCase {
 
   private var headerViewModel: SeasonHeaderViewModel!
 
@@ -26,11 +26,22 @@ class EpisodesListViewTestsDark: XCTestCase {
     // given
     let initialState = EpisodesListViewModelMock(state: .loading)
     let viewController = EpisodesListViewController(viewModel: initialState)
-    viewController.overrideUserInterfaceStyle = .dark
-    _ = viewController.view
+    configureWith(viewController, style: .dark)
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+
+    // when
+    let lightViewController = EpisodesListViewController(viewModel: initialState)
+    configureWith(lightViewController, style: .light)
+
+    // then
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+  }
+
+  private func configureWith(_ viewController: UIViewController, style: UIUserInterfaceStyle) {
+    viewController.overrideUserInterfaceStyle = style
+    _ = viewController.view
   }
 
   func test_WhenViewModelDidPopulated_thenShow_PopulatedScreen() {
@@ -47,24 +58,38 @@ class EpisodesListViewTestsDark: XCTestCase {
                                                  episodes: episodes,
                                                  headerViewModel: headerViewModel)
 
+    // when
     let viewController = EpisodesListViewController(viewModel: initialState)
-    viewController.overrideUserInterfaceStyle = .dark
-    _ = viewController.view
+    configureWith(viewController, style: .dark)
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
     assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneXsMax)))
+
+    // when
+    let lightViewController = EpisodesListViewController(viewModel: initialState)
+    configureWith(lightViewController, style: .light)
+
+    // then
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewModelReturnsError_thenShow_ErrorScreen() {
     // given
     let initialState = EpisodesListViewModelMock(state: .error("Error to Fetch Show"))
     let viewController = EpisodesListViewController(viewModel: initialState)
-    viewController.overrideUserInterfaceStyle = .dark
-    _ = viewController.view
+    configureWith(viewController, style: .dark)
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+
+    // when
+    let lightViewController = EpisodesListViewController(viewModel: initialState)
+    configureWith(lightViewController, style: .light)
+
+    // then
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewModelLoadSeason_thenShow_LoadingSeasonScreen() {
@@ -72,12 +97,19 @@ class EpisodesListViewTestsDark: XCTestCase {
     let initialState = EpisodesListViewModelMock(state: .loadingSeason,
                                                  headerViewModel: headerViewModel)
     let viewController = EpisodesListViewController(viewModel: initialState)
-    viewController.overrideUserInterfaceStyle = .dark
-    _ = viewController.view
+    configureWith(viewController, style: .dark)
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
     assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneXsMax)))
+
+    // when
+    let lightViewController = EpisodesListViewController(viewModel: initialState)
+    configureWith(lightViewController, style: .light)
+
+    // then
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewModelReturnsEmpty_thenShow_EmptyScreen() {
@@ -85,11 +117,17 @@ class EpisodesListViewTestsDark: XCTestCase {
     let initialState = EpisodesListViewModelMock(state: .empty,
                                                  headerViewModel: headerViewModel)
     let viewController = EpisodesListViewController(viewModel: initialState)
-    viewController.overrideUserInterfaceStyle = .dark
-    _ = viewController.view
+    configureWith(viewController, style: .dark)
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+
+    // when
+    let lightViewController = EpisodesListViewController(viewModel: initialState)
+    configureWith(lightViewController, style: .light)
+
+    // then
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewModelReturnsErrorSeason_thenShow_ErrorSeasonScreen() {
@@ -97,10 +135,16 @@ class EpisodesListViewTestsDark: XCTestCase {
     let initialState = EpisodesListViewModelMock(state: .errorSeason(""),
                                                  headerViewModel: headerViewModel)
     let viewController = EpisodesListViewController(viewModel: initialState)
-    viewController.overrideUserInterfaceStyle = .dark
-    _ = viewController.view
+    configureWith(viewController, style: .dark)
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+
+    // when
+    let lightViewController = EpisodesListViewController(viewModel: initialState)
+    configureWith(lightViewController, style: .light)
+
+    // then
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
   }
 }

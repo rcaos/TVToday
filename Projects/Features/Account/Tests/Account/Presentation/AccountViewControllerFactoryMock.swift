@@ -19,3 +19,8 @@ class AccountViewControllerFactoryMock: AccountViewControllerFactory {
     return ProfileViewController(viewModel: viewModel)
   }
 }
+
+func configureWith(_ viewController: UIViewController, style: UIUserInterfaceStyle) {
+  viewController.overrideUserInterfaceStyle = style
+  _ = viewController.view
+}

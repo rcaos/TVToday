@@ -88,3 +88,9 @@ class PopularViewTestsDark: XCTestCase {
     assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
   }
 }
+
+// MARK: - Helper
+func configureWith(_ viewController: UIViewController, style: UIUserInterfaceStyle) {
+  viewController.overrideUserInterfaceStyle = style
+  _ = viewController.view
+}

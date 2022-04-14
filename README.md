@@ -7,8 +7,8 @@ TVShows iOS app built with Combine, using the [TMDb API](https://www.themoviedb.
 
 ## What I'm working on
 April, 2022
-* ⏳ Fix testability on Schedulers *(wip* 
-* ⏳ Add demo apps for feature modules.
+* ⏳ Add demo apps for feature modules. (wip
+* ✅ Fix testability on Schedulers
 
 March, 2022
 
@@ -48,7 +48,7 @@ Last snapshot tests were created using `Xcode 13.2.1`, with Simulator `iPhone SE
 
 ## Project evolution
 - Monolith: https://github.com/rcaos/TVToday/releases/tag/v0.3.0
-- CocoaPods + RxSwift: https://github.com/rcaos/TVToday/releases/tag/v.0.4.0
+- RxSwift + CocoaPods : https://github.com/rcaos/TVToday/releases/tag/v.0.4.0
 - RxSwift + SPM + Tuist: https://github.com/rcaos/TVToday/releases/tag/v0.5.0
 - Current branch: Combine + SPM + Tuist
 

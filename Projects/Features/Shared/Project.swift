@@ -17,6 +17,7 @@ let project = Project.framework(
     .project(
       target: "KeyChainStorage",
       path: .relativeToRoot("Projects/Features/KeyChainStorage")
-    )
+    ),
+    .package(product: "CombineSchedulers")
   ]
 )

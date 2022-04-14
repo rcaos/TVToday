@@ -8,7 +8,6 @@
 import XCTest
 import SnapshotTesting
 @testable import Account
-@testable import SearchShowsTests
 
 class AccountViewTests: XCTestCase {
 

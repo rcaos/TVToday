@@ -11,7 +11,7 @@ import Combine
 class SeasonListViewModelMock: SeasonListViewModelProtocol {
   var inputSelectedSeason = CurrentValueSubject<Int, Never>(0)
 
-  func selectSeason(_ season: Int) { }
+  func selectSeason(seasonNumber: Int) { }
 
   var seasons = CurrentValueSubject<[Int], Never>([])
 
@@ -22,4 +22,12 @@ class SeasonListViewModelMock: SeasonListViewModelProtocol {
   }
 
   weak var delegate: SeasonListViewModelDelegate?
+
+  init(seasonList: [Int]) {
+    seasons = CurrentValueSubject(seasonList)
+  }
+
+  func selectSeason(_ season: Int) {
+    seasonSelected.send(season)
+  }
 }

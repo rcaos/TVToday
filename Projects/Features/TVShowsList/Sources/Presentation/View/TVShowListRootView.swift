@@ -77,7 +77,7 @@ class TVShowListRootView: NiblessView {
         snapShot.appendItems(viewState.currentEntities, toSection: .list)
         return snapShot
       }
-      .receive(on: RunLoop.main)
+      .receive(on: DispatchQueue.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] snapshot in
         self?.dataSource?.apply(snapshot)
       })

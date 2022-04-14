@@ -42,7 +42,8 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
       fetchTvShowState: fetchTVAccountStateMock,
       markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
       saveToWatchListUseCase: saveToWatchListUseCaseMock,
-      coordinator: nil
+      coordinator: nil,
+      scheduler: .immediate
     )
 
     let expected = [TVShowDetailViewModel.ViewState.loading]
@@ -57,8 +58,6 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
 
     // when
     sut.viewDidLoad()
-
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
     // then
     XCTAssertEqual(expected, received, "Should contains loading State")
@@ -76,7 +75,8 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
       fetchTvShowState: fetchTVAccountStateMock,
       markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
       saveToWatchListUseCase: saveToWatchListUseCaseMock,
-      coordinator: nil
+      coordinator: nil,
+      scheduler: .immediate
     )
 
     let expected = [
@@ -95,8 +95,6 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
     // when
     sut.viewDidLoad()
 
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
-
     // then
     XCTAssertEqual(expected, received, "Should contains loading State")
   }
@@ -113,7 +111,8 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
       fetchTvShowState: fetchTVAccountStateMock,
       markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
       saveToWatchListUseCase: saveToWatchListUseCaseMock,
-      coordinator: nil
+      coordinator: nil,
+      scheduler: .immediate
     )
 
     let expected = [
@@ -131,8 +130,6 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
 
     // when
     sut.viewDidLoad()
-
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
     // then
     XCTAssertEqual(expected, received, "Should contains Error State")
@@ -150,7 +147,8 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
       fetchTvShowState: fetchTVAccountStateMock,
       markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
       saveToWatchListUseCase: saveToWatchListUseCaseMock,
-      coordinator: nil
+      coordinator: nil,
+      scheduler: .immediate
     )
 
     let expected = [
@@ -169,63 +167,52 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
     // when
     sut.viewDidLoad()
 
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
-
     // then
     XCTAssertEqual(expected, received, "Should contains Error State")
   }
 
-  // MARK: - TODO, look the way of thest this case
-//  func test_For_Logged_When_Error_Happens_And_Did_Refresh_ViewModel_Should_Contains_Populated() {
-//    // given
-//    fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: true, isWatchList: true)
-//    fetchTVShowDetailsUseCaseMock.error = .noResponse
-//
-//    // let viewStateObserver = scheduler.createObserver(TVShowDetailViewModel.ViewState.self)
-//
-//    let sut: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
-//      1,
-//      fetchLoggedUser: fetchLoggedUserMock,
-//      fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-//      fetchTvShowState: fetchTVAccountStateMock,
-//      markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
-//      saveToWatchListUseCase: saveToWatchListUseCaseMock,
-//      coordinator: nil
-//    )
-//
-//    let expected = [
-//      TVShowDetailViewModel.ViewState.loading,
-//      TVShowDetailViewModel.ViewState.error(""),
-//      TVShowDetailViewModel.ViewState.populated(TVShowDetailInfo(show: detailResult))
-//    ]
-//    var received = [TVShowDetailViewModel.ViewState]()
-//
-//    sut.viewState
-//      .removeDuplicates()
-//      .sink(receiveValue: { value in
-//        received.append(value)
-//      })
-//      .store(in: &disposeBag)
-//
-//    //          viewModel.viewState
-//    //            .subscribe { event in
-//    //              viewStateObserver.on(event)
-//    //            }
-//    //            .disposed(by: disposeBag)
-//    //
-//
-//    // when
-//    sut.viewDidLoad()
-//    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
-//
-//    fetchTVShowDetailsUseCaseMock.error = nil
-//    fetchTVShowDetailsUseCaseMock.result = self.detailResult
-//    sut.refreshView()
-//    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
-//
-//    // then
-//    XCTAssertEqual(expected, received, "Should contains Populated State")
-//  }
+  func test_For_Logged_When_Recovery_From_Error_to_Populated_State() {
+    // given
+    let scheduler = DispatchQueue.test
+
+    let sut: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
+      1,
+      fetchLoggedUser: fetchLoggedUserMock,
+      fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+      fetchTvShowState: fetchTVAccountStateMock,
+      markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
+      saveToWatchListUseCase: saveToWatchListUseCaseMock,
+      coordinator: nil,
+      scheduler: scheduler.eraseToAnyScheduler()
+    )
+
+    let expected = [
+      TVShowDetailViewModel.ViewState.loading,
+      TVShowDetailViewModel.ViewState.error(""),
+      TVShowDetailViewModel.ViewState.populated(TVShowDetailInfo(show: detailResult))
+    ]
+    var received = [TVShowDetailViewModel.ViewState]()
+
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
+
+    // First Attempt got error
+    fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: true, isWatchList: true)
+    fetchTVShowDetailsUseCaseMock.error = .noResponse
+
+    // when
+    sut.viewDidLoad()
+    scheduler.advance(by: 1)
+
+    // Second attempt return successfully
+    fetchTVShowDetailsUseCaseMock.error = nil
+    fetchTVShowDetailsUseCaseMock.result = self.detailResult
+    sut.refreshView()
+    scheduler.advance(by: 1)
+
+    // then
+    XCTAssertEqual(expected, received, "Should contains Populated State")
+  }
 
   func test_For_Logged_When_Usecase_get_Favorite_State_ViewModel_Should_Contains_isFavorite_Value() {
     // given
@@ -239,13 +226,15 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
       fetchTvShowState: fetchTVAccountStateMock,
       markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
       saveToWatchListUseCase: saveToWatchListUseCaseMock,
-      coordinator: nil
+      coordinator: nil,
+      scheduler: .immediate
     )
 
     let expected = [false, true]
     var received = [Bool]()
 
     sut.isFavorite
+      .print()
       .removeDuplicates()
       .sink(receiveValue: { value in
         received.append(value)
@@ -254,8 +243,6 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
 
     // when
     sut.viewDidLoad()
-
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
     // then
     XCTAssertEqual(expected, received, "Should contains Favorite State")
@@ -273,7 +260,8 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
       fetchTvShowState: fetchTVAccountStateMock,
       markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
       saveToWatchListUseCase: saveToWatchListUseCaseMock,
-      coordinator: nil
+      coordinator: nil,
+      scheduler: .immediate
     )
 
     let expected = [false]
@@ -288,8 +276,6 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
 
     // when
     sut.viewDidLoad()
-
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
     // then
     XCTAssertEqual(expected, received, "Should contains Favorite State to false")
@@ -307,7 +293,8 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
       fetchTvShowState: fetchTVAccountStateMock,
       markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
       saveToWatchListUseCase: saveToWatchListUseCaseMock,
-      coordinator: nil
+      coordinator: nil,
+      scheduler: .immediate
     )
 
     let expected = [false, true]
@@ -322,8 +309,6 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
 
     // when
     sut.viewDidLoad()
-
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
     // then
     XCTAssertEqual(expected, received, "Should contains Favorite State")
@@ -341,7 +326,8 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
       fetchTvShowState: fetchTVAccountStateMock,
       markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
       saveToWatchListUseCase: saveToWatchListUseCaseMock,
-      coordinator: nil
+      coordinator: nil,
+      scheduler: .immediate
     )
 
     let expected = [false]
@@ -356,8 +342,6 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
 
     // when
     sut.viewDidLoad()
-
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
     // then
     XCTAssertEqual(expected, received, "Should contains Favorite State to false")

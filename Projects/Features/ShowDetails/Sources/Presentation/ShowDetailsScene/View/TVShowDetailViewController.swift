@@ -72,7 +72,7 @@ class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Em
     }
 
     viewModel.viewState
-      .receive(on: RunLoop.main)
+      .receive(on: DispatchQueue.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] state in
         self?.configView(with: state)
       })
@@ -94,7 +94,7 @@ class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Em
 
     viewModel
       .isFavorite
-      .receive(on: RunLoop.main)
+      .receive(on: DispatchQueue.main)
       .sink(receiveCompletion: { _ in },
             receiveValue: { [weak self] isFavorite in
         self?.favoriteButton.tintColor = isFavorite ? .systemRed : .systemGray
@@ -103,7 +103,7 @@ class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Em
 
     viewModel
       .isWatchList
-      .receive(on: RunLoop.main)
+      .receive(on: DispatchQueue.main)
       .sink(receiveCompletion: { _ in },
             receiveValue: { [weak self] isWatchList in
         self?.watchListButton.tintColor = isWatchList ? .systemGreen : .systemGray

@@ -13,9 +13,6 @@ import XCTest
 @testable import Shared
 
 class PopularViewModelTests: XCTestCase {
-
-  private let emptyPage = TVShowResult.stub(page: 1, results: [], totalResults: 0, totalPages: 1)
-
   private var fetchUseCaseMock: FetchShowsUseCaseMock!
   private var disposeBag: Set<AnyCancellable>!
 
@@ -28,26 +25,19 @@ class PopularViewModelTests: XCTestCase {
   func test_When_UseCase_Doesnot_Responds_Yet_ViewModel_Should_Contains_Loading_State() {
     // given
     let sut: PopularViewModelProtocol
-    sut = PopularViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
+    sut = PopularViewModel(fetchTVShowsUseCase: fetchUseCaseMock, scheduler: .immediate, coordinator: nil)
+
+    let expected = [SimpleViewState<TVShowCellViewModel>.loading]
+    var received = [SimpleViewState<TVShowCellViewModel>]()
+
+    sut.viewStateObservableSubject.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.viewDidLoad()
 
-    let expected = SimpleViewState<TVShowCellViewModel>.loading
-
-    var countValuesReceived = 0
-    sut.viewStateObservableSubject
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-
-        // then
-        countValuesReceived += 1
-        XCTAssertEqual(expected, value, "AiringTodayViewModel should contains loading State")
-      })
-      .store(in: &disposeBag)
-
     // then
-    XCTAssertEqual(1, countValuesReceived, "Should only receives one Value")
+    XCTAssertEqual(expected, received, "Should only receives one Value")
   }
 
   func test_when_useCase_respons_with_FirstPage_ViewModel_Should_contains_Populated_State() {
@@ -55,7 +45,7 @@ class PopularViewModelTests: XCTestCase {
     fetchUseCaseMock.result = buildFirstPage()
     let firstPageCells = buildFirstPage().results!.map { TVShowCellViewModel(show: $0) }
 
-    let sut: PopularViewModelProtocol = PopularViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
+    let sut: PopularViewModelProtocol = PopularViewModel(fetchTVShowsUseCase: fetchUseCaseMock, scheduler: .immediate, coordinator: nil)
 
     let expected = [
       SimpleViewState<TVShowCellViewModel>.loading,
@@ -63,24 +53,19 @@ class PopularViewModelTests: XCTestCase {
     ]
     var received = [SimpleViewState<TVShowCellViewModel>]()
 
-    sut.viewStateObservableSubject
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewStateObservableSubject.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.viewDidLoad()
 
     // then
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
     XCTAssertEqual(expected, received, "Should contains 2 values")
   }
 
   func test_When_ask_for_second_page_ViewModel_Should_contains_Populated_State_with_Second_Page() {
     // given
-    let sut: PopularViewModelProtocol = PopularViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
+    let sut: PopularViewModelProtocol = PopularViewModel(fetchTVShowsUseCase: fetchUseCaseMock, scheduler: .immediate, coordinator: nil)
     let firstPage = buildFirstPage().results!.map { TVShowCellViewModel(show: $0) }
     let secondPage = (buildFirstPage().results + buildSecondPage().results).map { TVShowCellViewModel(show: $0) }
 
@@ -92,26 +77,18 @@ class PopularViewModelTests: XCTestCase {
 
     var received = [SimpleViewState<TVShowCellViewModel>]()
 
-    sut.viewStateObservableSubject
-      .removeDuplicates()
-      .print()
-      .sink(receiveCompletion: { _ in } , receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewStateObservableSubject.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     fetchUseCaseMock.result = buildFirstPage()
     sut.viewDidLoad()
-
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
 
     // and when
     fetchUseCaseMock.result = buildSecondPage()
     sut.didLoadNextPage()
 
     // then
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
     XCTAssertEqual(expected, received, "Should contains 3 values")
   }
 
@@ -119,7 +96,7 @@ class PopularViewModelTests: XCTestCase {
     // given
     fetchUseCaseMock.error = .noResponse
     let sut: PopularViewModelProtocol
-    sut = PopularViewModel(fetchTVShowsUseCase: self.fetchUseCaseMock, coordinator: nil)
+    sut = PopularViewModel(fetchTVShowsUseCase: self.fetchUseCaseMock, scheduler: .immediate, coordinator: nil)
 
     let expected = [
       SimpleViewState<TVShowCellViewModel>.loading,
@@ -127,27 +104,21 @@ class PopularViewModelTests: XCTestCase {
     ]
     var received = [SimpleViewState<TVShowCellViewModel>]()
 
-    sut.viewStateObservableSubject
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewStateObservableSubject.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.viewDidLoad()
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
 
     // then
-    XCTAssertEqual(2, received.count, "Should only receives one Value")
     XCTAssertEqual(expected, received, "AiringTodayViewModel should contains Error State")
   }
 
   func test_When_UseCase_Responds_With_Zero_Elements_ViewModel_Should_Contains_Empty_State() {
     // given
-    fetchUseCaseMock.result = self.emptyPage
+    fetchUseCaseMock.result = .empty
     let sut: PopularViewModelProtocol
-    sut = PopularViewModel(fetchTVShowsUseCase: self.fetchUseCaseMock, coordinator: nil)
+    sut = PopularViewModel(fetchTVShowsUseCase: self.fetchUseCaseMock, scheduler: .immediate, coordinator: nil)
 
     let expected = [
       SimpleViewState<TVShowCellViewModel>.loading,
@@ -155,19 +126,13 @@ class PopularViewModelTests: XCTestCase {
     ]
     var received = [SimpleViewState<TVShowCellViewModel>]()
 
-    sut.viewStateObservableSubject
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewStateObservableSubject.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.viewDidLoad()
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
 
     // then
-    XCTAssertEqual(2, received.count, "Should only receives one Value")
     XCTAssertEqual(expected, received, "AiringTodayViewModel should contains Empty State")
   }
 }

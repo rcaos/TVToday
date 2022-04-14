@@ -20,7 +20,8 @@ let project = Project.framework(
     .project(
       target: "ShowDetailsInterface",
       path: .relativeToRoot("Projects/Features/ShowDetails")
-    )
+    ),
+    .package(product: "CombineSchedulers")
   ],
   testFolder: "Tests",
   testDependencies: [

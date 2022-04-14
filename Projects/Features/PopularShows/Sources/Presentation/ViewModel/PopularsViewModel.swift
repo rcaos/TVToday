@@ -7,6 +7,7 @@
 //
 
 import Combine
+import CombineSchedulers
 import Shared
 
 protocol PopularViewModelProtocol {
@@ -26,12 +27,15 @@ final class PopularViewModel: PopularViewModelProtocol, ShowsViewModel {
   var showsCells: [TVShowCellViewModel] = []
   let viewStateObservableSubject: CurrentValueSubject<SimpleViewState<TVShowCellViewModel>, Never> = .init(.loading)
   weak var coordinator: PopularCoordinatorProtocol?
+  var scheduler: AnySchedulerOf<DispatchQueue>
   var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializers
   init(fetchTVShowsUseCase: FetchTVShowsUseCase,
+       scheduler: AnySchedulerOf<DispatchQueue> = .main,
        coordinator: PopularCoordinatorProtocol?) {
     self.fetchTVShowsUseCase = fetchTVShowsUseCase
+    self.scheduler = scheduler
     self.coordinator = coordinator
     shows = []
   }

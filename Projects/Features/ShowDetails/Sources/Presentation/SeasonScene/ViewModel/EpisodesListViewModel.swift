@@ -8,6 +8,7 @@
 
 import Foundation
 import Combine
+import CombineSchedulers
 import Shared
 
 protocol EpisodesListViewModelProtocol: SeasonListViewModelDelegate {
@@ -39,6 +40,7 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
   private let seasonSelectedSubject = CurrentValueSubject<Int, Never>(0)
 
   private var seasonListViewModel: SeasonListViewModelProtocol?
+  private let scheduler: AnySchedulerOf<DispatchQueue>
   private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Public Api
@@ -46,10 +48,15 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
   var data = CurrentValueSubject<[SeasonsSectionModel], Never>([])
 
   // MARK: - Initializers
-  init(tvShowId: Int, fetchDetailShowUseCase: FetchTVShowDetailsUseCase, fetchEpisodesUseCase: FetchEpisodesUseCase) {
+  init(tvShowId: Int,
+       fetchDetailShowUseCase: FetchTVShowDetailsUseCase,
+       fetchEpisodesUseCase: FetchEpisodesUseCase,
+       scheduler: AnySchedulerOf<DispatchQueue> = .main
+  ) {
     self.tvShowId = tvShowId
     self.fetchDetailShowUseCase = fetchDetailShowUseCase
     self.fetchEpisodesUseCase = fetchEpisodesUseCase
+    self.scheduler = scheduler
     controlSeasons()
   }
 
@@ -95,7 +102,7 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
       fetchDetailShowUseCase.execute(requestValue: requestDetailsShow),
       fetchEpisodesUseCase.execute(requestValue: requestFirstSeason)
     )
-      .receive(on: RunLoop.main)
+      .receive(on: scheduler)
       .sink(receiveCompletion: { [weak self] completion in
         switch completion {
         case let .failure(error):
@@ -122,7 +129,7 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
     let request = FetchEpisodesUseCaseRequestValue(showIdentifier: tvShowId, seasonNumber: seasonNumber)
 
     fetchEpisodesUseCase.execute(requestValue: request)
-      .receive(on: RunLoop.main)
+      .receive(on: scheduler)
       .sink(receiveCompletion: { [weak self] completion in
         guard let strongSelf = self else { return }
 
@@ -191,7 +198,7 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
 
   private func createViewModelForSeasons(numberOfSeasons: Int) {
     let seasons: [Int] = (1...numberOfSeasons).map { $0 }
-    seasonListViewModel = SeasonListViewModel(seasonList: seasons)
+    seasonListViewModel = SeasonListViewModel(seasonList: seasons, scheduler: scheduler)
     seasonListViewModel?.delegate = self
   }
 

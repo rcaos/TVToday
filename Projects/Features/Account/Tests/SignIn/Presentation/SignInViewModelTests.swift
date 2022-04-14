@@ -23,20 +23,14 @@ class SignInViewModelTests: XCTestCase {
 
   func test_UseCase_Doesnot_Called_ViewModel_Should_Contains_Initial_State() {
     // given
-    let sut: SignInViewModelProtocol = SignInViewModel(createTokenUseCase: createTokenUseCase)
+    let sut: SignInViewModelProtocol = SignInViewModel(createTokenUseCase: createTokenUseCase, scheduler: .immediate)
 
     // when
     let expected = [SignInViewState.initial]
     var received = [SignInViewState]()
 
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
-
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // then
     XCTAssertEqual(expected, received, "Should only receives two Value")
@@ -44,7 +38,7 @@ class SignInViewModelTests: XCTestCase {
 
   func test_UseCase_Doesnot_Responds_Yet_ViewModel_Should_Contains_Loading_State() {
     // given
-    let sut: SignInViewModelProtocol = SignInViewModel(createTokenUseCase: createTokenUseCase)
+    let sut: SignInViewModelProtocol = SignInViewModel(createTokenUseCase: createTokenUseCase, scheduler: .immediate)
 
     // when
     let expected = [
@@ -53,17 +47,11 @@ class SignInViewModelTests: XCTestCase {
     ]
     var received = [SignInViewState]()
 
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.signInDidTapped()
-
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
     // then
     XCTAssertEqual(expected, received, "Should only receives two Value")
@@ -75,15 +63,11 @@ class SignInViewModelTests: XCTestCase {
     createTokenUseCase.result = expectedURL
     let delegate = SignInViewModelDelegateMock()
 
-    var sut: SignInViewModelProtocol = SignInViewModel(createTokenUseCase: createTokenUseCase)
+    var sut: SignInViewModelProtocol = SignInViewModel(createTokenUseCase: createTokenUseCase, scheduler: .immediate)
     sut.delegate = delegate
 
     // when
-
-    // when
     sut.signInDidTapped()
-
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
     // then
     XCTAssertEqual(expectedURL, delegate.url, "SignInViewModel should calls to delegate")

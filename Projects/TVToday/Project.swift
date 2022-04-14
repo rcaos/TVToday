@@ -19,6 +19,10 @@ let project = Project.app(
     .remote(
       url: "https://github.com/pointfreeco/swift-snapshot-testing.git",
       requirement: .upToNextMajor(from: "1.9.0")
+    ),
+    .remote(
+      url: "https://github.com/pointfreeco/combine-schedulers",
+      requirement: .upToNextMajor(from: "0.5.3")
     )
   ],
   resources: [

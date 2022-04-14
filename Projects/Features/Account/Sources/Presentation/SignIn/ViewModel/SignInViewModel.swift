@@ -8,6 +8,7 @@
 
 import Foundation
 import Combine
+import CombineSchedulers
 import Shared
 import NetworkingInterface
 
@@ -17,11 +18,14 @@ class SignInViewModel: SignInViewModelProtocol {
 
   let viewState: CurrentValueSubject<SignInViewState, Never> = .init(.initial)
   weak var delegate: SignInViewModelDelegate?
+
+  private let scheduler: AnySchedulerOf<DispatchQueue>
   private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializers
-  init(createTokenUseCase: CreateTokenUseCase) {
+  init(createTokenUseCase: CreateTokenUseCase, scheduler: AnySchedulerOf<DispatchQueue> = .main) {
     self.createTokenUseCase = createTokenUseCase
+    self.scheduler = scheduler
     subscribe()
   }
 
@@ -42,7 +46,7 @@ class SignInViewModel: SignInViewModelProtocol {
         viewState.send(.loading)
         return createTokenUseCase.execute()
       }
-      .receive(on: RunLoop.main)
+      .receive(on: scheduler)
       .sink(receiveCompletion: { [weak self] completion in
         switch completion {
         case let .failure(error):

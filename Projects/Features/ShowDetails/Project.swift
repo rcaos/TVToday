@@ -7,7 +7,8 @@ let project = Project.framework(
     .project(
       target: "UI",
       path: .relativeToRoot("Projects/Features/UI")
-    )
+    ),
+    .package(product: "CombineSchedulers")
   ],
   interfaceFolder: "Interface",
   interfaceDependencies: [

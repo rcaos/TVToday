@@ -8,25 +8,29 @@
 
 import Foundation
 import Combine
+import CombineSchedulers
 import Shared
 import Persistence
 
 final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
   private let searchTVShowsUseCase: SearchTVShowsUseCase
   private let fetchRecentSearchsUseCase: FetchSearchsUseCase
-  private var currentSearchSubject = CurrentValueSubject<String, Never>("")  /// ?????
+  private let currentSearchSubject = CurrentValueSubject<String, Never>("")  /// ?????
 
   let viewState  = CurrentValueSubject<ResultViewState, Never>(.initial)
   let dataSource = CurrentValueSubject<[ResultSearchSectionModel], Never>([])
 
   weak var delegate: ResultsSearchViewModelDelegate?
+  private let scheduler: AnySchedulerOf<DispatchQueue>
   private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Init
   init(searchTVShowsUseCase: SearchTVShowsUseCase,
-       fetchRecentSearchsUseCase: FetchSearchsUseCase) {
+       fetchRecentSearchsUseCase: FetchSearchsUseCase,
+       scheduler: AnySchedulerOf<DispatchQueue> = .main) {
     self.searchTVShowsUseCase = searchTVShowsUseCase
     self.fetchRecentSearchsUseCase = fetchRecentSearchsUseCase
+    self.scheduler = scheduler
     subscribeToRecentsShowsChange()
     subscribeToSearchInput()
   }
@@ -56,7 +60,7 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
   private func subscribeToSearchInput() {
     currentSearchSubject
       .filter { !$0.isEmpty }
-      .receive(on: RunLoop.main)
+      .receive(on: scheduler)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] query in
         self?.fetchShows(with: query)
       })
@@ -70,7 +74,7 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
       .flatMap { [fetchRecentSearchsUseCase] _ -> AnyPublisher<[Search], CustomError> in
         return fetchRecentSearchsUseCase.execute(requestValue: FetchSearchsUseCaseRequestValue())
       }
-      .receive(on: RunLoop.main)
+      .receive(on: scheduler)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] results in
         self?.createSectionModel(recentSearchs: results.map { $0.query }, resultShows: [])
       })
@@ -84,11 +88,11 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
     let request = SearchTVShowsUseCaseRequestValue(query: query, page: 1)
 
     searchTVShowsUseCase.execute(requestValue: request)
-      .receive(on: RunLoop.main)
+      .receive(on: scheduler)
       .sink(receiveCompletion: { [weak self] completion in
         switch completion {
         case let .failure(error):
-          self?.viewState.send(.error(error.localizedDescription))
+          self?.viewState.send(.error(error.localizedDescription))  // MARK: - TODO, test recovery after an Error
         case .finished:
           break
         }

@@ -6,6 +6,7 @@
 //
 
 import Combine
+import CombineSchedulers
 @testable import ShowDetails
 
 extension SeasonHeaderViewModel {
@@ -40,7 +41,7 @@ class EpisodesListViewModelMock: EpisodesListViewModelProtocol {
   var viewState: CurrentValueSubject<EpisodesListViewModel.ViewState, Never>
   var data: CurrentValueSubject<[SeasonsSectionModel], Never>
 
-  private var seasonListViewModel: SeasonListViewModel?
+  private var seasonListViewModel: SeasonListViewModelProtocol?
 
   init(state: EpisodesListViewModel.ViewState,
        numberOfSeasons: Int = 1,
@@ -52,7 +53,7 @@ class EpisodesListViewModelMock: EpisodesListViewModelProtocol {
     viewState = CurrentValueSubject(state)
     data = CurrentValueSubject([])
 
-    seasonListViewModel = SeasonListViewModel(seasonList: (1...numberOfSeasons).map { $0 })
+    seasonListViewModel = SeasonListViewModelMock(seasonList: (1...numberOfSeasons).map { $0 })
     seasonListViewModel?.selectSeason(seasonSelected)
 
     let dataSource = createSectionModel(headerViewModel, and: episodes)

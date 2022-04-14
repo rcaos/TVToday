@@ -7,6 +7,7 @@
 
 @testable import SearchShows
 @testable import Shared
+import UIKit
 
 public func createSectionModel(recentSearchs: [String], resultShows: [TVShow]) -> [ResultSearchSectionModel] {
   var dataSource: [ResultSearchSectionModel] = []
@@ -26,4 +27,9 @@ public func createSectionModel(recentSearchs: [String], resultShows: [TVShow]) -
   }
 
   return dataSource
+}
+
+func configureWith(_ viewController: UIViewController, style: UIUserInterfaceStyle) {
+  viewController.overrideUserInterfaceStyle = style
+  _ = viewController.view
 }

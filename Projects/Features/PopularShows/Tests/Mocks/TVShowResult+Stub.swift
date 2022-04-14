@@ -19,4 +19,13 @@ extension TVShowResult {
                  totalResults: totalResults,
                  totalPages: totalPages)
   }
+
+  static var empty: TVShowResult {
+    return stub(
+      page: 1,
+      results: [],
+      totalResults: 0,
+      totalPages: 1
+    )
+  }
 }

@@ -42,7 +42,7 @@ final class DefaultSearchTVShowsUseCase: SearchTVShowsUseCase {
     }
 
     return tvShowsRepository.searchShowsFor(query: requestValue.query, page: requestValue.page)
-      .receive(on: RunLoop.main)
+      .receive(on: DispatchQueue.main)
       .flatMap { resultSearch -> AnyPublisher<TVShowResult, DataTransferError> in
         if requestValue.page == 1 {
           return self.searchsLocalRepository.saveSearch(query: requestValue.query, userId: idLogged)

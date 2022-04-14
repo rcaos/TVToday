@@ -42,7 +42,7 @@ final class VisitedShowViewModel: VisitedShowViewModelProtocol, Hashable {
   private func subscribe() {
     selectedShow
       .filter { $0 != 0 }
-      .receive(on: RunLoop.main)
+      .receive(on: DispatchQueue.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] showId in
         guard let strongSelf = self else { return }
         strongSelf.delegate?.visitedShowViewModel(strongSelf, didSelectRecentlyVisitedShow: showId)

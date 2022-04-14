@@ -31,24 +31,17 @@ class ResultsSearchViewModelTests: XCTestCase {
   func test_Restuts_is_Create_Should_Contains_Initial_State() {
     // given
     sut = ResultsSearchViewModel(
-      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
+
+    var received = [ResultViewState]()
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0)}).store(in: &disposeBag)
 
     // when
-
-    let expected = ResultViewState.initial
-    var countValuesReceived = 0
-
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        // then
-        countValuesReceived += 1
-        XCTAssertEqual(expected, value, "ResultsSearchViewModel should contains loading State")
-      })
-      .store(in: &disposeBag)
+    // anything
 
     // then
-    XCTAssertEqual(1, countValuesReceived, "Should only receives one Value")
+    XCTAssertEqual([.initial], received)
   }
 
   func test_When_Use_Case_Responds_Successfully_Should_ViewModel_Contains_Recents_Searchs() {
@@ -58,125 +51,86 @@ class ResultsSearchViewModelTests: XCTestCase {
 
     sut = ResultsSearchViewModel(
       searchTVShowsUseCase: searchTVShowsUseCaseMock,
-      fetchRecentSearchsUseCase: fetchSearchsUseCaseMock
+      fetchRecentSearchsUseCase: fetchSearchsUseCaseMock,
+      scheduler: .immediate
     )
 
     // when
     let expected = [
-      [],
       createSectionModel(recentSearchs: recent, resultShows: [])
     ]
     var received = [[ResultSearchSectionModel]]()
 
-    sut.dataSource
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.dataSource.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // then
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
-    XCTAssertEqual(expected, received, "Should contains 2 values")
+    XCTAssertEqual(expected, received)
   }
 
   func test_When_Use_Case_DoestNot_Respond_yet_Should_ViewModel_Contains_Loading_State() {
     // given
     sut = ResultsSearchViewModel(
-      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
 
-    let expected = [
-      ResultViewState.initial,
-      ResultViewState.loading
-    ]
     var received = [ResultViewState]()
 
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.searchShows(with: "something")
 
     // then
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
-    XCTAssertEqual(expected, received, "Should contains 2 values")
+    XCTAssertEqual([.initial, .loading], received)
   }
 
   func test_When_Use_Case_Respond_with_Zero_Values_Should_ViewModel_Contains_Loading_State() {
     // given
     searchTVShowsUseCaseMock.result = TVShowResult(page: 1, results: [], totalResults: 0, totalPages: 0)
     sut = ResultsSearchViewModel(
-      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
 
-    let expected = [
-      ResultViewState.initial,
-      ResultViewState.loading,
-      ResultViewState.empty
-    ]
     var received = [ResultViewState]()
-
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.searchShows(with: "something")
 
     // then
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
-    XCTAssertEqual(expected, received, "Should contains 2 values")
+    XCTAssertEqual([.initial, .loading, .empty], received)
   }
 
   func test_When_Use_Case_Respond_With_Data_Should_ViewModel_Contains_Populated_State() {
     // given
-    let shows: [TVShow] = [
-      TVShow.stub(id: 1, name: "Show 1")
-    ]
+    let shows = [TVShow.stub(id: 1, name: "Show 1")]
     searchTVShowsUseCaseMock.result = TVShowResult(page: 1, results: shows, totalResults: 1, totalPages: 1)
 
     sut = ResultsSearchViewModel(
-      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
 
-    let expected = [
-      ResultViewState.initial,
-      ResultViewState.loading,
-      ResultViewState.populated
-    ]
     var received = [ResultViewState]()
-
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.searchShows(with: "something")
 
     // then
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
-    XCTAssertEqual(expected, received, "Should contains 3 values")
+    XCTAssertEqual([.initial, .loading, .populated], received)
   }
 
   func test_When_Use_Case_Respond_With_Data_Should_ViewModel_DataSource_Contains_Data() {
     // given
-    let shows: [TVShow] = [
+    let shows = [
       TVShow.stub(id: 1, name: "something Show 1"),
       TVShow.stub(id: 2, name: "something Show 2")
     ]
 
     searchTVShowsUseCaseMock.result = TVShowResult(page: 1, results: shows, totalResults: 1, totalPages: 1)
-
     sut = ResultsSearchViewModel(
-      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
 
     let expected = [
       [],
@@ -184,47 +138,33 @@ class ResultsSearchViewModelTests: XCTestCase {
     ]
     var received = [[ResultSearchSectionModel]]()
 
-    sut.dataSource
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.dataSource.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.searchShows(with: "something")
 
     // then
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
-    XCTAssertEqual(expected, received, "Should contains 2 values")
+    XCTAssertEqual(expected, received)
   }
 
   func test_When_Use_Case_Respond_With_Error_Should_ViewModel_Contains_Error_State() {
     // given
     searchTVShowsUseCaseMock.error = .noResponse
     sut = ResultsSearchViewModel(
-      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock)
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
 
-    let expected = [
-      ResultViewState.initial,
-      ResultViewState.loading,
-      ResultViewState.error("")
-    ]
     var received = [ResultViewState]()
-
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
     sut.searchShows(with: "something")
 
+    // MARK: - TODO, test, recovery from error also
+
     // then
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.1)
-    XCTAssertEqual(expected, received, "Should contains 3 values")
+    XCTAssertEqual([.initial, .loading, .error("")], received)
   }
 
   // MARK: - Map Results

@@ -19,7 +19,8 @@ let project = Project.framework(
     .project(
       target: "TVShowsListInterface",
       path: .relativeToRoot("Projects/Features/TVShowsList")
-    )
+    ),
+    .package(product: "CombineSchedulers")
   ],
   testFolder: "Tests",
   testDependencies: [

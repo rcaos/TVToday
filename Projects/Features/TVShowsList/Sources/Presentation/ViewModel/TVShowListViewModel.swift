@@ -7,6 +7,7 @@
 //
 
 import Combine
+import CombineSchedulers
 import Shared
 import ShowDetailsInterface
 import TVShowsListInterface
@@ -32,14 +33,16 @@ final class TVShowListViewModel: TVShowListViewModelProtocol, ShowsViewModel {
 
   private weak var coordinator: TVShowListCoordinatorProtocol?
   private let stepOrigin: TVShowListStepOrigin?
-
+  var scheduler: AnySchedulerOf<DispatchQueue>
   var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializers
   init(fetchTVShowsUseCase: FetchTVShowsUseCase,
+       scheduler: AnySchedulerOf<DispatchQueue> = .main,
        coordinator: TVShowListCoordinatorProtocol?,
        stepOrigin: TVShowListStepOrigin? = nil) {
     self.fetchTVShowsUseCase = fetchTVShowsUseCase
+    self.scheduler = scheduler
     self.coordinator = coordinator
     self.shows = []
     self.stepOrigin = stepOrigin

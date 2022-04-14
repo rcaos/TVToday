@@ -28,29 +28,27 @@ class AccountViewModelTests: XCTestCase {
     fetchLoggedUserMock = FetchLoggedUserMock()
     deleteLoguedUserUseCaseMock = DeleteLoguedUserUseCaseMock()
     disposeBag = []
+    sut = AccountViewModel(
+      createNewSession: createSessionUseCaseMock,
+      fetchAccountDetails: fetchAccountDetailsUseCaseMock,
+      fetchLoggedUser: fetchLoggedUserMock,
+      deleteLoguedUser: deleteLoguedUserUseCaseMock,
+      scheduler: .immediate
+    )
   }
 
   func test_When_Session_DoesNot_Exits_Should_Be_Login_State() {
     // given
     fetchLoggedUserMock.account = nil
-    sut = AccountViewModel(createNewSession: createSessionUseCaseMock,
-                     fetchAccountDetails: fetchAccountDetailsUseCaseMock,
-                     fetchLoggedUser: fetchLoggedUserMock,
-                     deleteLoguedUser: deleteLoguedUserUseCaseMock)
-
-    // when
 
     let expected = [AccountViewState.login]
     var received = [AccountViewState]()
 
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
+    // when
+    sut.viewDidLoad()
 
     // then
     XCTAssertEqual(expected, received, "Should only receives one Value")
@@ -61,27 +59,18 @@ class AccountViewModelTests: XCTestCase {
     fetchLoggedUserMock.account = AccountDomain(id: 1, sessionId: "1")
     fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
 
-    sut = AccountViewModel(createNewSession: createSessionUseCaseMock,
-                     fetchAccountDetails: fetchAccountDetailsUseCaseMock,
-                     fetchLoggedUser: fetchLoggedUserMock,
-                     deleteLoguedUser: deleteLoguedUserUseCaseMock)
-
     // when
-
     let expected = [
       AccountViewState.login,
       AccountViewState.profile(account: AccountResult.stub())
     ]
     var received = [AccountViewState]()
 
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
+    // when
+    sut.viewDidLoad()
 
     // then
     XCTAssertEqual(expected, received, "Should receives two values")
@@ -93,10 +82,6 @@ class AccountViewModelTests: XCTestCase {
     createSessionUseCaseMock.result = ()
     fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
 
-    sut = AccountViewModel(createNewSession: createSessionUseCaseMock,
-                     fetchAccountDetails: fetchAccountDetailsUseCaseMock,
-                     fetchLoggedUser: fetchLoggedUserMock,
-                     deleteLoguedUser: deleteLoguedUserUseCaseMock)
     authPermission.delegate = sut
 
     let expected = [
@@ -105,17 +90,12 @@ class AccountViewModelTests: XCTestCase {
     ]
     var received = [AccountViewState]()
 
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
+    sut.viewDidLoad()
     authPermission.signIn()
-
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
     // then
     XCTAssertEqual(expected, received, "Should receives two values")
@@ -127,28 +107,17 @@ class AccountViewModelTests: XCTestCase {
     createSessionUseCaseMock.error = .noResponse
     fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
 
-    sut = AccountViewModel(createNewSession: createSessionUseCaseMock,
-                     fetchAccountDetails: fetchAccountDetailsUseCaseMock,
-                     fetchLoggedUser: fetchLoggedUserMock,
-                     deleteLoguedUser: deleteLoguedUserUseCaseMock)
     authPermission.delegate = sut
 
-    let expected = [
-      AccountViewState.login
-    ]
+    let expected = [AccountViewState.login]
     var received = [AccountViewState]()
 
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+    sut.viewState.removeDuplicates()
+      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
+    sut.viewDidLoad()
     authPermission.signIn()
-
-    _ = XCTWaiter.wait(for: [XCTestExpectation()], timeout: 0.01)
 
     // then
     XCTAssertEqual(expected, received, "Should receives two values")

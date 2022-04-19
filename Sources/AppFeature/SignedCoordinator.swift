@@ -17,11 +17,8 @@ public enum SignedChildCoordinator {
 }
 
 public class SignedCoordinator: Coordinator {
-
-  private var tabBarController: UITabBarController
-
+  private let tabBarController: UITabBarController
   private var childCoordinators = [SignedChildCoordinator: Coordinator]()
-
   private let appDIContainer: AppDIContainer
 
   // MARK: - Life Cycle

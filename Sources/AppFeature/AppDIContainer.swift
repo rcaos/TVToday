@@ -59,43 +59,43 @@ public class AppDIContainer {
   // MARK: - Airing Today Module
   func buildAiringTodayModule() -> AiringTodayFeature.Module {
     let dependencies = AiringTodayFeature.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                      imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                      showDetailsBuilder: self)
+                                                             imagesBaseURL: appConfigurations.imagesBaseURL,
+                                                             showDetailsBuilder: self)
     return AiringTodayFeature.Module(dependencies: dependencies)
   }
 
   // MARK: - Popular Module
   func buildPopularModule() -> PopularsFeature.Module {
     let dependencies = PopularsFeature.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                       imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                       showDetailsBuilder: self)
+                                                          imagesBaseURL: appConfigurations.imagesBaseURL,
+                                                          showDetailsBuilder: self)
     return PopularsFeature.Module(dependencies: dependencies)
   }
 
   // MARK: - Search Module
   func buildSearchModule() -> SearchShowsFeature.Module {
     let dependencies = SearchShowsFeature.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                      imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                      showsPersistence: showsPersistence,
-                                                      searchsPersistence: searchPersistence,
-                                                      showDetailsBuilder: self,
-                                                      showListBuilder: self)
+                                                             imagesBaseURL: appConfigurations.imagesBaseURL,
+                                                             showsPersistence: showsPersistence,
+                                                             searchsPersistence: searchPersistence,
+                                                             showDetailsBuilder: self,
+                                                             showListBuilder: self)
     return SearchShowsFeature.Module(dependencies: dependencies)
   }
 
   // MARK: - Account Module
   func buildAccountModule() -> AccountFeature.Module {
     let dependencies = AccountFeature.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                  imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                  showListBuilder: self)
+                                                         imagesBaseURL: appConfigurations.imagesBaseURL,
+                                                         showListBuilder: self)
     return AccountFeature.Module(dependencies: dependencies)
   }
 
   // MARK: - Build TVShowDetails Module
   func buildTVShowDetailModule() -> ShowDetailsFeature.Module {
     let dependencies = ShowDetailsFeatureInterface.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                               imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                               showsPersistenceRepository: showsPersistence)
+                                                                      imagesBaseURL: appConfigurations.imagesBaseURL,
+                                                                      showsPersistenceRepository: showsPersistence)
     return ShowDetailsFeature.Module(dependencies: dependencies)
   }
 }
@@ -104,8 +104,8 @@ extension AppDIContainer: ModuleShowDetailsBuilder {
   public func buildModuleCoordinator(in navigationController: UINavigationController,
                                      delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinatorProtocol {
     let dependencies = ShowDetailsFeatureInterface.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                               imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                               showsPersistenceRepository: showsPersistence)
+                                                                      imagesBaseURL: appConfigurations.imagesBaseURL,
+                                                                      showsPersistenceRepository: showsPersistence)
     let module =  ShowDetailsFeature.Module(dependencies: dependencies)
     return module.buildModuleCoordinator(in: navigationController, delegate: delegate)
   }
@@ -116,8 +116,8 @@ extension AppDIContainer: ModuleShowListDetailsBuilder {
   public func buildModuleCoordinator(in navigationController: UINavigationController,
                                      delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinatorProtocol {
     let dependencies = ShowListFeatureInterface.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                               imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                               showDetailsBuilder: self)
+                                                                   imagesBaseURL: appConfigurations.imagesBaseURL,
+                                                                   showDetailsBuilder: self)
     let module = ShowListFeature.Module(dependencies: dependencies)
     return module.buildModuleCoordinator(in: navigationController, delegate: delegate)
   }

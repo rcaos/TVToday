@@ -20,9 +20,7 @@ public enum AppChildCoordinator {
 class AppCoordinator: Coordinator {
 
   private let window: UIWindow
-
   private var childCoordinators = [AppChildCoordinator: Coordinator]()
-
   private let appDIContainer: AppDIContainer
 
   // MARK: - Initializer

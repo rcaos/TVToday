@@ -7,7 +7,7 @@
 
 import UIKit
 import Shared
-import TVShowsListInterface
+import ShowListFeatureInterface
 
 public struct Module: ModuleShowListDetailsBuilder {
 

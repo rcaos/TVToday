@@ -9,7 +9,7 @@ import XCTest
 import Combine
 import Shared
 
-@testable import TVShowsList
+@testable import ShowListFeature
 
 class TVShowListViewModelMock: TVShowListViewModelProtocol {
 

@@ -8,7 +8,7 @@
 import SnapshotTesting
 import XCTest
 
-@testable import TVShowsList
+@testable import ShowListFeature
 @testable import Shared
 
 class TVShowListViewTests: XCTestCase {

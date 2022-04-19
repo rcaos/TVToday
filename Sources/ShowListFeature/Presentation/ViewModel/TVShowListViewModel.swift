@@ -9,8 +9,8 @@
 import Combine
 import CombineSchedulers
 import Shared
-import ShowDetailsInterface
-import TVShowsListInterface
+import ShowDetailsFeatureInterface
+import ShowListFeatureInterface
 
 protocol TVShowListViewModelProtocol {
   // MARK: - Input

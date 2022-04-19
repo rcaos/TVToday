@@ -7,11 +7,11 @@
 
 import UIKit
 import Shared
-import ShowDetailsInterface
-import TVShowsListInterface
+import ShowDetailsFeatureInterface
+import ShowListFeatureInterface
 
 final class DIContainer {
-  private let dependencies: TVShowsListInterface.ModuleDependencies
+  private let dependencies: ShowListFeatureInterface.ModuleDependencies
 
   // MARK: - Repositories
   private lazy var showsRepository: TVShowsRepository = {
@@ -31,7 +31,7 @@ final class DIContainer {
   }()
 
   // MARK: - Initializer
-  init(dependencies: TVShowsListInterface.ModuleDependencies) {
+  init(dependencies: ShowListFeatureInterface.ModuleDependencies) {
     self.dependencies = dependencies
   }
 

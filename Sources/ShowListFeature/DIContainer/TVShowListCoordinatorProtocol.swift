@@ -6,8 +6,8 @@
 //
 
 import UIKit
-import ShowDetailsInterface
-import TVShowsListInterface
+import ShowDetailsFeatureInterface
+import ShowListFeatureInterface
 
 protocol TVShowListCoordinatorDependencies {
   func buildShowListViewController_ForGenres(with genreId: Int,

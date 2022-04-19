@@ -9,7 +9,7 @@
 
 import Combine
 import XCTest
-@testable import TVShowsList
+@testable import ShowListFeature
 @testable import Shared
 
 class TVShowListViewModelTests: XCTestCase {

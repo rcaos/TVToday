@@ -10,8 +10,9 @@ let package = Package(
   ],
   products: [
     .library(name: "AppFeature", targets: ["AppFeature"]),
+    .library(name: "UI", targets: ["UI"]),
     .library(name: "Networking", targets: ["Networking"]),
-    .library(name: "NetworkingInterface", targets: ["NetworkingInterface"]),
+    .library(name: "NetworkingInterface", targets: ["NetworkingInterface"])
   ],
   dependencies: [
 
@@ -20,10 +21,13 @@ let package = Package(
     .target(
       name: "AppFeature",
       dependencies: [
+        // TODO, check graph here
+        "UI",
         "Networking",
         "NetworkingInterface"
       ]),
     .testTarget(name: "AppFeatureTests", dependencies: ["AppFeature"]),
+    .target(name: "UI", resources: [.process("Resources/")]),
     .target(name: "Networking", dependencies: ["NetworkingInterface"]),
     .testTarget(name: "NetworkingTests", dependencies: ["Networking"]),
     .target(name: "NetworkingInterface")

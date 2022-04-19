@@ -16,6 +16,7 @@ let package = Package(
     .library(name: "Networking", targets: ["Networking"]),
     .library(name: "NetworkingInterface", targets: ["NetworkingInterface"]),
     .library(name: "Persistence", targets: ["Persistence"]),
+    .library(name: "PopularsFeature", targets: ["PopularsFeature"]),
     .library(name: "Shared", targets: ["Shared"]),
     .library(name: "ShowDetailsFeature", targets: ["ShowDetailsFeature"]),
     .library(name: "ShowDetailsFeatureInterface", targets: ["ShowDetailsFeatureInterface"]),
@@ -88,6 +89,23 @@ let package = Package(
     .testTarget(name: "NetworkingTests", dependencies: ["Networking"]),
     .target(name: "NetworkingInterface"),
     .target(name: "Persistence", dependencies: ["Shared"]),
+    .target(
+      name: "PopularsFeature",
+      dependencies: [
+        "Networking",
+        "Shared",
+        "ShowDetailsFeatureInterface",
+        "UI",
+        .product(name: "CombineSchedulers", package: "combine-schedulers")
+      ]
+    ),
+    .testTarget(
+      name: "PopularsFeatureTests",
+      dependencies: [
+        "PopularsFeature",
+        .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+      ]
+    ),
     .target(
       name: "Shared",
       dependencies: [

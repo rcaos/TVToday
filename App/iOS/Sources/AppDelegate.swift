@@ -6,32 +6,24 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
+import AppFeature
 import UIKit
-//import UI
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var window: UIWindow?
-
-  //  let appDIContainer = AppDIContainer()
-  //
-  //  var appCoordinator: AppCoordinator?
+  let appDIContainer = AppDIContainer()
+  var appCoordinator: AppCoordinator?
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
-    //    UIFont.loadFonts()
-    //    UINavigationController.replaceAppearance()
+    UIFont.loadFonts()
+    UINavigationController.replaceAppearance()
 
     window = UIWindow(frame: UIScreen.main.bounds)
-
-    let dumpVC = UIViewController()
-    dumpVC.view.backgroundColor = .cyan
-
-    window?.rootViewController = dumpVC
-    window?.makeKeyAndVisible()
-    //    appCoordinator = AppCoordinator(window: window!, appDIContainer: appDIContainer)
-    //    appCoordinator?.start()
+    appCoordinator = AppCoordinator(window: window!, appDIContainer: appDIContainer)
+    appCoordinator?.start()
 
     return true
   }

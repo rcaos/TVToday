@@ -13,10 +13,13 @@ let package = Package(
     .library(name: "KeyChainStorage", targets: ["KeyChainStorage"]),
     .library(name: "Networking", targets: ["Networking"]),
     .library(name: "NetworkingInterface", targets: ["NetworkingInterface"]),
+    .library(name: "Shared", targets: ["Shared"]),
     .library(name: "UI", targets: ["UI"])
   ],
   dependencies: [
-    .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "14.0.0")
+    .package(url: "https://github.com/pointfreeco/combine-schedulers", from: "0.5.3"),
+    .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "14.0.0"),
+    .package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.0.0")
   ],
   targets: [
     .target(
@@ -27,6 +30,7 @@ let package = Package(
         "Networking",
         "NetworkingInterface",
         "UI",
+        "Shared"
       ]),
     .testTarget(name: "AppFeatureTests", dependencies: ["AppFeature"]),
     .target(
@@ -39,5 +43,15 @@ let package = Package(
     .testTarget(name: "NetworkingTests", dependencies: ["Networking"]),
     .target(name: "NetworkingInterface"),
     .target(name: "UI", resources: [.process("Resources/")]),
+    .target(
+      name: "Shared",
+      dependencies: [
+        "UI",
+        "NetworkingInterface",
+        "KeyChainStorage",
+        .product(name: "Kingfisher", package: "Kingfisher"),
+        .product(name: "CombineSchedulers", package: "combine-schedulers"),
+      ],
+      resources: [.process("Resources/")]),
   ]
 )

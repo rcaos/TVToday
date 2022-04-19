@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@testable import Account
+@testable import AccountFeature
 
 final class SignInViewModelDelegateMock: SignInViewModelDelegate {
 

@@ -7,7 +7,7 @@
 
 import Combine
 import NetworkingInterface
-@testable import Account
+@testable import AccountFeature
 
 final class CreateSessionUseCaseMock: CreateSessionUseCase {
 

@@ -6,7 +6,7 @@
 //
 
 import Combine
-@testable import Account
+@testable import AccountFeature
 
 final class SignInViewModelMock: SignInViewModelProtocol {
 

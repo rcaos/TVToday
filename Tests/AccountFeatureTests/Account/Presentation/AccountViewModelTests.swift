@@ -8,7 +8,7 @@
 
 import Combine
 import XCTest
-@testable import Account
+@testable import AccountFeature
 @testable import Shared
 
 class AccountViewModelTests: XCTestCase {

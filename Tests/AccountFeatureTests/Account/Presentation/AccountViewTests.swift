@@ -7,7 +7,7 @@
 
 import XCTest
 import SnapshotTesting
-@testable import Account
+@testable import AccountFeature
 
 class AccountViewTests: XCTestCase {
 

@@ -7,7 +7,7 @@
 
 import UIKit
 import Shared
-import TVShowsListInterface
+import ShowListFeatureInterface
 
 protocol AccountCoordinatorProtocol: AnyObject {
   func navigate(to step: AccountStep)

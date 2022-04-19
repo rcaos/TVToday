@@ -7,7 +7,7 @@
 
 import Foundation
 import Combine
-@testable import Account
+@testable import AccountFeature
 
 class AuthPermissionViewModelMock: AuthPermissionViewModelProtocol {
   func signIn() {

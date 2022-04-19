@@ -6,7 +6,7 @@
 //
 
 import Combine
-@testable import Account
+@testable import AccountFeature
 @testable import Shared
 import XCTest
 

@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 import NetworkingInterface
-@testable import Account
+@testable import AccountFeature
 
 final class CreateTokenUseCaseMock: CreateTokenUseCase {
 

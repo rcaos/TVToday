@@ -6,7 +6,7 @@
 //
 
 import UIKit
-@testable import Account
+@testable import AccountFeature
 
 class AccountViewControllerFactoryMock: AccountViewControllerFactory {
   func makeSignInViewController() -> UIViewController {

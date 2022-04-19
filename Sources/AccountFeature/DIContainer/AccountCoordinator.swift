@@ -8,7 +8,7 @@
 
 import UIKit
 import Shared
-import TVShowsListInterface
+import ShowListFeatureInterface
 
 class AccountCoordinator: NavigationCoordinator, AccountCoordinatorProtocol {
 

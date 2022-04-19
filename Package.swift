@@ -25,6 +25,7 @@ let package = Package(
       ]),
     .testTarget(name: "AppFeatureTests", dependencies: ["AppFeature"]),
     .target(name: "Networking", dependencies: ["NetworkingInterface"]),
+    .testTarget(name: "NetworkingTests", dependencies: ["Networking"]),
     .target(name: "NetworkingInterface")
   ]
 )

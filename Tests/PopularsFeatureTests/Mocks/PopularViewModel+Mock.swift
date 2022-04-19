@@ -7,7 +7,7 @@
 
 import Combine
 import Shared
-@testable import PopularShows
+@testable import PopularsFeature
 
 class PopularViewModelMock: PopularViewModelProtocol {
 

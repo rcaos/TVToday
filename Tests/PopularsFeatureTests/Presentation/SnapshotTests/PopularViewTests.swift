@@ -8,7 +8,7 @@
 import XCTest
 import SnapshotTesting
 
-@testable import PopularShows
+@testable import PopularsFeature
 @testable import Shared
 
 class PopularViewTests: XCTestCase {

@@ -9,7 +9,7 @@
 
 import Combine
 import XCTest
-@testable import PopularShows
+@testable import PopularsFeature
 @testable import Shared
 
 class PopularViewModelTests: XCTestCase {

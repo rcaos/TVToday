@@ -7,7 +7,7 @@
 
 import Shared
 import Persistence
-@testable import SearchShows
+@testable import SearchShowsFeature
 
 public func createSectionModel(showsVisited: [ShowVisited], genres: [Genre]) -> [SearchOptionsSectionModel] {
   var dataSource: [SearchOptionsSectionModel] = []

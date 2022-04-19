@@ -6,8 +6,8 @@
 //
 
 import UIKit
-import ShowDetailsInterface
-import TVShowsListInterface
+import ShowDetailsFeatureInterface
+import ShowListFeatureInterface
 import Shared
 
 protocol SearchCoordinatorProtocol: AnyObject {

@@ -6,7 +6,7 @@
 //
 
 import Combine
-@testable import SearchShows
+@testable import SearchShowsFeature
 @testable import Shared
 @testable import Persistence
 

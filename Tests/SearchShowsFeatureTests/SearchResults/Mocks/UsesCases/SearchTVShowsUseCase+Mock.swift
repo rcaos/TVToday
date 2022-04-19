@@ -6,7 +6,7 @@
 //
 
 import Combine
-import SearchShows
+import SearchShowsFeature
 import Shared
 import NetworkingInterface
 

@@ -8,7 +8,7 @@
 import SnapshotTesting
 import XCTest
 
-@testable import SearchShows
+@testable import SearchShowsFeature
 @testable import Shared
 @testable import Persistence
 

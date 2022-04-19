@@ -5,7 +5,7 @@
 //  Created by Jeans Ruiz on 8/7/20.
 //
 
-@testable import SearchShows
+@testable import SearchShowsFeature
 @testable import Shared
 @testable import Persistence
 

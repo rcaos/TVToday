@@ -8,7 +8,7 @@
 import XCTest
 import Combine
 
-@testable import SearchShows
+@testable import SearchShowsFeature
 @testable import Persistence
 @testable import Shared
 

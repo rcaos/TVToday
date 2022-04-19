@@ -6,7 +6,7 @@
 //
 
 import Combine
-@testable import SearchShows
+@testable import SearchShowsFeature
 
 final class ResultsSearchViewModelMock: ResultsSearchViewModelProtocol {
   func recentSearchIsPicked(query: String) { }

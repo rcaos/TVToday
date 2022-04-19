@@ -7,7 +7,7 @@
 
 import Combine
 import NetworkingInterface
-@testable import SearchShows
+@testable import SearchShowsFeature
 
 final class FetchGenresUseCaseMock: FetchGenresUseCase {
   var error: DataTransferError?

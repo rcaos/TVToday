@@ -8,8 +8,8 @@
 import UIKit
 import Shared
 import Persistence
-import ShowDetailsInterface
-import TVShowsListInterface
+import ShowDetailsFeatureInterface
+import ShowListFeatureInterface
 
 final class DIContainer {
 

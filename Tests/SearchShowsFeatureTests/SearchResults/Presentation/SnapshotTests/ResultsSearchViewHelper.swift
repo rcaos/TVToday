@@ -5,7 +5,7 @@
 //  Created by Jeans Ruiz on 20/12/21.
 //
 
-@testable import SearchShows
+@testable import SearchShowsFeature
 @testable import Shared
 import UIKit
 

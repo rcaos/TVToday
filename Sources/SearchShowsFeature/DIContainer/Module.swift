@@ -11,8 +11,8 @@ import UIKit
 import NetworkingInterface
 import Persistence
 import Shared
-import ShowDetailsInterface
-import TVShowsListInterface
+import ShowDetailsFeatureInterface
+import ShowListFeatureInterface
 
 public struct ModuleDependencies {
 

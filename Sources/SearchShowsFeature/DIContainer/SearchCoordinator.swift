@@ -8,8 +8,8 @@
 
 import UIKit
 import Shared
-import ShowDetailsInterface
-import TVShowsListInterface
+import ShowDetailsFeatureInterface
+import ShowListFeatureInterface
 
 class SearchCoordinator: NavigationCoordinator, SearchCoordinatorProtocol {
 

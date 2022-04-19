@@ -10,6 +10,7 @@ let package = Package(
   ],
   products: [
     .library(name: "AppFeature", targets: ["AppFeature"]),
+    .library(name: "AccountFeature", targets: ["AccountFeature"]),
     .library(name: "KeyChainStorage", targets: ["KeyChainStorage"]),
     .library(name: "Networking", targets: ["Networking"]),
     .library(name: "NetworkingInterface", targets: ["NetworkingInterface"]),
@@ -46,6 +47,23 @@ let package = Package(
       name: "KeyChainStorage",
       dependencies: [
         .product(name: "KeychainSwift", package: "keychain-swift")
+      ]
+    ),
+    .target(
+      name: "AccountFeature",
+      dependencies: [
+        "Networking",
+        "Shared",
+        "ShowListFeatureInterface",
+        "UI",
+        .product(name: "CombineSchedulers", package: "combine-schedulers")
+      ]
+    ),
+    .testTarget(
+      name: "AccountFeatureTests",
+      dependencies: [
+        "AccountFeature",
+        .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
       ]
     ),
     .target(name: "Networking", dependencies: ["NetworkingInterface"]),

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,6 +15,7 @@
 		7741E9D8280F11CE00A9F208 /* AppConfigurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7741E9CC280F118A00A9F208 /* AppConfigurations.swift */; };
 		7741E9D9280F11DA00A9F208 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7741E9C9280F118A00A9F208 /* Assets.xcassets */; };
 		7741E9DA280F11E800A9F208 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7741E9C8280F118A00A9F208 /* LaunchScreen.storyboard */; };
+		7741E9DC280F3DDE00A9F208 /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 7741E9DB280F3DDE00A9F208 /* AppFeature */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -75,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7741E9DC280F3DDE00A9F208 /* AppFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -174,6 +176,9 @@
 			dependencies = (
 			);
 			name = TVToday;
+			packageProductDependencies = (
+				7741E9DB280F3DDE00A9F208 /* AppFeature */,
+			);
 			productName = TVToday;
 			productReference = 3B69289CE36741F5E548D0A3 /* TVToday.app */;
 			productType = "com.apple.product-type.application";
@@ -430,6 +435,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7741E9DB280F3DDE00A9F208 /* AppFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppFeature;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4126129133D8819596DFB018 /* Project object */;
 }

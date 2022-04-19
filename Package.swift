@@ -11,6 +11,7 @@ let package = Package(
   products: [
     .library(name: "AppFeature", targets: ["AppFeature"]),
     .library(name: "AccountFeature", targets: ["AccountFeature"]),
+    .library(name: "AiringTodayFeature", targets: ["AiringTodayFeature"]),
     .library(name: "KeyChainStorage", targets: ["KeyChainStorage"]),
     .library(name: "Networking", targets: ["Networking"]),
     .library(name: "NetworkingInterface", targets: ["NetworkingInterface"]),
@@ -44,12 +45,6 @@ let package = Package(
       ]),
     .testTarget(name: "AppFeatureTests", dependencies: ["AppFeature"]),
     .target(
-      name: "KeyChainStorage",
-      dependencies: [
-        .product(name: "KeychainSwift", package: "keychain-swift")
-      ]
-    ),
-    .target(
       name: "AccountFeature",
       dependencies: [
         "Networking",
@@ -64,6 +59,29 @@ let package = Package(
       dependencies: [
         "AccountFeature",
         .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+      ]
+    ),
+    .target(
+      name: "AiringTodayFeature",
+      dependencies: [
+        "Networking",
+        "Shared",
+        "ShowDetailsFeatureInterface",
+        "UI",
+        .product(name: "CombineSchedulers", package: "combine-schedulers")
+      ]
+    ),
+    .testTarget(
+      name: "AiringTodayFeatureTests",
+      dependencies: [
+        "AiringTodayFeature",
+        .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+      ]
+    ),
+    .target(
+      name: "KeyChainStorage",
+      dependencies: [
+        .product(name: "KeychainSwift", package: "keychain-swift")
       ]
     ),
     .target(name: "Networking", dependencies: ["NetworkingInterface"]),

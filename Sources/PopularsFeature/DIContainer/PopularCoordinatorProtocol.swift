@@ -7,7 +7,7 @@
 
 import UIKit
 import Shared
-import ShowDetailsInterface
+import ShowDetailsFeatureInterface
 
 protocol PopularCoordinatorProtocol: AnyObject {
   func navigate(to step: PopularStep)

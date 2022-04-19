@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import NetworkingInterface
 import Shared
-import ShowDetailsInterface
+import ShowDetailsFeatureInterface
 
 public struct ModuleDependencies {
 

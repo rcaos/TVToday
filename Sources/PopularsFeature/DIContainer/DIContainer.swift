@@ -8,7 +8,7 @@
 import UIKit
 import NetworkingInterface
 import Shared
-import ShowDetailsInterface
+import ShowDetailsFeatureInterface
 
 final class DIContainer {
 

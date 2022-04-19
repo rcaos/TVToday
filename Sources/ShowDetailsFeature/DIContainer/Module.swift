@@ -7,7 +7,7 @@
 
 import UIKit
 import Shared
-import ShowDetailsInterface
+import ShowDetailsFeatureInterface
 
 public struct Module: ModuleShowDetailsBuilder {
 

@@ -10,7 +10,7 @@ import Foundation
 import Combine
 import CombineSchedulers
 import Shared
-import ShowDetailsInterface
+import ShowDetailsFeatureInterface
 import NetworkingInterface
 
 protocol TVShowDetailViewModelProtocol {

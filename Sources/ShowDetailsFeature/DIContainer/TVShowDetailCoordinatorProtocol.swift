@@ -7,7 +7,7 @@
 
 import UIKit
 import Shared
-import ShowDetailsInterface
+import ShowDetailsFeatureInterface
 
 protocol TVShowDetailCoordinatorDependencies {
   func buildShowDetailsViewController(with showId: Int,

@@ -15,6 +15,8 @@ let package = Package(
     .library(name: "NetworkingInterface", targets: ["NetworkingInterface"]),
     .library(name: "Persistence", targets: ["Persistence"]),
     .library(name: "Shared", targets: ["Shared"]),
+    .library(name: "ShowDetailsFeature", targets: ["ShowDetailsFeature"]),
+    .library(name: "ShowDetailsFeatureInterface", targets: ["ShowDetailsFeatureInterface"]),
     .library(name: "UI", targets: ["UI"])
   ],
   dependencies: [
@@ -33,6 +35,7 @@ let package = Package(
         "NetworkingInterface",
         "Persistence",
         "Shared",
+        "ShowDetailsFeature",
         "UI"
       ]),
     .testTarget(name: "AppFeatureTests", dependencies: ["AppFeature"]),
@@ -57,6 +60,22 @@ let package = Package(
       ],
       resources: [
         .process("Resources/")
+      ]
+    ),
+    .target(
+      name: "ShowDetailsFeature",
+      dependencies: [
+        "ShowDetailsFeatureInterface",
+        "UI",
+        .product(name: "CombineSchedulers", package: "combine-schedulers"),
+      ]
+    ),
+    .target(
+      name: "ShowDetailsFeatureInterface",
+      dependencies: [
+        "NetworkingInterface",
+        "Shared",
+        "Persistence"
       ]
     ),
     .target(name: "UI", resources: [.process("Resources/")]),

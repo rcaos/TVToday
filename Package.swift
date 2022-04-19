@@ -38,10 +38,13 @@ let package = Package(
       name: "AppFeature",
       dependencies: [
         // TODO, check graph here
+        "AccountFeature",
+        "AiringTodayFeature",
         "KeyChainStorage",
         "Networking",
-        "NetworkingInterface",
-        "Persistence",
+        "PersistenceRealm",
+        "PopularsFeature",
+        "SearchShowsFeature",
         "Shared",
         "ShowDetailsFeature",
         "ShowListFeature",

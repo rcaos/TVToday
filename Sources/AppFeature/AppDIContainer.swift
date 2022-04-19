@@ -23,6 +23,8 @@ import UIKit
 
 public class AppDIContainer {
 
+  public init() { }
+
   private lazy var appConfigurations = AppConfigurations()
 
   private lazy var apiDataTransferService: DataTransferService = {

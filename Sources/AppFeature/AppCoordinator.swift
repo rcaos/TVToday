@@ -17,7 +17,7 @@ public enum AppChildCoordinator {
   // case signUp, login, onboarding, etc
 }
 
-class AppCoordinator: Coordinator {
+public class AppCoordinator: Coordinator {
 
   private let window: UIWindow
   private var childCoordinators = [AppChildCoordinator: Coordinator]()
@@ -29,7 +29,7 @@ class AppCoordinator: Coordinator {
     self.appDIContainer = appDIContainer
   }
 
-  func start() {
+  public func start() {
     navigateToSignedFlow()
   }
 

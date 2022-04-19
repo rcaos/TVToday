@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7741E9D4280F11CE00A9F208 /* Bundle+TVToday.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7741E9CB280F118A00A9F208 /* Bundle+TVToday.swift */; };
 		7741E9D6280F11CE00A9F208 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7741E9D1280F118A00A9F208 /* AppDelegate.swift */; };
 		7741E9D9280F11DA00A9F208 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7741E9C9280F118A00A9F208 /* Assets.xcassets */; };
 		7741E9DA280F11E800A9F208 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7741E9C8280F118A00A9F208 /* LaunchScreen.storyboard */; };
@@ -50,7 +49,6 @@
 		7741E9C6280F0E1E00A9F208 /* TVToday */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = TVToday; path = ..; sourceTree = "<group>"; };
 		7741E9C8280F118A00A9F208 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7741E9C9280F118A00A9F208 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		7741E9CB280F118A00A9F208 /* Bundle+TVToday.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+TVToday.swift"; sourceTree = "<group>"; };
 		7741E9D1280F118A00A9F208 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7741E9D2280F118A00A9F208 /* info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = info.plist; sourceTree = "<group>"; };
 		83EC9748CC25119CE90E2C97 /* libKeyChainStorage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKeyChainStorage.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -97,7 +95,6 @@
 			isa = PBXGroup;
 			children = (
 				7741E9D1280F118A00A9F208 /* AppDelegate.swift */,
-				7741E9CB280F118A00A9F208 /* Bundle+TVToday.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -225,7 +222,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7741E9D6280F11CE00A9F208 /* AppDelegate.swift in Sources */,
-				7741E9D4280F11CE00A9F208 /* Bundle+TVToday.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

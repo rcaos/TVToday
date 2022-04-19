@@ -16,6 +16,7 @@ let package = Package(
     .library(name: "Networking", targets: ["Networking"]),
     .library(name: "NetworkingInterface", targets: ["NetworkingInterface"]),
     .library(name: "Persistence", targets: ["Persistence"]),
+    .library(name: "PersistenceRealm", targets: ["PersistenceRealm"]),
     .library(name: "PopularsFeature", targets: ["PopularsFeature"]),
     .library(name: "SearchShowsFeature", targets: ["SearchShowsFeature"]),
     .library(name: "Shared", targets: ["Shared"]),
@@ -29,7 +30,8 @@ let package = Package(
     .package(url: "https://github.com/pointfreeco/combine-schedulers", from: "0.5.3"),
     .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.9.0"),
     .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "14.0.0"),
-    .package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.0.0")
+    .package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.0.0"),
+    .package(url: "https://github.com/realm/realm-cocoa.git", from: "10.5.2")
   ],
   targets: [
     .target(
@@ -90,6 +92,14 @@ let package = Package(
     .testTarget(name: "NetworkingTests", dependencies: ["Networking"]),
     .target(name: "NetworkingInterface"),
     .target(name: "Persistence", dependencies: ["Shared"]),
+    .target(
+      name: "PersistenceRealm",
+      dependencies: [
+        "Persistence",
+        .product(name: "Realm", package: "realm-cocoa"),
+        .product(name: "RealmSwift", package: "realm-cocoa"),
+      ]
+    ),
     .target(
       name: "PopularsFeature",
       dependencies: [

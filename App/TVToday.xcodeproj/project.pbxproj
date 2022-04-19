@@ -7,12 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7741E9D3280F11CE00A9F208 /* AppDIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7741E9CF280F118A00A9F208 /* AppDIContainer.swift */; };
 		7741E9D4280F11CE00A9F208 /* Bundle+TVToday.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7741E9CB280F118A00A9F208 /* Bundle+TVToday.swift */; };
-		7741E9D5280F11CE00A9F208 /* SignedCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7741E9D0280F118A00A9F208 /* SignedCoordinator.swift */; };
 		7741E9D6280F11CE00A9F208 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7741E9D1280F118A00A9F208 /* AppDelegate.swift */; };
-		7741E9D7280F11CE00A9F208 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7741E9CE280F118A00A9F208 /* AppCoordinator.swift */; };
-		7741E9D8280F11CE00A9F208 /* AppConfigurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7741E9CC280F118A00A9F208 /* AppConfigurations.swift */; };
 		7741E9D9280F11DA00A9F208 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7741E9C9280F118A00A9F208 /* Assets.xcassets */; };
 		7741E9DA280F11E800A9F208 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7741E9C8280F118A00A9F208 /* LaunchScreen.storyboard */; };
 		7741E9DC280F3DDE00A9F208 /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 7741E9DB280F3DDE00A9F208 /* AppFeature */; };
@@ -55,10 +51,6 @@
 		7741E9C8280F118A00A9F208 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7741E9C9280F118A00A9F208 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7741E9CB280F118A00A9F208 /* Bundle+TVToday.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+TVToday.swift"; sourceTree = "<group>"; };
-		7741E9CC280F118A00A9F208 /* AppConfigurations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfigurations.swift; sourceTree = "<group>"; };
-		7741E9CE280F118A00A9F208 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
-		7741E9CF280F118A00A9F208 /* AppDIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDIContainer.swift; sourceTree = "<group>"; };
-		7741E9D0280F118A00A9F208 /* SignedCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignedCoordinator.swift; sourceTree = "<group>"; };
 		7741E9D1280F118A00A9F208 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7741E9D2280F118A00A9F208 /* info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = info.plist; sourceTree = "<group>"; };
 		83EC9748CC25119CE90E2C97 /* libKeyChainStorage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKeyChainStorage.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -104,22 +96,10 @@
 		7741E9CA280F118A00A9F208 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				7741E9CB280F118A00A9F208 /* Bundle+TVToday.swift */,
-				7741E9CC280F118A00A9F208 /* AppConfigurations.swift */,
-				7741E9CD280F118A00A9F208 /* DIContainer */,
 				7741E9D1280F118A00A9F208 /* AppDelegate.swift */,
+				7741E9CB280F118A00A9F208 /* Bundle+TVToday.swift */,
 			);
 			path = Sources;
-			sourceTree = "<group>";
-		};
-		7741E9CD280F118A00A9F208 /* DIContainer */ = {
-			isa = PBXGroup;
-			children = (
-				7741E9CE280F118A00A9F208 /* AppCoordinator.swift */,
-				7741E9CF280F118A00A9F208 /* AppDIContainer.swift */,
-				7741E9D0280F118A00A9F208 /* SignedCoordinator.swift */,
-			);
-			path = DIContainer;
 			sourceTree = "<group>";
 		};
 		AB39BE2C82264B465AAAAD8D = {
@@ -245,10 +225,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7741E9D6280F11CE00A9F208 /* AppDelegate.swift in Sources */,
-				7741E9D5280F11CE00A9F208 /* SignedCoordinator.swift in Sources */,
-				7741E9D7280F11CE00A9F208 /* AppCoordinator.swift in Sources */,
-				7741E9D3280F11CE00A9F208 /* AppDIContainer.swift in Sources */,
-				7741E9D8280F11CE00A9F208 /* AppConfigurations.swift in Sources */,
 				7741E9D4280F11CE00A9F208 /* Bundle+TVToday.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

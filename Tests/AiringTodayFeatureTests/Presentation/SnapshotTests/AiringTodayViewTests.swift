@@ -8,7 +8,7 @@
 import XCTest
 import SnapshotTesting
 
-@testable import AiringToday
+@testable import AiringTodayFeature
 
 class AiringTodayViewTests: XCTestCase {
 

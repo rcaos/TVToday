@@ -7,7 +7,7 @@
 
 import Shared
 import Combine
-@testable import AiringToday
+@testable import AiringTodayFeature
 
 class AiringTodayViewModelMock: AiringTodayViewModelProtocol {
 

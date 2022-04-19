@@ -10,7 +10,7 @@ import UIKit
 import NetworkingInterface
 import Persistence
 import Shared
-import ShowDetailsInterface
+import ShowDetailsFeatureInterface
 
 public struct ModuleDependencies {
 

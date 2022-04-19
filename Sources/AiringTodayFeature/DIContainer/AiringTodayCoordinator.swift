@@ -8,7 +8,7 @@
 
 import UIKit
 import Shared
-import ShowDetailsInterface
+import ShowDetailsFeatureInterface
 
 class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinatorProtocol {
 

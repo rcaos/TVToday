@@ -7,7 +7,7 @@
 
 // swiftlint:disable all
 
-@testable import AiringToday
+@testable import AiringTodayFeature
 @testable import Shared
 import XCTest
 import Combine

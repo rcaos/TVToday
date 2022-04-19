@@ -13,6 +13,7 @@ let package = Package(
     .library(name: "KeyChainStorage", targets: ["KeyChainStorage"]),
     .library(name: "Networking", targets: ["Networking"]),
     .library(name: "NetworkingInterface", targets: ["NetworkingInterface"]),
+    .library(name: "Persistence", targets: ["Persistence"]),
     .library(name: "Shared", targets: ["Shared"]),
     .library(name: "UI", targets: ["UI"])
   ],
@@ -29,8 +30,9 @@ let package = Package(
         "KeyChainStorage",
         "Networking",
         "NetworkingInterface",
-        "UI",
-        "Shared"
+        "Persistence",
+        "Shared",
+        "UI"
       ]),
     .testTarget(name: "AppFeatureTests", dependencies: ["AppFeature"]),
     .target(
@@ -42,7 +44,7 @@ let package = Package(
     .target(name: "Networking", dependencies: ["NetworkingInterface"]),
     .testTarget(name: "NetworkingTests", dependencies: ["Networking"]),
     .target(name: "NetworkingInterface"),
-    .target(name: "UI", resources: [.process("Resources/")]),
+    .target(name: "Persistence", dependencies: ["Shared"]),
     .target(
       name: "Shared",
       dependencies: [
@@ -52,6 +54,10 @@ let package = Package(
         .product(name: "Kingfisher", package: "Kingfisher"),
         .product(name: "CombineSchedulers", package: "combine-schedulers"),
       ],
-      resources: [.process("Resources/")]),
+      resources: [
+        .process("Resources/")
+      ]
+    ),
+    .target(name: "UI", resources: [.process("Resources/")]),
   ]
 )

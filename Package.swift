@@ -17,6 +17,8 @@ let package = Package(
     .library(name: "Shared", targets: ["Shared"]),
     .library(name: "ShowDetailsFeature", targets: ["ShowDetailsFeature"]),
     .library(name: "ShowDetailsFeatureInterface", targets: ["ShowDetailsFeatureInterface"]),
+    .library(name: "ShowListFeature", targets: ["ShowListFeature"]),
+    .library(name: "ShowListFeatureInterface", targets: ["ShowListFeatureInterface"]),
     .library(name: "UI", targets: ["UI"])
   ],
   dependencies: [
@@ -36,6 +38,7 @@ let package = Package(
         "Persistence",
         "Shared",
         "ShowDetailsFeature",
+        "ShowListFeature",
         "UI"
       ]),
     .testTarget(name: "AppFeatureTests", dependencies: ["AppFeature"]),
@@ -83,6 +86,29 @@ let package = Package(
         "Networking", // MARK: - TODO, depends on Interface only
         "Shared",
         "Persistence"
+      ]
+    ),
+    .target(
+      name: "ShowListFeature",
+      dependencies: [
+        "ShowListFeatureInterface",
+        .product(name: "CombineSchedulers", package: "combine-schedulers"),
+      ]
+    ),
+    .testTarget(
+      name: "ShowListFeatureTests",
+      dependencies: [
+        "ShowListFeature",
+        .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+      ]
+    ),
+    .target(
+      name: "ShowListFeatureInterface",
+      dependencies: [
+        "Networking",
+        "Shared",
+        "Persistence",
+        "ShowDetailsFeatureInterface"
       ]
     ),
     .target(name: "UI", resources: [.process("Resources/")]),

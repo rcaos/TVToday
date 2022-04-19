@@ -6,9 +6,9 @@ import PackageDescription
 let package = Package(
   name: "TVToday",
   products: [
-    .library(
-      name: "AppFeature", targets: ["AppFeature"]
-    )
+    .library(name: "AppFeature", targets: ["AppFeature"]),
+    .library(name: "Networking", targets: ["Networking"]),
+    .library(name: "NetworkingInterface", targets: ["NetworkingInterface"]),
   ],
   dependencies: [
 
@@ -17,8 +17,11 @@ let package = Package(
     .target(
       name: "AppFeature",
       dependencies: [
-
+        "Networking",
+        "NetworkingInterface"
       ]),
-    .testTarget(name: "AppFeatureTests", dependencies: ["AppFeature"])
+    .testTarget(name: "AppFeatureTests", dependencies: ["AppFeature"]),
+    .target(name: "Networking"),
+    .target(name: "NetworkingInterface"),
   ]
 )

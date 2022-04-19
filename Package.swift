@@ -70,10 +70,17 @@ let package = Package(
         .product(name: "CombineSchedulers", package: "combine-schedulers"),
       ]
     ),
+    .testTarget(
+      name: "ShowDetailsFeatureTests",
+      dependencies: [
+        "ShowDetailsFeature",
+        .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+      ]
+    ),
     .target(
       name: "ShowDetailsFeatureInterface",
       dependencies: [
-        "NetworkingInterface",
+        "Networking", // MARK: - TODO, depends on Interface only
         "Shared",
         "Persistence"
       ]

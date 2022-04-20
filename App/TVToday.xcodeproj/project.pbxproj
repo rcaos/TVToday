@@ -88,19 +88,11 @@
 			children = (
 				7741E9C8280F118A00A9F208 /* LaunchScreen.storyboard */,
 				7741E9C9280F118A00A9F208 /* Assets.xcassets */,
-				7741E9CA280F118A00A9F208 /* Sources */,
+				7741E9D1280F118A00A9F208 /* AppDelegate.swift */,
+				7741E9DF280F84D800A9F208 /* AppConfigurations.swift */,
 				7741E9D2280F118A00A9F208 /* info.plist */,
 			);
 			path = iOS;
-			sourceTree = "<group>";
-		};
-		7741E9CA280F118A00A9F208 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				7741E9D1280F118A00A9F208 /* AppDelegate.swift */,
-				7741E9DF280F84D800A9F208 /* AppConfigurations.swift */,
-			);
-			path = Sources;
 			sourceTree = "<group>";
 		};
 		7741E9DD280F83B900A9F208 /* Config */ = {

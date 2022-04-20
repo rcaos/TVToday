@@ -11,6 +11,7 @@
 		7741E9D9280F11DA00A9F208 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7741E9C9280F118A00A9F208 /* Assets.xcassets */; };
 		7741E9DA280F11E800A9F208 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7741E9C8280F118A00A9F208 /* LaunchScreen.storyboard */; };
 		7741E9DC280F3DDE00A9F208 /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 7741E9DB280F3DDE00A9F208 /* AppFeature */; };
+		7741E9E0280F84D800A9F208 /* AppConfigurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7741E9DF280F84D800A9F208 /* AppConfigurations.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -51,6 +52,8 @@
 		7741E9C9280F118A00A9F208 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7741E9D1280F118A00A9F208 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7741E9D2280F118A00A9F208 /* info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = info.plist; sourceTree = "<group>"; };
+		7741E9DE280F83B900A9F208 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		7741E9DF280F84D800A9F208 /* AppConfigurations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfigurations.swift; sourceTree = "<group>"; };
 		83EC9748CC25119CE90E2C97 /* libKeyChainStorage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKeyChainStorage.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		8CDA1873462E3B20FD1CF9A7 /* libShowDetailsInterface.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libShowDetailsInterface.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9892264379166CCBD866A208 /* libPersistence.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPersistence.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -95,8 +98,17 @@
 			isa = PBXGroup;
 			children = (
 				7741E9D1280F118A00A9F208 /* AppDelegate.swift */,
+				7741E9DF280F84D800A9F208 /* AppConfigurations.swift */,
 			);
 			path = Sources;
+			sourceTree = "<group>";
+		};
+		7741E9DD280F83B900A9F208 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				7741E9DE280F83B900A9F208 /* Config.xcconfig */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 		AB39BE2C82264B465AAAAD8D = {
@@ -104,6 +116,7 @@
 			children = (
 				7741E9C6280F0E1E00A9F208 /* TVToday */,
 				7741E9C7280F118900A9F208 /* iOS */,
+				7741E9DD280F83B900A9F208 /* Config */,
 				28BC9DDE8A4DE23B0BFE14EA /* Frameworks */,
 				F5BE0783CE61E802DA7BDFC3 /* Products */,
 			);
@@ -221,6 +234,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7741E9E0280F84D800A9F208 /* AppConfigurations.swift in Sources */,
 				7741E9D6280F11CE00A9F208 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -230,6 +244,7 @@
 /* Begin XCBuildConfiguration section */
 		38C6157699B7F0CC2622AFCD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7741E9DE280F83B900A9F208 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -282,6 +297,7 @@
 		};
 		40668D4320A2056B6DF2E06F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7741E9DE280F83B900A9F208 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -305,6 +321,7 @@
 		};
 		50C25C2BC498EA7F44D51B90 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7741E9DE280F83B900A9F208 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -329,6 +346,7 @@
 		};
 		56D7B4364436F05412964010 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7741E9DE280F83B900A9F208 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;

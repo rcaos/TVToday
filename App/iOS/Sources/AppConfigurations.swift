@@ -1,14 +1,14 @@
 //
 //  AppConfigurations.swift
-//  AppFeature
+//  TVToday
 //
-//  Created by Jeans Ruiz on 1/14/20.
-//  Copyright © 2020 Jeans. All rights reserved.
+//  Created by Jeans Ruiz on 19/04/22.
 //
 
+import AppFeature
 import Foundation
 
-final class AppConfigurations {
+final class AppConfigurations: AppConfigurationProtocol {
 
   lazy var apiKey: String = {
     guard let apiKey = Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String else {

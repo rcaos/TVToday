@@ -23,9 +23,11 @@ import UIKit
 
 public class AppDIContainer {
 
-  public init() { }
+  private let appConfigurations: AppConfigurationProtocol
 
-  private lazy var appConfigurations = AppConfigurations()
+  public init(appConfigurations: AppConfigurationProtocol) {
+    self.appConfigurations = appConfigurations
+  }
 
   private lazy var apiDataTransferService: DataTransferService = {
     let queryParameters = [

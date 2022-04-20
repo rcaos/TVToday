@@ -13,7 +13,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var window: UIWindow?
-  let appDIContainer = AppDIContainer()
+  let appDIContainer = AppDIContainer(appConfigurations: AppConfigurations())
   var appCoordinator: AppCoordinator?
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {

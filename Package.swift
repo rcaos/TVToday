@@ -24,7 +24,8 @@ let package = Package(
     .library(name: "ShowDetailsFeatureInterface", targets: ["ShowDetailsFeatureInterface"]),
     .library(name: "ShowListFeature", targets: ["ShowListFeature"]),
     .library(name: "ShowListFeatureInterface", targets: ["ShowListFeatureInterface"]),
-    .library(name: "UI", targets: ["UI"])
+    .library(name: "UI", targets: ["UI"]),
+    .library(name: "AiringTodayFeatureDemo", targets: ["AiringTodayFeatureDemo"])
   ],
   dependencies: [
     .package(url: "https://github.com/pointfreeco/combine-schedulers", from: "0.5.3"),
@@ -199,5 +200,13 @@ let package = Package(
       ]
     ),
     .target(name: "UI", resources: [.process("Resources/")]),
+
+    // MARK: - Demo modules
+    .target(
+      name: "AiringTodayFeatureDemo",
+      dependencies: [
+        "AiringTodayFeature"
+      ]
+    ),
   ]
 )

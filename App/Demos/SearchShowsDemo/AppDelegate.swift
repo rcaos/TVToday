@@ -1,29 +1,29 @@
 //
 //  AppDelegate.swift
-//  PopularDemo
+//  SearchShowsDemo
 //
 //  Created by Jeans Ruiz on 20/04/22.
 //
 
 import UIKit
-import PopularsFeatureDemo
+import SearchShowsFeatureDemo
 import Networking
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
-  var coordinator: PopularDemoCoordinator?
+  var coordinator: SearchShowsDemoCoordinator?
 
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     window = UIWindow(frame: UIScreen.main.bounds)
-
+    
     let appConfigurations = buildAppConfigurations()
     let apiDataTransferService = buildDataTransferService(appConfigurations: appConfigurations)
-    coordinator = PopularDemoCoordinator(window: window!,
-                                         tabBarController: UITabBarController(),
-                                         apiDataTransferService: apiDataTransferService,
-                                         imagesBaseURL: appConfigurations.imagesBaseURL)
+    coordinator = SearchShowsDemoCoordinator(window: window!,
+                                             tabBarController: UITabBarController(),
+                                             apiDataTransferService: apiDataTransferService,
+                                             imagesBaseURL: appConfigurations.imagesBaseURL)
     coordinator?.start()
     return true
   }

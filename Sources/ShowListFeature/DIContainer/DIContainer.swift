@@ -26,10 +26,6 @@ final class DIContainer {
       basePath: dependencies.imagesBaseURL)
   }()
 
-  private lazy var keychainRepository: KeychainRepository = {
-    return DefaultKeychainRepository()
-  }()
-
   // MARK: - Initializer
   init(dependencies: ShowListFeatureInterface.ModuleDependencies) {
     self.dependencies = dependencies
@@ -80,12 +76,12 @@ final class DIContainer {
 
   private func makeWatchListUseCase() -> FetchTVShowsUseCase {
     return DefaultUserWatchListShowsUseCase(accountShowsRepository: accountShowsRepository,
-                                            keychainRepository: keychainRepository)
+                                            keychainRepository: dependencies.keychainRepository)
   }
 
   private func makeFavoriteListUseCase() -> FetchTVShowsUseCase {
     return DefaultUserFavoritesShowsUseCase(accountShowsRepository: accountShowsRepository,
-                                            keychainRepository: keychainRepository)
+                                            keychainRepository: dependencies.keychainRepository)
   }
 }
 

@@ -6,50 +6,45 @@
 //
 
 import UIKit
-//import AiringTodayFeatureDemo
-//import Networking
+import PopularsFeatureDemo
+import Networking
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
-//  var coordinator: TodayDemoCoordinator?
+  var coordinator: PopularDemoCoordinator?
 
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     window = UIWindow(frame: UIScreen.main.bounds)
 
-//    let appConfigurations = buildAppConfigurations()
-//    let apiDataTransferService = buildDataTransferService(appConfigurations: appConfigurations)
-//    coordinator = TodayDemoCoordinator(window: window!,
-//                                       tabBarController: UITabBarController(),
-//                                       apiDataTransferService: apiDataTransferService,
-//                                       imagesBaseURL: appConfigurations.imagesBaseURL)
-//    coordinator?.start()
-    let vc = UIViewController()
-    vc.view.backgroundColor = .brown
-    window?.rootViewController = vc
-    window?.makeKeyAndVisible()
-
+    let appConfigurations = buildAppConfigurations()
+    let apiDataTransferService = buildDataTransferService(appConfigurations: appConfigurations)
+    coordinator = PopularDemoCoordinator(window: window!,
+                                         tabBarController: UITabBarController(),
+                                         apiDataTransferService: apiDataTransferService,
+                                         imagesBaseURL: appConfigurations.imagesBaseURL)
+    coordinator?.start()
     return true
   }
 }
 
-//func buildDataTransferService(appConfigurations: AppConfigurations) -> DefaultDataTransferService {
-//  let queryParameters = [
-//    "api_key": appConfigurations.apiKey,
-//    "language": NSLocale.preferredLanguages.first ?? "en"
-//  ]
-//
-//  let configuration = ApiDataNetworkConfig(
-//    baseURL: appConfigurations.apiBaseURL,
-//    headers: [
-//      "Content-Type": "application/json; charset=utf-8"
-//    ],
-//    queryParameters: queryParameters
-//  )
-//  let networkService = DefaultNetworkService(config: configuration)
-//  return DefaultDataTransferService(with: networkService)
-//}
+func buildDataTransferService(appConfigurations: AppConfigurations) -> DefaultDataTransferService {
+  let queryParameters = [
+    "api_key": appConfigurations.apiKey,
+    "language": NSLocale.preferredLanguages.first ?? "en"
+  ]
+
+  let configuration = ApiDataNetworkConfig(
+    baseURL: appConfigurations.apiBaseURL,
+    headers: [
+      "Content-Type": "application/json; charset=utf-8"
+    ],
+    queryParameters: queryParameters
+  )
+  let networkService = DefaultNetworkService(config: configuration)
+  return DefaultDataTransferService(with: networkService)
+}
 
 struct AppConfigurations {
   let apiKey: String

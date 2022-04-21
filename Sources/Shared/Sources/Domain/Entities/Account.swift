@@ -11,4 +11,9 @@ import Foundation
 public struct AccountDomain {
   public let id: Int
   public let sessionId: String
+
+  public init(id: Int, sessionId: String) {
+    self.id = id
+    self.sessionId = sessionId
+  }
 }

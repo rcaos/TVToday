@@ -36,11 +36,10 @@ public class ShowListDemoCoordinator: Coordinator {
 
   private func showMainFeatures() {
     // MARK: - TODO, build ViewController with a button and navigate to Favorites and WhiteList
-    let detailsNavigation = UINavigationController(rootViewController: UIViewController())
-    detailsNavigation.tabBarItem = UITabBarItem(title: "Custom Details", image: UIImage(systemName: "magnifyingglass"), tag: 0)
-    buildListScene(in: detailsNavigation)
+    let listNavigation = UINavigationController(rootViewController: UIViewController())
+    buildListScene(in: listNavigation)
 
-    tabBarController.setViewControllers([detailsNavigation], animated: true)
+    tabBarController.setViewControllers([listNavigation], animated: true)
 
     self.window.rootViewController = tabBarController
     self.window.makeKeyAndVisible()
@@ -49,11 +48,13 @@ public class ShowListDemoCoordinator: Coordinator {
   private func buildListScene(in navigation: UINavigationController) {
     let dependencies = ShowListFeatureInterface.ModuleDependencies(apiDataTransferService: apiDataTransferService,
                                                                    imagesBaseURL: imagesBaseURL,
+                                                                   keychainRepository: FakeKeychainRepository(),
                                                                    showDetailsBuilder: self)
     let module = ShowListFeature.Module(dependencies: dependencies)
     let coordinator = module.buildModuleCoordinator(in: navigation, delegate: nil)
-    coordinator.navigate(to: .favoriteList)
-    // coordinator.navigate(to: .watchList)
+    //coordinator.navigate(to: .favoriteList) // Need a valid token
+     coordinator.navigate(to: .watchList) // Need a valid token
+    // coordinator.navigate(to: .genreList(genreId: 99, title: "Documentary"))
     childCoordinators.append(coordinator)
   }
 }
@@ -77,4 +78,23 @@ class EmptyDetailCoordinator: TVShowDetailCoordinatorProtocol {
   func navigate(to step: ShowDetailsStep) {
     print("EmptyDetailCoordinator navigate to \(step)")
   }
+}
+
+class FakeKeychainRepository: KeychainRepository {
+  func saveRequestToken(_ token: String) { }
+  func fetchRequestToken() -> String? { return nil }
+
+  // MARK: - Access Token
+  func saveAccessToken(_ token: String) { }
+  func fetchAccessToken() -> String? { return nil }
+
+  // MARK: - Currently User
+  func saveLoguedUser(_ accountId: Int, _ sessionId: String) { }
+
+  func fetchLoguedUser() -> AccountDomain? {
+    // rcaos account
+    return AccountDomain(id: 8415942, sessionId: "405fb2545c73cf1ea9530776416615405327f2f7")
+  }
+
+  func deleteLoguedUser() { }
 }

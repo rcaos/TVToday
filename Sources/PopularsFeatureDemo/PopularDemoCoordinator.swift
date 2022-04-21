@@ -74,4 +74,3 @@ class EmptyDetailCoordinator: TVShowDetailCoordinatorProtocol {
     print("EmptyDetailCoordinator navigate to \(step)")
   }
 }
-

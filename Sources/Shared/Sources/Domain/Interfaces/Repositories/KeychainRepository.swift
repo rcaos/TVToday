@@ -8,6 +8,7 @@
 
 import Foundation
 
+// MARK: - TODO, split in two repositories, one for Entity, not for storage
 public protocol KeychainRepository {
 
   // MARK: - Request Token

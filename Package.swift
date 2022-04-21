@@ -72,6 +72,10 @@ let package = Package(
       dependencies: [
         "AccountFeature",
         .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+      ],
+      exclude: [
+        "SignIn/Presentation/__Snapshots__",
+        "Account/Presentation/__Snapshots__"
       ]
     ),
     .target(
@@ -89,6 +93,9 @@ let package = Package(
       dependencies: [
         "AiringTodayFeature",
         .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+      ],
+      exclude: [
+        "Presentation/SnapshotTests/__Snapshots__"
       ]
     ),
     .target(
@@ -124,6 +131,9 @@ let package = Package(
       dependencies: [
         "PopularsFeature",
         .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+      ],
+      exclude: [
+        "Presentation/SnapshotTests/__Snapshots__"
       ]
     ),
     .target(
@@ -143,6 +153,10 @@ let package = Package(
       dependencies: [
         "SearchShowsFeature",
         .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+      ],
+      exclude: [
+        "SearchOptions/Presentation/SnapshotTests/__Snapshots__",
+        "SearchResults/Presentation/SnapshotTests/__Snapshots__"
       ]
     ),
     .target(
@@ -171,6 +185,10 @@ let package = Package(
       dependencies: [
         "ShowDetailsFeature",
         .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+      ],
+      exclude: [
+        "DetailsScene/Presentation/View/__Snapshots__",
+        "SeasonsScene/Presentation/View/__Snapshots__"
       ]
     ),
     .target(
@@ -193,6 +211,9 @@ let package = Package(
       dependencies: [
         "ShowListFeature",
         .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+      ],
+      exclude: [
+        "Presentation/SnapshotTests/__Snapshots__"
       ]
     ),
     .target(
@@ -205,7 +226,7 @@ let package = Package(
       ]
     ),
     .target(name: "UI", resources: [.process("Resources/")]),
-
+    
     // MARK: - Demo modules
     .target(name: "AiringTodayFeatureDemo", dependencies: ["AiringTodayFeature"]),
     .target(name: "PopularsFeatureDemo", dependencies: ["PopularsFeature"]),

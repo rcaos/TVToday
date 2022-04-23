@@ -15,6 +15,22 @@ March, 2022
 - ✅ Migrate from RxDataSources to UICollectionViewDiffableDataSource
 - ✅ Migrate from RxSwift to Combine
 
+ 
+## About modularization
+
+In this app, I show you an approach to how you could structure your app. 
+
+In a real big app, you will have more and big dependencies.
+
+During development time, compiling the whole app could take quite an amount of time.
+
+Currently, the app is divided into 22 modules with 06 feature modules. [See](https://github.com/rcaos/TVToday/blob/master/Package.swift)
+
+Each feature module has its own demo target with a custom demo entry point.
+
+So you need to leverage your Unit tests, Snapshot Tests and Demo targets to save your time.
+
+
 ## Built with
 - Swift 5
 - Combine

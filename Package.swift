@@ -37,7 +37,7 @@ let package = Package(
     .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.9.0"),
     .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "14.0.0"),
     .package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.0.0"),
-    .package(url: "https://github.com/realm/realm-cocoa.git", from: "10.5.2")
+    .package(url: "https://github.com/realm/realm-cocoa.git", from: "10.25.1")
   ],
   targets: [
     .target(

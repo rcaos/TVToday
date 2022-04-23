@@ -1,13 +1,13 @@
-[![Tuist badge](https://img.shields.io/badge/Powered%20by-Tuist-blue)](https://tuist.io)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Platforms](https://img.shields.io/badge/platform-iOS-lightgrey.svg)
 [![Swift Version](https://img.shields.io/badge/Swift-5-F16D39.svg?style=flat)](https://developer.apple.com/swift)
+[![Swift Package Manager compatible](https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg)](https://github.com/apple/swift-package-manager)
 
 TVShows iOS app built with Combine, using the [TMDb API](https://www.themoviedb.org/).
 
 ## What I'm working on
 April, 2022
-* ⏳ Add demo apps for feature modules. (wip
+* ✅ Add demo apps for feature modules.
 * ✅ Fix testability on Schedulers
 
 March, 2022
@@ -25,23 +25,16 @@ March, 2022
 - Kingfisher
 - Realm
 - KeychainSwift
-- Tuist
 - Swift Package Manager
 - Dark Mode support
 
 ## Requirements
-1. Tuist 1.50.0+
-2. Xcode 12.0+
+1. Xcode 13.0+
 
 ## Getting started
-
 1. Clone this repository.
-2. run `tuist generate`
-3. Open the workspace file and have fun.
+2. Open `App/TVToday.xcodeproj` and have fun.
 
-
-## Tuist
-This project is setup with [Tuist](https://tuist.io). Therefore no `xcodeproj`/`xcworkspace` is committed to this repo.
 
 ## Snapshot Tests
 Last snapshot tests were created using `Xcode 13.2.1`, with Simulator `iPhone SE (2nd generation) iOS 15.2`
@@ -50,7 +43,8 @@ Last snapshot tests were created using `Xcode 13.2.1`, with Simulator `iPhone SE
 - Monolith: https://github.com/rcaos/TVToday/releases/tag/v0.3.0
 - RxSwift + CocoaPods : https://github.com/rcaos/TVToday/releases/tag/v.0.4.0
 - RxSwift + SPM + Tuist: https://github.com/rcaos/TVToday/releases/tag/v0.5.0
-- Current branch: Combine + SPM + Tuist
+- Combine + SPM + Tuist https://github.com/rcaos/TVToday/releases/tag/v0.6.0
+- Current branch: Combine + SPM
 
 ## Screenshots
 

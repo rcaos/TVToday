@@ -56,7 +56,6 @@ let package = Package(
         "ShowListFeature",
         "UI"
       ]),
-    .testTarget(name: "AppFeatureTests", dependencies: ["AppFeature"]),
     .target(
       name: "AccountFeature",
       dependencies: [

@@ -12,29 +12,20 @@ import Persistence
 import Shared
 
 public final class CoreDataShowVisitedStorage {
-
-//  private let store: PersistenceStore<RealmShowVisited>
-  private let recentsShowsSubject = CurrentValueSubject<Bool, Never>(true)
-
   private let maxStorageLimit: Int
   private let coreDataStorage: CoreDataStorage
+  private let recentsShowsSubject = CurrentValueSubject<Bool, Never>(true)
 
   public init(maxStorageLimit: Int, coreDataStorage: CoreDataStorage) {
     self.maxStorageLimit = maxStorageLimit
     self.coreDataStorage = coreDataStorage
-    //    self.store.subscribeToChanges()
-    //    self.store.delegate = self
+    // self.store.subscribeToChanges()
+    // self.store.delegate = self
   }
-
-//  public init(realmDataStack: RealmDataStorage) {
-//    self.store = PersistenceStore(realmDataStack.realm)
-//    self.store.subscribeToChanges()
-//    self.store.delegate = self
-//  }
 }
 
 // MARK: - TODO, review, should returns a Defered + Futured or a Just ?
-extension DefaultShowsVisitedLocalStorage: ShowsVisitedLocalRepository {
+extension CoreDataShowVisitedStorage: ShowsVisitedLocalRepository {
 
   public func saveShow(id: Int, pathImage: String, userId: Int) -> AnyPublisher<Void, CustomError> {
     return Fail(error: CustomError.genericError).eraseToAnyPublisher()

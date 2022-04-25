@@ -28,20 +28,21 @@ public final class CoreDataShowVisitedStorage {
 extension CoreDataShowVisitedStorage: ShowsVisitedLocalRepository {
 
   public func saveShow(id: Int, pathImage: String, userId: Int) -> AnyPublisher<Void, CustomError> {
-    return Fail(error: CustomError.genericError).eraseToAnyPublisher()
-//    return Deferred { [store] in
-//      return Future<Void, CustomError> { [store] promise in
-//        let persistEntity = RealmShowVisited()
-//        persistEntity.id = id
-//        persistEntity.userId = userId
-//        persistEntity.pathImage = pathImage
-//
-//        store.saveVisit(entity: persistEntity) {
-//          promise(.success(()))
-//        }
-//      }
-//    }
-//    .eraseToAnyPublisher()
+    return Deferred { [coreDataStorage] in
+      return Future<Void, CustomError> { promise in
+        coreDataStorage.performBackgroundTask { context in
+          do {
+            _ = CDShowVisited.insert(into: context, pathImage: pathImage, userId: userId)
+            try context.save()
+            promise(.success(()))
+          } catch {
+            debugPrint("CoreDataSearchQueriesStorage Unresolved error \(error), \((error as NSError).userInfo)")
+            promise(.failure(.genericError))
+          }
+        }
+      }
+    }
+    .eraseToAnyPublisher()
   }
 
   public func fetchVisitedShows(userId: Int) -> AnyPublisher<[ShowVisited], CustomError> {

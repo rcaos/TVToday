@@ -106,12 +106,7 @@ let package = Package(
     .testTarget(name: "NetworkingTests", dependencies: ["Networking"]),
     .target(name: "NetworkingInterface"),
     .target(name: "Persistence", dependencies: ["Shared"]),
-    .target(
-      name: "PersistenceLive",
-      dependencies: [
-        "Persistence"
-      ]
-    ),
+    .target(name: "PersistenceLive", dependencies: ["Persistence"]),
     .target(
       name: "PopularsFeature",
       dependencies: [

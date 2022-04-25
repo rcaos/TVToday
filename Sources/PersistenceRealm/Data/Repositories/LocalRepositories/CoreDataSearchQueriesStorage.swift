@@ -35,6 +35,7 @@ extension CoreDataSearchQueriesStorage: SearchLocalRepository {
       return Future<Void, CustomError> { promise in
         coreDataStorage.performBackgroundTask { context in
           do {
+            _ = CDRecentSearch.insert(into: context, query: query, userId: userId)
             try context.save()
             promise(.success(()))
           } catch {

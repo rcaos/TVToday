@@ -6,6 +6,7 @@
 //
 
 import CoreData
+import Persistence
 
 final class CDRecentSearch: NSManagedObject {
 
@@ -21,6 +22,10 @@ final class CDRecentSearch: NSManagedObject {
     recentSearch.userId = userId
     recentSearch.createdAt = Date()
     return recentSearch
+  }
+
+  @nonobjc public class func fetchRequest() -> NSFetchRequest<CDRecentSearch> {
+    return NSFetchRequest<CDRecentSearch>(entityName: "CDRecentSearch")
   }
 }
 
@@ -40,5 +45,12 @@ extension NSManagedObjectContext {
 extension NSManagedObject {
   static var entityName: String {
     return entity().name!
+  }
+}
+
+extension CDRecentSearch {
+
+  func toDomain() -> Search {
+    return Search(query: query)
   }
 }

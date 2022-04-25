@@ -33,11 +33,10 @@ let package = Package(
     .library(name: "ShowListFeatureDemo", targets: ["ShowListFeatureDemo"])
   ],
   dependencies: [
-    .package(url: "https://github.com/pointfreeco/combine-schedulers", from: "0.5.3"),
-    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.9.0"),
     .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "14.0.0"),
     .package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.2.1"),
-    .package(url: "https://github.com/realm/realm-cocoa.git", from: "10.25.1")
+    .package(url: "https://github.com/pointfreeco/combine-schedulers", from: "0.5.3"),
+    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.9.0")
   ],
   targets: [
     .target(
@@ -110,9 +109,7 @@ let package = Package(
     .target(
       name: "PersistenceRealm",
       dependencies: [
-        "Persistence",
-        .product(name: "Realm", package: "realm-cocoa"),
-        .product(name: "RealmSwift", package: "realm-cocoa"),
+        "Persistence"
       ]
     ),
     .target(

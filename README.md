@@ -7,6 +7,9 @@ TVShows iOS app built with Combine, using the [TMDb API](https://www.themoviedb.
 
 ## What I'm working on
 April, 2022
+
+* ⏳ Moving from Realm to CoreData (_wip_
+* ⏳ Improve UseCases use.
 * ✅ Add demo apps for feature modules.
 * ✅ Fix testability on Schedulers
 

@@ -22,23 +22,20 @@ public final class CoreDataSearchQueriesStorage {
 extension CoreDataSearchQueriesStorage: SearchLocalRepository {
 
   public func saveSearch(query: String, userId: Int) -> AnyPublisher<Void, CustomError> {
-    return Fail(error: CustomError.genericError).eraseToAnyPublisher()
-
-    // MARK: - TODO,
-    // coreDataStorage.performBackgroundTask { context in }
-
-//    return Deferred { [store] in
-//      return Future<Void, CustomError> { [store] promise in
-//        let persistEntity = RealmSearchShow()
-//        persistEntity.query = query
-//        persistEntity.userId = userId
-//
-//        store.saveSearch(entitie: persistEntity) {
-//          promise(.success(()))
-//        }
-//      }
-//    }
-//    .eraseToAnyPublisher()
+    return Deferred { [coreDataStorage] in
+      return Future<Void, CustomError> { promise in
+        coreDataStorage.performBackgroundTask { context in
+          do {
+            try context.save()
+            promise(.success(()))
+          } catch {
+            debugPrint("CoreDataSearchQueriesStorage Unresolved error \(error), \((error as NSError).userInfo)")
+            promise(.failure(.genericError))
+          }
+        }
+      }
+    }
+    .eraseToAnyPublisher()
   }
 
   public func fetchSearchs(userId: Int) -> AnyPublisher<[Search], CustomError> {

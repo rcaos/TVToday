@@ -32,11 +32,11 @@ extension CoreDataShowVisitedStorage: ShowsVisitedLocalRepository {
       return Future<Void, CustomError> { promise in
         coreDataStorage.performBackgroundTask { context in
           do {
-            _ = CDShowVisited.insert(into: context, pathImage: pathImage, userId: userId)
+            _ = CDShowVisited.insert(into: context, showId: id, pathImage: pathImage, userId: userId)
             try context.save()
             promise(.success(()))
           } catch {
-            debugPrint("CoreDataSearchQueriesStorage Unresolved error \(error), \((error as NSError).userInfo)")
+            debugPrint("CoreDataShowVisitedStorage Unresolved error \(error), \((error as NSError).userInfo)")
             promise(.failure(.genericError))
           }
         }
@@ -46,12 +46,24 @@ extension CoreDataShowVisitedStorage: ShowsVisitedLocalRepository {
   }
 
   public func fetchVisitedShows(userId: Int) -> AnyPublisher<[ShowVisited], CustomError> {
-    return Fail(error: CustomError.genericError).eraseToAnyPublisher()
-//    return Just(
-//      store.find(for: userId).map { $0.asDomain() }
-//    )
-//      .setFailureType(to: CustomError.self)
-//      .eraseToAnyPublisher()
+    return Deferred { [coreDataStorage] in
+      return Future<[ShowVisited], CustomError> { promise in
+        coreDataStorage.performBackgroundTask { context in
+          do {
+            let request: NSFetchRequest = CDShowVisited.fetchRequest()
+            request.predicate = NSPredicate(format: "%K = %d", #keyPath(CDShowVisited.userId), userId)
+            request.sortDescriptors = [NSSortDescriptor(key: #keyPath(CDShowVisited.createdAt), ascending: false)]
+
+            let results = try context.fetch(request).map { $0.toDomain() }
+            promise(.success(results))
+          } catch {
+            debugPrint("CoreDataShowVisitedStorage Unresolved error \(error), \((error as NSError).userInfo)")
+            promise(.failure(.genericError))
+          }
+        }
+      }
+    }
+    .eraseToAnyPublisher()
   }
 
   public func recentVisitedShowsDidChange() -> AnyPublisher<Bool, Never> {

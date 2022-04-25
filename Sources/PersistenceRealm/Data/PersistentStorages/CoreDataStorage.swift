@@ -15,7 +15,7 @@ enum CoreDataStorageError: Error {
   case deleteError(Error)
 }
 
-final class CoreDataStorage {
+public final class CoreDataStorage {
 
   static let shared = CoreDataStorage()
 

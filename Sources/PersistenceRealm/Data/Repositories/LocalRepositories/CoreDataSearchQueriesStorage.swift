@@ -12,12 +12,9 @@ import Persistence
 import Shared
 
 public final class CoreDataSearchQueriesStorage {
-
-  private let maxStorageLimit: Int
   private let coreDataStorage: CoreDataStorage
 
-  public init(maxStorageLimit: Int, coreDataStorage: CoreDataStorage) {
-    self.maxStorageLimit = maxStorageLimit
+  public init(coreDataStorage: CoreDataStorage) {
     self.coreDataStorage = coreDataStorage
   }
 }

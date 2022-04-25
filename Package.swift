@@ -16,7 +16,7 @@ let package = Package(
     .library(name: "Networking", targets: ["Networking"]),
     .library(name: "NetworkingInterface", targets: ["NetworkingInterface"]),
     .library(name: "Persistence", targets: ["Persistence"]),
-    .library(name: "PersistenceRealm", targets: ["PersistenceRealm"]),
+    .library(name: "PersistenceLive", targets: ["PersistenceLive"]),
     .library(name: "PopularsFeature", targets: ["PopularsFeature"]),
     .library(name: "SearchShowsFeature", targets: ["SearchShowsFeature"]),
     .library(name: "Shared", targets: ["Shared"]),
@@ -47,7 +47,7 @@ let package = Package(
         "AiringTodayFeature",
         "KeyChainStorage",
         "Networking",
-        "PersistenceRealm",
+        "PersistenceLive",
         "PopularsFeature",
         "SearchShowsFeature",
         "Shared",
@@ -107,7 +107,7 @@ let package = Package(
     .target(name: "NetworkingInterface"),
     .target(name: "Persistence", dependencies: ["Shared"]),
     .target(
-      name: "PersistenceRealm",
+      name: "PersistenceLive",
       dependencies: [
         "Persistence"
       ]

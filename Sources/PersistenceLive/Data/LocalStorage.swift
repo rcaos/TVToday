@@ -9,6 +9,7 @@ import Persistence
 
 public protocol LocalStorageProtocol {
   func showVisitedStorage() -> ShowsVisitedLocalRepository
+  func recentsSearch() -> SearchLocalRepository
 }
 
 final public class LocalStorage: LocalStorageProtocol {
@@ -21,5 +22,10 @@ final public class LocalStorage: LocalStorageProtocol {
   public func showVisitedStorage() -> ShowsVisitedLocalRepository {
     let store: PersistenceStore<CDShowVisited> = PersistenceStore(coreDataStorage.persistentContainer)
     return CoreDataShowVisitedStorage(store: store)
+  }
+
+  public func recentsSearch() -> SearchLocalRepository {
+    let store: PersistenceStore<CDRecentSearch> = PersistenceStore(coreDataStorage.persistentContainer)
+    return CoreDataSearchQueriesStorage(store: store)
   }
 }

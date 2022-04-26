@@ -11,20 +11,22 @@ import CoreData
 import Persistence
 import Shared
 
-public final class CoreDataSearchQueriesStorage {
-  private let coreDataStorage: CoreDataStorage
+final class CoreDataSearchQueriesStorage {
+  private let store: PersistenceStore<CDRecentSearch>
 
-  public init(coreDataStorage: CoreDataStorage) {
-    self.coreDataStorage = coreDataStorage
+  public init(store: PersistenceStore<CDRecentSearch>) {
+    self.store = store
   }
 }
 
 extension CoreDataSearchQueriesStorage: SearchLocalRepository {
 
   public func saveSearch(query: String, userId: Int) -> AnyPublisher<Void, CustomError> {
-    return Deferred { [coreDataStorage] in
+    return Deferred { [store] in
       return Future<Void, CustomError> { promise in
-        coreDataStorage.performBackgroundTask { context in
+        store.managedObjectContext.perform {
+          let context = store.managedObjectContext
+
           do {
             // Remove first
             let fetchRequest: NSFetchRequest<NSFetchRequestResult> = CDRecentSearch.fetchRequest()
@@ -47,15 +49,15 @@ extension CoreDataSearchQueriesStorage: SearchLocalRepository {
   }
 
   public func fetchSearchs(userId: Int) -> AnyPublisher<[Search], CustomError> {
-    return Deferred { [coreDataStorage] in
+    return Deferred { [store] in
       return Future<[Search], CustomError> { promise in
-        coreDataStorage.performBackgroundTask { context in
+        store.managedObjectContext.perform {
           do {
             let request: NSFetchRequest = CDRecentSearch.fetchRequest()
             request.predicate = NSPredicate(format: "%K = %d", #keyPath(CDRecentSearch.userId), userId)
             request.sortDescriptors = [NSSortDescriptor(key: #keyPath(CDRecentSearch.createdAt), ascending: false)]
 
-            let results = try context.fetch(request).map { $0.toDomain() }
+            let results = try store.managedObjectContext.fetch(request).map { $0.toDomain() }
             promise(.success(results))
           } catch {
             debugPrint("CoreDataSearchQueriesStorage Unresolved error \(error), \((error as NSError).userInfo)")

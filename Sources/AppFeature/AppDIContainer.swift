@@ -46,8 +46,12 @@ public class AppDIContainer {
     return DefaultDataTransferService(with: networkService)
   }()
 
+  private lazy var localStorage: LocalStorage = {
+    return LocalStorage(coreDataStorage: .shared)
+  }()
+
   lazy var showsPersistence: ShowsVisitedLocalRepository = {
-    return CoreDataShowVisitedStorage(maxStorageLimit: 10, coreDataStorage: CoreDataStorage.shared)
+    return localStorage.showVisitedStorage()
   }()
 
   lazy var searchPersistence: SearchLocalRepository = {

@@ -110,7 +110,7 @@ let package = Package(
       name: "PersistenceLive",
       dependencies: ["Persistence"],
       resources: [
-        .copy("Data/CoreDataStorage.xcdatamodeld")
+        .copy("Internal/CoreDataStorage.xcdatamodeld")
       ]),
     .target(
       name: "PopularsFeature",

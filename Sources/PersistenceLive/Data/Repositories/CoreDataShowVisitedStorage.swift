@@ -32,11 +32,13 @@ extension CoreDataShowVisitedStorage: ShowsVisitedLocalRepository {
       return Future<Void, CustomError> { promise in
         coreDataStorage.performBackgroundTask { context in
           do {
+            // Remove first
             let fetchRequest: NSFetchRequest<NSFetchRequestResult> = CDShowVisited.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "%K = %i", #keyPath(CDShowVisited.id), id)
             let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
             try context.execute(deleteRequest)
 
+            // Save visit
             _ = CDShowVisited.insert(into: context, showId: id, pathImage: pathImage, userId: userId)
             try context.save()
             promise(.success(()))

@@ -24,13 +24,19 @@ final class CDShowVisited: NSManagedObject {
     return showVisited
   }
 
-  @nonobjc public class func fetchRequest() -> NSFetchRequest<CDShowVisited> {
-    return NSFetchRequest<CDShowVisited>(entityName: "CDShowVisited")
-  }
+//  @nonobjc public class func fetchRequest() -> NSFetchRequest<CDShowVisited> {
+//    return NSFetchRequest<CDShowVisited>(entityName: "CDShowVisited")
+//  }
 }
 
 extension CDShowVisited {
   func toDomain() -> ShowVisited {
     return ShowVisited(id: id, pathImage: pathImage)
+  }
+}
+
+extension CDShowVisited: Managed {
+  static var defaultSortDescriptors: [NSSortDescriptor] {
+    return [NSSortDescriptor(key: #keyPath(createdAt), ascending: false)]
   }
 }

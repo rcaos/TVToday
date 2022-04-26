@@ -23,10 +23,6 @@ final class CDShowVisited: NSManagedObject {
     showVisited.userId = userId
     return showVisited
   }
-
-//  @nonobjc public class func fetchRequest() -> NSFetchRequest<CDShowVisited> {
-//    return NSFetchRequest<CDShowVisited>(entityName: "CDShowVisited")
-//  }
 }
 
 extension CDShowVisited {

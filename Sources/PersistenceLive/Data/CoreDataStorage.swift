@@ -17,12 +17,18 @@ enum CoreDataStorageError: Error {
 
 public final class CoreDataStorage {
 
-  static let shared = CoreDataStorage()
+  public static let shared = CoreDataStorage()
 
-  private init() {}
+  private init() { }
 
   private lazy var persistentContainer: NSPersistentContainer = {
-    let container = NSPersistentContainer(name: "CoreDataStorage")
+    guard let modelURL = Bundle.module.url(forResource: "CoreDataStorage", withExtension: "momd"),
+          let objectModel = NSManagedObjectModel(contentsOf: modelURL) else {
+            fatalError("CoreDataStorage cannot found resource")
+          }
+
+    let container = NSPersistentContainer(name: "CoreDataStorage", managedObjectModel: objectModel)
+
     container.loadPersistentStores { _, error in
       if let error = error as NSError? {
         assertionFailure("CoreDataStorage Unresolved error \(error), \(error.userInfo)")

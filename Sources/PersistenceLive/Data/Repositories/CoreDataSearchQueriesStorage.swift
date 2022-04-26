@@ -26,6 +26,13 @@ extension CoreDataSearchQueriesStorage: SearchLocalRepository {
       return Future<Void, CustomError> { promise in
         coreDataStorage.performBackgroundTask { context in
           do {
+            // Remove first
+            let fetchRequest: NSFetchRequest<NSFetchRequestResult> = CDRecentSearch.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "%K = %@", #keyPath(CDRecentSearch.query), query)
+            let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+            try context.execute(deleteRequest)
+
+            // Save recent search
             _ = CDRecentSearch.insert(into: context, query: query, userId: userId)
             try context.save()
             promise(.success(()))

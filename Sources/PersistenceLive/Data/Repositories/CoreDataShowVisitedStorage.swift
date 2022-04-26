@@ -11,27 +11,28 @@ import CoreData
 import Persistence
 import Shared
 
-public final class CoreDataShowVisitedStorage {
-  private let maxStorageLimit: Int
-  private let coreDataStorage: CoreDataStorage
+final class CoreDataShowVisitedStorage {
+  private let store: PersistenceStore<CDShowVisited>
   private let recentsShowsSubject = CurrentValueSubject<Bool, Never>(true)
 
-  public init(maxStorageLimit: Int, coreDataStorage: CoreDataStorage) {
-    self.maxStorageLimit = maxStorageLimit
-    self.coreDataStorage = coreDataStorage
-    // self.store.subscribeToChanges()
-    // self.store.delegate = self
+  init(store: PersistenceStore<CDShowVisited>) {
+    self.store = store
+    self.store.configureResultsController(
+      sortDescriptors: [NSSortDescriptor(key: #keyPath(CDShowVisited.createdAt), ascending: false)]
+    )
+    self.store.delegate = self
   }
 }
 
-// MARK: - TODO, review, should returns a Defered + Futured or a Just ?
 extension CoreDataShowVisitedStorage: ShowsVisitedLocalRepository {
 
   public func saveShow(id: Int, pathImage: String, userId: Int) -> AnyPublisher<Void, CustomError> {
-    return Deferred { [coreDataStorage] in
+    return Deferred { [store] in
       return Future<Void, CustomError> { promise in
-        coreDataStorage.performBackgroundTask { context in
+        store.managedObjectContext.perform {
           do {
+            let context = store.managedObjectContext
+
             // Remove first
             let fetchRequest: NSFetchRequest<NSFetchRequestResult> = CDShowVisited.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "%K = %i", #keyPath(CDShowVisited.id), id)
@@ -53,15 +54,15 @@ extension CoreDataShowVisitedStorage: ShowsVisitedLocalRepository {
   }
 
   public func fetchVisitedShows(userId: Int) -> AnyPublisher<[ShowVisited], CustomError> {
-    return Deferred { [coreDataStorage] in
+    return Deferred { [store] in
       return Future<[ShowVisited], CustomError> { promise in
-        coreDataStorage.performBackgroundTask { context in
+        store.managedObjectContext.perform {
           do {
             let request: NSFetchRequest = CDShowVisited.fetchRequest()
             request.predicate = NSPredicate(format: "%K = %d", #keyPath(CDShowVisited.userId), userId)
             request.sortDescriptors = [NSSortDescriptor(key: #keyPath(CDShowVisited.createdAt), ascending: false)]
 
-            let results = try context.fetch(request).map { $0.toDomain() }
+            let results = try store.managedObjectContext.fetch(request).map { $0.toDomain() }
             promise(.success(results))
           } catch {
             debugPrint("CoreDataShowVisitedStorage Unresolved error \(error), \((error as NSError).userInfo)")
@@ -78,9 +79,13 @@ extension CoreDataShowVisitedStorage: ShowsVisitedLocalRepository {
   }
 }
 
-// MARK: - RealmDataStorageDelegate
-//extension DefaultShowsVisitedLocalStorage: PersistenceStoreDelegate {
-//  func persistenceStore(didUpdateEntity update: Bool) {
-//    recentsShowsSubject.send(update)
-//  }
-//}
+// MARK: - PersistenceStoreDelegate
+extension CoreDataShowVisitedStorage: PersistenceStoreDelegate {
+  func persistenceStore(willUpdateEntity shouldPrepare: Bool) {
+    recentsShowsSubject.send(true)
+  }
+
+  func persistenceStore(didUpdateEntity update: Bool) {
+    _ = 1
+  }
+}

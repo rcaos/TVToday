@@ -21,7 +21,7 @@ public final class CoreDataStorage {
 
   private init() { }
 
-  private lazy var persistentContainer: NSPersistentContainer = {
+  lazy var persistentContainer: NSPersistentContainer = {
     guard let modelURL = Bundle.module.url(forResource: "CoreDataStorage", withExtension: "momd"),
           let objectModel = NSManagedObjectModel(contentsOf: modelURL) else {
             fatalError("CoreDataStorage cannot found resource")
@@ -36,20 +36,4 @@ public final class CoreDataStorage {
     }
     return container
   }()
-
-  // MARK: - Core Data Saving support
-//  func saveContext() {
-//    let context = persistentContainer.viewContext
-//    if context.hasChanges {
-//      do {
-//        try context.save()
-//      } catch {
-//        assertionFailure("CoreDataStorage Unresolved error \(error), \((error as NSError).userInfo)")
-//      }
-//    }
-//  }
-
-  func performBackgroundTask(_ block: @escaping (NSManagedObjectContext) -> Void) {
-    persistentContainer.performBackgroundTask(block)
-  }
 }

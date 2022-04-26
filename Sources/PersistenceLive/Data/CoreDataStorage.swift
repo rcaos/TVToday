@@ -8,13 +8,6 @@
 
 import CoreData
 
-// MARK: - TODO, should below to Persistence
-enum CoreDataStorageError: Error {
-  case readError(Error)
-  case saveError(Error)
-  case deleteError(Error)
-}
-
 public final class CoreDataStorage {
 
   public static let shared = CoreDataStorage()

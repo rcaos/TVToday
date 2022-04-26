@@ -55,7 +55,7 @@ public class AppDIContainer {
   }()
 
   lazy var searchPersistence: SearchLocalRepository = {
-    return CoreDataSearchQueriesStorage(coreDataStorage: CoreDataStorage.shared)
+    return localStorage.recentsSearch()
   }()
 
   // MARK: - Airing Today Module

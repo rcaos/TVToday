@@ -17,9 +17,7 @@ final class CoreDataShowVisitedStorage {
 
   init(store: PersistenceStore<CDShowVisited>) {
     self.store = store
-    self.store.configureResultsController(
-      sortDescriptors: [NSSortDescriptor(key: #keyPath(CDShowVisited.createdAt), ascending: false)]
-    )
+    self.store.configureResultsController(sortDescriptors: CDShowVisited.defaultSortDescriptors)
     self.store.delegate = self
   }
 }
@@ -29,25 +27,9 @@ extension CoreDataShowVisitedStorage: ShowsVisitedLocalRepository {
   public func saveShow(id: Int, pathImage: String, userId: Int) -> AnyPublisher<Void, CustomError> {
     return Deferred { [store] in
       return Future<Void, CustomError> { promise in
-        store.managedObjectContext.perform {
-          do {
-            let context = store.managedObjectContext
-
-            // Remove first
-            let fetchRequest: NSFetchRequest<NSFetchRequestResult> = CDShowVisited.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "%K = %i", #keyPath(CDShowVisited.id), id)
-            let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-            try context.execute(deleteRequest)
-
-            // Save visit
-            _ = CDShowVisited.insert(into: context, showId: id, pathImage: pathImage, userId: userId)
-            try context.save()
-            promise(.success(()))
-          } catch {
-            debugPrint("CoreDataShowVisitedStorage Unresolved error \(error), \((error as NSError).userInfo)")
-            promise(.failure(.genericError))
-          }
-        }
+        store.delete(showId: id)
+        store.insert(id: id, pathImage: pathImage, userId: userId)
+        promise(.success(()))
       }
     }
     .eraseToAnyPublisher()
@@ -56,19 +38,8 @@ extension CoreDataShowVisitedStorage: ShowsVisitedLocalRepository {
   public func fetchVisitedShows(userId: Int) -> AnyPublisher<[ShowVisited], CustomError> {
     return Deferred { [store] in
       return Future<[ShowVisited], CustomError> { promise in
-        store.managedObjectContext.perform {
-          do {
-            let request: NSFetchRequest = CDShowVisited.fetchRequest()
-            request.predicate = NSPredicate(format: "%K = %d", #keyPath(CDShowVisited.userId), userId)
-            request.sortDescriptors = [NSSortDescriptor(key: #keyPath(CDShowVisited.createdAt), ascending: false)]
-
-            let results = try store.managedObjectContext.fetch(request).map { $0.toDomain() }
-            promise(.success(results))
-          } catch {
-            debugPrint("CoreDataShowVisitedStorage Unresolved error \(error), \((error as NSError).userInfo)")
-            promise(.failure(.genericError))
-          }
-        }
+        let results = store.findAll(for: userId).map { $0.toDomain() }
+        promise(.success(results))
       }
     }
     .eraseToAnyPublisher()

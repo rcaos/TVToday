@@ -55,11 +55,7 @@ extension CoreDataShowVisitedStorage: ShowsVisitedLocalRepository {
 
 // MARK: - PersistenceStoreDelegate
 extension CoreDataShowVisitedStorage: PersistenceStoreDelegate {
-  func persistenceStore(willUpdateEntity shouldPrepare: Bool) {
-    recentsShowsSubject.send(true)
-  }
-
   func persistenceStore(didUpdateEntity update: Bool) {
-    _ = 1
+    recentsShowsSubject.send(update)
   }
 }

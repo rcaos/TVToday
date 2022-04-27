@@ -8,7 +8,6 @@
 import CoreData
 
 protocol PersistenceStoreDelegate: AnyObject {
-  func persistenceStore(willUpdateEntity shouldPrepare: Bool)
   func persistenceStore(didUpdateEntity update: Bool)
 }
 
@@ -58,10 +57,6 @@ class PersistenceStore<Entity: NSManagedObject>: NSObject, NSFetchedResultsContr
   }
 
   // MARK: - NSFetchedResultsControllerDelegate
-  public func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-    delegate?.persistenceStore(willUpdateEntity: true)
-  }
-
   public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
                          didChange anObject: Any,
                          at indexPath: IndexPath?,
@@ -71,9 +66,5 @@ class PersistenceStore<Entity: NSManagedObject>: NSObject, NSFetchedResultsContr
     if anObject as? Entity != nil {
       delegate?.persistenceStore(didUpdateEntity: true)
     }
-  }
-
-  public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-    delegate?.persistenceStore(willUpdateEntity: false)
   }
 }

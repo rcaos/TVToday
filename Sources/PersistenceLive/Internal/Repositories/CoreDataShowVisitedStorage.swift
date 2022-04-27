@@ -14,8 +14,10 @@ import Shared
 final class CoreDataShowVisitedStorage {
   private let store: PersistenceStore<CDShowVisited>
   private let recentsShowsSubject = CurrentValueSubject<Bool, Never>(true)
+  private let limitStorage: Int
 
-  init(store: PersistenceStore<CDShowVisited>) {
+  init(limitStorage: Int, store: PersistenceStore<CDShowVisited>) {
+    self.limitStorage = limitStorage
     self.store = store
     self.store.configureResultsController(sortDescriptors: CDShowVisited.defaultSortDescriptors)
     self.store.delegate = self
@@ -25,9 +27,10 @@ final class CoreDataShowVisitedStorage {
 extension CoreDataShowVisitedStorage: ShowsVisitedLocalRepository {
 
   public func saveShow(id: Int, pathImage: String, userId: Int) -> AnyPublisher<Void, CustomError> {
-    return Deferred { [store] in
+    return Deferred { [store, limitStorage] in
       return Future<Void, CustomError> { promise in
         store.delete(showId: id)
+        store.deleteLimitStorage(userId: userId, until: limitStorage)
         store.insert(id: id, pathImage: pathImage, userId: userId)
         promise(.success(()))
       }

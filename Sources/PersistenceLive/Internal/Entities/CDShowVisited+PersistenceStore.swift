@@ -31,4 +31,17 @@ extension PersistenceStore where Entity == CDShowVisited {
       fetchRequest.predicate = NSPredicate(format: "%K = %d", #keyPath(CDShowVisited.userId), userId)
     })
   }
+
+  func deleteLimitStorage(userId: Int, until limit: Int) {
+    managedObjectContext.performChanges { [managedObjectContext] in
+      do {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = CDShowVisited.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "%K = %i", #keyPath(CDShowVisited.userId), userId)
+        fetchRequest.sortDescriptors = CDShowVisited.defaultSortDescriptors
+        fetchRequest.fetchOffset = (limit > 0) ? limit - 1 : 0
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        try managedObjectContext.execute(deleteRequest)
+      } catch { }
+    }
+  }
 }

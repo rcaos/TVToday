@@ -51,7 +51,7 @@ public class AppDIContainer {
   }()
 
   lazy var showsPersistence: ShowsVisitedLocalRepository = {
-    return localStorage.showVisitedStorage()
+    return localStorage.showVisitedStorage(limitStorage: 10)
   }()
 
   lazy var searchPersistence: SearchLocalRepository = {

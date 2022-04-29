@@ -11,7 +11,7 @@ import AiringTodayFeature
 import Networking
 import NetworkingInterface
 import Persistence
-import PersistenceRealm
+import PersistenceLive
 import PopularsFeature
 import Shared
 import SearchShowsFeature
@@ -46,18 +46,16 @@ public class AppDIContainer {
     return DefaultDataTransferService(with: networkService)
   }()
 
-  lazy var realmDataStorage: RealmDataStorage = {
-    return RealmDataStorage()
+  private lazy var localStorage: LocalStorage = {
+    return LocalStorage(coreDataStorage: .shared)
   }()
 
   lazy var showsPersistence: ShowsVisitedLocalRepository = {
-    let localStorage = DefaultShowsVisitedLocalStorage(realmDataStack: realmDataStorage)
-    return DefaultShowsVisitedLocalRepository(showsVisitedLocalStorage: localStorage)
+    return localStorage.showVisitedStorage(limitStorage: 10)
   }()
 
   lazy var searchPersistence: SearchLocalRepository = {
-    let localStorage = DefaultSearchLocalStorage(realmDataStack: realmDataStorage)
-    return DefaultSearchLocalRepository(searchLocalStorage: localStorage)
+    return localStorage.recentsSearch()
   }()
 
   // MARK: - Airing Today Module

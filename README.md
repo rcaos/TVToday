@@ -8,8 +8,8 @@ TVShows iOS app built with Combine, using the [TMDb API](https://www.themoviedb.
 ## What I'm working on
 April, 2022
 
-* ⏳ Moving from Realm to CoreData (_wip_
-* ⏳ Improve UseCases use.
+* ⏳ Improve UseCases and Repositories use (_wip_
+* ✅ Moving from Realm to Core Data
 * ✅ Add demo apps for feature modules.
 * ✅ Fix testability on Schedulers
 
@@ -21,7 +21,7 @@ March, 2022
  
 ## About modularization
 
-In this app, I show you an approach to how you could structure your app. 
+In this project, I show you an approach to how you could structure your app. 
 
 In a real big app, you will have more and big dependencies.
 
@@ -31,7 +31,7 @@ Currently, the app is divided into 22 modules with 06 feature modules. [See](htt
 
 Each feature module has its own demo target with a custom demo entry point.
 
-So you need to leverage your Unit tests, Snapshot Tests and Demo targets to save your time.
+So you need to leverage your Unit tests, Snapshot Tests and Demo targets to save your time and boost your productivity.
 
 
 ## Built with
@@ -42,7 +42,7 @@ So you need to leverage your Unit tests, Snapshot Tests and Demo targets to save
 - MVVM
 - Dependency Injection
 - Kingfisher
-- Realm
+- Core Data
 - KeychainSwift
 - Swift Package Manager
 - Dark Mode support

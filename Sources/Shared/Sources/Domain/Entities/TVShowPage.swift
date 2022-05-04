@@ -22,10 +22,10 @@ public struct TVShowPage {
     public let firstAirDate: String // "2010-08-11"
 
     // "https://image.tmdb.org/t/p/w780/Ap86RyRhP7ikeRCpysnfC9PO2H0.jpg"  1. Cambia baseURL and Size
-    public let posterPath: URL //    "/Ap86RyRhP7ikeRCpysnfC9PO2H0.jpg"
+    public let posterPath: URL? //    "/Ap86RyRhP7ikeRCpysnfC9PO2H0.jpg"
 
     // "https://image.tmdb.org/t/p/w780/5dJccl3yF1Er6HVZDceYZC3rzhh.jpg"
-    public let backDropPath: URL //  "/5dJccl3yF1Er6HVZDceYZC3rzhh.jpg"
+    public let backDropPath: URL? //  "/5dJccl3yF1Er6HVZDceYZC3rzhh.jpg"
 
     public let genreIds: [Int]  // [35]
     public let voteAverage: Double // 7.3

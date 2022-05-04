@@ -20,16 +20,13 @@ public final class DefaultTVShowPageMapper: TVShowPageMapper {
     )
   }
 
-  private func mapTVShow(_ show: TVShow2DTO, imageBasePath: String, imageSize: ImageSize) -> TVShowPage.TVShow? {
+  private func mapTVShow(_ show: TVShow2DTO, imageBasePath: String, imageSize: ImageSize) -> TVShowPage.TVShow {
 
     // MARK: - TODO, handle here placeholder poster and backdrop
-    guard let posterPath = show.posterPath,
-          let posterPathURL = URL(string: "\(imageBasePath)/t/p/\(imageSize.rawValue)\(posterPath)"),
-          let backPath = show.backDropPath,
-          let backPathURL = URL(string: "\(imageBasePath)/t/p/\(imageSize.rawValue)\(backPath)") else {
-            print("log this error to unwrap=[\(show)]")
-            return nil
-          }
+    let posterPath = show.posterPath ?? ""
+    let posterPathURL = URL(string: "\(imageBasePath)/t/p/\(imageSize.rawValue)\(posterPath)")
+    let backPath = show.backDropPath ?? ""
+    let backPathURL = URL(string: "\(imageBasePath)/t/p/\(imageSize.rawValue)\(backPath)")
 
     return TVShowPage.TVShow(
       id: show.id,

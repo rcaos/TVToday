@@ -39,4 +39,10 @@ extension DefaultTVShowsPageRepository: TVShowsPageRepository {
       .map { self.mapper.mapTVShowPage($0, imageBasePath: self.imageBasePath, imageSize: .medium) }
       .eraseToAnyPublisher()
   }
+
+  public func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowPage, DataTransferError> {
+    return showsPageRemoteDataSource.searchShowsFor(query: query, page: page)
+      .map { self.mapper.mapTVShowPage($0, imageBasePath: self.imageBasePath, imageSize: .medium) }
+      .eraseToAnyPublisher()
+  }
 }

@@ -48,4 +48,16 @@ public final class DefaultTVShowsRemoteDataSource: TVShowsRemoteDataSource {
     )
     return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
   }
+
+  public func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError> {
+    let endpoint = Endpoint<TVShowPageDTO>(
+      path: "3/search/tv",
+      method: .get,
+      queryParameters: [
+        "query": query,
+        "page": page
+      ]
+    )
+    return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
+  }
 }

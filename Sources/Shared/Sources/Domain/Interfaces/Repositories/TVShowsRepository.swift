@@ -52,6 +52,7 @@ public protocol TVShowsPageRepository {
   func fetchAiringTodayShows(page: Int) -> AnyPublisher<TVShowPage, DataTransferError>
   func fetchPopularShows(page: Int) -> AnyPublisher<TVShowPage, DataTransferError>
   func fetchShowsByGenre(genreId: Int, page: Int) -> AnyPublisher<TVShowPage, DataTransferError>
+  func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowPage, DataTransferError>
 }
 
 public protocol TVShowsRemoteDataSource {
@@ -59,6 +60,7 @@ public protocol TVShowsRemoteDataSource {
   func fetchAiringTodayShows(page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError>
   func fetchPopularShows(page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError>
   func fetchShowsByGenre(genreId: Int, page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError>
+  func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError>
 }
 
 public protocol TVShowPageMapper {

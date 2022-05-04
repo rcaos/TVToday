@@ -10,7 +10,7 @@ import CombineSchedulers
 import NetworkingInterface
 import Shared
 
-func mapTVShow2IntoTVShow(_ show: TVShow2) -> TVShow {
+func mapTVShow2IntoTVShow(_ show: TVShowPage.TVShow) -> TVShow {
   // MARK: - TODO, Remove this
   return TVShow(id: show.id,
                 name: show.name,
@@ -28,7 +28,7 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol {
   let fetchTVShowsUseCase: FetchTVShowsUseCase
   let viewStateObservableSubject = CurrentValueSubject<SimpleViewState<AiringTodayCollectionViewModel>, Never>(.loading)
 
-  var shows: [TVShow2]
+  var shows: [TVShowPage.TVShow]
   var showsCells: [AiringTodayCollectionViewModel] = []
 
   let scheduler: AnySchedulerOf<DispatchQueue>
@@ -45,7 +45,7 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol {
     shows = []
   }
 
-  private func mapToCell(entities: [TVShow2]) -> [AiringTodayCollectionViewModel] {
+  private func mapToCell(entities: [TVShowPage.TVShow]) -> [AiringTodayCollectionViewModel] {
     return entities
       .map { mapTVShow2IntoTVShow($0) }
       .map { AiringTodayCollectionViewModel(show: $0) }

@@ -33,8 +33,13 @@ final class DIContainer {
   }
 
   // MARK: - Uses Cases
-  fileprivate func makeFetchPopularShowsUseCase() -> FetchTVShowsUseCase {
-    return DefaultFetchPopularTVShowsUseCase(tvShowsRepository: showsRepository)
+  private func makeFetchPopularShowsUseCase() -> FetchTVShowsUseCase {
+    let showsPageRepository = DefaultTVShowsPageRepository(
+      showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      mapper: DefaultTVShowPageMapper(),
+      imageBasePath: dependencies.imagesBaseURL
+    )
+    return DefaultFetchPopularTVShowsUseCase(tvShowsPageRepository: showsPageRepository, tvShowsRepository: showsRepository)
   }
 }
 

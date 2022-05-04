@@ -29,4 +29,8 @@ public final class DefaultUserFavoritesShowsUseCase: FetchTVShowsUseCase {
                                                       userId: userLogged.id,
                                                       sessionId: userLogged.sessionId)
   }
+
+  public func execute2(requestValue: FetchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowPage, DataTransferError> {
+    return Empty().setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
+  }
 }

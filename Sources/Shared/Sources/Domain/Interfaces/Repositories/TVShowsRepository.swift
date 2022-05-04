@@ -50,11 +50,13 @@ public protocol TVShowsRepository {
 
 public protocol TVShowsPageRepository {
   func fetchAiringTodayShows(page: Int) -> AnyPublisher<TVShowPage, DataTransferError>
+  func fetchPopularShows(page: Int) -> AnyPublisher<TVShowPage, DataTransferError>
 }
 
 public protocol TVShowsRemoteDataSource {
   // Internally this use DataTransferService
   func fetchAiringTodayShows(page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError>
+  func fetchPopularShows(page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError>
 }
 
 public protocol TVShowPageMapper {

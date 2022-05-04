@@ -24,4 +24,13 @@ public final class DefaultTVShowsRemoteDataSource: TVShowsRemoteDataSource {
     )
     return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
   }
+
+  public func fetchPopularShows(page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError> {
+    let endpoint = Endpoint<TVShowPageDTO>(
+      path: "3/tv/popular",
+      method: .get,
+      queryParameters: ["page": page]
+    )
+    return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
+  }
 }

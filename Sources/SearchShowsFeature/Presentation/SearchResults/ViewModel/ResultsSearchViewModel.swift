@@ -102,16 +102,28 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
       .store(in: &disposeBag)
   }
 
-  private func processFetched(for response: TVShowResult) {
-    let fetchedShows = response.results ?? []
-
-    if fetchedShows.isEmpty {
+  private func processFetched(for response: TVShowPage) {
+    if response.showsList.isEmpty {
       viewState.send( .empty )
     } else {
       viewState.send( .populated )
     }
 
-    createSectionModel(recentSearchs: [], resultShows: fetchedShows)
+    createSectionModel(recentSearchs: [], resultShows: response.showsList.map { mapTVShow2IntoTVShow($0) } )
+  }
+
+  private func mapTVShow2IntoTVShow(_ show: TVShowPage.TVShow) -> TVShow {
+    // MARK: - TODO, Remove this
+    return TVShow(id: show.id,
+                  name: show.name,
+                  voteAverage: show.voteAverage,
+                  firstAirDate: show.firstAirDate,
+                  posterPath: show.posterPath?.absoluteString ?? "",
+                  genreIds: show.genreIds,
+                  backDropPath: show.backDropPath?.absoluteString ?? "",
+                  overview: show.overview,
+                  originCountry: [],
+                  voteCount: show.voteCount)
   }
 
   private func createSectionModel(recentSearchs: [String], resultShows: [TVShow]) {

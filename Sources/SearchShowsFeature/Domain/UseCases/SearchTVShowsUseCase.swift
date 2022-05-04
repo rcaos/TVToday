@@ -12,7 +12,7 @@ import NetworkingInterface
 import Foundation
 
 public protocol SearchTVShowsUseCase {
-  func execute(requestValue: SearchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowResult, DataTransferError>
+  func execute(requestValue: SearchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowPage, DataTransferError>
 }
 
 public struct SearchTVShowsUseCaseRequestValue {
@@ -23,11 +23,11 @@ public struct SearchTVShowsUseCaseRequestValue {
 // MARK: - SearchTVShowsUseCase
 final class DefaultSearchTVShowsUseCase: SearchTVShowsUseCase {
 
-  private let tvShowsRepository: TVShowsRepository
+  private let tvShowsRepository: TVShowsPageRepository
   private let searchsLocalRepository: SearchLocalRepository
   private let keychainRepository: KeychainRepository
 
-  public init(tvShowsRepository: TVShowsRepository,
+  public init(tvShowsRepository: TVShowsPageRepository,
               keychainRepository: KeychainRepository,
               searchsLocalRepository: SearchLocalRepository) {
     self.tvShowsRepository = tvShowsRepository
@@ -35,19 +35,19 @@ final class DefaultSearchTVShowsUseCase: SearchTVShowsUseCase {
     self.searchsLocalRepository = searchsLocalRepository
   }
 
-  func execute(requestValue: SearchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowResult, DataTransferError> {
+  func execute(requestValue: SearchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowPage, DataTransferError> {
     var idLogged = 0
     if let userLogged = keychainRepository.fetchLoguedUser() {
       idLogged = userLogged.id
     }
 
     return tvShowsRepository.searchShowsFor(query: requestValue.query, page: requestValue.page)
-      .receive(on: DispatchQueue.main)
-      .flatMap { resultSearch -> AnyPublisher<TVShowResult, DataTransferError> in
+      .receive(on: DispatchQueue.main)  // MARK: - TODO, Change
+      .flatMap { resultSearch -> AnyPublisher<TVShowPage, DataTransferError> in
         if requestValue.page == 1 {
           return self.searchsLocalRepository.saveSearch(query: requestValue.query, userId: idLogged)
             .map { _ in resultSearch }
-            .mapError { _ -> DataTransferError in DataTransferError.noResponse  }
+            .mapError { _ -> DataTransferError in DataTransferError.noResponse }
             .eraseToAnyPublisher()
         } else {
           return Just(resultSearch).setFailureType(to: DataTransferError.self).eraseToAnyPublisher()

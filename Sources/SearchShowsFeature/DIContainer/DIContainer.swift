@@ -46,10 +46,17 @@ final class DIContainer {
   }
 
   // MARK: - Search Feature Uses Cases
-  fileprivate func makeSearchShowsUseCase() -> SearchTVShowsUseCase {
-    return DefaultSearchTVShowsUseCase(tvShowsRepository: showsRepository,
-                                       keychainRepository: keychainRepository,
-                                       searchsLocalRepository: dependencies.searchsPersistence)
+  private func makeSearchShowsUseCase() -> SearchTVShowsUseCase {
+    let showsRepository = DefaultTVShowsPageRepository(
+      showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      mapper: DefaultTVShowPageMapper(),
+      imageBasePath: dependencies.imagesBaseURL
+    )
+    return DefaultSearchTVShowsUseCase(
+      tvShowsRepository: showsRepository,
+      keychainRepository: keychainRepository,
+      searchsLocalRepository: dependencies.searchsPersistence
+    )
   }
 
   fileprivate func makeFetchSearchsUseCase() -> FetchSearchsUseCase {

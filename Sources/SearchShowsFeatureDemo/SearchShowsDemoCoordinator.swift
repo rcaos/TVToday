@@ -105,7 +105,7 @@ class EmptyListCoordinator: TVShowListCoordinatorProtocol {
 final class FakeShowsVisitedLocalRepository: ShowsVisitedLocalRepository {
 
   public func saveShow(id: Int, pathImage: String, userId: Int) -> AnyPublisher<Void, CustomError> {
-    return Empty().setFailureType(to: CustomError.self).eraseToAnyPublisher()
+    return Just(()).setFailureType(to: CustomError.self).eraseToAnyPublisher()
   }
 
   public func fetchVisitedShows(userId: Int) -> AnyPublisher<[ShowVisited], CustomError> {
@@ -121,10 +121,10 @@ final class FakeShowsVisitedLocalRepository: ShowsVisitedLocalRepository {
 final class FakeSearchLocalRepository: SearchLocalRepository {
 
   public func saveSearch(query: String, userId: Int) -> AnyPublisher<Void, CustomError> {
-    return Empty().setFailureType(to: CustomError.self).eraseToAnyPublisher()
+    return Just(()).setFailureType(to: CustomError.self).eraseToAnyPublisher()
   }
 
   public func fetchSearchs(userId: Int) -> AnyPublisher<[Search], CustomError> {
-    return Empty().setFailureType(to: CustomError.self).eraseToAnyPublisher()
+    return Just([]).setFailureType(to: CustomError.self).eraseToAnyPublisher()
   }
 }

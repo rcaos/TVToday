@@ -53,8 +53,8 @@ public class ShowListDemoCoordinator: Coordinator {
     let module = ShowListFeature.Module(dependencies: dependencies)
     let coordinator = module.buildModuleCoordinator(in: navigation, delegate: nil)
     //coordinator.navigate(to: .favoriteList) // Need a valid token
-     coordinator.navigate(to: .watchList) // Need a valid token
-    // coordinator.navigate(to: .genreList(genreId: 99, title: "Documentary"))
+    // coordinator.navigate(to: .watchList) // Need a valid token
+     coordinator.navigate(to: .genreList(genreId: 99, title: "Documentary"))
     childCoordinators.append(coordinator)
   }
 }

@@ -10,7 +10,7 @@ import Combine
 import CombineSchedulers
 import Shared
 
-final class AiringTodayViewModel: AiringTodayViewModelProtocol, ShowsViewModel {
+final class AiringTodayViewModel2: AiringTodayViewModelProtocol, ShowsViewModel {
   let fetchTVShowsUseCase: FetchTVShowsUseCase
   let viewStateObservableSubject = CurrentValueSubject<SimpleViewState<AiringTodayCollectionViewModel>, Never>(.loading)
 

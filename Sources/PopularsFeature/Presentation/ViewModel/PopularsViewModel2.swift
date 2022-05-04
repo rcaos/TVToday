@@ -10,18 +10,7 @@ import Combine
 import CombineSchedulers
 import Shared
 
-protocol PopularViewModelProtocol {
-  // MARK: - Input
-  func viewDidLoad()
-  func didLoadNextPage()
-  func showIsPicked(with id: Int)
-  func refreshView()
-
-  // MARK: - Output
-  var viewStateObservableSubject: CurrentValueSubject<SimpleViewState<TVShowCellViewModel>, Never> { get }
-}
-
-final class PopularViewModel: PopularViewModelProtocol, ShowsViewModel {
+final class PopularViewModel2: PopularViewModelProtocol, ShowsViewModel {
   let fetchTVShowsUseCase: FetchTVShowsUseCase
   var shows: [TVShow]
   var showsCells: [TVShowCellViewModel] = []

@@ -33,4 +33,19 @@ public final class DefaultTVShowsRemoteDataSource: TVShowsRemoteDataSource {
     )
     return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
   }
+
+  public func fetchShowsByGenre(genreId: Int, page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError> {
+    let endpoint = Endpoint<TVShowPageDTO>(
+      path: "3/discover/tv",
+      method: .get,
+      queryParameters: [
+        "with_genres": genreId,
+        "page": page,
+        "sort_by": "popularity.desc",
+        "timezone": "America%2FNew_York", // MARK: - TODO, should be injected
+        "include_null_first_air_dates": "false"
+      ]
+    )
+    return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
+  }
 }

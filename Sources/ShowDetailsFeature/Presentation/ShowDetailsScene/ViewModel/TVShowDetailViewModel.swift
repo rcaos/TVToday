@@ -246,7 +246,7 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
     return fetchDetailShowUseCase.execute(requestValue: request)
   }
 
-  private func fetchTVShowState() -> AnyPublisher<TVShowAccountStateResult, DataTransferError> {
+  private func fetchTVShowState() -> AnyPublisher<TVShowAccountStatus, DataTransferError> {
     let request = FetchTVAccountStatesRequestValue(showId: showId)
     return fetchTvShowState.execute(requestValue: request)
   }

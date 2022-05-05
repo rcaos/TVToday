@@ -10,20 +10,13 @@ import Foundation
 import Shared
 
 public struct SeasonHeaderViewModel: Hashable {
+  let showName: String
 
-  var showName: String = ""
-
-  private let showDetail: TVShowDetailResult
-
-  public init(showDetail: TVShowDetailResult) {
-    self.showDetail = showDetail
-
-    if let name = showDetail.name {
-      showName = name
-    }
-
+  public init(showDetail: TVShowDetail) {
     if let years = showDetail.releaseYears {
-      showName += " (" + years + ")"
+      showName = showDetail.name + " (" + years + ")"
+    } else {
+      showName = showDetail.name
     }
   }
 }

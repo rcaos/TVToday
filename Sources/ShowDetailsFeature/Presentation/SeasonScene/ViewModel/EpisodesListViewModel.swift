@@ -30,7 +30,7 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
   private let fetchEpisodesUseCase: FetchEpisodesUseCase
 
   private let tvShowId: Int
-  private var showDetailResult: TVShowDetailResult?
+  private var showDetailResult: TVShowDetail?
   private var totalSeasons: Int {
     guard let totalSeasons = showDetailResult?.numberOfSeasons else { return 0 }
     return totalSeasons
@@ -116,10 +116,10 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
       .store(in: &disposeBag)
   }
 
-  private func processResultFirstFetched(_ detailsShow: TVShowDetailResult, _ firstSeason: SeasonResult) {
+  private func processResultFirstFetched(_ detailsShow: TVShowDetail, _ firstSeason: SeasonResult) {
     showDetailResult = detailsShow
     processFetched(with: firstSeason)
-    createViewModelForSeasons(numberOfSeasons: detailsShow.numberOfSeasons ?? 1)
+    createViewModelForSeasons(numberOfSeasons: detailsShow.numberOfSeasons)
     selectFirstSeason()
   }
 

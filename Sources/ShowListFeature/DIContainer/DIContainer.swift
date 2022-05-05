@@ -16,8 +16,10 @@ final class DIContainer {
   // MARK: - Repositories
   private lazy var accountShowsRepository: AccountTVShowsRepository = {
     return DefaultAccountTVShowsRepository(
-      dataTransferService: dependencies.apiDataTransferService,
-      basePath: dependencies.imagesBaseURL)
+      showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      mapper: DefaultTVShowPageMapper(),
+      imageBasePath: dependencies.imagesBaseURL
+    )
   }()
 
   // MARK: - Initializer

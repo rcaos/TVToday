@@ -14,7 +14,7 @@ import Foundation
 
 public protocol FetchTVShowDetailsUseCase {
   // MARK: - TODO Use another error maybe?
-  func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> AnyPublisher<TVShowDetailResult, DataTransferError>
+  func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> AnyPublisher<TVShowDetail, DataTransferError>
 }
 
 public struct FetchTVShowDetailsUseCaseRequestValue {
@@ -23,32 +23,32 @@ public struct FetchTVShowDetailsUseCaseRequestValue {
 
 // MARK: - FetchTVShowDetailsUseCase
 public final class DefaultFetchTVShowDetailsUseCase: FetchTVShowDetailsUseCase {
-  private let tvShowsRepository: TVShowsRepository
+  private let tvShowDetailsRepository: TVShowsDetailsRepository
   private let tvShowsVisitedRepository: ShowsVisitedLocalRepository
   private let keychainRepository: KeychainRepository
 
-  public init(tvShowsRepository: TVShowsRepository,
+  public init(tvShowDetailsRepository: TVShowsDetailsRepository,
               keychainRepository: KeychainRepository,
               tvShowsVisitedRepository: ShowsVisitedLocalRepository) {
-    self.tvShowsRepository = tvShowsRepository
+    self.tvShowDetailsRepository = tvShowDetailsRepository
     self.keychainRepository = keychainRepository
     self.tvShowsVisitedRepository = tvShowsVisitedRepository
   }
 
-  public func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> AnyPublisher<TVShowDetailResult, DataTransferError> {
+  public func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> AnyPublisher<TVShowDetail, DataTransferError> {
     var idLogged = 0
     if let userLogged = keychainRepository.fetchLoguedUser() {
       idLogged = userLogged.id
     }
 
-    return tvShowsRepository
+    return tvShowDetailsRepository
       .fetchTVShowDetails(with: requestValue.identifier)
       .receive(on: DispatchQueue.main) // MARK: - TODO,
-      .flatMap { [tvShowsVisitedRepository] details -> AnyPublisher<TVShowDetailResult, DataTransferError> in
-        return tvShowsVisitedRepository.saveShow(id: details.id ?? 0,
-                                                 pathImage: details.posterPath ?? "",
+      .flatMap { [tvShowsVisitedRepository] details -> AnyPublisher<TVShowDetail, DataTransferError> in
+        return tvShowsVisitedRepository.saveShow(id: details.id,
+                                                 pathImage: details.posterPathURL?.absoluteString ?? "",
                                                  userId: idLogged)
-          .map { _ -> TVShowDetailResult in details }
+          .map { _ -> TVShowDetail in details }
           .mapError { _ -> DataTransferError in DataTransferError.noResponse }
           .eraseToAnyPublisher()
       }

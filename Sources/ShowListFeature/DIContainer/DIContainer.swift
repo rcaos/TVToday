@@ -14,12 +14,6 @@ final class DIContainer {
   private let dependencies: ShowListFeatureInterface.ModuleDependencies
 
   // MARK: - Repositories
-  private lazy var showsRepository: TVShowsRepository = {
-    return DefaultTVShowsRepository(
-      dataTransferService: dependencies.apiDataTransferService,
-      basePath: dependencies.imagesBaseURL)
-  }()
-
   private lazy var accountShowsRepository: AccountTVShowsRepository = {
     return DefaultAccountTVShowsRepository(
       dataTransferService: dependencies.apiDataTransferService,
@@ -77,7 +71,6 @@ final class DIContainer {
     )
     return DefaultFetchShowsByGenreTVShowsUseCase(
       genreId: genreId,
-      tvShowsRepository: showsRepository,
       tvShowsPageRepository: showsPageRepository
     )
   }

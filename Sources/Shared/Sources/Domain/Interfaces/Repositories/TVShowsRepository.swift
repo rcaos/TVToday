@@ -9,19 +9,6 @@
 import Combine
 import NetworkingInterface
 
-public protocol TVShowsRepository {
-  func fetchAiringTodayShows(page: Int) -> AnyPublisher<TVShowResult, DataTransferError>
-
-  func fetchPopularShows(page: Int) -> AnyPublisher<TVShowResult, DataTransferError>
-
-  func fetchShowsByGenre(genreId: Int, page: Int) -> AnyPublisher<TVShowResult, DataTransferError>
-
-  func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowResult, DataTransferError>
-
-  // Maybe another Repository ??
-  func fetchTVShowDetails(with showId: Int) -> AnyPublisher<TVShowDetailResult, DataTransferError>
-}
-
 // https://developer.android.com/topic/architecture/data-layer
 // 1. Repository can contains 0 or Many DataSources
 // 2. Create each Repository for each DIFFERENT type of Data you Handle (MoviesRepository, PaymentsRepository

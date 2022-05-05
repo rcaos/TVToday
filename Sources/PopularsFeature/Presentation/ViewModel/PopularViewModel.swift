@@ -27,9 +27,9 @@ func mapTVShow2IntoTVShow(_ show: TVShowPage.TVShow) -> TVShow {
                 name: show.name,
                 voteAverage: show.voteAverage,
                 firstAirDate: show.firstAirDate,
-                posterPath: show.posterPath.absoluteString,
+                posterPath: show.posterPath?.absoluteString ?? "",
                 genreIds: show.genreIds,
-                backDropPath: show.backDropPath.absoluteString,
+                backDropPath: show.backDropPath?.absoluteString ?? "",
                 overview: show.overview,
                 originCountry: [],
                 voteCount: show.voteCount)
@@ -87,7 +87,7 @@ final class PopularViewModel: PopularViewModelProtocol {
 
     let request = FetchTVShowsUseCaseRequestValue(page: page)
 
-    fetchTVShowsUseCase.execute2(requestValue: request)
+    fetchTVShowsUseCase.execute(requestValue: request)
       .receive(on: scheduler)
       .sink(receiveCompletion: { [weak self] completion in
         switch completion {

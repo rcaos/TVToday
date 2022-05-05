@@ -7,8 +7,18 @@
 //
 
 import Combine
+import Foundation
 import NetworkingInterface
+import Shared
 
 protocol TVEpisodesRepository {
-  func fetchEpisodesList(for show: Int, season: Int) -> AnyPublisher<SeasonResult, DataTransferError>
+  func fetchEpisodesList(for show: Int, season: Int) -> AnyPublisher<TVShowSeason, DataTransferError> // MARK: - TODO, Change Name
+}
+
+public protocol TVEpisodesRemoteDataSource {
+  func fetchEpisodes(for showId: Int, season: Int) -> AnyPublisher<TVShowSeasonDTO, DataTransferError>
+}
+
+public protocol TVEpisodesMapperProtocol {
+  func mapSeasonDTO(_ season: TVShowSeasonDTO, imageBasePath: String, imageSize: ImageSize) -> TVShowSeason
 }

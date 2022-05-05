@@ -1,6 +1,5 @@
 //
-//  Genre+Decodable.swift
-//  TVToday
+//  GenreDTO.swift
 //
 //  Created by Jeans Ruiz on 1/16/20.
 //  Copyright © 2020 Jeans. All rights reserved.
@@ -21,3 +20,14 @@ extension Genre: Decodable {
     self.name = try container.decode(String.self, forKey: .name)
   }
 }
+
+public struct GenreDTO: Decodable {
+  public var id: Int
+  public var name: String
+
+  enum CodingKeys: String, CodingKey {
+    case id
+    case name
+  }
+}
+

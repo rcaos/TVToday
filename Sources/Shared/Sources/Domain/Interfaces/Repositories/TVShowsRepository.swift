@@ -81,6 +81,7 @@ public protocol AccountTVShowsDetailsMapperProtocol {
 }
 
 public enum ImageSize: String {
+  case small = "w342"
   case medium = "w780"
 }
 

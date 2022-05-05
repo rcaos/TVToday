@@ -68,4 +68,72 @@ public final class DefaultTVShowsRemoteDataSource: TVShowsRemoteDataSource {
     )
     return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
   }
+
+  public func fetchFavoritesShows(page: Int, userId: Int, sessionId: String) -> AnyPublisher<TVShowPageDTO, DataTransferError> {
+    let endpoint = Endpoint<TVShowPageDTO>(
+      path: "3/account/\(userId)/favorite/tv",
+      method: .get,
+      queryParameters: [
+        "page": page,
+        "session_id": sessionId
+      ]
+    )
+    return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
+  }
+
+  public func fetchWatchListShows(page: Int, userId: Int, sessionId: String) -> AnyPublisher<TVShowPageDTO, DataTransferError> {
+    let endpoint = Endpoint<TVShowPageDTO>(
+      path: "3/account/\(userId)/watchlist/tv",
+      method: .get,
+      queryParameters: [
+        "page": page,
+        "session_id": sessionId
+      ]
+    )
+
+    return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
+  }
+
+  public func markAsFavorite(tvShowId: Int, userId: String, session: String, favorite: Bool) -> AnyPublisher<TVShowActionStatusDTO, DataTransferError> {
+    let endpoint = Endpoint<TVShowActionStatusDTO>(
+      path: "3/account/\(userId)/favorite",
+      method: .post,
+      queryParameters: [
+        "session_id": session
+      ],
+      bodyParameters: [
+        "media_type": "tv",
+        "media_id": tvShowId,
+        "favorite": favorite
+      ]
+    )
+    return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
+  }
+
+  public func saveToWatchList(tvShowId: Int, userId: String, session: String, watchedList: Bool) -> AnyPublisher<TVShowActionStatusDTO, DataTransferError> {
+    let endpoint = Endpoint<TVShowActionStatusDTO>(
+      path: "3/account/\(userId)/watchlist",
+      method: .post,
+      queryParameters: [
+        "session_id": session
+      ],
+      bodyParameters: [
+        "media_type": "tv",
+        "media_id": tvShowId,
+        "watchlist": watchedList
+      ]
+    )
+    return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
+  }
+
+  public func fetchTVShowStatus(tvShowId: Int, sessionId: String) -> AnyPublisher<TVShowAccountStatusDTO, DataTransferError> {
+    let endpoint = Endpoint<TVShowAccountStatusDTO>(
+      path: "3/tv/\(String(tvShowId))/account_states",
+      method: .get,
+      queryParameters: [
+        "session_id": sessionId
+      ]
+    )
+    return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
+  }
 }

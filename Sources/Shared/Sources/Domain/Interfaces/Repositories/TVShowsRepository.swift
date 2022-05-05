@@ -55,17 +55,26 @@ public protocol TVShowsPageRepository {
   func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowPage, DataTransferError>
 }
 
+public protocol TVShowsDetailsRepository {
+  func fetchTVShowDetails(with showId: Int) -> AnyPublisher<TVShowDetail, DataTransferError>
+}
+
 public protocol TVShowsRemoteDataSource {
   // Internally this use DataTransferService
   func fetchAiringTodayShows(page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError>
   func fetchPopularShows(page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError>
   func fetchShowsByGenre(genreId: Int, page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError>
   func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError>
+  func fetchTVShowDetails(with showId: Int) -> AnyPublisher<TVShowDetailDTO, DataTransferError>
 }
 
 public protocol TVShowPageMapper {
   // init should be have URL base Path String
   func mapTVShowPage(_ page: TVShowPageDTO, imageBasePath: String, imageSize: ImageSize) -> TVShowPage
+}
+
+public protocol TVShowDetailsMapper {
+  func mapTVShow(_ show: TVShowDetailDTO, imageBasePath: String, imageSize: ImageSize) -> TVShowDetail
 }
 
 public enum ImageSize: String {

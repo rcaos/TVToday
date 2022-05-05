@@ -136,4 +136,12 @@ public final class DefaultTVShowsRemoteDataSource: TVShowsRemoteDataSource {
     )
     return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
   }
+
+  public func fetchGenres() -> AnyPublisher<GenreListDTO, DataTransferError> {
+    let endpoint = Endpoint<GenreListDTO>(
+      path: "3/genre/tv/list",
+      method: .get
+    )
+    return dataTransferService.request(with: endpoint)
+  }
 }

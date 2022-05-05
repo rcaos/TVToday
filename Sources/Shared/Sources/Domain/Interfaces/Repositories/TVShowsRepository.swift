@@ -47,6 +47,7 @@ public protocol TVShowsDetailsRepository {
   func fetchTVShowDetails(with showId: Int) -> AnyPublisher<TVShowDetail, DataTransferError>
 }
 
+// MARK: - TODO,  Should split this DataSource if only one Module uses :thinking
 public protocol TVShowsRemoteDataSource {
   // Internally this use DataTransferService
   func fetchAiringTodayShows(page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError>
@@ -61,6 +62,8 @@ public protocol TVShowsRemoteDataSource {
   func markAsFavorite(tvShowId: Int, userId: String,session: String,  favorite: Bool) -> AnyPublisher<TVShowActionStatusDTO, DataTransferError>
   func saveToWatchList(tvShowId: Int, userId: String, session: String, watchedList: Bool) -> AnyPublisher<TVShowActionStatusDTO, DataTransferError>
   func fetchTVShowStatus(tvShowId: Int, sessionId: String) -> AnyPublisher<TVShowAccountStatusDTO, DataTransferError>
+
+  func fetchGenres() -> AnyPublisher<GenreListDTO, DataTransferError> // Maybe move to Search Module. Another DataSource
 }
 
 public protocol TVShowPageMapper {

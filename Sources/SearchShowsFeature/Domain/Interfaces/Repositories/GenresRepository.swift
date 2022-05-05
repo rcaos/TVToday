@@ -10,5 +10,5 @@ import Combine
 import NetworkingInterface
 
 protocol GenresRepository {
-  func genresList() -> AnyPublisher<GenreListResult, DataTransferError>
+  func genresList() -> AnyPublisher<GenreList, DataTransferError>
 }

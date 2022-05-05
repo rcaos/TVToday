@@ -10,7 +10,7 @@ import Combine
 import NetworkingInterface
 
 protocol FetchGenresUseCase {
-  func execute(requestValue: FetchGenresUseCaseRequestValue) -> AnyPublisher<GenreListResult, DataTransferError>
+  func execute(requestValue: FetchGenresUseCaseRequestValue) -> AnyPublisher<GenreList, DataTransferError>
 }
 
 struct FetchGenresUseCaseRequestValue { }
@@ -23,7 +23,7 @@ final class DefaultFetchGenresUseCase: FetchGenresUseCase {
     self.genresRepository = genresRepository
   }
 
-  func execute(requestValue: FetchGenresUseCaseRequestValue) -> AnyPublisher<GenreListResult, DataTransferError> {
+  func execute(requestValue: FetchGenresUseCaseRequestValue) -> AnyPublisher<GenreList, DataTransferError> {
     return genresRepository.genresList()
   }
 }

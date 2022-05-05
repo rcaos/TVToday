@@ -12,6 +12,7 @@ import NetworkingInterface
 // https://developer.android.com/topic/architecture/data-layer
 // 1. Repository can contains 0 or Many DataSources
 // 2. Create each Repository for each DIFFERENT type of Data you Handle (MoviesRepository, PaymentsRepository
+// 2.1 Each DataSource should work only with ONE source of data (file, Network, local database
 // 3. Must returns a Immutable Domain Model (Merge of different dataSources)
 // 4. Resolve conflicts between different data Sources and User input
 // 5. Each Repository defines a Single Source of Truth (usually a DataSource= local, network or Memory
@@ -53,6 +54,13 @@ public protocol TVShowsRemoteDataSource {
   func fetchShowsByGenre(genreId: Int, page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError>
   func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError>
   func fetchTVShowDetails(with showId: Int) -> AnyPublisher<TVShowDetailDTO, DataTransferError>
+
+  func fetchFavoritesShows(page: Int, userId: Int, sessionId: String) -> AnyPublisher<TVShowPageDTO, DataTransferError>
+  func fetchWatchListShows(page: Int, userId: Int, sessionId: String) -> AnyPublisher<TVShowPageDTO, DataTransferError>
+
+  func markAsFavorite(tvShowId: Int, userId: String,session: String,  favorite: Bool) -> AnyPublisher<TVShowActionStatusDTO, DataTransferError>
+  func saveToWatchList(tvShowId: Int, userId: String, session: String, watchedList: Bool) -> AnyPublisher<TVShowActionStatusDTO, DataTransferError>
+  func fetchTVShowStatus(tvShowId: Int, sessionId: String) -> AnyPublisher<TVShowAccountStatusDTO, DataTransferError>
 }
 
 public protocol TVShowPageMapper {
@@ -62,6 +70,11 @@ public protocol TVShowPageMapper {
 
 public protocol TVShowDetailsMapper {
   func mapTVShow(_ show: TVShowDetailDTO, imageBasePath: String, imageSize: ImageSize) -> TVShowDetail
+}
+
+public protocol AccountTVShowsDetailsMapperProtocol {
+  func mapActionResult(result: TVShowActionStatusDTO) -> TVShowActionStatus
+  func mapTVShowStatusResult(result: TVShowAccountStatusDTO) -> TVShowAccountStatus
 }
 
 public enum ImageSize: String {

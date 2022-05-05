@@ -9,13 +9,12 @@ import Combine
 import NetworkingInterface
 
 public protocol AccountTVShowsRepository {
-  func fetchFavoritesShows(page: Int, userId: Int, sessionId: String) -> AnyPublisher<TVShowResult, DataTransferError>
+  func fetchFavoritesShows(page: Int, userId: Int, sessionId: String) -> AnyPublisher<TVShowPage, DataTransferError>
+  func fetchWatchListShows(page: Int, userId: Int, sessionId: String) -> AnyPublisher<TVShowPage, DataTransferError>
+}
 
-  func fetchWatchListShows(page: Int, userId: Int, sessionId: String) -> AnyPublisher<TVShowResult, DataTransferError>
-
-  func fetchTVAccountStates(tvShowId: Int, sessionId: String) -> AnyPublisher<TVShowAccountStateResult, DataTransferError>
-
-  func markAsFavorite(session: String, userId: String, tvShowId: Int, favorite: Bool) -> AnyPublisher<StatusResult, DataTransferError>
-
-  func saveToWatchList(session: String, userId: String, tvShowId: Int, watchedList: Bool) -> AnyPublisher<StatusResult, DataTransferError>
+public protocol AccountTVShowsDetailsRepository {
+  func markAsFavorite(tvShowId: Int, userId: String,session: String,  favorite: Bool) -> AnyPublisher<TVShowActionStatus, DataTransferError>
+  func saveToWatchList(tvShowId: Int, userId: String, session: String, watchedList: Bool) -> AnyPublisher<TVShowActionStatus, DataTransferError>
+  func fetchTVShowStatus(tvShowId: Int, sessionId: String) -> AnyPublisher<TVShowAccountStatus, DataTransferError>
 }

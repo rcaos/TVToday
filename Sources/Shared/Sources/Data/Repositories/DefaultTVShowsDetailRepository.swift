@@ -5,7 +5,8 @@
 //  Created by Jeans Ruiz on 4/05/22.
 //
 
-import Foundation
+import Combine
+import NetworkingInterface
 
 public final class DefaultTVShowsDetailRepository {
   private let showsPageRemoteDataSource: TVShowsRemoteDataSource

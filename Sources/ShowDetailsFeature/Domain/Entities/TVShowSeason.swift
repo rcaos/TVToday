@@ -8,8 +8,8 @@
 
 import Foundation
 
-struct SeasonResult {
-  let id: String?
-  var episodes: [Episode]?
+public struct TVShowSeason {
+  let id: String
+  let episodes: [TVShowEpisode]
   let seasonNumber: Int
 }

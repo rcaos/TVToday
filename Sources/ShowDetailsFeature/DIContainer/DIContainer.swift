@@ -27,8 +27,10 @@ final class DIContainer {
 
   private lazy var episodesRepository: TVEpisodesRepository = {
     return DefaultTVEpisodesRepository(
-      dataTransferService: dependencies.apiDataTransferService,
-      basePath: dependencies.imagesBaseURL)
+      remoteDataSource: DefaultTVEpisodesRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      mapper: TVEpisodesMapper(),
+      imageBasePath: dependencies.imagesBaseURL
+    )
   }()
 
   // MARK: - Initializer

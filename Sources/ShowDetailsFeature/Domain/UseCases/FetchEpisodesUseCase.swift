@@ -10,7 +10,7 @@ import Combine
 import NetworkingInterface
 
 protocol FetchEpisodesUseCase {
-  func execute(requestValue: FetchEpisodesUseCaseRequestValue) -> AnyPublisher<SeasonResult, DataTransferError>
+  func execute(requestValue: FetchEpisodesUseCaseRequestValue) -> AnyPublisher<TVShowSeason, DataTransferError>
 }
 
 struct FetchEpisodesUseCaseRequestValue {
@@ -27,7 +27,7 @@ final class DefaultFetchEpisodesUseCase: FetchEpisodesUseCase {
     self.episodesRepository = episodesRepository
   }
 
-  func execute(requestValue: FetchEpisodesUseCaseRequestValue) -> AnyPublisher<SeasonResult, DataTransferError> {
+  func execute(requestValue: FetchEpisodesUseCaseRequestValue) -> AnyPublisher<TVShowSeason, DataTransferError> {
     return episodesRepository.fetchEpisodesList(
       for: requestValue.showIdentifier,
       season: requestValue.seasonNumber

@@ -20,10 +20,10 @@ public struct SaveToWatchListUseCaseRequestValue {
 }
 
 final class DefaultSaveToWatchListUseCase: SaveToWatchListUseCase {
-  private let accountShowsRepository: AccountTVShowsRepository
+  private let accountShowsRepository: AccountTVShowsDetailsRepository
   private let keychainRepository: KeychainRepository
 
-  init(accountShowsRepository: AccountTVShowsRepository,
+  init(accountShowsRepository: AccountTVShowsDetailsRepository,
        keychainRepository: KeychainRepository) {
     self.accountShowsRepository = accountShowsRepository
     self.keychainRepository = keychainRepository
@@ -35,9 +35,9 @@ final class DefaultSaveToWatchListUseCase: SaveToWatchListUseCase {
     }
 
     return accountShowsRepository.saveToWatchList(
-      session: account.sessionId,
-      userId: String(account.id),
       tvShowId: requestValue.showId,
+      userId: String(account.id),
+      session: account.sessionId,
       watchedList: requestValue.watchList
     )
       .map { _ in requestValue.watchList }

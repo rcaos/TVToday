@@ -11,7 +11,6 @@ import NetworkingInterface
 
 public final class DefaultUserWatchListShowsUseCase: FetchTVShowsUseCase {
   private let accountShowsRepository: AccountTVShowsRepository
-
   private let keychainRepository: KeychainRepository
 
   public init(accountShowsRepository: AccountTVShowsRepository, keychainRepository: KeychainRepository) {
@@ -19,7 +18,7 @@ public final class DefaultUserWatchListShowsUseCase: FetchTVShowsUseCase {
     self.keychainRepository = keychainRepository
   }
 
-  public func execute(requestValue: FetchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowResult, DataTransferError> {
+  public func execute(requestValue: FetchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowPage, DataTransferError> {
     guard let userLogged = keychainRepository.fetchLoguedUser() else {
       return Fail(error: DataTransferError.noResponse)    // TODO, another error type
         .eraseToAnyPublisher()
@@ -28,9 +27,5 @@ public final class DefaultUserWatchListShowsUseCase: FetchTVShowsUseCase {
     return accountShowsRepository.fetchWatchListShows(page: requestValue.page,
                                                       userId: userLogged.id,
                                                       sessionId: userLogged.sessionId)
-  }
-
-  public func execute2(requestValue: FetchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowPage, DataTransferError> {
-    return Empty().setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
   }
 }

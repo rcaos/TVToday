@@ -20,10 +20,10 @@ public struct MarkAsFavoriteUseCaseRequestValue {
 }
 
 public final class DefaultMarkAsFavoriteUseCase: MarkAsFavoriteUseCase {
-  private let accountShowsRepository: AccountTVShowsRepository
+  private let accountShowsRepository: AccountTVShowsDetailsRepository
   private let keychainRepository: KeychainRepository
 
-  public init(accountShowsRepository: AccountTVShowsRepository,
+  public init(accountShowsRepository: AccountTVShowsDetailsRepository,
               keychainRepository: KeychainRepository) {
     self.accountShowsRepository = accountShowsRepository
     self.keychainRepository = keychainRepository
@@ -35,9 +35,9 @@ public final class DefaultMarkAsFavoriteUseCase: MarkAsFavoriteUseCase {
     }
 
     return accountShowsRepository.markAsFavorite(
-      session: account.sessionId,
-      userId: String(account.id),
       tvShowId: requestValue.showId,
+      userId: String(account.id),
+      session: account.sessionId,
       favorite: requestValue.favorite
     )
       .map { _ in requestValue.favorite }

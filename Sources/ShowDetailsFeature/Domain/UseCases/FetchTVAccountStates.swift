@@ -11,7 +11,7 @@ import Shared
 import NetworkingInterface
 
 protocol FetchTVAccountStates {
-  func execute(requestValue: FetchTVAccountStatesRequestValue) -> AnyPublisher<TVShowAccountStateResult, DataTransferError>
+  func execute(requestValue: FetchTVAccountStatesRequestValue) -> AnyPublisher<TVShowAccountStatus, DataTransferError>
 }
 
 struct FetchTVAccountStatesRequestValue {
@@ -19,23 +19,21 @@ struct FetchTVAccountStatesRequestValue {
 }
 
 final class DefaultFetchTVAccountStates: FetchTVAccountStates {
-  private let accountShowsRepository: AccountTVShowsRepository
+  private let accountShowsRepository: AccountTVShowsDetailsRepository
   private let keychainRepository: KeychainRepository
 
-  init(accountShowsRepository: AccountTVShowsRepository,
+  init(accountShowsRepository: AccountTVShowsDetailsRepository,
        keychainRepository: KeychainRepository) {
     self.accountShowsRepository = accountShowsRepository
     self.keychainRepository = keychainRepository
   }
 
-  func execute(requestValue: FetchTVAccountStatesRequestValue) -> AnyPublisher<TVShowAccountStateResult, DataTransferError> {
+  func execute(requestValue: FetchTVAccountStatesRequestValue) -> AnyPublisher<TVShowAccountStatus, DataTransferError> {
     guard let account = keychainRepository.fetchLoguedUser() else {
       return Fail(error: .noResponse).eraseToAnyPublisher()
     }
 
-    return accountShowsRepository.fetchTVAccountStates(
-      tvShowId: requestValue.showId,
-      sessionId: account.sessionId
-    )
+    return accountShowsRepository.fetchTVShowStatus(tvShowId: requestValue.showId, sessionId: account.sessionId)
+      .eraseToAnyPublisher()
   }
 }

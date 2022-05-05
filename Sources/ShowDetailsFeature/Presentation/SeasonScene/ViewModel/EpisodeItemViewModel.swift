@@ -15,14 +15,14 @@ final class EpisodeItemViewModel {
   var average: String?
   var posterURL: URL?
 
-  private let episode: Episode
+  private let episode: TVShowEpisode
 
-  init(episode: Episode) {
+  init(episode: TVShowEpisode) {
     self.episode = episode
     setupData(with: episode)
   }
 
-  private func setupData(with episode: Episode) {
+  private func setupData(with episode: TVShowEpisode) {
     episodeNumber = String(episode.episodeNumber) + "."
     episodeName = episode.name
     releaseDate = episode.airDate

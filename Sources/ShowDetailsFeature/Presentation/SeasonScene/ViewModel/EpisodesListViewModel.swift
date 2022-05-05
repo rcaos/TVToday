@@ -36,7 +36,7 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
     return totalSeasons
   }
 
-  private var allEpisodes = [Int: [Episode]]()
+  private var allEpisodes = [Int: [TVShowEpisode]]()
   private let seasonSelectedSubject = CurrentValueSubject<Int, Never>(0)
 
   private var seasonListViewModel: SeasonListViewModelProtocol?
@@ -79,7 +79,7 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
       .store(in: &disposeBag)
   }
 
-  private func changeToSeason(number: Int, episodes: [Episode]) {
+  private func changeToSeason(number: Int, episodes: [TVShowEpisode]) {
     createSectionModel(state: .populated, with: totalSeasons, seasonSelected: number, and: episodes)
   }
 
@@ -116,7 +116,7 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
       .store(in: &disposeBag)
   }
 
-  private func processResultFirstFetched(_ detailsShow: TVShowDetail, _ firstSeason: SeasonResult) {
+  private func processResultFirstFetched(_ detailsShow: TVShowDetail, _ firstSeason: TVShowSeason) {
     showDetailResult = detailsShow
     processFetched(with: firstSeason)
     createViewModelForSeasons(numberOfSeasons: detailsShow.numberOfSeasons)
@@ -147,8 +147,8 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
       .store(in: &disposeBag)
   }
 
-  private func processFetched(with response: SeasonResult) {
-    let fetchedEpisodes = response.episodes ?? []
+  private func processFetched(with response: TVShowSeason) {
+    let fetchedEpisodes = response.episodes
     let seasonFetched = response.seasonNumber
 
     if fetchedEpisodes.isEmpty {
@@ -162,7 +162,7 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
     createSectionModel(state: .populated, with: totalSeasons, seasonSelected: seasonFetched, and: ordered)
   }
 
-  private func createSectionModel(state: ViewState, with numberOfSeasons: Int, seasonSelected: Int, and episodes: [Episode]) {
+  private func createSectionModel(state: ViewState, with numberOfSeasons: Int, seasonSelected: Int, and episodes: [TVShowEpisode]) {
     var dataSourceSections: [SeasonsSectionModel] = []
 
     if let headerSection = createModelForheader() {

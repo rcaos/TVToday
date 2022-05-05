@@ -9,6 +9,6 @@
 import Foundation
 import Shared
 
-struct GenreListResult {
-    var genres: [Genre]!
+struct GenreList {
+  let genres: [Genre]
 }

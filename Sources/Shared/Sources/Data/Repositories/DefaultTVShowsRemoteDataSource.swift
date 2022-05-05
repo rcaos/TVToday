@@ -60,4 +60,12 @@ public final class DefaultTVShowsRemoteDataSource: TVShowsRemoteDataSource {
     )
     return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
   }
+
+  public func fetchTVShowDetails(with showId: Int) -> AnyPublisher<TVShowDetailDTO, DataTransferError> {
+    let endpoint = Endpoint<TVShowDetailDTO>(
+      path: "3/tv/\(showId)",
+      method: .get
+    )
+    return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
+  }
 }

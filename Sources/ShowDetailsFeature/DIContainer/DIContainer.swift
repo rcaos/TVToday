@@ -76,9 +76,16 @@ final class DIContainer {
 
   // MARK: - Uses Cases for Show Details
   private func makeFetchShowDetailsUseCase() -> FetchTVShowDetailsUseCase {
-    return DefaultFetchTVShowDetailsUseCase(tvShowsRepository: tvShowsRepository,
-                                            keychainRepository: keychainRepository,
-                                            tvShowsVisitedRepository: dependencies.showsPersistenceRepository)
+    let tvShowDetailsRepository = DefaultTVShowsDetailRepository(
+      showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      mapper: DefaultTVShowDetailsMapper(),
+      imageBasePath: dependencies.imagesBaseURL
+    )
+    return DefaultFetchTVShowDetailsUseCase(
+      tvShowDetailsRepository: tvShowDetailsRepository,
+      keychainRepository: keychainRepository,
+      tvShowsVisitedRepository: dependencies.showsPersistenceRepository
+    )
   }
 
   private func makeMarkAsFavoriteUseCase() -> MarkAsFavoriteUseCase {

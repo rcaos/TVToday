@@ -23,14 +23,14 @@ public struct SearchTVShowsUseCaseRequestValue {
 // MARK: - SearchTVShowsUseCase
 final class DefaultSearchTVShowsUseCase: SearchTVShowsUseCase {
 
-  private let tvShowsRepository: TVShowsPageRepository
+  private let tvShowsPageRepository: TVShowsPageRepository
   private let searchsLocalRepository: SearchLocalRepository
   private let keychainRepository: KeychainRepository
 
-  public init(tvShowsRepository: TVShowsPageRepository,
+  public init(tvShowsPageRepository: TVShowsPageRepository,
               keychainRepository: KeychainRepository,
               searchsLocalRepository: SearchLocalRepository) {
-    self.tvShowsRepository = tvShowsRepository
+    self.tvShowsPageRepository = tvShowsPageRepository
     self.keychainRepository = keychainRepository
     self.searchsLocalRepository = searchsLocalRepository
   }
@@ -41,7 +41,7 @@ final class DefaultSearchTVShowsUseCase: SearchTVShowsUseCase {
       idLogged = userLogged.id
     }
 
-    return tvShowsRepository.searchShowsFor(query: requestValue.query, page: requestValue.page)
+    return tvShowsPageRepository.searchShowsFor(query: requestValue.query, page: requestValue.page)
       .receive(on: DispatchQueue.main)  // MARK: - TODO, Change
       .flatMap { resultSearch -> AnyPublisher<TVShowPage, DataTransferError> in
         if requestValue.page == 1 {

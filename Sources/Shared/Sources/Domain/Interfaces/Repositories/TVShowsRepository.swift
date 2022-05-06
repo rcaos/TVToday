@@ -62,8 +62,6 @@ public protocol TVShowsRemoteDataSource {
   func markAsFavorite(tvShowId: Int, userId: String,session: String,  favorite: Bool) -> AnyPublisher<TVShowActionStatusDTO, DataTransferError>
   func saveToWatchList(tvShowId: Int, userId: String, session: String, watchedList: Bool) -> AnyPublisher<TVShowActionStatusDTO, DataTransferError>
   func fetchTVShowStatus(tvShowId: Int, sessionId: String) -> AnyPublisher<TVShowAccountStatusDTO, DataTransferError>
-
-  func fetchGenres() -> AnyPublisher<GenreListDTO, DataTransferError> // Maybe move to Search Module. Another DataSource
 }
 
 public protocol TVShowPageMapper {

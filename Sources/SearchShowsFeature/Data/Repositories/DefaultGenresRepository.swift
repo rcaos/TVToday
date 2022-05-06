@@ -12,9 +12,9 @@ import Networking
 import Shared
 
 final class DefaultGenreRepository {
-  private let remoteDataSource: TVShowsRemoteDataSource
+  private let remoteDataSource: GenreRemoteDataSource
 
-  init(remoteDataSource: TVShowsRemoteDataSource) {
+  init(remoteDataSource: GenreRemoteDataSource) {
     self.remoteDataSource = remoteDataSource
   }
 }

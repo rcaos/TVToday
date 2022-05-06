@@ -18,7 +18,7 @@ final class DIContainer {
   // MARK: - Repositories
   private lazy var genresRepository: GenresRepository = {
     return DefaultGenreRepository(
-      remoteDataSource: DefaultTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService)
+      remoteDataSource: DefaultGenreRemoteDataSource(dataTransferService: dependencies.apiDataTransferService)
     )
   }()
 

@@ -7,10 +7,6 @@
 
 import Foundation
 
-public struct GenreListDTO: Decodable {
-  public let genres: [GenreDTO]
-}
-
 public struct GenreDTO: Decodable {
   public let id: Int
   public let name: String

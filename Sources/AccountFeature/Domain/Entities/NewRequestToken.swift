@@ -1,5 +1,5 @@
 //
-//  CreateSessionResult.swift
+//  CreateTokenResult.swift
 //  TVToday
 //
 //  Created by Jeans Ruiz on 6/19/20.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct CreateSessionResult {
-  let success: Bool?
-  let sessionId: String?
+struct NewRequestToken {
+  let success: Bool
+  let token: String
 }

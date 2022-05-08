@@ -1,5 +1,5 @@
 //
-//  AccountResult.swift
+//  Account.swift
 //  TVToday
 //
 //  Created by Jeans Ruiz on 6/21/20.
@@ -8,17 +8,12 @@
 
 import Foundation
 
-public struct AccountResult: Hashable {
+public struct Account: Hashable {
+  let id: Int
+  let userName: String
   let avatar: Avatar?
-  let id: Int?
-  let userName: String?
 }
 
 public struct Avatar: Hashable {
-  let gravatar: Gravatar?
-}
-
-public struct Gravatar: Hashable {
-  let hash: String?
-
+  let hashId: String?
 }

@@ -29,13 +29,8 @@ final class DefaultCreateSessionUseCase: CreateSessionUseCase {
     }
 
     return authRepository.createSession(requestToken: requestToken)
-      .flatMap { [weak self] sessionResult -> AnyPublisher<Void, DataTransferError> in
-        guard let sessionId = sessionResult.sessionId else {
-          return Fail(error: DataTransferError.noResponse)
-            .eraseToAnyPublisher()
-        }
-
-        self?.keyChainRepository.saveAccessToken(sessionId)
+      .flatMap { [weak self] newSession -> AnyPublisher<Void, DataTransferError> in
+        self?.keyChainRepository.saveAccessToken(newSession.sessionId)
 
         return Just(())
           .setFailureType(to: DataTransferError.self).eraseToAnyPublisher()

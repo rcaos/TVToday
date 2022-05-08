@@ -27,12 +27,12 @@ final class DefaultCreateTokenUseCase: CreateTokenUseCase {
   func execute() -> AnyPublisher<URL, DataTransferError> {
     authRepository.requestToken()
       .flatMap { [weak self] result -> AnyPublisher<URL, DataTransferError> in
-        guard let token = result.token,
-              let url = URL(string: "https://www.themoviedb.org/authenticate/\(token)") else {    // MARK: - Move URL to environment config
-                return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher()
-              }
+        // MARK: - TODO, Move URL to environment config
+        guard let url = URL(string: "https://www.themoviedb.org/authenticate/\(result.token)") else {
+          return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher()
+        }
 
-        self?.keyChainRepository.saveRequestToken(token)
+        self?.keyChainRepository.saveRequestToken(result.token)
 
         return Just(url).setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
       }

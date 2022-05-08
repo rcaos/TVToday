@@ -1,6 +1,6 @@
 //
 //  FetchAccountDetailsUseCase.swift
-//  TVToday
+//  AccountFeature
 //
 //  Created by Jeans Ruiz on 6/21/20.
 //  Copyright © 2020 Jeans. All rights reserved.
@@ -11,7 +11,7 @@ import Shared
 import NetworkingInterface
 
 protocol FetchAccountDetailsUseCase {
-  func execute() -> AnyPublisher<AccountResult, DataTransferError>
+  func execute() -> AnyPublisher<Account, DataTransferError>
 }
 
 final class DefaultFetchAccountDetailsUseCase: FetchAccountDetailsUseCase {
@@ -24,18 +24,15 @@ final class DefaultFetchAccountDetailsUseCase: FetchAccountDetailsUseCase {
     self.keychainRepository = keychainRepository
   }
 
-  func execute() -> AnyPublisher<AccountResult, DataTransferError> {
+  func execute() -> AnyPublisher<Account, DataTransferError> {
     guard let sessionId = keychainRepository.fetchAccessToken() else {
       return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher()
     }
 
     return accountRepository.getAccountDetails(session: sessionId)
-      .flatMap { [weak self] accountResult -> AnyPublisher<AccountResult, DataTransferError> in
-        guard let fetchedAccount = accountResult.id else {
-          return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher()
-        }
-        self?.keychainRepository.saveLoguedUser(fetchedAccount, sessionId)
-        return Just(accountResult).setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
+      .flatMap { [weak self] account -> AnyPublisher<Account, DataTransferError> in
+        self?.keychainRepository.saveLoguedUser(account.id, sessionId)
+        return Just(account).setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
       }
       .eraseToAnyPublisher()
   }

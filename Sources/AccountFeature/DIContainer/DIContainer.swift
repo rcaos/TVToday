@@ -14,7 +14,7 @@ final class DIContainer {
   private let dependencies: ModuleDependencies
 
   private lazy var authRepository: AuthRepository = {
-    return DefaultAuthRepository(dataTransferService: dependencies.apiDataTransferService)
+    return DefaultAuthRepository(remoteDataSource: DefaultAuthRemoteDataSource(dataTransferService: dependencies.apiDataTransferService))
   }()
 
   private lazy var accountRepository: AccountRepository = {

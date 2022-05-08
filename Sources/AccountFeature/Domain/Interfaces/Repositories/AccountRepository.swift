@@ -7,9 +7,8 @@
 //
 
 import Combine
-import Shared
 import NetworkingInterface
 
 public protocol AccountRepository {
-  func getAccountDetails(session: String) -> AnyPublisher<AccountResult, DataTransferError>
+  func getAccountDetails(session: String) -> AnyPublisher<Account, DataTransferError>
 }

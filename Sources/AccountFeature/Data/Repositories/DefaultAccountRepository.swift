@@ -9,27 +9,24 @@
 import Combine
 import NetworkingInterface
 import Networking
-import Shared
 
 public final class DefaultAccountRepository {
-  private let dataTransferService: DataTransferService
+  private let remoteDataSource: AccountRemoteDataSource
 
-  public init(dataTransferService: DataTransferService) {
-    self.dataTransferService = dataTransferService
+  init(remoteDataSource: AccountRemoteDataSource) {
+    self.remoteDataSource = remoteDataSource
   }
 }
 
-// MARK: - AuthRepository
+// MARK: - AccountRepository
 extension DefaultAccountRepository: AccountRepository {
 
-  public func getAccountDetails(session: String) -> AnyPublisher<AccountResult, DataTransferError> {
-    let endpoint = Endpoint<AccountResult>(
-      path: "3/account",
-      method: .get,
-      queryParameters: [
-        "session_id": session
-      ]
-    )
-    return dataTransferService.request(with: endpoint)
+  public func getAccountDetails(session: String) -> AnyPublisher<Account, DataTransferError> {
+    return remoteDataSource.getAccountDetails(session: session)
+      .map {
+        let avatar = Avatar(hashId: $0.avatar?.gravatar?.hash)
+        return Account(id: $0.id, userName: $0.userName, avatar: avatar)
+      }
+      .eraseToAnyPublisher()
   }
 }

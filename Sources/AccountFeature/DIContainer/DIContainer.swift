@@ -18,7 +18,8 @@ final class DIContainer {
   }()
 
   private lazy var accountRepository: AccountRepository = {
-    return DefaultAccountRepository(dataTransferService: dependencies.apiDataTransferService)
+    return DefaultAccountRepository(
+      remoteDataSource: DefaultAccountRemoteDataSource(dataTransferService: dependencies.apiDataTransferService))
   }()
 
   private lazy var keychainRepository: KeychainRepository = {
@@ -96,7 +97,7 @@ extension DIContainer: AccountViewControllerFactory {
     return SignInViewController(viewModel: signViewModel)
   }
 
-  func makeProfileViewController(with account: AccountResult) -> UIViewController {
+  func makeProfileViewController(with account: Account) -> UIViewController {
     let profileViewModel = ProfileViewModel(account: account)
     profileViewModel.delegate = accountViewModel
     return ProfileViewController(viewModel: profileViewModel)

@@ -17,7 +17,7 @@ class ProfileViewModel: ProfileViewModelProtocol {
   private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializer
-  init(account: AccountResult) {
+  init(account: Account) {
     let section = createSectionModel(account: account)
     dataSource.send(section)
   }
@@ -39,7 +39,7 @@ class ProfileViewModel: ProfileViewModelProtocol {
   }
 
   // MARK: - Private
-  private func createSectionModel(account: AccountResult) -> [ProfileSectionModel] {
+  private func createSectionModel(account: Account) -> [ProfileSectionModel] {
     let items: [ProfilesSectionItem] = [
       .userLists(items: .favorites),
       .userLists(items: .watchList)

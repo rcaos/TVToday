@@ -14,7 +14,7 @@ import Shared
 
 enum AccountViewState: Equatable {
   case login
-  case profile(account: AccountResult)
+  case profile(account: Account)
 }
 
 protocol AccountViewModelProtocol: AuthPermissionViewModelDelegate {
@@ -80,7 +80,7 @@ final class AccountViewModel: AccountViewModelProtocol {
 
   private func createSession() {
     createNewSession.execute()
-      .flatMap { [weak self] () -> AnyPublisher<AccountResult, DataTransferError> in
+      .flatMap { [weak self] () -> AnyPublisher<Account, DataTransferError> in
         guard let strongSelf = self else {
           return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher()
         }
@@ -101,7 +101,7 @@ final class AccountViewModel: AccountViewModelProtocol {
       .store(in: &disposeBag)
   }
 
-  private func fetchDetailsAccount() -> AnyPublisher<AccountResult, DataTransferError> {
+  private func fetchDetailsAccount() -> AnyPublisher<Account, DataTransferError> {
     return fetchAccountDetails.execute()
   }
 

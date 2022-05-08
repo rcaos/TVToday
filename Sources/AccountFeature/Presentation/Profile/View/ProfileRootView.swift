@@ -90,7 +90,7 @@ class ProfileRootView: NiblessView {
   }
 
   // MARK: - Build Cells
-  private func buildCellForProfileInfo(_ tableView: UITableView, at indexPath: IndexPath, element: AccountResult) -> UITableViewCell {
+  private func buildCellForProfileInfo(_ tableView: UITableView, at indexPath: IndexPath, element: Account) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: ProfileTableViewCell.self, for: indexPath)
     cell.setModel(with: element)
     return cell

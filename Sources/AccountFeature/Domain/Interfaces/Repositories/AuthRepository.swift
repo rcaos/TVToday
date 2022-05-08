@@ -10,6 +10,6 @@ import Combine
 import NetworkingInterface
 
 protocol AuthRepository {
-  func requestToken() -> AnyPublisher<CreateTokenResult, DataTransferError>
-  func createSession(requestToken: String) -> AnyPublisher<CreateSessionResult, DataTransferError>
+  func requestToken() -> AnyPublisher<NewRequestToken, DataTransferError>
+  func createSession(requestToken: String) -> AnyPublisher<NewSession, DataTransferError>
 }

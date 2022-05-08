@@ -11,33 +11,29 @@ import NetworkingInterface
 import Networking
 
 final class DefaultAuthRepository {
+  private let remoteDataSource: AuthRemoteDataSource
 
-  private let dataTransferService: DataTransferService
-
-  init(dataTransferService: DataTransferService) {
-    self.dataTransferService = dataTransferService
+  init(remoteDataSource: AuthRemoteDataSource) {
+    self.remoteDataSource = remoteDataSource
   }
 }
 
 // MARK: - AuthRepository
 extension DefaultAuthRepository: AuthRepository {
 
-  func requestToken() -> AnyPublisher<CreateTokenResult, DataTransferError> {
-    let endpoint = Endpoint<CreateTokenResult>(
-      path: "3/authentication/token/new",
-      method: .get
-    )
-    return dataTransferService.request(with: endpoint)
+  func requestToken() -> AnyPublisher<NewRequestToken, DataTransferError> {
+    return remoteDataSource.requestToken()
+      .map {
+        return NewRequestToken(success: $0.success, token: $0.token)
+      }
+      .eraseToAnyPublisher()
   }
 
-  func createSession(requestToken: String) -> AnyPublisher<CreateSessionResult, DataTransferError> {
-    let endpoint = Endpoint<CreateSessionResult>(
-      path: "3/authentication/session/new",
-      method: .post,
-      queryParameters: [
-        "request_token": requestToken
-      ]
-    )
-    return dataTransferService.request(with: endpoint)
+  func createSession(requestToken: String) -> AnyPublisher<NewSession, DataTransferError> {
+    return remoteDataSource.createSession(requestToken: requestToken)
+      .map {
+        return NewSession(success: $0.success, sessionId: $0.sessionId)
+      }
+      .eraseToAnyPublisher()
   }
 }

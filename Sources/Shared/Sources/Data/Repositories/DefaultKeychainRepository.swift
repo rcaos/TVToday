@@ -11,7 +11,7 @@ import KeyChainStorage
 
 public class DefaultKeychainRepository {
 
-  private var keyChainStorage: KeychainStorage
+  private let keyChainStorage: KeychainStorage
 
   public init(keyChainStorage: KeychainStorage = DefaultKeyChainStorage.shared) {
     self.keyChainStorage = keyChainStorage

@@ -14,7 +14,11 @@ final class DIContainer {
   private let dependencies: ModuleDependencies
 
   private lazy var authRepository: AuthRepository = {
-    return DefaultAuthRepository(remoteDataSource: DefaultAuthRemoteDataSource(dataTransferService: dependencies.apiDataTransferService))
+    return DefaultAuthRepository(
+      remoteDataSource: DefaultAuthRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      requestTokenRepository: keychainRepository,
+      accessTokenRepository: keychainRepository
+    )
   }()
 
   private lazy var accountRepository: AccountRepository = {
@@ -22,9 +26,7 @@ final class DIContainer {
       remoteDataSource: DefaultAccountRemoteDataSource(dataTransferService: dependencies.apiDataTransferService))
   }()
 
-  private lazy var keychainRepository: KeychainRepository = {
-    return DefaultKeychainRepository()
-  }()
+  private lazy var keychainRepository = DefaultKeychainRepository() // KeychainRepository
 
   private var accountViewModel: AccountViewModel?
 
@@ -63,9 +65,8 @@ final class DIContainer {
   }
 
   // MARK: - Uses Cases
-  fileprivate func makeCreateTokenUseCase() -> CreateTokenUseCase {
-    return DefaultCreateTokenUseCase(authRepository: authRepository,
-                                     keyChainRepository: keychainRepository)
+  private func makeCreateTokenUseCase() -> CreateTokenUseCase {
+    return DefaultCreateTokenUseCase(authRepository: authRepository)
   }
 }
 

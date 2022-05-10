@@ -1,5 +1,5 @@
 //
-//  CreateTokenResult.swift
+//  NewRequestToken.swift
 //  TVToday
 //
 //  Created by Jeans Ruiz on 6/19/20.
@@ -9,6 +9,6 @@
 import Foundation
 
 struct NewRequestToken {
-  let success: Bool
   let token: String
+  let url: URL
 }

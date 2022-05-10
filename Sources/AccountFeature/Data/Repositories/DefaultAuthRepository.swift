@@ -55,7 +55,11 @@ extension DefaultAuthRepository: AuthRepository {
     }
   }
 
-  func createSession(requestToken: String) -> AnyPublisher<NewSession, DataTransferError> {
+  func createSession() -> AnyPublisher<NewSession, DataTransferError> {
+    guard let requestToken = accessTokenRepository.getAccessToken() else {
+      return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher()
+    }
+    
     return remoteDataSource.createSession(requestToken: requestToken)
       .map {
         self.accessTokenRepository.saveAccessToken($0.sessionId)

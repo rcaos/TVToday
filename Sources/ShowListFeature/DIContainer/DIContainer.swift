@@ -14,11 +14,14 @@ final class DIContainer {
   private let dependencies: ShowListFeatureInterface.ModuleDependencies
 
   // MARK: - Repositories
+  private lazy var keychainRepository = DefaultKeychainRepository() // MARK: - TODO, use dependencies.keyChainRepository instead
+
   private lazy var accountShowsRepository: AccountTVShowsRepository = {
     return DefaultAccountTVShowsRepository(
       showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
       mapper: DefaultTVShowPageMapper(),
-      imageBasePath: dependencies.imagesBaseURL
+      imageBasePath: dependencies.imagesBaseURL,
+      loggedUserRepository: keychainRepository
     )
   }()
 
@@ -78,13 +81,11 @@ final class DIContainer {
   }
 
   private func makeWatchListUseCase() -> FetchTVShowsUseCase {
-    return DefaultUserWatchListShowsUseCase(accountShowsRepository: accountShowsRepository,
-                                            keychainRepository: dependencies.keychainRepository)
+    return DefaultUserWatchListShowsUseCase(accountShowsRepository: accountShowsRepository)
   }
 
   private func makeFavoriteListUseCase() -> FetchTVShowsUseCase {
-    return DefaultUserFavoritesShowsUseCase(accountShowsRepository: accountShowsRepository,
-                                            keychainRepository: dependencies.keychainRepository)
+    return DefaultUserFavoritesShowsUseCase(accountShowsRepository: accountShowsRepository)
   }
 }
 

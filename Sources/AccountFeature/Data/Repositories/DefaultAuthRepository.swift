@@ -58,6 +58,7 @@ extension DefaultAuthRepository: AuthRepository {
   func createSession(requestToken: String) -> AnyPublisher<NewSession, DataTransferError> {
     return remoteDataSource.createSession(requestToken: requestToken)
       .map {
+        self.accessTokenRepository.saveAccessToken($0.sessionId)
         return NewSession(success: $0.success, sessionId: $0.sessionId)
       }
       .eraseToAnyPublisher()

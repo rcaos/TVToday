@@ -17,24 +17,15 @@ protocol CreateTokenUseCase {
 
 final class DefaultCreateTokenUseCase: CreateTokenUseCase {
   private let authRepository: AuthRepository
-  private let keyChainRepository: KeychainRepository
 
-  init(authRepository: AuthRepository, keyChainRepository: KeychainRepository) {
+  init(authRepository: AuthRepository) {
     self.authRepository = authRepository
-    self.keyChainRepository = keyChainRepository
   }
 
   func execute() -> AnyPublisher<URL, DataTransferError> {
     authRepository.requestToken()
-      .flatMap { [weak self] result -> AnyPublisher<URL, DataTransferError> in
-        // MARK: - TODO, Move URL to environment config
-        guard let url = URL(string: "https://www.themoviedb.org/authenticate/\(result.token)") else {
-          return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher()
-        }
-
-        self?.keyChainRepository.saveRequestToken(result.token)
-
-        return Just(url).setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
+      .map {
+        return $0.url
       }
       .eraseToAnyPublisher()
   }

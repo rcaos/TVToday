@@ -47,7 +47,7 @@ extension DefaultAuthRepository: AuthRepository {
   // MARK: - TODO, move to Mapping file
   private func mapRequestToken(basePath: String, result: NewRequestTokenDTO) throws -> NewRequestToken {
     if result.success == true,
-       let url = URL(string: "\(basePath)\(result.token)") {
+       let url = URL(string: "\(basePath)/\(result.token)") {
       return NewRequestToken(token: result.token, url: url)
     } else {
       print("cannot Convert request token= \(result), basePath=\(basePath)")
@@ -56,10 +56,9 @@ extension DefaultAuthRepository: AuthRepository {
   }
 
   func createSession() -> AnyPublisher<NewSession, DataTransferError> {
-    guard let requestToken = accessTokenRepository.getAccessToken() else {
+    guard let requestToken = requestTokenRepository.getRequestToken() else {
       return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher()
     }
-    
     return remoteDataSource.createSession(requestToken: requestToken)
       .map {
         self.accessTokenRepository.saveAccessToken($0.sessionId)

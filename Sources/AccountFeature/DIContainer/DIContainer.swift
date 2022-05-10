@@ -23,7 +23,10 @@ final class DIContainer {
 
   private lazy var accountRepository: AccountRepository = {
     return DefaultAccountRepository(
-      remoteDataSource: DefaultAccountRemoteDataSource(dataTransferService: dependencies.apiDataTransferService))
+      remoteDataSource: DefaultAccountRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      tokenRepository: keychainRepository,
+      userLoggedRepository: keychainRepository
+    )
   }()
 
   private lazy var keychainRepository = DefaultKeychainRepository() // KeychainRepository

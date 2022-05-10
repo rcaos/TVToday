@@ -22,6 +22,6 @@ final class DefaultFetchAccountDetailsUseCase: FetchAccountDetailsUseCase {
   }
 
   func execute() -> AnyPublisher<Account, DataTransferError> {
-    return accountRepository.getAccountDetails(session: sessionId)
+    return accountRepository.getAccountDetails()
   }
 }

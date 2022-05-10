@@ -27,9 +27,7 @@ public final class DefaultAccountRepository {
 extension DefaultAccountRepository: AccountRepository {
 
   public func getAccountDetails() -> AnyPublisher<Account, DataTransferError> {
-    guard let sessionId = tokenRepository.getAccessToken() else {
-      return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher()
-    }
+    let sessionId = tokenRepository.getAccessToken()
 
     return remoteDataSource.getAccountDetails(session: sessionId)
       .map {

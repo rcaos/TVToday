@@ -11,28 +11,40 @@ import NetworkingInterface
 public final class DefaultAccountTVShowsDetailsRepository {
   private let showsPageRemoteDataSource: TVShowsRemoteDataSource
   private let mapper: AccountTVShowsDetailsMapperProtocol
+  private let loggedUserRepository: LoggedUserRepository
 
-  public init(showsPageRemoteDataSource: TVShowsRemoteDataSource, mapper: AccountTVShowsDetailsMapperProtocol) {
+  public init(showsPageRemoteDataSource: TVShowsRemoteDataSource, mapper: AccountTVShowsDetailsMapperProtocol, loggedUserRepository: LoggedUserRepository) {
     self.showsPageRemoteDataSource = showsPageRemoteDataSource
     self.mapper = mapper
+    self.loggedUserRepository = loggedUserRepository
   }
 }
 
+
 extension DefaultAccountTVShowsDetailsRepository: AccountTVShowsDetailsRepository {
 
-  public func markAsFavorite(tvShowId: Int, userId: String, session: String, favorite: Bool) -> AnyPublisher<TVShowActionStatus, DataTransferError> {
-    return showsPageRemoteDataSource.markAsFavorite(tvShowId: tvShowId, userId: userId, session: session, favorite: favorite)
+  // MARK: - TODO, handle nil cases, consider change the LoggedUserRepository signature instead
+
+  public func markAsFavorite(tvShowId: Int, favorite: Bool) -> AnyPublisher<TVShowActionStatus, DataTransferError> {
+    let loggedUser = loggedUserRepository.getUser()
+    let userId = loggedUser?.id ?? 0
+
+    return showsPageRemoteDataSource.markAsFavorite(tvShowId: tvShowId, userId: String(userId), session: loggedUser?.sessionId ?? "", favorite: favorite)
       .map { self.mapper.mapActionResult(result: $0) }
       .eraseToAnyPublisher()
   }
 
-  public func saveToWatchList(tvShowId: Int, userId: String, session: String, watchedList: Bool) -> AnyPublisher<TVShowActionStatus, DataTransferError> {
-    return showsPageRemoteDataSource.saveToWatchList(tvShowId: tvShowId, userId: userId, session: session, watchedList: watchedList)
+  public func saveToWatchList(tvShowId: Int, watchedList: Bool) -> AnyPublisher<TVShowActionStatus, DataTransferError> {
+    let loggedUser = loggedUserRepository.getUser()
+    let userId = loggedUser?.id ?? 0
+
+    return showsPageRemoteDataSource.saveToWatchList(tvShowId: tvShowId, userId: String(userId), session: loggedUser?.sessionId ?? "", watchedList: watchedList)
       .map { self.mapper.mapActionResult(result: $0) }
       .eraseToAnyPublisher()
   }
 
-  public func fetchTVShowStatus(tvShowId: Int, sessionId: String) -> AnyPublisher<TVShowAccountStatus, DataTransferError> {
+  public func fetchTVShowStatus(tvShowId: Int) -> AnyPublisher<TVShowAccountStatus, DataTransferError> {
+    let sessionId = loggedUserRepository.getUser()?.sessionId ?? ""
     return showsPageRemoteDataSource.fetchTVShowStatus(tvShowId: tvShowId, sessionId: sessionId)
       .map { self.mapper.mapTVShowStatusResult(result: $0) }
       .eraseToAnyPublisher()

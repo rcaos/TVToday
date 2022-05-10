@@ -9,16 +9,9 @@ import Combine
 import NetworkingInterface
 
 public protocol AccountTVShowsDetailsRepository {
-  func markAsFavorite(tvShowId: Int,
-                      userId: String,
-                      session: String,
-                      favorite: Bool) -> AnyPublisher<TVShowActionStatus, DataTransferError>
+  func markAsFavorite(tvShowId: Int, favorite: Bool) -> AnyPublisher<TVShowActionStatus, DataTransferError>
 
-  func saveToWatchList(tvShowId: Int,
-                       userId: String,
-                       session: String,
-                       watchedList: Bool) -> AnyPublisher<TVShowActionStatus, DataTransferError>
+  func saveToWatchList(tvShowId: Int, watchedList: Bool) -> AnyPublisher<TVShowActionStatus, DataTransferError>
 
-  func fetchTVShowStatus(tvShowId: Int,
-                         sessionId: String) -> AnyPublisher<TVShowAccountStatus, DataTransferError>
+  func fetchTVShowStatus(tvShowId: Int) -> AnyPublisher<TVShowAccountStatus, DataTransferError>
 }

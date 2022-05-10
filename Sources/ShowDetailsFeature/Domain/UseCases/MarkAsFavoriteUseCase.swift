@@ -21,23 +21,14 @@ public struct MarkAsFavoriteUseCaseRequestValue {
 
 public final class DefaultMarkAsFavoriteUseCase: MarkAsFavoriteUseCase {
   private let accountShowsRepository: AccountTVShowsDetailsRepository
-  private let keychainRepository: KeychainRepository
 
-  public init(accountShowsRepository: AccountTVShowsDetailsRepository,
-              keychainRepository: KeychainRepository) {
+  public init(accountShowsRepository: AccountTVShowsDetailsRepository) {
     self.accountShowsRepository = accountShowsRepository
-    self.keychainRepository = keychainRepository
   }
 
   public func execute(requestValue: MarkAsFavoriteUseCaseRequestValue) -> AnyPublisher<Bool, DataTransferError> {
-    guard let account = keychainRepository.fetchLoguedUser() else {
-      return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher() // TODO, use other error
-    }
-
     return accountShowsRepository.markAsFavorite(
       tvShowId: requestValue.showId,
-      userId: String(account.id),
-      session: account.sessionId,
       favorite: requestValue.favorite
     )
       .map { _ in requestValue.favorite }

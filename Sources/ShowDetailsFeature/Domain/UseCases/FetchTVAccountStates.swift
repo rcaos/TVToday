@@ -20,20 +20,12 @@ struct FetchTVAccountStatesRequestValue {
 
 final class DefaultFetchTVAccountStates: FetchTVAccountStates {
   private let accountShowsRepository: AccountTVShowsDetailsRepository
-  private let keychainRepository: KeychainRepository
 
-  init(accountShowsRepository: AccountTVShowsDetailsRepository,
-       keychainRepository: KeychainRepository) {
+  init(accountShowsRepository: AccountTVShowsDetailsRepository) {
     self.accountShowsRepository = accountShowsRepository
-    self.keychainRepository = keychainRepository
   }
 
   func execute(requestValue: FetchTVAccountStatesRequestValue) -> AnyPublisher<TVShowAccountStatus, DataTransferError> {
-    guard let account = keychainRepository.fetchLoguedUser() else {
-      return Fail(error: .noResponse).eraseToAnyPublisher()
-    }
-
-    return accountShowsRepository.fetchTVShowStatus(tvShowId: requestValue.showId, sessionId: account.sessionId)
-      .eraseToAnyPublisher()
+    return accountShowsRepository.fetchTVShowStatus(tvShowId: requestValue.showId)
   }
 }

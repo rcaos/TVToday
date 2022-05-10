@@ -12,21 +12,11 @@ import NetworkingInterface
 public final class DefaultUserFavoritesShowsUseCase: FetchTVShowsUseCase {
   private let accountShowsRepository: AccountTVShowsRepository
 
-  private let keychainRepository: KeychainRepository
-
-  public init(accountShowsRepository: AccountTVShowsRepository, keychainRepository: KeychainRepository) {
+  public init(accountShowsRepository: AccountTVShowsRepository) {
     self.accountShowsRepository = accountShowsRepository
-    self.keychainRepository = keychainRepository
   }
 
   public func execute(requestValue: FetchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowPage, DataTransferError> {
-    guard let userLogged = keychainRepository.fetchLoguedUser() else {
-      return Fail(error: DataTransferError.noResponse)    // TODO, another error type
-        .eraseToAnyPublisher()
-    }
-
-    return accountShowsRepository.fetchFavoritesShows(page: requestValue.page,
-                                                      userId: userLogged.id,
-                                                      sessionId: userLogged.sessionId)
+    return accountShowsRepository.fetchFavoritesShows(page: requestValue.page)
   }
 }

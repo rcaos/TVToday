@@ -16,24 +16,15 @@ protocol CreateSessionUseCase {
 
 final class DefaultCreateSessionUseCase: CreateSessionUseCase {
   private let authRepository: AuthRepository
-  private let keyChainRepository: KeychainRepository
 
-  init(authRepository: AuthRepository, keyChainRepository: KeychainRepository) {
+  init(authRepository: AuthRepository) {
     self.authRepository = authRepository
-    self.keyChainRepository = keyChainRepository
   }
 
   func execute() -> AnyPublisher<Void, DataTransferError> {
-    guard let requestToken = keyChainRepository.fetchRequestToken() else {
-      return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher()
-    }
-
-    return authRepository.createSession(requestToken: requestToken)
-      .flatMap { [weak self] newSession -> AnyPublisher<Void, DataTransferError> in
-        self?.keyChainRepository.saveAccessToken(newSession.sessionId)
-
-        return Just(())
-          .setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
+    return authRepository.createSession()
+      .map { _ in
+        return (())
       }
       .eraseToAnyPublisher()
   }

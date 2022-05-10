@@ -36,8 +36,7 @@ final class DIContainer {
 
     // This init methods are Ok, because acountViewModel its a Long-Lived dependency
     func makeCreateSessionUseCase() -> CreateSessionUseCase {
-      return DefaultCreateSessionUseCase(authRepository: authRepository,
-                                         keyChainRepository: keychainRepository)
+      return DefaultCreateSessionUseCase(authRepository: authRepository)
     }
 
     func makeFetchAccountDetailsUseCase() -> FetchAccountDetailsUseCase {

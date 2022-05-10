@@ -10,5 +10,5 @@ import Combine
 import NetworkingInterface
 
 public protocol AccountRepository {
-  func getAccountDetails(session: String) -> AnyPublisher<Account, DataTransferError>
+  func getAccountDetails() -> AnyPublisher<Account, DataTransferError>
 }

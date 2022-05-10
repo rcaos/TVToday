@@ -17,13 +17,12 @@ final class DIContainer {
   private lazy var accountShowsRepository: AccountTVShowsDetailsRepository = {
     return DefaultAccountTVShowsDetailsRepository(
       showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
-      mapper: DefaultAccountTVShowDetailsMapper()
+      mapper: DefaultAccountTVShowDetailsMapper(),
+      loggedUserRepository: keychainRepository
     )
   }()
 
-  private lazy var keychainRepository: KeychainRepository = {
-    return DefaultKeychainRepository()
-  }()
+  private lazy var keychainRepository = DefaultKeychainRepository() // MARK: - TODO, expose wrapper instead
 
   private lazy var episodesRepository: TVEpisodesRepository = {
     return DefaultTVEpisodesRepository(
@@ -87,18 +86,15 @@ final class DIContainer {
   }
 
   private func makeMarkAsFavoriteUseCase() -> MarkAsFavoriteUseCase {
-    return DefaultMarkAsFavoriteUseCase(accountShowsRepository: accountShowsRepository,
-                                        keychainRepository: keychainRepository)
+    return DefaultMarkAsFavoriteUseCase(accountShowsRepository: accountShowsRepository)
   }
 
   private func makeSaveToWatchListUseCase() -> SaveToWatchListUseCase {
-    return DefaultSaveToWatchListUseCase(accountShowsRepository: accountShowsRepository,
-                                         keychainRepository: keychainRepository)
+    return DefaultSaveToWatchListUseCase(accountShowsRepository: accountShowsRepository)
   }
 
   private func makeTVAccountStatesUseCase() -> FetchTVAccountStates {
-    return DefaultFetchTVAccountStates(accountShowsRepository: accountShowsRepository,
-                                       keychainRepository: keychainRepository)
+    return DefaultFetchTVAccountStates(accountShowsRepository: accountShowsRepository)
   }
 
   private func makeFetchLoggedUserUseCase() -> FetchLoggedUser {

@@ -43,8 +43,7 @@ final class DIContainer {
     }
 
     func makeFetchAccountDetailsUseCase() -> FetchAccountDetailsUseCase {
-      return DefaultFetchAccountDetailsUseCase(accountRepository: accountRepository,
-                                               keychainRepository: keychainRepository)
+      return DefaultFetchAccountDetailsUseCase(accountRepository: accountRepository)
     }
 
     func makeFetchLoggedUserUseCase() -> FetchLoggedUser {

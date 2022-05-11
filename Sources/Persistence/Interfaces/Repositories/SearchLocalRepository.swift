@@ -10,6 +10,6 @@ import Combine
 import Shared
 
 public protocol SearchLocalRepository {
-  func saveSearch(query: String, userId: Int) -> AnyPublisher<Void, CustomError>
-  func fetchSearchs(userId: Int) -> AnyPublisher<[Search], CustomError>
+  func saveSearch(query: String) -> AnyPublisher<Void, CustomError>
+  func fetchRecentSearches() -> AnyPublisher<[Search], CustomError>
 }

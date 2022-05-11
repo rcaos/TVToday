@@ -50,8 +50,9 @@ public class AppDIContainer {
     return LocalStorage(coreDataStorage: .shared)
   }()
 
-  lazy var showsPersistence: ShowsVisitedLocalRepository = {
-    return localStorage.showVisitedStorage(limitStorage: 10)
+  lazy var showsPersistence: ShowsVisitedLocalRepositoryProtocol = {
+    return ShowsVisitedLocalRepository(dataSource: localStorage.showVisitedStorage(limitStorage: 10),
+                                       loggedUserRepository: keychainRepository)
   }()
 
   lazy var searchPersistence: SearchLocalRepository = {

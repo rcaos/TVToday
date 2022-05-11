@@ -63,9 +63,7 @@ final class DIContainer {
   }
 
   fileprivate func makeFetchVisitedShowsUseCase() -> FetchVisitedShowsUseCase {
-    return DefaultFetchVisitedShowsUseCase(
-      showsVisitedLocalRepository: dependencies.showsPersistence,
-      keychainRepository: keychainRepository)
+    return DefaultFetchVisitedShowsUseCase(showsVisitedLocalRepository: dependencies.showsPersistence)
   }
 
   fileprivate func makeRecentShowsDidChangedUseCase() -> RecentVisitedShowDidChangeUseCase {

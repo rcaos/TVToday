@@ -80,7 +80,6 @@ final class DIContainer {
     )
     return DefaultFetchTVShowDetailsUseCase(
       tvShowDetailsRepository: tvShowDetailsRepository,
-      keychainRepository: keychainRepository,
       tvShowsVisitedRepository: dependencies.showsPersistenceRepository
     )
   }

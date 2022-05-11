@@ -14,9 +14,9 @@ protocol DeleteLoggedUserUseCase {
 }
 
 final class DefaultDeleteLoggedUserUseCase: DeleteLoggedUserUseCase {
-  private let loggedRepository: LoggedUserRepository
+  private let loggedRepository: LoggedUserRepositoryProtocol
 
-  init(loggedRepository: LoggedUserRepository) {
+  init(loggedRepository: LoggedUserRepositoryProtocol) {
     self.loggedRepository = loggedRepository
   }
 

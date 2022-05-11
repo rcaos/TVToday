@@ -11,9 +11,9 @@ public protocol FetchLoggedUser {
 }
 
 public final class DefaultFetchLoggedUser: FetchLoggedUser {
-  private let loggedRepository: LoggedUserRepository
+  private let loggedRepository: LoggedUserRepositoryProtocol
 
-  public init(loggedRepository: LoggedUserRepository) {
+  public init(loggedRepository: LoggedUserRepositoryProtocol) {
     self.loggedRepository = loggedRepository
   }
 

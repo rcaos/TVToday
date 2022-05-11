@@ -11,9 +11,9 @@ import NetworkingInterface
 public final class DefaultAccountTVShowsDetailsRepository {
   private let showsPageRemoteDataSource: TVShowsRemoteDataSource
   private let mapper: AccountTVShowsDetailsMapperProtocol
-  private let loggedUserRepository: LoggedUserRepository
+  private let loggedUserRepository: LoggedUserRepositoryProtocol
 
-  public init(showsPageRemoteDataSource: TVShowsRemoteDataSource, mapper: AccountTVShowsDetailsMapperProtocol, loggedUserRepository: LoggedUserRepository) {
+  public init(showsPageRemoteDataSource: TVShowsRemoteDataSource, mapper: AccountTVShowsDetailsMapperProtocol, loggedUserRepository: LoggedUserRepositoryProtocol) {
     self.showsPageRemoteDataSource = showsPageRemoteDataSource
     self.mapper = mapper
     self.loggedUserRepository = loggedUserRepository

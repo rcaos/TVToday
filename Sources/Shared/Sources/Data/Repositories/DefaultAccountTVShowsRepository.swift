@@ -13,9 +13,9 @@ public final class DefaultAccountTVShowsRepository {
   private let showsPageRemoteDataSource: TVShowsRemoteDataSource
   private let mapper: TVShowPageMapper
   private let imageBasePath: String
-  private let loggedUserRepository: LoggedUserRepository
+  private let loggedUserRepository: LoggedUserRepositoryProtocol
 
-  public init(showsPageRemoteDataSource: TVShowsRemoteDataSource, mapper: TVShowPageMapper, imageBasePath: String, loggedUserRepository: LoggedUserRepository) {
+  public init(showsPageRemoteDataSource: TVShowsRemoteDataSource, mapper: TVShowPageMapper, imageBasePath: String, loggedUserRepository: LoggedUserRepositoryProtocol) {
     self.showsPageRemoteDataSource = showsPageRemoteDataSource
     self.mapper = mapper
     self.imageBasePath = imageBasePath

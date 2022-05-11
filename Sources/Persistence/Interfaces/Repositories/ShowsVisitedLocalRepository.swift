@@ -10,9 +10,9 @@ import Shared
 
 public final class ShowsVisitedLocalRepository {
   private let dataSource: ShowsVisitedLocalDataSource
-  private let loggedUserRepository: LoggedUserRepository
+  private let loggedUserRepository: LoggedUserRepositoryProtocol
 
-  public init(dataSource: ShowsVisitedLocalDataSource, loggedUserRepository: LoggedUserRepository) {
+  public init(dataSource: ShowsVisitedLocalDataSource, loggedUserRepository: LoggedUserRepositoryProtocol) {
     self.dataSource = dataSource
     self.loggedUserRepository = loggedUserRepository
   }

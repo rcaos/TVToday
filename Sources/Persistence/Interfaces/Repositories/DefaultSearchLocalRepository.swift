@@ -10,9 +10,9 @@ import Shared
 
 public final class DefaultSearchLocalRepository {
   private let dataSource: SearchLocalDataSource
-  private let loggedUserRepository: LoggedUserRepository
+  private let loggedUserRepository: LoggedUserRepositoryProtocol
 
-  public init(dataSource: SearchLocalDataSource, loggedUserRepository: LoggedUserRepository) {
+  public init(dataSource: SearchLocalDataSource, loggedUserRepository: LoggedUserRepositoryProtocol) {
     self.dataSource = dataSource
     self.loggedUserRepository = loggedUserRepository
   }

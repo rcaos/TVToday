@@ -18,22 +18,13 @@ public struct FetchVisitedShowsUseCaseRequestValue {
 
 public final class DefaultFetchVisitedShowsUseCase: FetchVisitedShowsUseCase {
 
-  private let showsVisitedLocalRepository: ShowsVisitedLocalRepository
-  private let keychainRepository: KeychainRepository
+  private let showsVisitedLocalRepository: ShowsVisitedLocalRepositoryProtocol
 
-  public init(showsVisitedLocalRepository: ShowsVisitedLocalRepository,
-              keychainRepository: KeychainRepository) {
+  public init(showsVisitedLocalRepository: ShowsVisitedLocalRepositoryProtocol) {
     self.showsVisitedLocalRepository = showsVisitedLocalRepository
-    self.keychainRepository = keychainRepository
   }
 
   public func execute(requestValue: FetchVisitedShowsUseCaseRequestValue) -> AnyPublisher<[ShowVisited], CustomError> {
-
-    var idLogged = 0
-    if let userLogged = keychainRepository.fetchLoguedUser() {
-      idLogged = userLogged.id
-    }
-
-    return showsVisitedLocalRepository.fetchVisitedShows(userId: idLogged)
+    return showsVisitedLocalRepository.fetchVisitedShows()
   }
 }

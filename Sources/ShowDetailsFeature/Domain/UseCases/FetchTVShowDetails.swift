@@ -24,30 +24,21 @@ public struct FetchTVShowDetailsUseCaseRequestValue {
 // MARK: - FetchTVShowDetailsUseCase
 public final class DefaultFetchTVShowDetailsUseCase: FetchTVShowDetailsUseCase {
   private let tvShowDetailsRepository: TVShowsDetailsRepository
-  private let tvShowsVisitedRepository: ShowsVisitedLocalRepository
-  private let keychainRepository: KeychainRepository
+  private let tvShowsVisitedRepository: ShowsVisitedLocalRepositoryProtocol // MARK: - TODO, Move this logic to TVShowsDetailsRepository
 
   public init(tvShowDetailsRepository: TVShowsDetailsRepository,
-              keychainRepository: KeychainRepository,
-              tvShowsVisitedRepository: ShowsVisitedLocalRepository) {
+              tvShowsVisitedRepository: ShowsVisitedLocalRepositoryProtocol) {
     self.tvShowDetailsRepository = tvShowDetailsRepository
-    self.keychainRepository = keychainRepository
     self.tvShowsVisitedRepository = tvShowsVisitedRepository
   }
 
   public func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> AnyPublisher<TVShowDetail, DataTransferError> {
-    var idLogged = 0
-    if let userLogged = keychainRepository.fetchLoguedUser() {
-      idLogged = userLogged.id
-    }
-
     return tvShowDetailsRepository
       .fetchTVShowDetails(with: requestValue.identifier)
       .receive(on: DispatchQueue.main) // MARK: - TODO,
       .flatMap { [tvShowsVisitedRepository] details -> AnyPublisher<TVShowDetail, DataTransferError> in
         return tvShowsVisitedRepository.saveShow(id: details.id,
-                                                 pathImage: details.posterPathURL?.absoluteString ?? "",
-                                                 userId: idLogged)
+                                                 pathImage: details.posterPathURL?.absoluteString ?? "")
           .map { _ -> TVShowDetail in details }
           .mapError { _ -> DataTransferError in DataTransferError.noResponse }
           .eraseToAnyPublisher()

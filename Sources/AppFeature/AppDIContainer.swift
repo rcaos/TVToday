@@ -55,8 +55,11 @@ public class AppDIContainer {
   }()
 
   lazy var searchPersistence: SearchLocalRepository = {
-    return localStorage.recentsSearch()
+    return DefaultSearchLocalRepository(dataSource: localStorage.recentsSearch(),
+                                        loggedUserRepository: keychainRepository)
   }()
+
+  private lazy var keychainRepository = DefaultKeychainRepository()
 
   // MARK: - Airing Today Module
   func buildAiringTodayModule() -> AiringTodayFeature.Module {
@@ -119,7 +122,7 @@ extension AppDIContainer: ModuleShowListDetailsBuilder {
                                      delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinatorProtocol {
     let dependencies = ShowListFeatureInterface.ModuleDependencies(apiDataTransferService: apiDataTransferService,
                                                                    imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                                   keychainRepository: DefaultKeychainRepository(),
+                                                                   keychainRepository: keychainRepository,
                                                                    showDetailsBuilder: self)
     let module = ShowListFeature.Module(dependencies: dependencies)
     return module.buildModuleCoordinator(in: navigationController, delegate: delegate)

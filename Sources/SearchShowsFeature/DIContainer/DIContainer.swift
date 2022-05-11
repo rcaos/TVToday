@@ -50,14 +50,12 @@ final class DIContainer {
     )
     return DefaultSearchTVShowsUseCase(
       tvShowsPageRepository: tvShowsPageRepository,
-      keychainRepository: keychainRepository,
       searchsLocalRepository: dependencies.searchsPersistence
     )
   }
 
-  fileprivate func makeFetchSearchsUseCase() -> FetchSearchsUseCase {
-    return DefaultFetchSearchsUseCase(searchLocalRepository: dependencies.searchsPersistence,
-                                      keychainRepository: keychainRepository)
+  fileprivate func makeFetchSearchesUseCase() -> FetchSearchesUseCase {
+    return DefaultFetchSearchesUseCase(searchLocalRepository: dependencies.searchsPersistence)
   }
 
   fileprivate func makeFetchGenresUseCase() -> FetchGenresUseCase {
@@ -77,7 +75,7 @@ final class DIContainer {
   // MARK: - Search Feature View Models
   fileprivate func buildResultsViewModel(with delegate: ResultsSearchViewModelDelegate?) -> ResultsSearchViewModelProtocol {
     let resultsViewModel = ResultsSearchViewModel(searchTVShowsUseCase: makeSearchShowsUseCase(),
-                                                  fetchRecentSearchsUseCase: makeFetchSearchsUseCase())
+                                                  fetchRecentSearchesUseCase: makeFetchSearchesUseCase())
     resultsViewModel.delegate = searchViewModel
     return resultsViewModel
   }

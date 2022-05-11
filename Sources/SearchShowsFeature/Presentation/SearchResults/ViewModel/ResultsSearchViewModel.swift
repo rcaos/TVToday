@@ -14,7 +14,7 @@ import Persistence
 
 final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
   private let searchTVShowsUseCase: SearchTVShowsUseCase
-  private let fetchRecentSearchsUseCase: FetchSearchsUseCase
+  private let fetchRecentSearchesUseCase: FetchSearchesUseCase
   private let currentSearchSubject = CurrentValueSubject<String, Never>("")  /// ?????
 
   let viewState  = CurrentValueSubject<ResultViewState, Never>(.initial)
@@ -26,10 +26,10 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
 
   // MARK: - Init
   init(searchTVShowsUseCase: SearchTVShowsUseCase,
-       fetchRecentSearchsUseCase: FetchSearchsUseCase,
+       fetchRecentSearchesUseCase: FetchSearchesUseCase,
        scheduler: AnySchedulerOf<DispatchQueue> = .main) {
     self.searchTVShowsUseCase = searchTVShowsUseCase
-    self.fetchRecentSearchsUseCase = fetchRecentSearchsUseCase
+    self.fetchRecentSearchesUseCase = fetchRecentSearchesUseCase
     self.scheduler = scheduler
     subscribeToRecentsShowsChange()
     subscribeToSearchInput()
@@ -71,8 +71,8 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
     viewState
       .removeDuplicates()
       .filter { $0 == .initial }
-      .flatMap { [fetchRecentSearchsUseCase] _ -> AnyPublisher<[Search], CustomError> in
-        return fetchRecentSearchsUseCase.execute(requestValue: FetchSearchsUseCaseRequestValue())
+      .flatMap { [fetchRecentSearchesUseCase] _ -> AnyPublisher<[Search], CustomError> in
+        return fetchRecentSearchesUseCase.execute(requestValue: FetchSearchesUseCaseRequestValue())
       }
       .receive(on: scheduler)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] results in

@@ -1,5 +1,5 @@
 //
-//  DeleteLoguedUserUseCase.swift
+//  DeleteLoggedUserUseCase.swift
 //  AccountFeature
 //
 //  Created by Jeans Ruiz on 6/21/20.

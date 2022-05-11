@@ -50,14 +50,14 @@ final class DIContainer {
       return DefaultFetchLoggedUser(loggedRepository: keychainRepository)
     }
 
-    func makeDeleteLoguedUserUseCase() -> DeleteLoguedUserUseCase {
-      return DefaultDeleteLoguedUserUseCase(keychainRepository: keychainRepository)
+    func makeDeleteLoggedUserUseCase() -> DeleteLoggedUserUseCase {
+      return DefaultDeleteLoggedUserUseCase(loggedRepository: keychainRepository)
     }
 
     accountViewModel = AccountViewModel(createNewSession: makeCreateSessionUseCase(),
                                         fetchAccountDetails: makeFetchAccountDetailsUseCase(),
                                         fetchLoggedUser: makeFetchLoggedUserUseCase(),
-                                        deleteLoguedUser: makeDeleteLoguedUserUseCase())
+                                        deleteLoggedUser: makeDeleteLoggedUserUseCase())
   }
 
   // MARK: - Build Module Coordinator

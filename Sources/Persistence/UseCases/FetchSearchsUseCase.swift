@@ -1,5 +1,5 @@
 //
-//  FetchSearchsUseCase.swift
+//  FetchSearchesUseCase.swift
 //  Persistence
 //
 //  Created by Jeans Ruiz on 7/7/20.
@@ -8,30 +8,22 @@
 import Combine
 import Shared
 
-public protocol FetchSearchsUseCase {
-  func execute(requestValue: FetchSearchsUseCaseRequestValue) -> AnyPublisher<[Search], CustomError>
+public protocol FetchSearchesUseCase {
+  func execute(requestValue: FetchSearchesUseCaseRequestValue) -> AnyPublisher<[Search], CustomError>
 }
 
-public struct FetchSearchsUseCaseRequestValue {
+public struct FetchSearchesUseCaseRequestValue {
   public init() { }
 }
 
-public final class DefaultFetchSearchsUseCase: FetchSearchsUseCase {
-
+public final class DefaultFetchSearchesUseCase: FetchSearchesUseCase {
   private let searchLocalRepository: SearchLocalRepository
-  private let keychainRepository: KeychainRepository
 
-  public init(searchLocalRepository: SearchLocalRepository,
-              keychainRepository: KeychainRepository) {
+  public init(searchLocalRepository: SearchLocalRepository) {
     self.searchLocalRepository = searchLocalRepository
-    self.keychainRepository = keychainRepository
   }
 
-  public func execute(requestValue: FetchSearchsUseCaseRequestValue) -> AnyPublisher<[Search], CustomError> {
-    var idLogged = 0
-    if let userLogged = keychainRepository.fetchLoguedUser() {
-      idLogged = userLogged.id
-    }
-    return searchLocalRepository.fetchSearchs(userId: idLogged)
+  public func execute(requestValue: FetchSearchesUseCaseRequestValue) -> AnyPublisher<[Search], CustomError> {
+    return searchLocalRepository.fetchRecentSearches()
   }
 }

@@ -22,30 +22,21 @@ public struct SearchTVShowsUseCaseRequestValue {
 
 // MARK: - SearchTVShowsUseCase
 final class DefaultSearchTVShowsUseCase: SearchTVShowsUseCase {
-
   private let tvShowsPageRepository: TVShowsPageRepository
   private let searchsLocalRepository: SearchLocalRepository
-  private let keychainRepository: KeychainRepository
 
   public init(tvShowsPageRepository: TVShowsPageRepository,
-              keychainRepository: KeychainRepository,
               searchsLocalRepository: SearchLocalRepository) {
     self.tvShowsPageRepository = tvShowsPageRepository
-    self.keychainRepository = keychainRepository
     self.searchsLocalRepository = searchsLocalRepository
   }
 
   func execute(requestValue: SearchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowPage, DataTransferError> {
-    var idLogged = 0
-    if let userLogged = keychainRepository.fetchLoguedUser() {
-      idLogged = userLogged.id
-    }
-
     return tvShowsPageRepository.searchShowsFor(query: requestValue.query, page: requestValue.page)
       .receive(on: DispatchQueue.main)  // MARK: - TODO, Change
       .flatMap { resultSearch -> AnyPublisher<TVShowPage, DataTransferError> in
         if requestValue.page == 1 {
-          return self.searchsLocalRepository.saveSearch(query: requestValue.query, userId: idLogged)
+          return self.searchsLocalRepository.saveSearch(query: requestValue.query)
             .map { _ in resultSearch }
             .mapError { _ -> DataTransferError in DataTransferError.noResponse }
             .eraseToAnyPublisher()

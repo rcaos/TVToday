@@ -98,7 +98,7 @@ final class DIContainer {
   }
 
   private func makeFetchLoggedUserUseCase() -> FetchLoggedUser {
-    return DefaultFetchLoggedUser(keychainRepository: keychainRepository)
+    return DefaultFetchLoggedUser(loggedRepository: keychainRepository)
   }
 
   // MARK: - Uses Cases for Seasons

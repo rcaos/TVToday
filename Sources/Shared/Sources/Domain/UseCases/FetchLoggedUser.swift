@@ -11,14 +11,13 @@ public protocol FetchLoggedUser {
 }
 
 public final class DefaultFetchLoggedUser: FetchLoggedUser {
+  private let loggedRepository: LoggedUserRepository
 
-  private let keychainRepository: KeychainRepository  // MARK: - TODO, move Repository
-
-  public init(keychainRepository: KeychainRepository) {
-    self.keychainRepository = keychainRepository
+  public init(loggedRepository: LoggedUserRepository) {
+    self.loggedRepository = loggedRepository
   }
 
   public func execute() -> AccountDomain? {
-    return keychainRepository.fetchLoguedUser()
+    return loggedRepository.getUser() // MARK: - TODO, Show Details access 3 times?
   }
 }

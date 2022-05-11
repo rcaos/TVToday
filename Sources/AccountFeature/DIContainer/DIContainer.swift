@@ -47,7 +47,7 @@ final class DIContainer {
     }
 
     func makeFetchLoggedUserUseCase() -> FetchLoggedUser {
-      return DefaultFetchLoggedUser(keychainRepository: keychainRepository)
+      return DefaultFetchLoggedUser(loggedRepository: keychainRepository)
     }
 
     func makeDeleteLoguedUserUseCase() -> DeleteLoguedUserUseCase {

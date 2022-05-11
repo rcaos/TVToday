@@ -1,6 +1,6 @@
 //
 //  DeleteLoguedUserUseCase.swift
-//  TVToday
+//  AccountFeature
 //
 //  Created by Jeans Ruiz on 6/21/20.
 //  Copyright © 2020 Jeans. All rights reserved.
@@ -9,18 +9,18 @@
 import Foundation
 import Shared
 
-protocol DeleteLoguedUserUseCase {
+protocol DeleteLoggedUserUseCase {
   func execute()
 }
 
-final class DefaultDeleteLoguedUserUseCase: DeleteLoguedUserUseCase {
-  private let keychainRepository: KeychainRepository
+final class DefaultDeleteLoggedUserUseCase: DeleteLoggedUserUseCase {
+  private let loggedRepository: LoggedUserRepository
 
-  init(keychainRepository: KeychainRepository) {
-    self.keychainRepository = keychainRepository
+  init(loggedRepository: LoggedUserRepository) {
+    self.loggedRepository = loggedRepository
   }
 
   func execute() {
-    return keychainRepository.deleteLoguedUser()
+    loggedRepository.deleteUser()
   }
 }

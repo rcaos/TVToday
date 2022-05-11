@@ -26,7 +26,7 @@ final class AccountViewModel: AccountViewModelProtocol {
   private let createNewSession: CreateSessionUseCase
   private let fetchLoggedUser: FetchLoggedUser
   private let fetchAccountDetails: FetchAccountDetailsUseCase
-  private let deleteLoguedUser: DeleteLoguedUserUseCase
+  private let deleteLoggedUser: DeleteLoggedUserUseCase
 
   weak var coordinator: AccountCoordinatorProtocol?
   private var disposeBag = Set<AnyCancellable>()
@@ -39,13 +39,13 @@ final class AccountViewModel: AccountViewModelProtocol {
   init(createNewSession: CreateSessionUseCase,
        fetchAccountDetails: FetchAccountDetailsUseCase,
        fetchLoggedUser: FetchLoggedUser,
-       deleteLoguedUser: DeleteLoguedUserUseCase,
+       deleteLoggedUser: DeleteLoggedUserUseCase,
        scheduler: AnySchedulerOf<DispatchQueue> = .main
   ) {
     self.createNewSession = createNewSession
     self.fetchAccountDetails = fetchAccountDetails
     self.fetchLoggedUser = fetchLoggedUser
-    self.deleteLoguedUser = deleteLoguedUser
+    self.deleteLoggedUser = deleteLoggedUser
     self.scheduler = scheduler
   }
 
@@ -106,7 +106,7 @@ final class AccountViewModel: AccountViewModelProtocol {
   }
 
   private func logoutUser() {
-    deleteLoguedUser.execute()
+    deleteLoggedUser.execute()
     viewState.send(.login)
   }
 

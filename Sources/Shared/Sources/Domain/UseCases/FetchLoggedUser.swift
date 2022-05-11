@@ -12,7 +12,7 @@ public protocol FetchLoggedUser {
 
 public final class DefaultFetchLoggedUser: FetchLoggedUser {
 
-  private let keychainRepository: KeychainRepository
+  private let keychainRepository: KeychainRepository  // MARK: - TODO, move Repository
 
   public init(keychainRepository: KeychainRepository) {
     self.keychainRepository = keychainRepository

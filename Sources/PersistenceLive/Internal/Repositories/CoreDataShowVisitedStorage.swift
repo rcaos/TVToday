@@ -24,7 +24,7 @@ final class CoreDataShowVisitedStorage {
   }
 }
 
-extension CoreDataShowVisitedStorage: ShowsVisitedLocalRepository {
+extension CoreDataShowVisitedStorage: ShowsVisitedLocalDataSource {
 
   public func saveShow(id: Int, pathImage: String, userId: Int) -> AnyPublisher<Void, CustomError> {
     return Deferred { [store, limitStorage] in
@@ -38,9 +38,9 @@ extension CoreDataShowVisitedStorage: ShowsVisitedLocalRepository {
     .eraseToAnyPublisher()
   }
 
-  public func fetchVisitedShows(userId: Int) -> AnyPublisher<[ShowVisited], CustomError> {
+  public func fetchVisitedShows(userId: Int) -> AnyPublisher<[ShowVisitedDLO], CustomError> {
     return Deferred { [store] in
-      return Future<[ShowVisited], CustomError> { promise in
+      return Future<[ShowVisitedDLO], CustomError> { promise in
         let results = store.findAll(for: userId).map { $0.toDomain() }
         promise(.success(results))
       }

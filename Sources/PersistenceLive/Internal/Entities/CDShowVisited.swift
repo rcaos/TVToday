@@ -26,8 +26,8 @@ final class CDShowVisited: NSManagedObject {
 }
 
 extension CDShowVisited {
-  func toDomain() -> ShowVisited {
-    return ShowVisited(id: id, pathImage: pathImage)
+  func toDomain() -> ShowVisitedDLO {
+    return ShowVisitedDLO(id: id, pathImage: pathImage)
   }
 }
 

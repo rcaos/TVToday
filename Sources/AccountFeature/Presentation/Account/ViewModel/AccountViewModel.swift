@@ -50,10 +50,10 @@ final class AccountViewModel: AccountViewModelProtocol {
   }
 
   func viewDidLoad() {
-    checkIsLogued()
+    checkIsLogged()
   }
 
-  private func checkIsLogued() {
+  private func checkIsLogged() {
     if fetchLoggedUser.execute() != nil {
       fetchUserDetails()
     } else {

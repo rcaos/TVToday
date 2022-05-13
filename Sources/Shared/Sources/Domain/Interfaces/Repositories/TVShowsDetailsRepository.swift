@@ -11,7 +11,3 @@ import NetworkingInterface
 public protocol TVShowsDetailsRepository {
   func fetchTVShowDetails(with showId: Int) -> AnyPublisher<TVShowDetail, DataTransferError>
 }
-
-public protocol TVShowsDetailsRemoteDataSourceProtocol {
-  func fetchTVShowDetails(with showId: Int) -> AnyPublisher<TVShowDetailDTO, DataTransferError>
-}

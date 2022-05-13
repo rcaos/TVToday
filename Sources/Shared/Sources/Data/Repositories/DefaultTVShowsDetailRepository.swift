@@ -11,10 +11,10 @@ import NetworkingInterface
 
 public final class DefaultTVShowsDetailRepository {
   private let showsPageRemoteDataSource: TVShowsDetailsRemoteDataSourceProtocol
-  private let mapper: TVShowDetailsMapper
+  private let mapper: TVShowDetailsMapperProtocol
   private let imageBasePath: String
 
-  public init(showsPageRemoteDataSource: TVShowsDetailsRemoteDataSourceProtocol, mapper: TVShowDetailsMapper, imageBasePath: String) {
+  public init(showsPageRemoteDataSource: TVShowsDetailsRemoteDataSourceProtocol, mapper: TVShowDetailsMapperProtocol, imageBasePath: String) {
     self.showsPageRemoteDataSource = showsPageRemoteDataSource
     self.mapper = mapper
     self.imageBasePath = imageBasePath

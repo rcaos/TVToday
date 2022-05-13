@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class DefaultTVShowDetailsMapper: TVShowDetailsMapper {
+public final class DefaultTVShowDetailsMapper: TVShowDetailsMapperProtocol {
 
   public init() { }
 

@@ -47,7 +47,7 @@ public protocol TVShowPageMapperProtocol {
   func mapTVShowPage(_ page: TVShowPageDTO, imageBasePath: String, imageSize: ImageSize) -> TVShowPage
 }
 
-public protocol TVShowDetailsMapper {
+public protocol TVShowDetailsMapperProtocol {
   func mapTVShow(_ show: TVShowDetailDTO, imageBasePath: String, imageSize: ImageSize) -> TVShowDetail
 }
 

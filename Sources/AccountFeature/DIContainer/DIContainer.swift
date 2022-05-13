@@ -16,20 +16,18 @@ final class DIContainer {
   private lazy var authRepository: AuthRepository = {
     return DefaultAuthRepository(
       remoteDataSource: DefaultAuthRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
-      requestTokenRepository: keychainRepository,
-      accessTokenRepository: keychainRepository
+      requestTokenRepository: dependencies.requestTokenRepository,
+      accessTokenRepository: dependencies.accessTokenRepository
     )
   }()
 
   private lazy var accountRepository: AccountRepository = {
     return DefaultAccountRepository(
       remoteDataSource: DefaultAccountRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
-      tokenRepository: keychainRepository,
-      userLoggedRepository: keychainRepository
+      tokenRepository: dependencies.accessTokenRepository,
+      userLoggedRepository: dependencies.userLoggedRepository
     )
   }()
-
-  private lazy var keychainRepository = DefaultKeychainRepository() // KeychainRepository
 
   private var accountViewModel: AccountViewModel?
 
@@ -47,11 +45,11 @@ final class DIContainer {
     }
 
     func makeFetchLoggedUserUseCase() -> FetchLoggedUser {
-      return DefaultFetchLoggedUser(loggedRepository: keychainRepository)
+      return DefaultFetchLoggedUser(loggedRepository: dependencies.userLoggedRepository)
     }
 
     func makeDeleteLoggedUserUseCase() -> DeleteLoggedUserUseCase {
-      return DefaultDeleteLoggedUserUseCase(loggedRepository: keychainRepository)
+      return DefaultDeleteLoggedUserUseCase(loggedRepository: dependencies.userLoggedRepository)
     }
 
     accountViewModel = AccountViewModel(createNewSession: makeCreateSessionUseCase(),

@@ -64,6 +64,10 @@ public class AppDIContainer {
     return LoggedUserRepository(dataSource: keychainRepository)
   }()
 
+  lazy var requestTokenRepository: RequestTokenRepositoryProtocol = {
+    return RequestTokenRepository(dataSource: keychainRepository)
+  }()
+
   private lazy var keychainRepository = DefaultKeychainRepository()
 
   // MARK: - Airing Today Module
@@ -98,7 +102,7 @@ public class AppDIContainer {
     let dependencies = AccountFeature.ModuleDependencies(apiDataTransferService: apiDataTransferService,
                                                          imagesBaseURL: appConfigurations.imagesBaseURL,
                                                          showListBuilder: self,
-                                                         requestTokenRepository: keychainRepository,
+                                                         requestTokenRepository: requestTokenRepository,
                                                          accessTokenRepository: keychainRepository,
                                                          userLoggedRepository: keychainRepository)
     return AccountFeature.Module(dependencies: dependencies)

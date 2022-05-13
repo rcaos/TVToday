@@ -60,29 +60,4 @@ public final class DefaultTVShowsRemoteDataSource: TVShowsRemoteDataSource {
     )
     return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
   }
-
-  public func fetchFavoritesShows(page: Int, userId: Int, sessionId: String) -> AnyPublisher<TVShowPageDTO, DataTransferError> {
-    let endpoint = Endpoint<TVShowPageDTO>(
-      path: "3/account/\(userId)/favorite/tv",
-      method: .get,
-      queryParameters: [
-        "page": page,
-        "session_id": sessionId
-      ]
-    )
-    return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
-  }
-
-  public func fetchWatchListShows(page: Int, userId: Int, sessionId: String) -> AnyPublisher<TVShowPageDTO, DataTransferError> {
-    let endpoint = Endpoint<TVShowPageDTO>(
-      path: "3/account/\(userId)/watchlist/tv",
-      method: .get,
-      queryParameters: [
-        "page": page,
-        "session_id": sessionId
-      ]
-    )
-
-    return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
-  }
 }

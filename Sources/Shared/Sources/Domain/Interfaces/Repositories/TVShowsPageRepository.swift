@@ -50,10 +50,6 @@ public protocol TVShowsRemoteDataSource {
   func fetchPopularShows(page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError>
   func fetchShowsByGenre(genreId: Int, page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError>
   func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError>
-
-  // MARK: - TODO, check what methods could moved to its own module.
-  func fetchFavoritesShows(page: Int, userId: Int, sessionId: String) -> AnyPublisher<TVShowPageDTO, DataTransferError>
-  func fetchWatchListShows(page: Int, userId: Int, sessionId: String) -> AnyPublisher<TVShowPageDTO, DataTransferError>
 }
 
 public protocol TVShowPageMapper {

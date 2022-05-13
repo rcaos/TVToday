@@ -22,10 +22,6 @@ final class DIContainer {
     )
   }()
 
-  private lazy var keychainRepository: KeychainRepository = {
-    return DefaultKeychainRepository()
-  }()
-
   // MARK: - Long-Lived dependencies
   private let searchViewModel: SearchViewModel
 

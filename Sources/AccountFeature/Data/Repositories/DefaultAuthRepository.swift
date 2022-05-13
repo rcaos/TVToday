@@ -15,11 +15,11 @@ import Shared
 final class DefaultAuthRepository {
   private let remoteDataSource: AuthRemoteDataSource
   private let requestTokenRepository: RequestTokenRepositoryProtocol
-  private let accessTokenRepository: AccessTokenRepository
+  private let accessTokenRepository: AccessTokenRepositoryProtocol
 
   init(remoteDataSource: AuthRemoteDataSource,
        requestTokenRepository: RequestTokenRepositoryProtocol,
-       accessTokenRepository: AccessTokenRepository) {
+       accessTokenRepository: AccessTokenRepositoryProtocol) {
     self.remoteDataSource = remoteDataSource
     self.requestTokenRepository = requestTokenRepository
     self.accessTokenRepository = accessTokenRepository

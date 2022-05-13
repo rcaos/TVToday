@@ -18,7 +18,7 @@ public struct ModuleDependencies {
   let imagesBaseURL: String
   let showListBuilder: ModuleShowListDetailsBuilder
   let requestTokenRepository: RequestTokenRepositoryProtocol
-  let accessTokenRepository: AccessTokenRepository
+  let accessTokenRepository: AccessTokenRepositoryProtocol
   let userLoggedRepository: LoggedUserRepositoryProtocol
   
 
@@ -26,7 +26,7 @@ public struct ModuleDependencies {
               imagesBaseURL: String,
               showListBuilder: ModuleShowListDetailsBuilder,
               requestTokenRepository: RequestTokenRepositoryProtocol,
-              accessTokenRepository: AccessTokenRepository,
+              accessTokenRepository: AccessTokenRepositoryProtocol,
               userLoggedRepository: LoggedUserRepositoryProtocol
   ) {
     self.apiDataTransferService = apiDataTransferService

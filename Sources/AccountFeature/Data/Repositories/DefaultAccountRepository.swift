@@ -13,10 +13,10 @@ import Shared
 
 public final class DefaultAccountRepository {
   private let remoteDataSource: AccountRemoteDataSource
-  private let accessTokenRepository: AccessTokenRepository
+  private let accessTokenRepository: AccessTokenRepositoryProtocol
   private let userLoggedRepository: LoggedUserRepositoryProtocol
 
-  init(remoteDataSource: AccountRemoteDataSource, accessTokenRepository: AccessTokenRepository, userLoggedRepository: LoggedUserRepositoryProtocol) {
+  init(remoteDataSource: AccountRemoteDataSource, accessTokenRepository: AccessTokenRepositoryProtocol, userLoggedRepository: LoggedUserRepositoryProtocol) {
     self.remoteDataSource = remoteDataSource
     self.accessTokenRepository = accessTokenRepository
     self.userLoggedRepository = userLoggedRepository

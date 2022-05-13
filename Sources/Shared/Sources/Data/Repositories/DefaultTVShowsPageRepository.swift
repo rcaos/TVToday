@@ -10,10 +10,10 @@ import Combine
 
 public final class DefaultTVShowsPageRepository {
   private let showsPageRemoteDataSource: TVShowsRemoteDataSourceProtocol
-  private let mapper: TVShowPageMapper
+  private let mapper: TVShowPageMapperProtocol
   private let imageBasePath: String
 
-  public init(showsPageRemoteDataSource: TVShowsRemoteDataSourceProtocol, mapper: TVShowPageMapper, imageBasePath: String) {
+  public init(showsPageRemoteDataSource: TVShowsRemoteDataSourceProtocol, mapper: TVShowPageMapperProtocol, imageBasePath: String) {
     self.showsPageRemoteDataSource = showsPageRemoteDataSource
     self.mapper = mapper
     self.imageBasePath = imageBasePath

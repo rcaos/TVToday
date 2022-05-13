@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class DefaultTVShowPageMapper: TVShowPageMapper {
+public final class DefaultTVShowPageMapper: TVShowPageMapperProtocol {
 
   public init() { }
 

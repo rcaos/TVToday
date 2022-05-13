@@ -11,12 +11,12 @@ import Networking
 
 public final class DefaultAccountTVShowsRepository {
   private let showsPageRemoteDataSource: AccountTVShowsRemoteDataSourceProtocol
-  private let mapper: TVShowPageMapper
+  private let mapper: TVShowPageMapperProtocol
   private let imageBasePath: String
   private let loggedUserRepository: LoggedUserRepositoryProtocol
 
   public init(showsPageRemoteDataSource: AccountTVShowsRemoteDataSourceProtocol,
-              mapper: TVShowPageMapper, imageBasePath: String,
+              mapper: TVShowPageMapperProtocol, imageBasePath: String,
               loggedUserRepository: LoggedUserRepositoryProtocol) {
     self.showsPageRemoteDataSource = showsPageRemoteDataSource
     self.mapper = mapper

@@ -43,7 +43,7 @@ public protocol TVShowsPageRepository {
   func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowPage, DataTransferError>
 }
 
-public protocol TVShowPageMapper {
+public protocol TVShowPageMapperProtocol {
   func mapTVShowPage(_ page: TVShowPageDTO, imageBasePath: String, imageSize: ImageSize) -> TVShowPage
 }
 

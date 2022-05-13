@@ -50,6 +50,7 @@ public struct TVShowDetail: Hashable {
   }
 
   // MARK: - Helper for Dates
+  // MARK: - TODO, this behavior doesn't belong to domain Model, Move to another struct.
   private func getYear(from dateString: String?) -> String {
     guard let dateString = dateString else {
       return "?"

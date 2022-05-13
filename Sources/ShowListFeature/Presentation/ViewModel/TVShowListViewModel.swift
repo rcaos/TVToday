@@ -100,7 +100,7 @@ final class TVShowListViewModel: TVShowListViewModelProtocol {
 
   // MARK: - Updated List from Show Details (Deleted Favorite, Delete WatchList)
   private func updateTVShow(_ updated: TVShowUpdated) {
-    // MARK: - TODO
+    // MARK: - TODO, during refactor, need to fix this behavior, maybe use a Memory Repository.
     print("refresh show= [\(updated)]")
 //    for index in shows.indices where shows[index].id == updated.showId {
 //      shows[index].isActive = updated.isActive

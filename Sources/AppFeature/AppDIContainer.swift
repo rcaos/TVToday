@@ -101,12 +101,12 @@ public class AppDIContainer {
   }
 
   // MARK: - Build TVShowDetails Module
-  func buildTVShowDetailModule() -> ShowDetailsFeature.Module {
-    let dependencies = ShowDetailsFeatureInterface.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                                      imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                                      showsPersistenceRepository: showsPersistence)
-    return ShowDetailsFeature.Module(dependencies: dependencies)
-  }
+//  func buildTVShowDetailModule() -> ShowDetailsFeature.Module {
+//    let dependencies = ShowDetailsFeatureInterface.ModuleDependencies(apiDataTransferService: apiDataTransferService,
+//                                                                      imagesBaseURL: appConfigurations.imagesBaseURL,
+//                                                                      showsPersistenceRepository: showsPersistence)
+//    return ShowDetailsFeature.Module(dependencies: dependencies)
+//  }
 }
 
 extension AppDIContainer: ModuleShowDetailsBuilder {
@@ -114,7 +114,8 @@ extension AppDIContainer: ModuleShowDetailsBuilder {
                                      delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinatorProtocol {
     let dependencies = ShowDetailsFeatureInterface.ModuleDependencies(apiDataTransferService: apiDataTransferService,
                                                                       imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                                      showsPersistenceRepository: showsPersistence)
+                                                                      showsPersistenceRepository: showsPersistence,
+                                                                      loggedUserRepository: keychainRepository)
     let module =  ShowDetailsFeature.Module(dependencies: dependencies)
     return module.buildModuleCoordinator(in: navigationController, delegate: delegate)
   }

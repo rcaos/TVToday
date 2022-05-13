@@ -18,11 +18,9 @@ final class DIContainer {
     return DefaultAccountTVShowsDetailsRepository(
       showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
       mapper: DefaultAccountTVShowDetailsMapper(),
-      loggedUserRepository: keychainRepository
+      loggedUserRepository: dependencies.loggedUserRepository
     )
   }()
-
-  private lazy var keychainRepository = DefaultKeychainRepository() // MARK: - TODO, expose wrapper instead
 
   private lazy var episodesRepository: TVEpisodesRepository = {
     return DefaultTVEpisodesRepository(
@@ -97,7 +95,7 @@ final class DIContainer {
   }
 
   private func makeFetchLoggedUserUseCase() -> FetchLoggedUser {
-    return DefaultFetchLoggedUser(loggedRepository: keychainRepository)
+    return DefaultFetchLoggedUser(loggedRepository: dependencies.loggedUserRepository)
   }
 
   // MARK: - Uses Cases for Seasons

@@ -43,17 +43,7 @@ public protocol TVShowsPageRepository {
   func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowPage, DataTransferError>
 }
 
-// MARK: - TODO,  Should split this DataSource if only one Module uses :thinking
-public protocol TVShowsRemoteDataSource {
-  // Internally this use DataTransferService
-  func fetchAiringTodayShows(page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError>
-  func fetchPopularShows(page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError>
-  func fetchShowsByGenre(genreId: Int, page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError>
-  func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError>
-}
-
 public protocol TVShowPageMapper {
-  // init should be have URL base Path String
   func mapTVShowPage(_ page: TVShowPageDTO, imageBasePath: String, imageSize: ImageSize) -> TVShowPage
 }
 
@@ -70,13 +60,3 @@ public enum ImageSize: String {
   case small = "w342"
   case medium = "w780"
 }
-
-// CoreDataSource
-//public protocol TVShowsLocalDataSource {
-//  func fetchAiringTodayShows(page: Int) -> AnyPublisher<TVShowPageLocal, DataTransferError>
-//}
-
-// Memory DataSource
-//public protocol TVShowsMemoryDataSource {
-//  func fetchAiringTodayShows(page: Int) -> AnyPublisher<TVShowsPageMemory, DataTransferError>
-//}

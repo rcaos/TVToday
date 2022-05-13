@@ -6,15 +6,7 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import Foundation
-
-// MARK: - TODO, include protocol asDomain()
-
-public struct AccountKStorage {
-  public let id: Int
-
-  public let sessionId: String
-}
+import Shared
 
 public class DefaultKeyChainStorage {
   static public let shared = DefaultKeyChainStorage()
@@ -31,53 +23,52 @@ public class DefaultKeyChainStorage {
   @KeychainItemStorage(key: Constants.sessionId)
   var sessionId: String?
 
-  init() {}
+  public init() {}
 }
 
-// MARK: - KeychainStorage
-extension DefaultKeyChainStorage: KeychainStorage {
+// MARK: - Constants
+struct Constants {
+  static let requestTokenKey = "TVShows_RequestToken"
+  static let accessToken = "TVShows_accessToken"
+  static let accountId = "TVShows_AccountId"
+  static let sessionId = "TVShows_SessionId"
+}
 
+extension DefaultKeyChainStorage: RequestTokenLocalDataSource {
   public func saveRequestToken(_ token: String) {
     requestToken = token
   }
 
-  public func fetchRequestToken() -> String? {
+  public func getRequestToken() -> String? {
     return requestToken
   }
+}
 
+extension DefaultKeyChainStorage: AccessTokenLocalDataSource {
   public func saveAccessToken(_ token: String) {
     accessToken = token
   }
 
-  public func fetchAccessToken() -> String? {
-    return accessToken
+  public func getAccessToken() -> String {
+    return accessToken ?? ""
   }
+}
 
-  public func saveLoguedUser(_ accountId: Int, _ sessionId: String) {
-    self.accountId = String(accountId)
+extension DefaultKeyChainStorage: LoggedUserLocalDataSource {
+  public func saveUser(userId: Int, sessionId: String) {
+    self.accountId = String(userId)
     self.sessionId = sessionId
   }
 
-  public func fetchLoguedUser() -> AccountKStorage? {
+  public func getUser() -> AccountDomain? {
     guard let currentAccountId = accountId,
-      let accountId = Int(currentAccountId),
-      let sessionId = sessionId else { return nil }
-    return AccountKStorage(id: accountId, sessionId: sessionId)
+          let accountId = Int(currentAccountId),
+          let sessionId = sessionId else { return nil }
+    return AccountDomain(id: accountId, sessionId: sessionId)
   }
 
-  public func deleteLoguedUser() {
+  public func deleteUser() {
     accountId = nil
     sessionId = nil
-  }
-
-}
-
-// MARK: - Constants
-extension DefaultKeyChainStorage {
-  struct Constants {
-    static let requestTokenKey = "TVShows_RequestToken"
-    static let accessToken = "TVShows_accessToken"
-    static let accountId = "TVShows_AccountId"
-    static let sessionId = "TVShows_SessionId"
   }
 }

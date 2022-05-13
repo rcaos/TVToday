@@ -13,12 +13,12 @@ import Shared
 
 public final class DefaultAccountRepository {
   private let remoteDataSource: AccountRemoteDataSource
-  private let tokenRepository: AccessTokenRepository
+  private let accessTokenRepository: AccessTokenRepository
   private let userLoggedRepository: LoggedUserRepositoryProtocol
 
-  init(remoteDataSource: AccountRemoteDataSource, tokenRepository: AccessTokenRepository, userLoggedRepository: LoggedUserRepositoryProtocol) {
+  init(remoteDataSource: AccountRemoteDataSource, accessTokenRepository: AccessTokenRepository, userLoggedRepository: LoggedUserRepositoryProtocol) {
     self.remoteDataSource = remoteDataSource
-    self.tokenRepository = tokenRepository
+    self.accessTokenRepository = accessTokenRepository
     self.userLoggedRepository = userLoggedRepository
   }
 }
@@ -27,7 +27,7 @@ public final class DefaultAccountRepository {
 extension DefaultAccountRepository: AccountRepository {
 
   public func getAccountDetails() -> AnyPublisher<Account, DataTransferError> {
-    let sessionId = tokenRepository.getAccessToken()
+    let sessionId = accessTokenRepository.getAccessToken()
 
     return remoteDataSource.getAccountDetails(session: sessionId)
       .map {

@@ -14,14 +14,12 @@ final class DIContainer {
   private let dependencies: ShowListFeatureInterface.ModuleDependencies
 
   // MARK: - Repositories
-  private lazy var keychainRepository = DefaultKeychainRepository() // MARK: - TODO, use dependencies.keyChainRepository instead
-
   private lazy var accountShowsRepository: AccountTVShowsRepository = {
     return DefaultAccountTVShowsRepository(
       showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
       mapper: DefaultTVShowPageMapper(),
       imageBasePath: dependencies.imagesBaseURL,
-      loggedUserRepository: keychainRepository
+      loggedUserRepository: dependencies.loggedUserRepository
     )
   }()
 

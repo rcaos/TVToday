@@ -22,7 +22,6 @@ public final class DefaultAccountTVShowsDetailsRepository {
   }
 }
 
-
 extension DefaultAccountTVShowsDetailsRepository: AccountTVShowsDetailsRepository {
 
   // MARK: - TODO, handle nil cases, consider change the LoggedUserRepository signature instead
@@ -30,7 +29,7 @@ extension DefaultAccountTVShowsDetailsRepository: AccountTVShowsDetailsRepositor
   public func markAsFavorite(tvShowId: Int, favorite: Bool) -> AnyPublisher<TVShowActionStatus, DataTransferError> {
     let loggedUser = loggedUserRepository.getUser()
     let userId = loggedUser?.id ?? 0
-    
+
     return showsRemoteDataSource.markAsFavorite(tvShowId: tvShowId, userId: String(userId), session: loggedUser?.sessionId ?? "", favorite: favorite)
       .map { self.mapper.mapActionResult(result: $0) }
       .eraseToAnyPublisher()

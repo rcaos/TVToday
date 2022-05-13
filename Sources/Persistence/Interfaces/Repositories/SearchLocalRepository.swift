@@ -1,15 +1,35 @@
 //
 //  SearchLocalRepository.swift
-//  TVToday
+//  
 //
-//  Created by Jeans Ruiz on 7/2/20.
-//  Copyright © 2020 Jeans. All rights reserved.
+//  Created by Jeans Ruiz on 11/05/22.
 //
 
 import Combine
 import Shared
 
-public protocol SearchLocalRepository {
-  func saveSearch(query: String) -> AnyPublisher<Void, CustomError>
-  func fetchRecentSearches() -> AnyPublisher<[Search], CustomError>
+public final class SearchLocalRepository {
+  private let dataSource: SearchLocalDataSource
+  private let loggedUserRepository: LoggedUserRepositoryProtocol
+
+  public init(dataSource: SearchLocalDataSource, loggedUserRepository: LoggedUserRepositoryProtocol) {
+    self.dataSource = dataSource
+    self.loggedUserRepository = loggedUserRepository
+  }
+}
+
+extension SearchLocalRepository: SearchLocalRepositoryProtocol {
+  public func saveSearch(query: String) -> AnyPublisher<Void, CustomError> {
+    let userId = loggedUserRepository.getUser()?.id ?? 0
+    return dataSource.saveSearch(query: query, userId: userId)
+  }
+
+  public func fetchRecentSearches() -> AnyPublisher<[Search], CustomError> {
+    let userId = loggedUserRepository.getUser()?.id ?? 0
+    return dataSource.fetchRecentSearches(userId: userId)
+      .map {
+        return $0.map { Search(query: $0.query) }
+      }
+      .eraseToAnyPublisher()
+  }
 }

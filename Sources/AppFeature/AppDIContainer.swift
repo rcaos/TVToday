@@ -126,7 +126,7 @@ extension AppDIContainer: ModuleShowListDetailsBuilder {
                                      delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinatorProtocol {
     let dependencies = ShowListFeatureInterface.ModuleDependencies(apiDataTransferService: apiDataTransferService,
                                                                    imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                                   keychainRepository: keychainRepository,
+                                                                   loggedUserRepository: keychainRepository,
                                                                    showDetailsBuilder: self)
     let module = ShowListFeature.Module(dependencies: dependencies)
     return module.buildModuleCoordinator(in: navigationController, delegate: delegate)

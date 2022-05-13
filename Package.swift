@@ -161,6 +161,7 @@ let package = Package(
       dependencies: [
         "UI",
         "NetworkingInterface",
+        "Networking",
         .product(name: "Kingfisher", package: "Kingfisher"),
         .product(name: "CombineSchedulers", package: "combine-schedulers"),
       ],

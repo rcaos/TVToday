@@ -99,6 +99,7 @@ let package = Package(
     .target(
       name: "KeyChainStorage",
       dependencies: [
+        "Shared",
         .product(name: "KeychainSwift", package: "keychain-swift")
       ]
     ),
@@ -160,7 +161,6 @@ let package = Package(
       dependencies: [
         "UI",
         "NetworkingInterface",
-        "KeyChainStorage",
         .product(name: "Kingfisher", package: "Kingfisher"),
         .product(name: "CombineSchedulers", package: "combine-schedulers"),
       ],

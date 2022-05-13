@@ -9,7 +9,7 @@ import Combine
 import Networking
 import NetworkingInterface
 
-public final class DefaultTVShowsRemoteDataSource: TVShowsRemoteDataSource {
+public final class DefaultTVShowsRemoteDataSource: TVShowsRemoteDataSourceProtocol {
   private let dataTransferService: DataTransferService
 
   public init(dataTransferService: DataTransferService) {

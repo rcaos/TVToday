@@ -52,12 +52,16 @@ public class AppDIContainer {
 
   lazy var showsPersistence: ShowsVisitedLocalRepositoryProtocol = {
     return ShowsVisitedLocalRepository(dataSource: localStorage.showVisitedStorage(limitStorage: 10),
-                                       loggedUserRepository: keychainRepository)
+                                       loggedUserRepository: loggedUserRepository)
   }()
 
   lazy var searchPersistence: SearchLocalRepository = {
     return DefaultSearchLocalRepository(dataSource: localStorage.recentsSearch(),
-                                        loggedUserRepository: keychainRepository)
+                                        loggedUserRepository: loggedUserRepository)
+  }()
+
+  lazy var loggedUserRepository: LoggedUserRepositoryProtocol = {
+    return LoggedUserRepository(dataSource: keychainRepository)
   }()
 
   private lazy var keychainRepository = DefaultKeychainRepository()
@@ -115,7 +119,7 @@ extension AppDIContainer: ModuleShowDetailsBuilder {
     let dependencies = ShowDetailsFeatureInterface.ModuleDependencies(apiDataTransferService: apiDataTransferService,
                                                                       imagesBaseURL: appConfigurations.imagesBaseURL,
                                                                       showsPersistenceRepository: showsPersistence,
-                                                                      loggedUserRepository: keychainRepository)
+                                                                      loggedUserRepository: loggedUserRepository)
     let module =  ShowDetailsFeature.Module(dependencies: dependencies)
     return module.buildModuleCoordinator(in: navigationController, delegate: delegate)
   }
@@ -127,7 +131,7 @@ extension AppDIContainer: ModuleShowListDetailsBuilder {
                                      delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinatorProtocol {
     let dependencies = ShowListFeatureInterface.ModuleDependencies(apiDataTransferService: apiDataTransferService,
                                                                    imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                                   loggedUserRepository: keychainRepository,
+                                                                   loggedUserRepository: loggedUserRepository,
                                                                    showDetailsBuilder: self)
     let module = ShowListFeature.Module(dependencies: dependencies)
     return module.buildModuleCoordinator(in: navigationController, delegate: delegate)

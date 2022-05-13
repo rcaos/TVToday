@@ -52,13 +52,13 @@ public class AppDIContainer {
   }()
 
   lazy var showsPersistence: ShowsVisitedLocalRepositoryProtocol = {
-    return ShowsVisitedLocalRepository(dataSource: localStorage.showVisitedStorage(limitStorage: 10),
+    return ShowsVisitedLocalRepository(dataSource: localStorage.getShowVisitedDataSource(limitStorage: 10),
                                        loggedUserRepository: loggedUserRepository)
   }()
 
   lazy var searchPersistence: SearchLocalRepository = {
-    return DefaultSearchLocalRepository(dataSource: localStorage.recentsSearch(),
-                                        loggedUserRepository: loggedUserRepository)
+    return SearchLocalRepository(dataSource: localStorage.getRecentSearchesDataSource(),
+                                 loggedUserRepository: loggedUserRepository)
   }()
 
   lazy var loggedUserRepository: LoggedUserRepositoryProtocol = {

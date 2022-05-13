@@ -7,24 +7,24 @@
 
 import Persistence
 
-public protocol LocalStorageProtocol {
-  func showVisitedStorage(limitStorage: Int) -> ShowsVisitedLocalDataSource
-  func recentsSearch() -> SearchLocalDataSource
+public protocol LocalDataSourceProtocol {
+  func getShowVisitedDataSource(limitStorage: Int) -> ShowsVisitedLocalDataSource
+  func getRecentSearchesDataSource() -> SearchLocalDataSource
 }
 
-final public class LocalStorage: LocalStorageProtocol {
+final public class LocalStorage: LocalDataSourceProtocol {
   private let coreDataStorage: CoreDataStorage
 
   public init(coreDataStorage: CoreDataStorage) {
     self.coreDataStorage = coreDataStorage
   }
 
-  public func showVisitedStorage(limitStorage: Int) -> ShowsVisitedLocalDataSource {
+  public func getShowVisitedDataSource(limitStorage: Int) -> ShowsVisitedLocalDataSource {
     let store: PersistenceStore<CDShowVisited> = PersistenceStore(coreDataStorage.persistentContainer)
     return CoreDataShowVisitedStorage(limitStorage: limitStorage, store: store)
   }
 
-  public func recentsSearch() -> SearchLocalDataSource {
+  public func getRecentSearchesDataSource() -> SearchLocalDataSource {
     let store: PersistenceStore<CDRecentSearch> = PersistenceStore(coreDataStorage.persistentContainer)
     return CoreDataSearchQueriesStorage(store: store)
   }

@@ -72,7 +72,7 @@ final class DIContainer {
   // MARK: - Uses Cases for Show Details
   private func makeFetchShowDetailsUseCase() -> FetchTVShowDetailsUseCase {
     let tvShowDetailsRepository = DefaultTVShowsDetailRepository(
-      showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      showsPageRemoteDataSource: TVShowsDetailsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
       mapper: DefaultTVShowDetailsMapper(),
       imageBasePath: dependencies.imagesBaseURL
     )

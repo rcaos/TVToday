@@ -8,6 +8,7 @@
 
 import AccountFeature
 import AiringTodayFeature
+import KeyChainStorage
 import Networking
 import NetworkingInterface
 import Persistence
@@ -61,18 +62,18 @@ public class AppDIContainer {
   }()
 
   lazy var loggedUserRepository: LoggedUserRepositoryProtocol = {
-    return LoggedUserRepository(dataSource: keychainRepository)
+    return LoggedUserRepository(dataSource: keyChainStorage)
   }()
 
   lazy var requestTokenRepository: RequestTokenRepositoryProtocol = {
-    return RequestTokenRepository(dataSource: keychainRepository)
+    return RequestTokenRepository(dataSource: keyChainStorage)
   }()
 
   lazy var accessTokenRepository: AccessTokenRepositoryProtocol = {
-    return AccessTokenRepository(dataSource: keychainRepository)
+    return AccessTokenRepository(dataSource: keyChainStorage)
   }()
 
-  private lazy var keychainRepository = DefaultKeychainRepository()
+  private lazy var keyChainStorage = DefaultKeyChainStorage()
 
   // MARK: - Airing Today Module
   func buildAiringTodayModule() -> AiringTodayFeature.Module {
@@ -108,7 +109,7 @@ public class AppDIContainer {
                                                          showListBuilder: self,
                                                          requestTokenRepository: requestTokenRepository,
                                                          accessTokenRepository: accessTokenRepository,
-                                                         userLoggedRepository: keychainRepository)
+                                                         userLoggedRepository: loggedUserRepository)
     return AccountFeature.Module(dependencies: dependencies)
   }
 

@@ -36,7 +36,8 @@ let package = Package(
     .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "14.0.0"),
     .package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.2.1"),
     .package(url: "https://github.com/pointfreeco/combine-schedulers", from: "0.5.3"),
-    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.9.0")
+    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.9.0"),
+    .package(url: "https://github.com/pointfreeco/swift-custom-dump.git", from: "0.4.0") // MARK: - TODO, remove
   ],
   targets: [
     .target(
@@ -90,6 +91,7 @@ let package = Package(
       name: "AiringTodayFeatureTests",
       dependencies: [
         "AiringTodayFeature",
+        "CommonMocks",
         .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
       ],
       exclude: [
@@ -230,6 +232,16 @@ let package = Package(
     .target(name: "SearchShowsFeatureDemo", dependencies: ["SearchShowsFeature"]),
     .target(name: "AccountFeatureDemo", dependencies: ["AccountFeature"]),
     .target(name: "ShowDetailsFeatureDemo", dependencies: ["ShowDetailsFeature"]),
-    .target(name: "ShowListFeatureDemo", dependencies: ["ShowListFeature"])
+    .target(name: "ShowListFeatureDemo", dependencies: ["ShowListFeature"]),
+
+    // MARK: - Common For test Targets
+    .target(
+      name: "CommonMocks",
+      dependencies: [
+        "Shared",
+        "NetworkingInterface"
+      ],
+      path: "Tests/CommonMocks"
+    ),
   ]
 )

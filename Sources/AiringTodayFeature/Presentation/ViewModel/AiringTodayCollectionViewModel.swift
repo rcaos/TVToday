@@ -13,10 +13,8 @@ struct AiringTodayCollectionViewModel: Hashable {
   private let showId: Int
   let showName: String?
   let average: String?
-
   let posterURL: URL?
 
-  // MARK: - Initializers
   public init(show: TVShowPage.TVShow) {
     showId = show.id
     showName = show.name

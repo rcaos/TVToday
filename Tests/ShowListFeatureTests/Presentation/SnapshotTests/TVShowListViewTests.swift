@@ -5,6 +5,7 @@
 //  Created by Jeans Ruiz on 19/12/21.
 //
 
+import CommonMocks
 import SnapshotTesting
 import XCTest
 
@@ -31,7 +32,7 @@ class TVShowListViewTests: XCTestCase {
   }
 
   func test_WhenViewPaging_thenShowPagingScreen() {
-    let firsPageCells = buildFirstPage().results!.map { TVShowCellViewModel(show: $0) }
+    let firsPageCells = buildFirstPageSnapshot().showsList.map { TVShowCellViewModel(show: $0) }
     let viewModel = TVShowListViewModelMock(state: .paging(firsPageCells, next: 2) )
 
     let viewController = TVShowListViewController(viewModel: viewModel)
@@ -46,7 +47,7 @@ class TVShowListViewTests: XCTestCase {
   }
 
   func test_WhenViewPopulated_thenShowPopulatedScreen() {
-    let totalCells = (buildFirstPage().results + buildSecondPage().results)
+    let totalCells = (buildFirstPageSnapshot().showsList + buildSecondPageSnapshot().showsList)
       .map { TVShowCellViewModel(show: $0) }
     let viewModel = TVShowListViewModelMock(state: .populated(totalCells) )
 

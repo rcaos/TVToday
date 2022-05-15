@@ -70,8 +70,10 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol {
     return viewStateObservableSubject.value
   }
 
-  func showIsPicked(with id: Int) {
-    coordinator?.navigate(to: .showIsPicked(id))
+  func showIsPicked(index: Int) {
+    if shows.indices.contains(index) {
+      coordinator?.navigate(to: .showIsPicked(shows[index].id))
+    }
   }
 
   // MARK: - Private
@@ -108,11 +110,9 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol {
       shows.removeAll()
     }
 
-    let fetchedShows = response.showsList
+    shows.append(contentsOf: response.showsList)
 
-    self.shows.append(contentsOf: fetchedShows)
-
-    if self.shows.isEmpty {
+    if shows.isEmpty {
       viewStateObservableSubject.send(.empty)
       return
     }

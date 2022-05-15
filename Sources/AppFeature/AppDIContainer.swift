@@ -106,10 +106,9 @@ public class AppDIContainer {
   func buildAccountModule() -> AccountFeature.Module {
     let dependencies = AccountFeature.ModuleDependencies(apiDataTransferService: apiDataTransferService,
                                                          imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                         showListBuilder: self,
                                                          requestTokenRepository: requestTokenRepository,
                                                          accessTokenRepository: accessTokenRepository,
-                                                         userLoggedRepository: loggedUserRepository)
+                                                         userLoggedRepository: loggedUserRepository,showListBuilder: self)
     return AccountFeature.Module(dependencies: dependencies)
   }
 

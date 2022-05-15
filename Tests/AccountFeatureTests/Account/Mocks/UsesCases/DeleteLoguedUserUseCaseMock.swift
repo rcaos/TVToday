@@ -7,6 +7,6 @@
 
 @testable import AccountFeature
 
-final class DeleteLoguedUserUseCaseMock: DeleteLoguedUserUseCase {
+final class DeleteLoguedUserUseCaseMock: DeleteLoggedUserUseCase {
   func execute() { }
 }

@@ -14,7 +14,7 @@ class AccountViewControllerFactoryMock: AccountViewControllerFactory {
     return SignInViewController(viewModel: viewModel)
   }
 
-  func makeProfileViewController(with account: AccountResult) -> UIViewController {
+  func makeProfileViewController(with account: Account) -> UIViewController {
     let viewModel =  ProfileViewModelMock(account: account)
     return ProfileViewController(viewModel: viewModel)
   }

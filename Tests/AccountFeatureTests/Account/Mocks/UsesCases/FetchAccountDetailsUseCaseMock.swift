@@ -11,10 +11,10 @@ import NetworkingInterface
 
 final class FetchAccountDetailsUseCaseMock: FetchAccountDetailsUseCase {
 
-  var result: AccountResult?
+  var result: Account?
   var error: DataTransferError?
 
-  func execute() -> AnyPublisher<AccountResult, DataTransferError> {
+  func execute() -> AnyPublisher<Account, DataTransferError> {
     if let error = error {
       return Fail(error: error).eraseToAnyPublisher()
     }

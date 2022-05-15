@@ -15,7 +15,7 @@ import Persistence
 final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
   private let searchTVShowsUseCase: SearchTVShowsUseCase
   private let fetchRecentSearchesUseCase: FetchSearchesUseCase
-  private let currentSearchSubject = CurrentValueSubject<String, Never>("")  /// ?????
+  private let currentSearchSubject = CurrentValueSubject<String, Never>("")
 
   let viewState  = CurrentValueSubject<ResultViewState, Never>(.initial)
   let dataSource = CurrentValueSubject<[ResultSearchSectionModel], Never>([])
@@ -23,6 +23,8 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
   weak var delegate: ResultsSearchViewModelDelegate?
   private let scheduler: AnySchedulerOf<DispatchQueue>
   private var disposeBag = Set<AnyCancellable>()
+
+  private var currentResultShows: [TVShowPage.TVShow] = []
 
   // MARK: - Init
   init(searchTVShowsUseCase: SearchTVShowsUseCase,
@@ -48,8 +50,10 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
     delegate?.resultsSearchViewModel(self, didSelectRecentSearch: query)
   }
 
-  func showIsPicked(idShow: Int) {
-    delegate?.resultsSearchViewModel(self, didSelectShow: idShow)
+  func showIsPicked(index: Int) {
+    if currentResultShows.indices.contains(index) {
+      delegate?.resultsSearchViewModel(self, didSelectShow: currentResultShows[index].id)
+    }
   }
 
   func getViewState() -> ResultViewState {
@@ -109,24 +113,11 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
       viewState.send( .populated )
     }
 
-    createSectionModel(recentSearchs: [], resultShows: response.showsList.map { mapTVShow2IntoTVShow($0) } )
+    currentResultShows = response.showsList
+    createSectionModel(recentSearchs: [], resultShows: response.showsList)
   }
 
-  private func mapTVShow2IntoTVShow(_ show: TVShowPage.TVShow) -> TVShow {
-    // MARK: - TODO, Remove this
-    return TVShow(id: show.id,
-                  name: show.name,
-                  voteAverage: show.voteAverage,
-                  firstAirDate: show.firstAirDate,
-                  posterPath: show.posterPath?.absoluteString ?? "",
-                  genreIds: show.genreIds,
-                  backDropPath: show.backDropPath?.absoluteString ?? "",
-                  overview: show.overview,
-                  originCountry: [],
-                  voteCount: show.voteCount)
-  }
-
-  private func createSectionModel(recentSearchs: [String], resultShows: [TVShow]) {
+  private func createSectionModel(recentSearchs: [String], resultShows: [TVShowPage.TVShow]) {
     let recentSearchsItem = recentSearchs.map { ResultSearchSectionItem.recentSearchs(items: $0) }
 
     let resultsShowsItem = resultShows

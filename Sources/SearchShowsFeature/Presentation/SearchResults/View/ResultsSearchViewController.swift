@@ -154,8 +154,8 @@ extension ResultsSearchViewController: UITableViewDelegate {
       case .recentSearchs(let query) :
         viewModel.recentSearchIsPicked(query: query)
 
-      case .results(let itemViewModel):
-        viewModel.showIsPicked(idShow: itemViewModel.entity.id)
+      case .results:
+        viewModel.showIsPicked(index: indexPath.row)
       }
     }
   }

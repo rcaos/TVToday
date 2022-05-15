@@ -19,7 +19,7 @@ protocol ResultsSearchViewModelDelegate: AnyObject {
 protocol ResultsSearchViewModelProtocol {
   // MARK: - Input
   func recentSearchIsPicked(query: String)
-  func showIsPicked(idShow: Int)
+  func showIsPicked(index: Int)
   func searchShows(with query: String)
   func resetSearch()
 

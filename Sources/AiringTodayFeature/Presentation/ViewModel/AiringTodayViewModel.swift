@@ -10,20 +10,6 @@ import CombineSchedulers
 import NetworkingInterface
 import Shared
 
-func mapTVShow2IntoTVShow(_ show: TVShowPage.TVShow) -> TVShow {
-  // MARK: - TODO, Remove this
-  return TVShow(id: show.id,
-                name: show.name,
-                voteAverage: show.voteAverage,
-                firstAirDate: show.firstAirDate,
-                posterPath: show.posterPath?.absoluteString ?? "",
-                genreIds: show.genreIds,
-                backDropPath: show.backDropPath?.absoluteString ?? "",
-                overview: show.overview,
-                originCountry: [],
-                voteCount: show.voteCount)
-}
-
 final class AiringTodayViewModel: AiringTodayViewModelProtocol {
   let fetchTVShowsUseCase: FetchTVShowsUseCase
   let viewStateObservableSubject = CurrentValueSubject<SimpleViewState<AiringTodayCollectionViewModel>, Never>(.loading)
@@ -46,9 +32,7 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol {
   }
 
   private func mapToCell(entities: [TVShowPage.TVShow]) -> [AiringTodayCollectionViewModel] {
-    return entities
-      .map { mapTVShow2IntoTVShow($0) }
-      .map { AiringTodayCollectionViewModel(show: $0) }
+    return entities.map { AiringTodayCollectionViewModel(show: $0) }
   }
 
   // MARK: Input

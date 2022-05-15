@@ -97,9 +97,7 @@ extension TVShowListRootView: UITableViewDelegate {
   }
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    if let model = dataSource?.itemIdentifier(for: indexPath) {
-      tableView.deselectRow(at: indexPath, animated: true)
-      viewModel.showIsPicked(with: model.entity.id)
-    }
+    tableView.deselectRow(at: indexPath, animated: true)
+    viewModel.showIsPicked(index: indexPath.row)
   }
 }

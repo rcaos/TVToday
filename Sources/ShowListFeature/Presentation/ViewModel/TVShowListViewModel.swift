@@ -16,26 +16,12 @@ protocol TVShowListViewModelProtocol {
   // MARK: - Input
   func viewDidLoad()
   func didLoadNextPage()
-  func showIsPicked(with id: Int)
+  func showIsPicked(index: Int)
   func refreshView()
   func viewDidFinish()
 
   // MARK: - Output
   var viewStateObservableSubject: CurrentValueSubject<SimpleViewState<TVShowCellViewModel>, Never> { get }
-}
-
-func mapTVShow2IntoTVShow(_ show: TVShowPage.TVShow) -> TVShow {
-  // MARK: - TODO, Remove this
-  return TVShow(id: show.id,
-                name: show.name,
-                voteAverage: show.voteAverage,
-                firstAirDate: show.firstAirDate,
-                posterPath: show.posterPath?.absoluteString ?? "",
-                genreIds: show.genreIds,
-                backDropPath: show.backDropPath?.absoluteString ?? "",
-                overview: show.overview,
-                originCountry: [],
-                voteCount: show.voteCount)
 }
 
 final class TVShowListViewModel: TVShowListViewModelProtocol {
@@ -68,8 +54,7 @@ final class TVShowListViewModel: TVShowListViewModelProtocol {
 
   func mapToCell(entities: [TVShowPage.TVShow]) -> [TVShowCellViewModel] {
     return entities
-      //.filter { $0.isActive } // MARK: - TODO, recover this
-      .map { mapTVShow2IntoTVShow($0) }
+      //.filter { $0.isActive } // MARK: - TODO, recover this behavior
       .map { TVShowCellViewModel(show: $0) }
   }
 
@@ -89,9 +74,11 @@ final class TVShowListViewModel: TVShowListViewModelProtocol {
   }
 
   // MARK: - Navigation
-  public func showIsPicked(with id: Int) {
-    let step = TVShowListStep.showIsPicked(showId: id, stepOrigin: stepOrigin, closure: updateTVShow)
-    coordinator?.navigate(to: step)
+  public func showIsPicked(index: Int) {
+    if shows.indices.contains(index) {
+      let step = TVShowListStep.showIsPicked(showId: shows[index].id, stepOrigin: stepOrigin, closure: updateTVShow)
+      coordinator?.navigate(to: step)
+    }
   }
 
   public func viewDidFinish() {

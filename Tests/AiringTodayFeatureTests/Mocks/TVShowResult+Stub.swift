@@ -7,26 +7,27 @@
 
 @testable import Shared
 
-extension TVShowResult {
+extension TVShowPage {
 
-  static func stub(page: Int? = 1,
-                   results: [TVShow],
-                   totalResults: Int,
-                   totalPages: Int) -> Self {
-
-    TVShowResult(page: page,
-                 results: results,
-                 totalResults: totalResults,
-                 totalPages: totalPages)
+  static func stub(page: Int = 1,
+                   showsList: [TVShow],
+                   totalPages: Int,
+                   totalShows: Int) -> Self {
+    TVShowPage(
+      page: page,
+      showsList: showsList,
+      totalPages: totalPages,
+      totalShows: totalShows
+    )
   }
 
   // MARK: - Empty
-  static var empty: TVShowResult {
-    return TVShowResult.stub(
+  static var empty: TVShowPage {
+    return TVShowPage.stub(
       page: 1,
-      results: [],
-      totalResults: 0,
-      totalPages: 1
+      showsList: [],
+      totalPages: 0,
+      totalShows: 1
     )
   }
 }

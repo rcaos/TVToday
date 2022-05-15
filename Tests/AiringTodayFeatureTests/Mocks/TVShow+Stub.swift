@@ -5,23 +5,29 @@
 //  Created by Jeans Ruiz on 7/28/20.
 //
 
+import Foundation
 @testable import Shared
 
-extension TVShow {
+extension TVShowPage.TVShow {
   static func stub(
     id: Int = 1,
     name: String = "title1",
     voteAverage: Double = 1.0,
-    posterPath: String? = "/1",
-    backDropPath: String? = "/back1",
+    posterPath: URL? = nil,
+    backDropPath: URL? = nil,
     overview: String = "overview1"
   ) -> Self {
 
-    TVShow(id: id,
-           name: name,
-           voteAverage: voteAverage,
-           posterPath: posterPath,
-           backDropPath: backDropPath,
-           overview: overview)
+    TVShowPage.TVShow(
+      id: id,
+      name: name,
+      overview: overview,
+      firstAirDate: "",
+      posterPath: posterPath,
+      backDropPath: backDropPath,
+      genreIds: [],
+      voteAverage: voteAverage,
+      voteCount: 0
+    )
   }
 }

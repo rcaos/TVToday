@@ -8,66 +8,56 @@
 import Foundation
 @testable import Shared
 
-func buildFirstPage() -> TVShowResult {
-  let firstShow = TVShow.stub(
+func buildFirstPage() -> TVShowPage {
+  let firstShow = TVShowPage.TVShow.stub(
     id: 1,
     name: "title1 🐶",
-    posterPath: "/1",
-    backDropPath: "/back1",
     overview: "overview"
   )
-  let secondShow = TVShow.stub(
+  let secondShow = TVShowPage.TVShow.stub(
     id: 2,
     name: "title2 🔫",
-    posterPath: "/2",
-    backDropPath: "/back2",
     overview: "overview2"
   )
-  return TVShowResult.stub(page: 1,
-                           results: [firstShow, secondShow],
-                           totalResults: 3,
-                           totalPages: 2)
+  return TVShowPage.stub(page: 1,
+                         showsList: [firstShow, secondShow],
+                         totalPages: 2,
+                         totalShows: 3)
 }
 
-func buildSecondPage() -> TVShowResult {
-  let thirdShow = TVShow.stub(
+func buildSecondPage() -> TVShowPage {
+  let thirdShow = TVShowPage.TVShow.stub(
     id: 3,
     name: "title3 🚨",
-    posterPath: "/3",
-    backDropPath: "/back3",
     overview: "overview3"
   )
-  return TVShowResult.stub(page: 2,
-                           results: [thirdShow],
-                           totalResults: 3,
-                           totalPages: 2)
+  return TVShowPage.stub(page: 2,
+                         showsList: [thirdShow],
+                         totalPages: 2,
+                         totalShows: 3)
 }
 
 // MARK: - For SnapshotTests
-func buildFirstPageSnapshot() -> TVShowResult {
-  let firstShow = TVShow.stub(
+func buildFirstPageSnapshot() -> TVShowPage {
+  let firstShow = TVShowPage.TVShow.stub(
     id: 1,
     name: "title1 🐶",
-    posterPath: "/1",
-    backDropPath: "/back1",
     overview: "overview"
   )
-  return TVShowResult.stub(page: 1,
-                           results: [firstShow],
-                           totalResults: 2,
-                           totalPages: 2)
+  return TVShowPage.stub(page: 1,
+                         showsList: [firstShow],
+                         totalPages: 2,
+                         totalShows: 2)
 }
 
-func buildSecondPageSnapshot() -> TVShowResult {
-  let secondShow = TVShow.stub(
+func buildSecondPageSnapshot() -> TVShowPage {
+  let secondShow = TVShowPage.TVShow.stub(
     id: 3,
     name: "title3 🚨",
-    posterPath: "/3",
-    backDropPath: "/back3",
     overview: "overview3"
   )
-  return TVShowResult.stub(page: 2,
-                           results: [secondShow],
-                           totalResults: 2,
-                           totalPages: 2)
+  return TVShowPage.stub(page: 2,
+                         showsList: [secondShow],
+                         totalPages: 2,
+                         totalShows: 2)
 }

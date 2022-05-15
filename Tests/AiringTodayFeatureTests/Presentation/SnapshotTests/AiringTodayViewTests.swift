@@ -30,7 +30,7 @@ class AiringTodayViewTests: XCTestCase {
   }
 
   func test_WhenViewPaging_thenShowPagingScreen() {
-    let firsPageCells = buildFirstPageSnapshot().results!.map { AiringTodayCollectionViewModel(show: $0) }
+    let firsPageCells = buildFirstPageSnapshot().showsList.map { AiringTodayCollectionViewModel(show: $0) }
     let viewModel = AiringTodayViewModelMock(state: .paging(firsPageCells, next: 2) )
 
     let viewController = AiringTodayViewController(viewModel: viewModel)
@@ -45,7 +45,7 @@ class AiringTodayViewTests: XCTestCase {
   }
 
   func test_WhenViewPopulated_thenShowPopulatedScreen() {
-    let totalCells = (buildFirstPageSnapshot().results + buildSecondPageSnapshot().results)
+    let totalCells = (buildFirstPageSnapshot().showsList + buildSecondPageSnapshot().showsList)
       .map { AiringTodayCollectionViewModel(show: $0) }
     let viewModel = AiringTodayViewModelMock(state: .populated(totalCells) )
 
@@ -86,7 +86,7 @@ class AiringTodayViewTests: XCTestCase {
 }
 
 // MARK: - Helper
-func configureWith(_ viewController: UIViewController, style: UIUserInterfaceStyle) {
+private func configureWith(_ viewController: UIViewController, style: UIUserInterfaceStyle) {
   viewController.overrideUserInterfaceStyle = style
   _ = viewController.view
 }

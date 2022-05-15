@@ -42,6 +42,8 @@ func buildFirstPageSnapshot() -> TVShowPage {
   let firstShow = TVShowPage.TVShow.stub(
     id: 1,
     name: "title1 🐶",
+    posterPath: URL(string: "mock"),
+    backDropPath: URL(string: "mock"),
     overview: "overview"
   )
   return TVShowPage.stub(page: 1,
@@ -54,6 +56,8 @@ func buildSecondPageSnapshot() -> TVShowPage {
   let secondShow = TVShowPage.TVShow.stub(
     id: 3,
     name: "title3 🚨",
+    posterPath: URL(string: "mock"),
+    backDropPath: URL(string: "mock"),
     overview: "overview3"
   )
   return TVShowPage.stub(page: 2,

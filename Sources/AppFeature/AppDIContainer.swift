@@ -111,14 +111,6 @@ public class AppDIContainer {
                                                          userLoggedRepository: loggedUserRepository,showListBuilder: self)
     return AccountFeature.Module(dependencies: dependencies)
   }
-
-  // MARK: - Build TVShowDetails Module
-//  func buildTVShowDetailModule() -> ShowDetailsFeature.Module {
-//    let dependencies = ShowDetailsFeatureInterface.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-//                                                                      imagesBaseURL: appConfigurations.imagesBaseURL,
-//                                                                      showsPersistenceRepository: showsPersistence)
-//    return ShowDetailsFeature.Module(dependencies: dependencies)
-//  }
 }
 
 extension AppDIContainer: ModuleShowDetailsBuilder {

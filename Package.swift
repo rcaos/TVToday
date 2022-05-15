@@ -210,6 +210,7 @@ let package = Package(
       name: "ShowListFeatureTests",
       dependencies: [
         "ShowListFeature",
+        "CommonMocks",
         .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
       ],
       exclude: [

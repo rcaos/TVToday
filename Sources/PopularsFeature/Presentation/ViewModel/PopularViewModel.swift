@@ -21,20 +21,6 @@ protocol PopularViewModelProtocol {
   var viewStateObservableSubject: CurrentValueSubject<SimpleViewState<TVShowCellViewModel>, Never> { get }
 }
 
-func mapTVShow2IntoTVShow(_ show: TVShowPage.TVShow) -> TVShow {
-  // MARK: - TODO, Remove this
-  return TVShow(id: show.id,
-                name: show.name,
-                voteAverage: show.voteAverage,
-                firstAirDate: show.firstAirDate,
-                posterPath: show.posterPath?.absoluteString ?? "",
-                genreIds: show.genreIds,
-                backDropPath: show.backDropPath?.absoluteString ?? "",
-                overview: show.overview,
-                originCountry: [],
-                voteCount: show.voteCount)
-}
-
 final class PopularViewModel: PopularViewModelProtocol {
   let fetchTVShowsUseCase: FetchTVShowsUseCase
   var shows: [TVShowPage.TVShow]
@@ -52,12 +38,6 @@ final class PopularViewModel: PopularViewModelProtocol {
     self.scheduler = scheduler
     self.coordinator = coordinator
     shows = []
-  }
-
-  private func mapToCell(entities: [TVShowPage.TVShow]) -> [TVShowCellViewModel] {
-    return entities
-      .map { mapTVShow2IntoTVShow($0) }
-      .map { TVShowCellViewModel(show: $0) }
   }
 
   func viewDidLoad() {
@@ -128,5 +108,9 @@ final class PopularViewModel: PopularViewModelProtocol {
     } else {
       viewStateObservableSubject.send( .populated(cellsShows) )
     }
+  }
+
+  private func mapToCell(entities: [TVShowPage.TVShow]) -> [TVShowCellViewModel] {
+    return entities.map { TVShowCellViewModel(show: $0) }
   }
 }

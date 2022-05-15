@@ -19,7 +19,7 @@ public struct ModuleDependencies {
   let apiDataTransferService: DataTransferService
   let imagesBaseURL: String
   let showsPersistence: ShowsVisitedLocalRepositoryProtocol
-  let searchsPersistence: SearchLocalRepository
+  let searchsPersistence: SearchLocalRepositoryProtocol
 
   let showDetailsBuilder: ModuleShowDetailsBuilder
   let showListBuilder: ModuleShowListDetailsBuilder
@@ -27,7 +27,7 @@ public struct ModuleDependencies {
   public init(apiDataTransferService: DataTransferService,
               imagesBaseURL: String,
               showsPersistence: ShowsVisitedLocalRepositoryProtocol,
-              searchsPersistence: SearchLocalRepository,
+              searchsPersistence: SearchLocalRepositoryProtocol,
               showDetailsBuilder: ModuleShowDetailsBuilder,
               showListBuilder: ModuleShowListDetailsBuilder) {
     self.apiDataTransferService = apiDataTransferService

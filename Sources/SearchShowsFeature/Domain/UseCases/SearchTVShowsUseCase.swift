@@ -23,10 +23,10 @@ public struct SearchTVShowsUseCaseRequestValue {
 // MARK: - SearchTVShowsUseCase
 final class DefaultSearchTVShowsUseCase: SearchTVShowsUseCase {
   private let tvShowsPageRepository: TVShowsPageRepository
-  private let searchsLocalRepository: SearchLocalRepository
+  private let searchsLocalRepository: SearchLocalRepositoryProtocol
 
   public init(tvShowsPageRepository: TVShowsPageRepository,
-              searchsLocalRepository: SearchLocalRepository) {
+              searchsLocalRepository: SearchLocalRepositoryProtocol) {
     self.tvShowsPageRepository = tvShowsPageRepository
     self.searchsLocalRepository = searchsLocalRepository
   }

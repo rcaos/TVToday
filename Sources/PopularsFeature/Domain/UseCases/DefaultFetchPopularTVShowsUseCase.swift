@@ -10,14 +10,13 @@ import Shared
 import NetworkingInterface
 
 final class DefaultFetchPopularTVShowsUseCase: FetchTVShowsUseCase {
+  private let tvShowsPageRepository: TVShowsPageRepository
 
-  private let tvShowsRepository: TVShowsRepository
-
-  init(tvShowsRepository: TVShowsRepository) {
-    self.tvShowsRepository = tvShowsRepository
+  init(tvShowsPageRepository: TVShowsPageRepository) {
+    self.tvShowsPageRepository = tvShowsPageRepository
   }
 
-  func execute(requestValue: FetchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowResult, DataTransferError> {
-    return tvShowsRepository.fetchPopularShows(page: requestValue.page)
+  func execute(requestValue: FetchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowPage, DataTransferError> {
+    return tvShowsPageRepository.fetchPopularShows(page: requestValue.page)
   }
 }

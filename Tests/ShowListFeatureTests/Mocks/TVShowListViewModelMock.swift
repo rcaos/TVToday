@@ -17,7 +17,7 @@ class TVShowListViewModelMock: TVShowListViewModelProtocol {
 
   func didLoadNextPage() { }
 
-  func showIsPicked(with id: Int) { }
+  func showIsPicked(index: Int) { }
 
   func refreshView() { }
 

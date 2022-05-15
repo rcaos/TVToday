@@ -13,23 +13,20 @@ final class DIContainer {
 
   private let dependencies: ModuleDependencies
 
-  // MARK: - Repositories
-  private lazy var showsRepository: TVShowsRepository = {
-    return DefaultTVShowsRepository(
-      dataTransferService: dependencies.apiDataTransferService,
-      basePath: dependencies.imagesBaseURL)
-  }()
-
   private lazy var authRepository: AuthRepository = {
-    return DefaultAuthRepository(dataTransferService: dependencies.apiDataTransferService)
+    return DefaultAuthRepository(
+      remoteDataSource: DefaultAuthRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      requestTokenRepository: dependencies.requestTokenRepository,
+      accessTokenRepository: dependencies.accessTokenRepository
+    )
   }()
 
   private lazy var accountRepository: AccountRepository = {
-    return DefaultAccountRepository(dataTransferService: dependencies.apiDataTransferService)
-  }()
-
-  private lazy var keychainRepository: KeychainRepository = {
-    return DefaultKeychainRepository()
+    return DefaultAccountRepository(
+      remoteDataSource: DefaultAccountRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      accessTokenRepository: dependencies.accessTokenRepository,
+      userLoggedRepository: dependencies.userLoggedRepository
+    )
   }()
 
   private var accountViewModel: AccountViewModel?
@@ -40,27 +37,25 @@ final class DIContainer {
 
     // This init methods are Ok, because acountViewModel its a Long-Lived dependency
     func makeCreateSessionUseCase() -> CreateSessionUseCase {
-      return DefaultCreateSessionUseCase(authRepository: authRepository,
-                                         keyChainRepository: keychainRepository)
+      return DefaultCreateSessionUseCase(authRepository: authRepository)
     }
 
     func makeFetchAccountDetailsUseCase() -> FetchAccountDetailsUseCase {
-      return DefaultFetchAccountDetailsUseCase(accountRepository: accountRepository,
-                                               keychainRepository: keychainRepository)
+      return DefaultFetchAccountDetailsUseCase(accountRepository: accountRepository)
     }
 
     func makeFetchLoggedUserUseCase() -> FetchLoggedUser {
-      return DefaultFetchLoggedUser(keychainRepository: keychainRepository)
+      return DefaultFetchLoggedUser(loggedRepository: dependencies.userLoggedRepository)
     }
 
-    func makeDeleteLoguedUserUseCase() -> DeleteLoguedUserUseCase {
-      return DefaultDeleteLoguedUserUseCase(keychainRepository: keychainRepository)
+    func makeDeleteLoggedUserUseCase() -> DeleteLoggedUserUseCase {
+      return DefaultDeleteLoggedUserUseCase(loggedRepository: dependencies.userLoggedRepository)
     }
 
     accountViewModel = AccountViewModel(createNewSession: makeCreateSessionUseCase(),
                                         fetchAccountDetails: makeFetchAccountDetailsUseCase(),
                                         fetchLoggedUser: makeFetchLoggedUserUseCase(),
-                                        deleteLoguedUser: makeDeleteLoguedUserUseCase())
+                                        deleteLoggedUser: makeDeleteLoggedUserUseCase())
   }
 
   // MARK: - Build Module Coordinator
@@ -69,9 +64,8 @@ final class DIContainer {
   }
 
   // MARK: - Uses Cases
-  fileprivate func makeCreateTokenUseCase() -> CreateTokenUseCase {
-    return DefaultCreateTokenUseCase(authRepository: authRepository,
-                                     keyChainRepository: keychainRepository)
+  private func makeCreateTokenUseCase() -> CreateTokenUseCase {
+    return DefaultCreateTokenUseCase(authRepository: authRepository)
   }
 }
 
@@ -103,7 +97,7 @@ extension DIContainer: AccountViewControllerFactory {
     return SignInViewController(viewModel: signViewModel)
   }
 
-  func makeProfileViewController(with account: AccountResult) -> UIViewController {
+  func makeProfileViewController(with account: Account) -> UIViewController {
     let profileViewModel = ProfileViewModel(account: account)
     profileViewModel.delegate = accountViewModel
     return ProfileViewController(viewModel: profileViewModel)

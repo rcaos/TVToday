@@ -11,15 +11,7 @@ import Shared
 import ShowDetailsFeatureInterface
 
 final class DIContainer {
-
   private let dependencies: ModuleDependencies
-
-  // MARK: - Repositories
-  private lazy var showsRepository: TVShowsRepository = {
-    return DefaultTVShowsRepository(
-      dataTransferService: dependencies.apiDataTransferService,
-      basePath: dependencies.imagesBaseURL)
-  }()
 
   // MARK: - Initializer
   init(dependencies: ModuleDependencies) {
@@ -33,8 +25,13 @@ final class DIContainer {
   }
 
   // MARK: - Uses Cases
-  fileprivate func makeFetchPopularShowsUseCase() -> FetchTVShowsUseCase {
-    return DefaultFetchPopularTVShowsUseCase(tvShowsRepository: showsRepository)
+  private func makeFetchPopularShowsUseCase() -> FetchTVShowsUseCase {
+    let showsPageRepository = DefaultTVShowsPageRepository(
+      showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      mapper: DefaultTVShowPageMapper(),
+      imageBasePath: dependencies.imagesBaseURL
+    )
+    return DefaultFetchPopularTVShowsUseCase(tvShowsPageRepository: showsPageRepository)
   }
 }
 

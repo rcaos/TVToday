@@ -7,6 +7,7 @@
 
 // swiftlint:disable all
 
+import CommonMocks
 import Combine
 import XCTest
 @testable import ShowListFeature
@@ -43,7 +44,7 @@ class TVShowListViewModelTests: XCTestCase {
   func test_when_useCase_respons_with_FirstPage_ViewModel_Should_contains_Populated_State() {
     // given
     fetchUseCaseMock.result = buildFirstPage()
-    let firstPageCells = buildFirstPage().results!.map { TVShowCellViewModel(show: $0) }
+    let firstPageCells = buildFirstPage().showsList.map { TVShowCellViewModel(show: $0) }
 
     let sut: TVShowListViewModelProtocol = TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, scheduler: .immediate, coordinator: nil)
 
@@ -66,8 +67,8 @@ class TVShowListViewModelTests: XCTestCase {
   func test_When_ask_for_second_page_ViewModel_Should_contains_Populated_State_with_Second_Page() {
     // given
     let sut: TVShowListViewModelProtocol = TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, scheduler: .immediate, coordinator: nil)
-    let firstPage = buildFirstPage().results!.map { TVShowCellViewModel(show: $0) }
-    let secondPage = (buildFirstPage().results + buildSecondPage().results).map { TVShowCellViewModel(show: $0) }
+    let firstPage = buildFirstPage().showsList.map { TVShowCellViewModel(show: $0) }
+    let secondPage = (buildFirstPage().showsList + buildSecondPage().showsList).map { TVShowCellViewModel(show: $0) }
 
     let expected = [
       SimpleViewState<TVShowCellViewModel>.loading,

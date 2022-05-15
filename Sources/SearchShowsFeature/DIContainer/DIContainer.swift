@@ -16,18 +16,10 @@ final class DIContainer {
   private let dependencies: ModuleDependencies
 
   // MARK: - Repositories
-  private lazy var showsRepository: TVShowsRepository = {
-    return DefaultTVShowsRepository(
-      dataTransferService: dependencies.apiDataTransferService,
-      basePath: dependencies.imagesBaseURL)
-  }()
-
   private lazy var genresRepository: GenresRepository = {
-    return DefaultGenreRepository(dataTransferService: dependencies.apiDataTransferService)
-  }()
-
-  private lazy var keychainRepository: KeychainRepository = {
-    return DefaultKeychainRepository()
+    return DefaultGenreRepository(
+      remoteDataSource: DefaultGenreRemoteDataSource(dataTransferService: dependencies.apiDataTransferService)
+    )
   }()
 
   // MARK: - Long-Lived dependencies
@@ -46,15 +38,20 @@ final class DIContainer {
   }
 
   // MARK: - Search Feature Uses Cases
-  fileprivate func makeSearchShowsUseCase() -> SearchTVShowsUseCase {
-    return DefaultSearchTVShowsUseCase(tvShowsRepository: showsRepository,
-                                       keychainRepository: keychainRepository,
-                                       searchsLocalRepository: dependencies.searchsPersistence)
+  private func makeSearchShowsUseCase() -> SearchTVShowsUseCase {
+    let tvShowsPageRepository = DefaultTVShowsPageRepository(
+      showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      mapper: DefaultTVShowPageMapper(),
+      imageBasePath: dependencies.imagesBaseURL
+    )
+    return DefaultSearchTVShowsUseCase(
+      tvShowsPageRepository: tvShowsPageRepository,
+      searchsLocalRepository: dependencies.searchsPersistence
+    )
   }
 
-  fileprivate func makeFetchSearchsUseCase() -> FetchSearchsUseCase {
-    return DefaultFetchSearchsUseCase(searchLocalRepository: dependencies.searchsPersistence,
-                                      keychainRepository: keychainRepository)
+  fileprivate func makeFetchSearchesUseCase() -> FetchSearchesUseCase {
+    return DefaultFetchSearchesUseCase(searchLocalRepository: dependencies.searchsPersistence)
   }
 
   fileprivate func makeFetchGenresUseCase() -> FetchGenresUseCase {
@@ -62,9 +59,7 @@ final class DIContainer {
   }
 
   fileprivate func makeFetchVisitedShowsUseCase() -> FetchVisitedShowsUseCase {
-    return DefaultFetchVisitedShowsUseCase(
-      showsVisitedLocalRepository: dependencies.showsPersistence,
-      keychainRepository: keychainRepository)
+    return DefaultFetchVisitedShowsUseCase(showsVisitedLocalRepository: dependencies.showsPersistence)
   }
 
   fileprivate func makeRecentShowsDidChangedUseCase() -> RecentVisitedShowDidChangeUseCase {
@@ -74,7 +69,7 @@ final class DIContainer {
   // MARK: - Search Feature View Models
   fileprivate func buildResultsViewModel(with delegate: ResultsSearchViewModelDelegate?) -> ResultsSearchViewModelProtocol {
     let resultsViewModel = ResultsSearchViewModel(searchTVShowsUseCase: makeSearchShowsUseCase(),
-                                                  fetchRecentSearchsUseCase: makeFetchSearchsUseCase())
+                                                  fetchRecentSearchesUseCase: makeFetchSearchesUseCase())
     resultsViewModel.delegate = searchViewModel
     return resultsViewModel
   }

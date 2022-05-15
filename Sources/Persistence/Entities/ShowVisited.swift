@@ -10,7 +10,7 @@ import Foundation
 
 public struct ShowVisited: Hashable {
   public let id: Int
-  public let pathImage: String
+  public let pathImage: String  // MARK: - TODO, consider this could contain the URL already
 
   public init(id: Int, pathImage: String) {
     self.id = id

@@ -14,25 +14,20 @@ final class DIContainer {
   private let dependencies: ModuleDependencies
 
   // MARK: - Repositories
-  private lazy var tvShowsRepository: TVShowsRepository = {
-    return DefaultTVShowsRepository(
-      dataTransferService: dependencies.apiDataTransferService,
-      basePath: dependencies.imagesBaseURL)
-  }()
-
-  private lazy var accountShowsRepository: AccountTVShowsRepository = {
-    return DefaultAccountTVShowsRepository(dataTransferService: dependencies.apiDataTransferService,
-                                           basePath: dependencies.imagesBaseURL)
-  }()
-
-  private lazy var keychainRepository: KeychainRepository = {
-    return DefaultKeychainRepository()
+  private lazy var accountShowsRepository: AccountTVShowsDetailsRepository = {
+    return DefaultAccountTVShowsDetailsRepository(
+      showsRemoteDataSource: AccountTVShowsDetailsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      mapper: DefaultAccountTVShowDetailsMapper(),
+      loggedUserRepository: dependencies.loggedUserRepository
+    )
   }()
 
   private lazy var episodesRepository: TVEpisodesRepository = {
     return DefaultTVEpisodesRepository(
-      dataTransferService: dependencies.apiDataTransferService,
-      basePath: dependencies.imagesBaseURL)
+      remoteDataSource: DefaultTVEpisodesRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      mapper: TVEpisodesMapper(),
+      imageBasePath: dependencies.imagesBaseURL
+    )
   }()
 
   // MARK: - Initializer
@@ -76,28 +71,31 @@ final class DIContainer {
 
   // MARK: - Uses Cases for Show Details
   private func makeFetchShowDetailsUseCase() -> FetchTVShowDetailsUseCase {
-    return DefaultFetchTVShowDetailsUseCase(tvShowsRepository: tvShowsRepository,
-                                            keychainRepository: keychainRepository,
-                                            tvShowsVisitedRepository: dependencies.showsPersistenceRepository)
+    let tvShowDetailsRepository = DefaultTVShowsDetailRepository(
+      showsPageRemoteDataSource: TVShowsDetailsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      mapper: DefaultTVShowDetailsMapper(),
+      imageBasePath: dependencies.imagesBaseURL
+    )
+    return DefaultFetchTVShowDetailsUseCase(
+      tvShowDetailsRepository: tvShowDetailsRepository,
+      tvShowsVisitedRepository: dependencies.showsPersistenceRepository
+    )
   }
 
   private func makeMarkAsFavoriteUseCase() -> MarkAsFavoriteUseCase {
-    return DefaultMarkAsFavoriteUseCase(accountShowsRepository: accountShowsRepository,
-                                        keychainRepository: keychainRepository)
+    return DefaultMarkAsFavoriteUseCase(accountShowsRepository: accountShowsRepository)
   }
 
   private func makeSaveToWatchListUseCase() -> SaveToWatchListUseCase {
-    return DefaultSaveToWatchListUseCase(accountShowsRepository: accountShowsRepository,
-                                         keychainRepository: keychainRepository)
+    return DefaultSaveToWatchListUseCase(accountShowsRepository: accountShowsRepository)
   }
 
   private func makeTVAccountStatesUseCase() -> FetchTVAccountStates {
-    return DefaultFetchTVAccountStates(accountShowsRepository: accountShowsRepository,
-                                       keychainRepository: keychainRepository)
+    return DefaultFetchTVAccountStates(accountShowsRepository: accountShowsRepository)
   }
 
   private func makeFetchLoggedUserUseCase() -> FetchLoggedUser {
-    return DefaultFetchLoggedUser(keychainRepository: keychainRepository)
+    return DefaultFetchLoggedUser(loggedRepository: dependencies.loggedUserRepository)
   }
 
   // MARK: - Uses Cases for Seasons

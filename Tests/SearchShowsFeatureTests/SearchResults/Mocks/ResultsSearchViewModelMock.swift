@@ -10,7 +10,7 @@ import Combine
 
 final class ResultsSearchViewModelMock: ResultsSearchViewModelProtocol {
   func recentSearchIsPicked(query: String) { }
-  func showIsPicked(idShow: Int) { }
+  func showIsPicked(index: Int) { }
   func searchShows(with query: String) { }
   func resetSearch() { }
 

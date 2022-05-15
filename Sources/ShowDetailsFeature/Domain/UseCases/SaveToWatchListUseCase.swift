@@ -20,23 +20,14 @@ public struct SaveToWatchListUseCaseRequestValue {
 }
 
 final class DefaultSaveToWatchListUseCase: SaveToWatchListUseCase {
-  private let accountShowsRepository: AccountTVShowsRepository
-  private let keychainRepository: KeychainRepository
+  private let accountShowsRepository: AccountTVShowsDetailsRepository
 
-  init(accountShowsRepository: AccountTVShowsRepository,
-       keychainRepository: KeychainRepository) {
+  init(accountShowsRepository: AccountTVShowsDetailsRepository) {
     self.accountShowsRepository = accountShowsRepository
-    self.keychainRepository = keychainRepository
   }
 
   public func execute(requestValue: SaveToWatchListUseCaseRequestValue) -> AnyPublisher<Bool, DataTransferError> {
-    guard let account = keychainRepository.fetchLoguedUser() else {
-      return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher() // TODO, use other error
-    }
-
     return accountShowsRepository.saveToWatchList(
-      session: account.sessionId,
-      userId: String(account.id),
       tvShowId: requestValue.showId,
       watchedList: requestValue.watchList
     )

@@ -1,9 +1,8 @@
 //
 //  TVShowListViewModel.swift
-//  MyTvShows
+//  
 //
-//  Created by Jeans on 9/16/19.
-//  Copyright © 2019 Jeans. All rights reserved.
+//  Created by Jeans Ruiz on 4/05/22.
 //
 
 import Combine
@@ -11,12 +10,13 @@ import CombineSchedulers
 import Shared
 import ShowDetailsFeatureInterface
 import ShowListFeatureInterface
+import NetworkingInterface
 
 protocol TVShowListViewModelProtocol {
   // MARK: - Input
   func viewDidLoad()
   func didLoadNextPage()
-  func showIsPicked(with id: Int)
+  func showIsPicked(index: Int)
   func refreshView()
   func viewDidFinish()
 
@@ -24,11 +24,11 @@ protocol TVShowListViewModelProtocol {
   var viewStateObservableSubject: CurrentValueSubject<SimpleViewState<TVShowCellViewModel>, Never> { get }
 }
 
-final class TVShowListViewModel: TVShowListViewModelProtocol, ShowsViewModel {
+final class TVShowListViewModel: TVShowListViewModelProtocol {
   let fetchTVShowsUseCase: FetchTVShowsUseCase
   let viewStateObservableSubject: CurrentValueSubject<SimpleViewState<TVShowCellViewModel>, Never> = .init(.loading)
 
-  var shows: [TVShow]
+  var shows: [TVShowPage.TVShow]
   var showsCells: [TVShowCellViewModel] = []
 
   private weak var coordinator: TVShowListCoordinatorProtocol?
@@ -52,9 +52,9 @@ final class TVShowListViewModel: TVShowListViewModelProtocol, ShowsViewModel {
     print("deinit \(Self.self)")
   }
 
-  func mapToCell(entities: [TVShow]) -> [TVShowCellViewModel] {
+  func mapToCell(entities: [TVShowPage.TVShow]) -> [TVShowCellViewModel] {
     return entities
-      .filter { $0.isActive }
+      //.filter { $0.isActive } // MARK: - TODO, recover this behavior
       .map { TVShowCellViewModel(show: $0) }
   }
 
@@ -74,9 +74,11 @@ final class TVShowListViewModel: TVShowListViewModelProtocol, ShowsViewModel {
   }
 
   // MARK: - Navigation
-  public func showIsPicked(with id: Int) {
-    let step = TVShowListStep.showIsPicked(showId: id, stepOrigin: stepOrigin, closure: updateTVShow)
-    coordinator?.navigate(to: step)
+  public func showIsPicked(index: Int) {
+    if shows.indices.contains(index) {
+      let step = TVShowListStep.showIsPicked(showId: shows[index].id, stepOrigin: stepOrigin, closure: updateTVShow)
+      coordinator?.navigate(to: step)
+    }
   }
 
   public func viewDidFinish() {
@@ -85,10 +87,12 @@ final class TVShowListViewModel: TVShowListViewModelProtocol, ShowsViewModel {
 
   // MARK: - Updated List from Show Details (Deleted Favorite, Delete WatchList)
   private func updateTVShow(_ updated: TVShowUpdated) {
-    for index in shows.indices where shows[index].id == updated.showId {
-      shows[index].isActive = updated.isActive
-    }
-    refreshCells()
+    // MARK: - TODO, during refactor, need to fix this behavior, maybe use a Memory Repository.
+    print("refresh show= [\(updated)]")
+//    for index in shows.indices where shows[index].id == updated.showId {
+//      shows[index].isActive = updated.isActive
+//    }
+//    refreshCells()
   }
 
   private func refreshCells() {
@@ -106,6 +110,56 @@ final class TVShowListViewModel: TVShowListViewModelProtocol, ShowsViewModel {
       viewStateObservableSubject.send(.populated(cells))
     default:
       break
+    }
+  }
+
+  // MARK: - Private
+  private func getShows(for page: Int, showLoader: Bool = true) {
+
+    if viewStateObservableSubject.value.isInitialPage, showLoader {
+      viewStateObservableSubject.send(.loading)
+    }
+
+    let request = FetchTVShowsUseCaseRequestValue(page: page)
+
+    fetchTVShowsUseCase.execute(requestValue: request)
+      .receive(on: scheduler)
+      .sink(receiveCompletion: { [weak self] completion in
+        switch completion {
+        case let .failure(error):
+          self?.handleError(error)
+        case .finished: break
+        }
+      }, receiveValue: { [weak self] result in
+        self?.processFetched(for: result, currentPage: page)
+      })
+      .store(in: &disposeBag)
+  }
+
+  private func handleError(_ error: DataTransferError) {
+    if viewStateObservableSubject.value.isInitialPage {
+      viewStateObservableSubject.send(.error(error.localizedDescription))
+    }
+  }
+
+  private func processFetched(for response: TVShowPage, currentPage: Int) {
+    if currentPage == 1 {
+      shows.removeAll()
+    }
+
+    self.shows.append(contentsOf: response.showsList)
+
+    if self.shows.isEmpty {
+      viewStateObservableSubject.send(.empty)
+      return
+    }
+
+    let cellsShows = mapToCell(entities: shows)
+
+    if response.hasMorePages {
+      viewStateObservableSubject.send( .paging(cellsShows, next: response.nextPage) )
+    } else {
+      viewStateObservableSubject.send( .populated(cellsShows) )
     }
   }
 }

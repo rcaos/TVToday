@@ -10,6 +10,6 @@
 
 extension TVShowDetailInfo {
   static func stub() -> Self {
-    return TVShowDetailInfo(show: TVShowDetailResult.stub())
+    return TVShowDetailInfo(show: TVShowDetail.stub())
   }
 }

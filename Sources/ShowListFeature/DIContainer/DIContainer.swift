@@ -14,16 +14,13 @@ final class DIContainer {
   private let dependencies: ShowListFeatureInterface.ModuleDependencies
 
   // MARK: - Repositories
-  private lazy var showsRepository: TVShowsRepository = {
-    return DefaultTVShowsRepository(
-      dataTransferService: dependencies.apiDataTransferService,
-      basePath: dependencies.imagesBaseURL)
-  }()
-
   private lazy var accountShowsRepository: AccountTVShowsRepository = {
     return DefaultAccountTVShowsRepository(
-      dataTransferService: dependencies.apiDataTransferService,
-      basePath: dependencies.imagesBaseURL)
+      showsPageRemoteDataSource: AccountTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      mapper: DefaultTVShowPageMapper(),
+      imageBasePath: dependencies.imagesBaseURL,
+      loggedUserRepository: dependencies.loggedUserRepository
+    )
   }()
 
   // MARK: - Initializer
@@ -70,18 +67,23 @@ final class DIContainer {
 
   // MARK: - Build Uses Cases
   private func makeShowListByGenreUseCase(genreId: Int) -> FetchTVShowsUseCase {
-    return DefaultFetchShowsByGenreTVShowsUseCase(genreId: genreId,
-                                                  tvShowsRepository: showsRepository)
+    let showsPageRepository = DefaultTVShowsPageRepository(
+      showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      mapper: DefaultTVShowPageMapper(),
+      imageBasePath: dependencies.imagesBaseURL
+    )
+    return DefaultFetchShowsByGenreTVShowsUseCase(
+      genreId: genreId,
+      tvShowsPageRepository: showsPageRepository
+    )
   }
 
   private func makeWatchListUseCase() -> FetchTVShowsUseCase {
-    return DefaultUserWatchListShowsUseCase(accountShowsRepository: accountShowsRepository,
-                                            keychainRepository: dependencies.keychainRepository)
+    return DefaultUserWatchListShowsUseCase(accountShowsRepository: accountShowsRepository)
   }
 
   private func makeFavoriteListUseCase() -> FetchTVShowsUseCase {
-    return DefaultUserFavoritesShowsUseCase(accountShowsRepository: accountShowsRepository,
-                                            keychainRepository: dependencies.keychainRepository)
+    return DefaultUserFavoritesShowsUseCase(accountShowsRepository: accountShowsRepository)
   }
 }
 

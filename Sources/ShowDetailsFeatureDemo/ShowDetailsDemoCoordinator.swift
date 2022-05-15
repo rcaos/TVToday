@@ -50,7 +50,8 @@ public class ShowDetailsDemoCoordinator: Coordinator {
   private func buildDetailsScene(in navigation: UINavigationController) {
     let dependencies = ShowDetailsFeatureInterface.ModuleDependencies(apiDataTransferService: apiDataTransferService,
                                                                       imagesBaseURL: imagesBaseURL,
-                                                                      showsPersistenceRepository: FakeShowsVisitedLocalRepository())
+                                                                      showsPersistenceRepository: FakeShowsVisitedLocalRepository(),
+                                                                      loggedUserRepository: FakeLoggedUserRepository())
     let module = ShowDetailsFeature.Module(dependencies: dependencies)
     let coordinator = module.buildModuleCoordinator(in: navigation, delegate: self)
     coordinator.navigate(to: .showDetailsIsRequired(withId: 1416, closures: nil)) // Greys Anatomy
@@ -64,14 +65,25 @@ extension ShowDetailsDemoCoordinator: TVShowDetailCoordinatorDelegate {
   }
 }
 
-// MARK: - ShowsVisitedLocalRepository
-final class FakeShowsVisitedLocalRepository: ShowsVisitedLocalRepository {
+// MARK: - LoggedUserRepositoryProtocol
+final class FakeLoggedUserRepository: LoggedUserRepositoryProtocol {
+  func saveUser(userId: Int, sessionId: String) { }
 
-  public func saveShow(id: Int, pathImage: String, userId: Int) -> AnyPublisher<Void, CustomError> {
+  func getUser() -> AccountDomain? {
+    return nil
+    // return AccountDomain(id: 1, sessionId: "mock")  // Must be a valid userId and sessionId
+  }
+
+  func deleteUser() { }
+}
+
+// MARK: - ShowsVisitedLocalRepository
+final class FakeShowsVisitedLocalRepository: ShowsVisitedLocalRepositoryProtocol {
+  func saveShow(id: Int, pathImage: String) -> AnyPublisher<Void, CustomError> {
     return Just(()).setFailureType(to: CustomError.self).eraseToAnyPublisher()
   }
 
-  public func fetchVisitedShows(userId: Int) -> AnyPublisher<[ShowVisited], CustomError> {
+  func fetchVisitedShows() -> AnyPublisher<[ShowVisited], CustomError> {
     return Just([]).setFailureType(to: CustomError.self).eraseToAnyPublisher()
   }
 

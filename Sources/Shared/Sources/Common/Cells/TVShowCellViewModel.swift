@@ -1,6 +1,6 @@
 //
 //  TVShowCellViewModel.swift
-//  MyTvShows
+//  Shared
 //
 //  Created by Jeans on 9/14/19.
 //  Copyright © 2019 Jeans. All rights reserved.
@@ -9,27 +9,17 @@
 import Foundation
 
 public struct TVShowCellViewModel: Hashable {
+  private let showId: Int
+  let name: String
+  let average: String
+  let firstAirDate: String
+  let posterPathURL: URL?
 
-  public let entity: TVShow
-
-  var name: String = ""
-  var average: String = ""
-  var firstAirDate: String = ""
-  var posterPathURL: URL?
-
-  public init(show: TVShow) {
-    self.entity = show
-
+  public init(show: TVShowPage.TVShow) {
+    showId = show.id
     name = show.name
-
-    if let voteAverage = show.voteAverage {
-      average = String(voteAverage)
-    }
-
-    if let firstAir = show.firstAirDate {
-      firstAirDate = firstAir
-    }
-
-    posterPathURL = show.posterPathURL
+    average = (show.voteAverage == 0) ? "0.0": String(show.voteAverage)
+    firstAirDate = show.firstAirDate
+    posterPathURL = show.posterPath
   }
 }

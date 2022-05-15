@@ -17,13 +17,23 @@ public struct ModuleDependencies {
   let apiDataTransferService: DataTransferService
   let imagesBaseURL: String
   let showListBuilder: ModuleShowListDetailsBuilder
+  let requestTokenRepository: RequestTokenRepositoryProtocol
+  let accessTokenRepository: AccessTokenRepositoryProtocol
+  let userLoggedRepository: LoggedUserRepositoryProtocol
 
   public init(apiDataTransferService: DataTransferService,
               imagesBaseURL: String,
-              showListBuilder: ModuleShowListDetailsBuilder) {
+              requestTokenRepository: RequestTokenRepositoryProtocol,
+              accessTokenRepository: AccessTokenRepositoryProtocol,
+              userLoggedRepository: LoggedUserRepositoryProtocol,
+              showListBuilder: ModuleShowListDetailsBuilder
+  ) {
     self.apiDataTransferService = apiDataTransferService
     self.imagesBaseURL = imagesBaseURL
     self.showListBuilder = showListBuilder
+    self.requestTokenRepository = requestTokenRepository
+    self.accessTokenRepository = accessTokenRepository
+    self.userLoggedRepository = userLoggedRepository
   }
 }
 

@@ -1,18 +1,39 @@
 //
 //  ShowsVisitedLocalRepository.swift
-//  TVToday
+//  
 //
-//  Created by Jeans Ruiz on 7/2/20.
-//  Copyright © 2020 Jeans. All rights reserved.
+//  Created by Jeans Ruiz on 11/05/22.
 //
 
 import Combine
 import Shared
 
-public protocol ShowsVisitedLocalRepository {
-  func saveShow(id: Int, pathImage: String, userId: Int) -> AnyPublisher<Void, CustomError>
+public final class ShowsVisitedLocalRepository {
+  private let dataSource: ShowsVisitedLocalDataSource
+  private let loggedUserRepository: LoggedUserRepositoryProtocol
 
-  func fetchVisitedShows(userId: Int) -> AnyPublisher<[ShowVisited], CustomError>
+  public init(dataSource: ShowsVisitedLocalDataSource, loggedUserRepository: LoggedUserRepositoryProtocol) {
+    self.dataSource = dataSource
+    self.loggedUserRepository = loggedUserRepository
+  }
+}
 
-  func recentVisitedShowsDidChange() -> AnyPublisher<Bool, Never>
+extension ShowsVisitedLocalRepository: ShowsVisitedLocalRepositoryProtocol {
+  public func saveShow(id: Int, pathImage: String) -> AnyPublisher<Void, CustomError> {
+    let userId = loggedUserRepository.getUser()?.id ?? 0
+    return dataSource.saveShow(id: id, pathImage: pathImage, userId: userId)
+  }
+
+  public func fetchVisitedShows() -> AnyPublisher<[ShowVisited], CustomError> {
+    let userId = loggedUserRepository.getUser()?.id ?? 0
+    return dataSource.fetchVisitedShows(userId: userId)
+      .map {
+        return $0.map { ShowVisited(id: $0.id, pathImage: $0.pathImage) }
+      }
+      .eraseToAnyPublisher()
+  }
+
+  public func recentVisitedShowsDidChange() -> AnyPublisher<Bool, Never> {
+    return dataSource.recentVisitedShowsDidChange()
+  }
 }

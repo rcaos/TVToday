@@ -15,7 +15,7 @@ class AiringTodayViewModelMock: AiringTodayViewModelProtocol {
 
   func didLoadNextPage() { }
 
-  func showIsPicked(with id: Int) { }
+  func showIsPicked(index id: Int) { }
 
   func refreshView() { }
 

@@ -67,5 +67,5 @@ class AccountViewController: NiblessViewController {
 // MARK: - AccountViewControllerFactory
 protocol AccountViewControllerFactory {
   func makeSignInViewController() -> UIViewController
-  func makeProfileViewController(with account: AccountResult) -> UIViewController
+  func makeProfileViewController(with account: Account) -> UIViewController
 }

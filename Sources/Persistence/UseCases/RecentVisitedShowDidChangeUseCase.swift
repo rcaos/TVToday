@@ -12,9 +12,9 @@ public protocol RecentVisitedShowDidChangeUseCase {
 }
 
 public final class DefaultRecentVisitedShowDidChangeUseCase: RecentVisitedShowDidChangeUseCase {
-  private let showsVisitedLocalRepository: ShowsVisitedLocalRepository
+  private let showsVisitedLocalRepository: ShowsVisitedLocalRepositoryProtocol
 
-  public init(showsVisitedLocalRepository: ShowsVisitedLocalRepository) {
+  public init(showsVisitedLocalRepository: ShowsVisitedLocalRepositoryProtocol) {
     self.showsVisitedLocalRepository = showsVisitedLocalRepository
   }
 

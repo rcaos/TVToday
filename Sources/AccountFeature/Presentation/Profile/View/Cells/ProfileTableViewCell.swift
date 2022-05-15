@@ -24,13 +24,11 @@ class ProfileTableViewCell: NiblessTableViewCell {
     setupUI()
   }
 
-  func setModel(with entity: AccountResult) {
-    if let userName = entity.userName {
-      nameLabel.text = "Hi \(userName)!"
-    }
+  func setModel(with entity: Account) {
+    nameLabel.text = "Hi \(entity.userName)!"
 
-    if let hash = entity.avatar?.gravatar?.hash {
-      let imageURL = "https://www.gravatar.com/avatar/\(hash)"
+    if let hash = entity.avatar?.hashId {
+      let imageURL = "https://www.gravatar.com/avatar/\(hash)"  // MARK: - TODO, move to configuration
       avatarImageView.setImage(with: URL(string: imageURL))
     }
   }

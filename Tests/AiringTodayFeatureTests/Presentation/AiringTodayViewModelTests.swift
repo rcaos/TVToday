@@ -11,6 +11,7 @@
 @testable import Shared
 import XCTest
 import Combine
+import CommonMocks
 
 class AiringTodayViewModelTests: XCTestCase {
 
@@ -49,7 +50,7 @@ class AiringTodayViewModelTests: XCTestCase {
   func test_when_useCase_respons_with_FirstPage_ViewModel_Should_contains_Populated_State() {
     // given
     fetchUseCaseMock.result = buildFirstPage()
-    let firstPageCells = buildFirstPage().results!.map { AiringTodayCollectionViewModel(show: $0) }
+    let firstPageCells = buildFirstPage().showsList.map { AiringTodayCollectionViewModel(show: $0) }
 
     let sut: AiringTodayViewModelProtocol =
     AiringTodayViewModel(fetchTVShowsUseCase: fetchUseCaseMock,
@@ -79,8 +80,8 @@ class AiringTodayViewModelTests: XCTestCase {
                          scheduler: .immediate,
                          coordinator: nil)
 
-    let firstPage = buildFirstPage().results!.map { AiringTodayCollectionViewModel(show: $0) }
-    let secondPage = (buildFirstPage().results + buildSecondPage().results).map { AiringTodayCollectionViewModel(show: $0) }
+    let firstPage = buildFirstPage().showsList.map { AiringTodayCollectionViewModel(show: $0) }
+    let secondPage = (buildFirstPage().showsList + buildSecondPage().showsList).map { AiringTodayCollectionViewModel(show: $0) }
 
     let expected = [
       SimpleViewState<AiringTodayCollectionViewModel>.loading,
@@ -165,7 +166,7 @@ class AiringTodayViewModelTests: XCTestCase {
       SimpleViewState<AiringTodayCollectionViewModel>.loading,
       SimpleViewState<AiringTodayCollectionViewModel>.error(""),
       SimpleViewState<AiringTodayCollectionViewModel>.paging(
-        buildFirstPage().results!.map { AiringTodayCollectionViewModel(show: $0) }, next: 2)
+        buildFirstPage().showsList.map { AiringTodayCollectionViewModel(show: $0) }, next: 2)
     ]
     var received = [SimpleViewState<AiringTodayCollectionViewModel>]()
 
@@ -186,8 +187,8 @@ class AiringTodayViewModelTests: XCTestCase {
 
   func test_Jump_from_States_Paginated_Error_Populated() {
     // given
-    let firstPageVM = buildFirstPage().results!.map { AiringTodayCollectionViewModel(show: $0) }
-    let secondPageVM = (buildFirstPage().results + buildSecondPage().results).map { AiringTodayCollectionViewModel(show: $0) }
+    let firstPageVM = buildFirstPage().showsList.map { AiringTodayCollectionViewModel(show: $0) }
+    let secondPageVM = (buildFirstPage().showsList + buildSecondPage().showsList).map { AiringTodayCollectionViewModel(show: $0) }
 
     let sut: AiringTodayViewModelProtocol
     sut = AiringTodayViewModel(fetchTVShowsUseCase: self.fetchUseCaseMock,

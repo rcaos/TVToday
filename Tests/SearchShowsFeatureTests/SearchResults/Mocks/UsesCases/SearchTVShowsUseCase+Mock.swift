@@ -5,6 +5,7 @@
 //  Created by Jeans Ruiz on 8/7/20.
 //
 
+import CommonMocks
 import Combine
 import SearchShowsFeature
 import Shared
@@ -12,9 +13,9 @@ import NetworkingInterface
 
 final class SearchTVShowsUseCaseMock: SearchTVShowsUseCase {
   var error: DataTransferError?
-  var result: TVShowResult?
+  var result: TVShowPage?
 
-  func execute(requestValue: SearchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowResult, DataTransferError> {
+  func execute(requestValue: SearchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowPage, DataTransferError> {
     if let error = error {
       return Fail(error: error).eraseToAnyPublisher()
     }

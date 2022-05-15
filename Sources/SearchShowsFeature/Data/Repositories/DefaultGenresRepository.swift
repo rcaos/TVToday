@@ -9,23 +9,24 @@
 import Combine
 import NetworkingInterface
 import Networking
+import Shared
 
 final class DefaultGenreRepository {
-  private let dataTransferService: DataTransferService
+  private let remoteDataSource: GenreRemoteDataSource
 
-  init(dataTransferService: DataTransferService) {
-    self.dataTransferService = dataTransferService
+  init(remoteDataSource: GenreRemoteDataSource) {
+    self.remoteDataSource = remoteDataSource
   }
 }
 
-// MARK: - GenresRepository
 extension DefaultGenreRepository: GenresRepository {
 
-  func genresList() -> AnyPublisher<GenreListResult, DataTransferError> {
-    let endpoint = Endpoint<GenreListResult>(
-      path: "3/genre/tv/list",
-      method: .get
-    )
-    return dataTransferService.request(with: endpoint)
+  func genresList() -> AnyPublisher<GenreList, DataTransferError> {
+    return remoteDataSource.fetchGenres()
+      .map { list in
+        let genresDomain = list.genres.map { Genre(id: $0.id, name: $0.name) }
+        return GenreList(genres: genresDomain )
+      }
+      .eraseToAnyPublisher()
   }
 }

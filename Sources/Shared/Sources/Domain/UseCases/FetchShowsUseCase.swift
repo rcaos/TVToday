@@ -10,7 +10,7 @@ import Combine
 import NetworkingInterface
 
 public protocol FetchTVShowsUseCase {
-  func execute(requestValue: FetchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowResult, DataTransferError>
+  func execute(requestValue: FetchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowPage, DataTransferError>
 }
 
 public struct FetchTVShowsUseCaseRequestValue {

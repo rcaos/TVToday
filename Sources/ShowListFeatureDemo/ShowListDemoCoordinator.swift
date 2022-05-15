@@ -48,13 +48,13 @@ public class ShowListDemoCoordinator: Coordinator {
   private func buildListScene(in navigation: UINavigationController) {
     let dependencies = ShowListFeatureInterface.ModuleDependencies(apiDataTransferService: apiDataTransferService,
                                                                    imagesBaseURL: imagesBaseURL,
-                                                                   keychainRepository: FakeKeychainRepository(),
+                                                                   loggedUserRepository: FakeLoggedRepository(),
                                                                    showDetailsBuilder: self)
     let module = ShowListFeature.Module(dependencies: dependencies)
     let coordinator = module.buildModuleCoordinator(in: navigation, delegate: nil)
     //coordinator.navigate(to: .favoriteList) // Need a valid token
-     coordinator.navigate(to: .watchList) // Need a valid token
-    // coordinator.navigate(to: .genreList(genreId: 99, title: "Documentary"))
+    // coordinator.navigate(to: .watchList) // Need a valid token
+     coordinator.navigate(to: .genreList(genreId: 99, title: "Documentary"))
     childCoordinators.append(coordinator)
   }
 }
@@ -80,21 +80,13 @@ class EmptyDetailCoordinator: TVShowDetailCoordinatorProtocol {
   }
 }
 
-class FakeKeychainRepository: KeychainRepository {
-  func saveRequestToken(_ token: String) { }
-  func fetchRequestToken() -> String? { return nil }
+class FakeLoggedRepository: LoggedUserRepositoryProtocol {
+  func saveUser(userId: Int, sessionId: String) { }
 
-  // MARK: - Access Token
-  func saveAccessToken(_ token: String) { }
-  func fetchAccessToken() -> String? { return nil }
-
-  // MARK: - Currently User
-  func saveLoguedUser(_ accountId: Int, _ sessionId: String) { }
-
-  func fetchLoguedUser() -> AccountDomain? {
+  func getUser() -> AccountDomain? {
     // rcaos account
     return AccountDomain(id: 8415942, sessionId: "405fb2545c73cf1ea9530776416615405327f2f7")
   }
 
-  func deleteLoguedUser() { }
+  func deleteUser() { }
 }

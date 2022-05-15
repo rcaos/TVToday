@@ -24,7 +24,30 @@ public struct TVShow: Hashable {
   public var originCountry: [String]!
   public var voteCount: Int!
 
-  public var isActive: Bool = true
+  public var isActive: Bool = true  // MARK: - TODO, 🤦‍♂️ In what I was thinking?
+
+  // MARK: - Remove
+  public init(id: Int,
+       name: String,
+       voteAverage: Double,
+       firstAirDate: String,
+       posterPath: String,
+       genreIds: [Int],
+       backDropPath: String,
+       overview: String,
+       originCountry: [String],
+       voteCount: Int) {
+    self.id = id
+    self.name = name
+    self.voteAverage = voteAverage
+    self.firstAirDate = firstAirDate
+    self.posterPath = posterPath
+    self.genreIds = genreIds
+    self.backDropPath = backDropPath
+    self.overview = overview
+    self.originCountry = originCountry
+    self.voteCount = voteCount
+  }
 }
 
 extension TVShow {

@@ -5,38 +5,40 @@
 //  Created by Jeans Ruiz on 29/03/22.
 //
 
+import CommonMocks
+import Foundation
 import Shared
 
-func buildFirstPage() -> TVShowResult {
-  let firstShow = TVShow.stub(id: 1,
-                              name: "Dark 🐶",
-                              voteAverage: 8.0,
-                              posterPath: "/1",
-                              backDropPath: "/back1",
-                              overview: "overview")
-  let secondShow = TVShow.stub(id: 2,
-                               name: "Dragon Ball Z 🔫",
-                               voteAverage: 9.0,
-                               posterPath: "/2",
-                               backDropPath: "/back2",
-                               overview: "overview2")
+func buildFirstPageSnapshot() -> TVShowPage {
+  let firstShow = TVShowPage.TVShow.stub(id: 1,
+                                         name: "Dark 🐶",
+                                         voteAverage: 8.0,
+                                         posterPath: URL(string: "mock"),
+                                         backDropPath: URL(string: "mock"),
+                                         overview: "overview")
+  let secondShow = TVShowPage.TVShow.stub(id: 2,
+                                          name: "Dragon Ball Z 🔫",
+                                          voteAverage: 9.0,
+                                          posterPath: URL(string: "mock"),
+                                          backDropPath: URL(string: "mock"),
+                                          overview: "overview2")
 
-  return TVShowResult.stub(page: 1,
-                           results: [firstShow, secondShow],
-                           totalResults: 3,
-                           totalPages: 2)
+  return TVShowPage.stub(page: 1,
+                         showsList: [firstShow, secondShow],
+                         totalPages: 2,
+                         totalShows: 3)
 }
 
-func buildSecondPage() -> TVShowResult {
-  let thirdShow = TVShow.stub(id: 3,
-                              name: "Esto es un TVShow con un título muy grande creado con fines de test 🚨",
-                              voteAverage: 10.0,
-                              posterPath: "/3",
-                              backDropPath: "/back3",
-                              overview: "overview3")
+func buildSecondPageSnapshot() -> TVShowPage {
+  let thirdShow = TVShowPage.TVShow.stub(id: 3,
+                                         name: "Esto es un TVShow con un título muy grande creado con fines de test 🚨",
+                                         voteAverage: 10.0,
+                                         posterPath: URL(string: "mock"),
+                                         backDropPath: URL(string: "mock"),
+                                         overview: "overview3")
 
-  return TVShowResult.stub(page: 2,
-                           results: [thirdShow],
-                           totalResults: 3,
-                           totalPages: 2)
+  return TVShowPage.stub(page: 2,
+                         showsList: [thirdShow],
+                         totalPages: 2,
+                         totalShows: 3)
 }

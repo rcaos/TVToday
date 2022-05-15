@@ -11,7 +11,7 @@ import Shared
 import NetworkingInterface
 
 protocol FetchTVAccountStates {
-  func execute(requestValue: FetchTVAccountStatesRequestValue) -> AnyPublisher<TVShowAccountStateResult, DataTransferError>
+  func execute(requestValue: FetchTVAccountStatesRequestValue) -> AnyPublisher<TVShowAccountStatus, DataTransferError>
 }
 
 struct FetchTVAccountStatesRequestValue {
@@ -19,23 +19,13 @@ struct FetchTVAccountStatesRequestValue {
 }
 
 final class DefaultFetchTVAccountStates: FetchTVAccountStates {
-  private let accountShowsRepository: AccountTVShowsRepository
-  private let keychainRepository: KeychainRepository
+  private let accountShowsRepository: AccountTVShowsDetailsRepository
 
-  init(accountShowsRepository: AccountTVShowsRepository,
-       keychainRepository: KeychainRepository) {
+  init(accountShowsRepository: AccountTVShowsDetailsRepository) {
     self.accountShowsRepository = accountShowsRepository
-    self.keychainRepository = keychainRepository
   }
 
-  func execute(requestValue: FetchTVAccountStatesRequestValue) -> AnyPublisher<TVShowAccountStateResult, DataTransferError> {
-    guard let account = keychainRepository.fetchLoguedUser() else {
-      return Fail(error: .noResponse).eraseToAnyPublisher()
-    }
-
-    return accountShowsRepository.fetchTVAccountStates(
-      tvShowId: requestValue.showId,
-      sessionId: account.sessionId
-    )
+  func execute(requestValue: FetchTVAccountStatesRequestValue) -> AnyPublisher<TVShowAccountStatus, DataTransferError> {
+    return accountShowsRepository.fetchTVShowStatus(tvShowId: requestValue.showId)
   }
 }

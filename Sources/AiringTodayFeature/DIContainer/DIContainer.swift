@@ -13,12 +13,6 @@ final class DIContainer {
 
   private let dependencies: ModuleDependencies
 
-  private lazy var showsRepository: TVShowsRepository = {
-    return DefaultTVShowsRepository(
-      dataTransferService: dependencies.apiDataTransferService,
-      basePath: dependencies.imagesBaseURL)
-  }()
-
   // MARK: - Initializer
   init(dependencies: ModuleDependencies) {
     self.dependencies = dependencies
@@ -31,8 +25,13 @@ final class DIContainer {
   }
 
   // MARK: - Uses Cases
-  fileprivate func makeFetchTodayShowsUseCase() -> FetchTVShowsUseCase {
-    return DefaultFetchAiringTodayTVShowsUseCase(tvShowsRepository: showsRepository)
+  private func makeFetchTodayShowsUseCase() -> FetchTVShowsUseCase {
+    let showsPageRepository = DefaultTVShowsPageRepository(
+      showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      mapper: DefaultTVShowPageMapper(),
+      imageBasePath: dependencies.imagesBaseURL
+    )
+    return DefaultFetchAiringTodayTVShowsUseCase(tvShowsPageRepository: showsPageRepository)
   }
 }
 

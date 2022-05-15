@@ -13,13 +13,13 @@ import CombineSchedulers
 
 class EpisodesListViewModelTests: XCTestCase {
 
-  let detailResult = TVShowDetailResult.stub()
+  let detailResult = TVShowDetail.stub()
 
-  let episodes: [Episode] = {
+  let episodes: [TVShowEpisode] = {
     return [
-      Episode.stub(id: 1, episodeNumber: 1, name: "Chapter #1"),
-      Episode.stub(id: 2, episodeNumber: 2, name: "Chapter #2"),
-      Episode.stub(id: 3, episodeNumber: 3, name: "Chapter #3")
+      .stub(id: 1, episodeNumber: 1, name: "Chapter #1"),
+      .stub(id: 2, episodeNumber: 2, name: "Chapter #2"),
+      .stub(id: 3, episodeNumber: 3, name: "Chapter #3")
     ]
   }()
 
@@ -58,7 +58,7 @@ class EpisodesListViewModelTests: XCTestCase {
   func test_when_ShowDetails_useCase_And_Seasons_useCase_return_OK_ViewModel_Should_Contains_Populated_State() {
     // given
     fetchTVShowDetailsUseCaseMock.result = self.detailResult
-    fetchEpisodesUseCaseMock.result = SeasonResult(id: "1", episodes: self.episodes, seasonNumber: 1)
+    fetchEpisodesUseCaseMock.result = TVShowSeason(id: "1", episodes: self.episodes, seasonNumber: 1)
 
     let sut: EpisodesListViewModelProtocol =
     EpisodesListViewModel(tvShowId: 1,
@@ -95,7 +95,7 @@ class EpisodesListViewModelTests: XCTestCase {
     ]
 
     fetchTVShowDetailsUseCaseMock.result = self.detailResult
-    fetchEpisodesUseCaseMock.result = SeasonResult(id: "1", episodes: self.episodes, seasonNumber: 1)
+    fetchEpisodesUseCaseMock.result = TVShowSeason(id: "1", episodes: self.episodes, seasonNumber: 1)
 
     let sut: EpisodesListViewModelProtocol =
     EpisodesListViewModel(tvShowId: 1,
@@ -146,7 +146,7 @@ class EpisodesListViewModelTests: XCTestCase {
     fetchTVShowDetailsUseCaseMock.result = self.detailResult
 
     fetchEpisodesUseCaseMock.error = nil
-    fetchEpisodesUseCaseMock.result = SeasonResult(id: "1", episodes: self.episodes, seasonNumber: 1)
+    fetchEpisodesUseCaseMock.result = TVShowSeason(id: "1", episodes: self.episodes, seasonNumber: 1)
 
     sut.refreshView()
     scheduler.advance(by: 1)
@@ -158,7 +158,7 @@ class EpisodesListViewModelTests: XCTestCase {
   func test_when_useCase_Returns_Zero_Episodes_Viewmodel_should_Contains_Empty_State() {
     // given
     fetchTVShowDetailsUseCaseMock.result = self.detailResult
-    fetchEpisodesUseCaseMock.result = SeasonResult(id: "1", episodes: [], seasonNumber: 1)
+    fetchEpisodesUseCaseMock.result = TVShowSeason(id: "1", episodes: [], seasonNumber: 1)
 
     let sut: EpisodesListViewModelProtocol =
     EpisodesListViewModel(tvShowId: 1,
@@ -189,7 +189,7 @@ class EpisodesListViewModelTests: XCTestCase {
     // given
     let scheduler = DispatchQueue.test
     fetchTVShowDetailsUseCaseMock.result = self.detailResult
-    fetchEpisodesUseCaseMock.result = SeasonResult(id: "1", episodes: self.episodes, seasonNumber: 1)
+    fetchEpisodesUseCaseMock.result = TVShowSeason(id: "1", episodes: self.episodes, seasonNumber: 1)
 
     let sut: EpisodesListViewModelProtocol =
     EpisodesListViewModel(tvShowId: 1,
@@ -220,7 +220,7 @@ class EpisodesListViewModelTests: XCTestCase {
     let scheduler = DispatchQueue.test
 
     fetchTVShowDetailsUseCaseMock.result = self.detailResult
-    fetchEpisodesUseCaseMock.result = SeasonResult(id: "1", episodes: self.episodes, seasonNumber: 1)
+    fetchEpisodesUseCaseMock.result = TVShowSeason(id: "1", episodes: self.episodes, seasonNumber: 1)
 
     let sut: EpisodesListViewModelProtocol =
     EpisodesListViewModel(tvShowId: 1,
@@ -250,7 +250,7 @@ class EpisodesListViewModelTests: XCTestCase {
   func test_When_Ask_For_Different_Season_And_UseCase_Return_OK_ViewModel_Should_Contains_populated() {
     let scheduler = DispatchQueue.test
     fetchTVShowDetailsUseCaseMock.result = self.detailResult
-    fetchEpisodesUseCaseMock.result = SeasonResult(id: "1", episodes: self.episodes, seasonNumber: 1)
+    fetchEpisodesUseCaseMock.result = TVShowSeason(id: "1", episodes: self.episodes, seasonNumber: 1)
 
     let sut: EpisodesListViewModelProtocol =
     EpisodesListViewModel(tvShowId: 1,
@@ -265,7 +265,7 @@ class EpisodesListViewModelTests: XCTestCase {
     scheduler.advance(by: 1)
 
     // Given UseCase responds with Data
-    fetchEpisodesUseCaseMock.result = SeasonResult(id: "2", episodes: self.episodes, seasonNumber: 2)
+    fetchEpisodesUseCaseMock.result = TVShowSeason(id: "2", episodes: self.episodes, seasonNumber: 2)
     fetchEpisodesUseCaseMock.error = nil
 
     // When
@@ -304,7 +304,7 @@ class EpisodesListViewModelTests: XCTestCase {
     ]
 
     fetchTVShowDetailsUseCaseMock.result = self.detailResult
-    fetchEpisodesUseCaseMock.result = SeasonResult(id: "1", episodes: self.episodes, seasonNumber: 1)
+    fetchEpisodesUseCaseMock.result = TVShowSeason(id: "1", episodes: self.episodes, seasonNumber: 1)
 
     // Given
     let scheduler = DispatchQueue.test
@@ -321,7 +321,7 @@ class EpisodesListViewModelTests: XCTestCase {
     scheduler.advance(by: 1)
 
     // Second Season responds
-    fetchEpisodesUseCaseMock.result = SeasonResult(id: "2", episodes: self.episodes, seasonNumber: 2)
+    fetchEpisodesUseCaseMock.result = TVShowSeason(id: "2", episodes: self.episodes, seasonNumber: 2)
     fetchEpisodesUseCaseMock.error = nil
 
     // When

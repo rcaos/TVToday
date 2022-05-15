@@ -7,13 +7,17 @@
 
 @testable import AccountFeature
 
-extension AccountResult {
+extension Account {
 
-  static func stub(hash: String? = nil,
-                   id: Int = 1,
-                   userName: String = "userName") -> Self {
-    AccountResult(avatar: Avatar(gravatar: Gravatar(hash: hash)),
-                  id: id,
-                  userName: userName)
+  static func stub(
+    accountId: Int = 1,
+    userName: String = "userName",
+    avatarId: String? = nil
+  ) -> Self {
+    Account(
+      id: accountId,
+      userName: userName,
+      avatar: Avatar(hashId: avatarId)
+    )
   }
 }

@@ -5,11 +5,11 @@
 //  Created by Jeans Ruiz on 19/12/21.
 //
 
-import XCTest
-import SnapshotTesting
-
+import CommonMocks
 @testable import PopularsFeature
 @testable import Shared
+import SnapshotTesting
+import XCTest
 
 class PopularViewTests: XCTestCase {
 
@@ -31,7 +31,7 @@ class PopularViewTests: XCTestCase {
   }
 
   func test_WhenViewPaging_thenShowPagingScreen() {
-    let firsPageCells = buildFirstPage().results!.map { TVShowCellViewModel(show: $0) }
+    let firsPageCells = buildFirstPageSnapshot().showsList.map { TVShowCellViewModel(show: $0) }
     let viewModel = PopularViewModelMock(state: .paging(firsPageCells, next: 2) )
 
     let viewController = PopularsViewController(viewModel: viewModel)
@@ -46,7 +46,7 @@ class PopularViewTests: XCTestCase {
   }
 
   func test_WhenViewPopulated_thenShowPopulatedScreen() {
-    let totalCells = (buildFirstPage().results + buildSecondPage().results)
+    let totalCells = (buildFirstPageSnapshot().showsList + buildSecondPageSnapshot().showsList)
       .map { TVShowCellViewModel(show: $0) }
     let viewModel = PopularViewModelMock(state: .populated(totalCells) )
 

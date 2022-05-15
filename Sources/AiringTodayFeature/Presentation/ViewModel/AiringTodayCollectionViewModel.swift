@@ -10,24 +10,20 @@ import Foundation
 import Shared
 
 struct AiringTodayCollectionViewModel: Hashable {
-  let show: TVShow
+  private let showId: Int
+  let showName: String?
+  let average: String?
+  let posterURL: URL?
 
-  var showName: String?
-  var average: String?
-
-  var posterURL: URL?
-
-  // MARK: - Initializers
-  public init(show: TVShow) {
-    self.show = show
-
-    showName = show.name ?? ""
-    if let average = show.voteAverage {
-      self.average = String(average)
-    } else {
+  public init(show: TVShowPage.TVShow) {
+    showId = show.id
+    showName = show.name
+    if show.voteAverage == 0 {
       average = "0.0"
+    } else {
+      average = String(show.voteAverage)
     }
-    posterURL = show.backDropPathURL
+    posterURL = show.backDropPath
   }
 }
 

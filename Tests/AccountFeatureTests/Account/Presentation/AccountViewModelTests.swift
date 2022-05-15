@@ -17,7 +17,7 @@ class AccountViewModelTests: XCTestCase {
   var createSessionUseCaseMock: CreateSessionUseCaseMock!
   var fetchAccountDetailsUseCaseMock: FetchAccountDetailsUseCaseMock!
   var fetchLoggedUserMock: FetchLoggedUserMock!
-  var deleteLoguedUserUseCaseMock: DeleteLoguedUserUseCaseMock!
+  var deleteLoggedUserUseCaseMock: DeleteLoguedUserUseCaseMock!
   private var disposeBag: Set<AnyCancellable>!
 
   override func setUp() {
@@ -26,13 +26,13 @@ class AccountViewModelTests: XCTestCase {
     createSessionUseCaseMock = CreateSessionUseCaseMock()
     fetchAccountDetailsUseCaseMock = FetchAccountDetailsUseCaseMock()
     fetchLoggedUserMock = FetchLoggedUserMock()
-    deleteLoguedUserUseCaseMock = DeleteLoguedUserUseCaseMock()
+    deleteLoggedUserUseCaseMock = DeleteLoguedUserUseCaseMock()
     disposeBag = []
     sut = AccountViewModel(
       createNewSession: createSessionUseCaseMock,
       fetchAccountDetails: fetchAccountDetailsUseCaseMock,
       fetchLoggedUser: fetchLoggedUserMock,
-      deleteLoguedUser: deleteLoguedUserUseCaseMock,
+      deleteLoggedUser: deleteLoggedUserUseCaseMock,
       scheduler: .immediate
     )
   }
@@ -57,12 +57,12 @@ class AccountViewModelTests: XCTestCase {
   func test_When_Session_Exits_Should_Be_Profile_State() {
     // given
     fetchLoggedUserMock.account = AccountDomain(id: 1, sessionId: "1")
-    fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
+    fetchAccountDetailsUseCaseMock.result = Account.stub()
 
     // when
     let expected = [
       AccountViewState.login,
-      AccountViewState.profile(account: AccountResult.stub())
+      AccountViewState.profile(account: Account.stub())
     ]
     var received = [AccountViewState]()
 
@@ -80,13 +80,13 @@ class AccountViewModelTests: XCTestCase {
     // given
     let authPermission = AuthPermissionViewModelMock()
     createSessionUseCaseMock.result = ()
-    fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
+    fetchAccountDetailsUseCaseMock.result = Account.stub()
 
     authPermission.delegate = sut
 
     let expected = [
       AccountViewState.login,
-      AccountViewState.profile(account: AccountResult.stub())
+      AccountViewState.profile(account: Account.stub())
     ]
     var received = [AccountViewState]()
 
@@ -105,7 +105,7 @@ class AccountViewModelTests: XCTestCase {
     // given
     let authPermission = AuthPermissionViewModelMock()
     createSessionUseCaseMock.error = .noResponse
-    fetchAccountDetailsUseCaseMock.result = AccountResult.stub()
+    fetchAccountDetailsUseCaseMock.result = Account.stub()
 
     authPermission.delegate = sut
 

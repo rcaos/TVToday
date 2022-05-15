@@ -1,20 +1,20 @@
 //
 //  AiringTodayViewModel.swift
-//  MyTvShows
+//  
 //
-//  Created by Jeans on 9/14/19.
-//  Copyright © 2019 Jeans. All rights reserved.
+//  Created by Jeans Ruiz on 1/05/22.
 //
 
 import Combine
 import CombineSchedulers
+import NetworkingInterface
 import Shared
 
-final class AiringTodayViewModel: AiringTodayViewModelProtocol, ShowsViewModel {
+final class AiringTodayViewModel: AiringTodayViewModelProtocol {
   let fetchTVShowsUseCase: FetchTVShowsUseCase
   let viewStateObservableSubject = CurrentValueSubject<SimpleViewState<AiringTodayCollectionViewModel>, Never>(.loading)
 
-  var shows: [TVShow]
+  var shows: [TVShowPage.TVShow]
   var showsCells: [AiringTodayCollectionViewModel] = []
 
   let scheduler: AnySchedulerOf<DispatchQueue>
@@ -31,7 +31,7 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol, ShowsViewModel {
     shows = []
   }
 
-  func mapToCell(entities: [TVShow]) -> [AiringTodayCollectionViewModel] {
+  private func mapToCell(entities: [TVShowPage.TVShow]) -> [AiringTodayCollectionViewModel] {
     return entities.map { AiringTodayCollectionViewModel(show: $0) }
   }
 
@@ -54,7 +54,59 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol, ShowsViewModel {
     return viewStateObservableSubject.value
   }
 
-  func showIsPicked(with id: Int) {
-    coordinator?.navigate(to: .showIsPicked(id))
+  func showIsPicked(index: Int) {
+    if shows.indices.contains(index) {
+      coordinator?.navigate(to: .showIsPicked(shows[index].id))
+    }
+  }
+
+  // MARK: - Private
+  private func getShows(for page: Int, showLoader: Bool = true) {
+
+    if viewStateObservableSubject.value.isInitialPage, showLoader {
+      viewStateObservableSubject.send(.loading)
+    }
+
+    let request = FetchTVShowsUseCaseRequestValue(page: page)
+
+    fetchTVShowsUseCase.execute(requestValue: request)
+      .receive(on: scheduler)
+      .sink(receiveCompletion: { [weak self] completion in
+        switch completion {
+        case let .failure(error):
+          self?.handleError(error)
+        case .finished: break
+        }
+      }, receiveValue: { [weak self] result in
+        self?.processFetched(for: result, currentPage: page)
+      })
+      .store(in: &disposeBag)
+  }
+
+  private func handleError(_ error: DataTransferError) {
+    if viewStateObservableSubject.value.isInitialPage {
+      viewStateObservableSubject.send(.error(error.localizedDescription))
+    }
+  }
+
+  private func processFetched(for response: TVShowPage, currentPage: Int) {
+    if currentPage == 1 {
+      shows.removeAll()
+    }
+
+    shows.append(contentsOf: response.showsList)
+
+    if shows.isEmpty {
+      viewStateObservableSubject.send(.empty)
+      return
+    }
+
+    let cellsShows = mapToCell(entities: shows)
+
+    if response.hasMorePages {
+      viewStateObservableSubject.send( .paging(cellsShows, next: response.nextPage) )
+    } else {
+      viewStateObservableSubject.send( .populated(cellsShows) )
+    }
   }
 }

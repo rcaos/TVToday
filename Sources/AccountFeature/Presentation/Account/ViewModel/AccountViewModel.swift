@@ -14,7 +14,7 @@ import Shared
 
 enum AccountViewState: Equatable {
   case login
-  case profile(account: AccountResult)
+  case profile(account: Account)
 }
 
 protocol AccountViewModelProtocol: AuthPermissionViewModelDelegate {
@@ -26,7 +26,7 @@ final class AccountViewModel: AccountViewModelProtocol {
   private let createNewSession: CreateSessionUseCase
   private let fetchLoggedUser: FetchLoggedUser
   private let fetchAccountDetails: FetchAccountDetailsUseCase
-  private let deleteLoguedUser: DeleteLoguedUserUseCase
+  private let deleteLoggedUser: DeleteLoggedUserUseCase
 
   weak var coordinator: AccountCoordinatorProtocol?
   private var disposeBag = Set<AnyCancellable>()
@@ -39,21 +39,21 @@ final class AccountViewModel: AccountViewModelProtocol {
   init(createNewSession: CreateSessionUseCase,
        fetchAccountDetails: FetchAccountDetailsUseCase,
        fetchLoggedUser: FetchLoggedUser,
-       deleteLoguedUser: DeleteLoguedUserUseCase,
+       deleteLoggedUser: DeleteLoggedUserUseCase,
        scheduler: AnySchedulerOf<DispatchQueue> = .main
   ) {
     self.createNewSession = createNewSession
     self.fetchAccountDetails = fetchAccountDetails
     self.fetchLoggedUser = fetchLoggedUser
-    self.deleteLoguedUser = deleteLoguedUser
+    self.deleteLoggedUser = deleteLoggedUser
     self.scheduler = scheduler
   }
 
   func viewDidLoad() {
-    checkIsLogued()
+    checkIsLogged()
   }
 
-  private func checkIsLogued() {
+  private func checkIsLogged() {
     if fetchLoggedUser.execute() != nil {
       fetchUserDetails()
     } else {
@@ -80,7 +80,7 @@ final class AccountViewModel: AccountViewModelProtocol {
 
   private func createSession() {
     createNewSession.execute()
-      .flatMap { [weak self] () -> AnyPublisher<AccountResult, DataTransferError> in
+      .flatMap { [weak self] () -> AnyPublisher<Account, DataTransferError> in
         guard let strongSelf = self else {
           return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher()
         }
@@ -101,12 +101,12 @@ final class AccountViewModel: AccountViewModelProtocol {
       .store(in: &disposeBag)
   }
 
-  private func fetchDetailsAccount() -> AnyPublisher<AccountResult, DataTransferError> {
+  private func fetchDetailsAccount() -> AnyPublisher<Account, DataTransferError> {
     return fetchAccountDetails.execute()
   }
 
   private func logoutUser() {
-    deleteLoguedUser.execute()
+    deleteLoggedUser.execute()
     viewState.send(.login)
   }
 

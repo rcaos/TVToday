@@ -9,7 +9,7 @@
 @testable import Shared
 import UIKit
 
-public func createSectionModel(recentSearchs: [String], resultShows: [TVShow]) -> [ResultSearchSectionModel] {
+public func createSectionModel(recentSearchs: [String], resultShows: [TVShowPage.TVShow]) -> [ResultSearchSectionModel] {
   var dataSource: [ResultSearchSectionModel] = []
 
   let recentSearchsItem = recentSearchs.map { ResultSearchSectionItem.recentSearchs(items: $0) }

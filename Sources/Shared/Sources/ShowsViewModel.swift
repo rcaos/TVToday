@@ -15,12 +15,12 @@ public protocol ShowsViewModel: AnyObject {
   associatedtype MovieCellViewModel: Equatable
 
   var fetchTVShowsUseCase: FetchTVShowsUseCase { get }
-  var shows: [TVShow] { get set }
+  var shows: [TVShowPage.TVShow] { get set }
   var showsCells: [MovieCellViewModel] { get set }
   var viewStateObservableSubject: CurrentValueSubject<SimpleViewState<MovieCellViewModel>, Never> { get }
   var scheduler: AnySchedulerOf<DispatchQueue> { get }
   var disposeBag: Set<AnyCancellable> { get set }
-  func mapToCell(entities: [TVShow]) -> [MovieCellViewModel]
+  func mapToCell(entities: [TVShowPage.TVShow]) -> [MovieCellViewModel]
 }
 
 extension ShowsViewModel {
@@ -53,14 +53,12 @@ extension ShowsViewModel {
     }
   }
 
-  private func processFetched(for response: TVShowResult, currentPage: Int) {
+  private func processFetched(for response: TVShowPage, currentPage: Int) {
     if currentPage == 1 {
       shows.removeAll()
     }
 
-    let fetchedShows = response.results ?? []
-
-    self.shows.append(contentsOf: fetchedShows)
+    self.shows.append(contentsOf: response.showsList)
 
     if self.shows.isEmpty {
       viewStateObservableSubject.send(.empty)

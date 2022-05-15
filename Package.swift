@@ -90,6 +90,7 @@ let package = Package(
       name: "AiringTodayFeatureTests",
       dependencies: [
         "AiringTodayFeature",
+        "CommonMocks",
         .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
       ],
       exclude: [
@@ -99,6 +100,7 @@ let package = Package(
     .target(
       name: "KeyChainStorage",
       dependencies: [
+        "Shared",
         .product(name: "KeychainSwift", package: "keychain-swift")
       ]
     ),
@@ -126,6 +128,7 @@ let package = Package(
       name: "PopularsFeatureTests",
       dependencies: [
         "PopularsFeature",
+        "CommonMocks",
         .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
       ],
       exclude: [
@@ -148,6 +151,7 @@ let package = Package(
       name: "SearchShowsFeatureTests",
       dependencies: [
         "SearchShowsFeature",
+        "CommonMocks",
         .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
       ],
       exclude: [
@@ -160,7 +164,7 @@ let package = Package(
       dependencies: [
         "UI",
         "NetworkingInterface",
-        "KeyChainStorage",
+        "Networking",
         .product(name: "Kingfisher", package: "Kingfisher"),
         .product(name: "CombineSchedulers", package: "combine-schedulers"),
       ],
@@ -206,6 +210,7 @@ let package = Package(
       name: "ShowListFeatureTests",
       dependencies: [
         "ShowListFeature",
+        "CommonMocks",
         .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
       ],
       exclude: [
@@ -229,6 +234,16 @@ let package = Package(
     .target(name: "SearchShowsFeatureDemo", dependencies: ["SearchShowsFeature"]),
     .target(name: "AccountFeatureDemo", dependencies: ["AccountFeature"]),
     .target(name: "ShowDetailsFeatureDemo", dependencies: ["ShowDetailsFeature"]),
-    .target(name: "ShowListFeatureDemo", dependencies: ["ShowListFeature"])
+    .target(name: "ShowListFeatureDemo", dependencies: ["ShowListFeature"]),
+
+    // MARK: - Common For test Targets
+    .target(
+      name: "CommonMocks",
+      dependencies: [
+        "Shared",
+        "NetworkingInterface"
+      ],
+      path: "Tests/CommonMocks"
+    ),
   ]
 )

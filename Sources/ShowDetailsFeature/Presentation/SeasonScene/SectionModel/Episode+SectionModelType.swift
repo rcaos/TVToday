@@ -6,6 +6,8 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
+import Foundation
+
 public struct EpisodeSectionModelType: Hashable {
 
   var id: Int
@@ -13,23 +15,23 @@ public struct EpisodeSectionModelType: Hashable {
   var name: String?
   var airDate: String?
   var voteAverage: Double?
-  var posterPath: String?
+  var posterPathURL: URL?
 
-  init(episode: Episode) {
+  init(episode: TVShowEpisode) {
     self.id = episode.id
     self.episodeNumber = episode.episodeNumber
     self.name = episode.name
     self.airDate = episode.airDate
     self.voteAverage = episode.voteAverage
-    self.posterPath = episode.posterPath
+    self.posterPathURL = episode.posterPathURL
   }
 
-  static func buildEpisode(from episodeSection: EpisodeSectionModelType) -> Episode {
-    return Episode(id: episodeSection.id,
-                   episodeNumber: episodeSection.episodeNumber,
-                   name: episodeSection.name,
-                   airDate: episodeSection.airDate,
-                   voteAverage: episodeSection.voteAverage,
-                   posterPath: episodeSection.posterPath)
+  static func buildEpisode(from episodeSection: EpisodeSectionModelType) -> TVShowEpisode {
+    return TVShowEpisode(id: episodeSection.id,
+                         episodeNumber: episodeSection.episodeNumber,
+                         name: episodeSection.name,
+                         airDate: episodeSection.airDate,
+                         voteAverage: episodeSection.voteAverage,
+                         posterPathURL: episodeSection.posterPathURL)
   }
 }

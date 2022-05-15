@@ -48,7 +48,7 @@ class SearchOptionsViewModelTest: XCTestCase {
 
   func test_when_useCase_Responds_Success_ViewModel_Should_contains_Populated_State() {
     // given
-    fetchGenresUseCaseMock.result = GenreListResult(genres: buildGenres() )
+    fetchGenresUseCaseMock.result = GenreList(genres: buildGenres())
               recentsDidChangeUseCaseMock.result = true
               fetchVisitedShowsUseCaseMock.result = buildShowVisited()
 
@@ -71,7 +71,7 @@ class SearchOptionsViewModelTest: XCTestCase {
 
   func test_when_useCase_Responds_With_Zero_Elements_ViewModel_Should_contains_Empty_State() {
     // given
-    fetchGenresUseCaseMock.result = GenreListResult(genres: [] )
+    fetchGenresUseCaseMock.result = GenreList(genres: [])
     recentsDidChangeUseCaseMock.result = true
     fetchVisitedShowsUseCaseMock.result = buildShowVisited()
 

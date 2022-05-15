@@ -11,10 +11,10 @@ import Shared
 @testable import ShowDetailsFeature
 
 class FetchTVShowDetailsUseCaseMock: FetchTVShowDetailsUseCase {
-  var result: TVShowDetailResult?
+  var result: TVShowDetail?
   var error: DataTransferError?
 
-  func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> AnyPublisher<TVShowDetailResult, DataTransferError> {
+  func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> AnyPublisher<TVShowDetail, DataTransferError> {
     if let error = error {
       return Fail(error: error).eraseToAnyPublisher()
     }

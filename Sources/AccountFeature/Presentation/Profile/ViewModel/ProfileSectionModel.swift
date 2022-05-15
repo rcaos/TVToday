@@ -43,7 +43,7 @@ enum ProfileSectionView: Hashable {
 }
 
 enum ProfilesSectionItem: Hashable {
-  case userInfo(number: AccountResult)
+  case userInfo(number: Account)
   case userLists(items: UserListType)
   case logout(items: String)
 }

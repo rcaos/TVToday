@@ -5,10 +5,11 @@
 //  Created by Jeans Ruiz on 8/4/20.
 //
 
+import Foundation
 @testable import Shared
 @testable import ShowDetailsFeature
 
-extension TVShowDetailResult {
+extension TVShowDetail {
 
   static func stub(
     id: Int = 1,
@@ -19,8 +20,8 @@ extension TVShowDetailResult {
     genreIds: [Genre] = [Genre(id: 10765, name: "Sci-Fi & Fantasy")],
     numberOfEpisodes: Int = 291,
     numberOfSeasons: Int = 9,
-    posterPath: String? = nil,
-    backDropPath: String? = nil,
+    posterPath: URL? = nil,
+    backDropPath: URL? = nil,
     overView: String = """
     Five years have passed since the fight with Piccolo Jr.,
     and Goku now has a son, Gohan. The peace is interrupted when an alien named Raditz arrives on
@@ -32,19 +33,20 @@ extension TVShowDetailResult {
     status: String = "Ended"
   ) -> Self {
 
-    return TVShowDetailResult(id: id,
-                              name: name,
-                              firstAirDate: firstAirDate,
-                              lastAirDate: lastAirDate,
-                              episodeRunTime: episodeRunTime,
-                              genreIds: genreIds,
-                              numberOfEpisodes: numberOfEpisodes,
-                              numberOfSeasons: numberOfSeasons,
-                              posterPath: posterPath,
-                              backDropPath: backDropPath,
-                              overview: overView,
-                              voteAverage: voteAverage,
-                              voteCount: voteCount,
-                              status: status)
+    return TVShowDetail(
+      id: id,
+      name: name,
+      firstAirDate: firstAirDate,
+      lastAirDate: lastAirDate,
+      episodeRunTime: episodeRunTime,
+      genreIds: genreIds,
+      numberOfEpisodes: numberOfEpisodes,
+      numberOfSeasons: numberOfSeasons,
+      posterPathURL: posterPath,
+      backDropPathURL: backDropPath,
+      overview: overView,
+      voteAverage: voteAverage,
+      voteCount: voteCount,
+      status: status)
   }
 }

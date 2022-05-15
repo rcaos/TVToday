@@ -102,13 +102,12 @@ class EmptyListCoordinator: TVShowListCoordinatorProtocol {
 }
 
 // MARK: - ShowsVisitedLocalRepository
-final class FakeShowsVisitedLocalRepository: ShowsVisitedLocalRepository {
-
-  public func saveShow(id: Int, pathImage: String, userId: Int) -> AnyPublisher<Void, CustomError> {
-    return Empty().setFailureType(to: CustomError.self).eraseToAnyPublisher()
+final class FakeShowsVisitedLocalRepository: ShowsVisitedLocalRepositoryProtocol {
+  public func saveShow(id: Int, pathImage: String) -> AnyPublisher<Void, CustomError> {
+    return Just(()).setFailureType(to: CustomError.self).eraseToAnyPublisher()
   }
 
-  public func fetchVisitedShows(userId: Int) -> AnyPublisher<[ShowVisited], CustomError> {
+  public func fetchVisitedShows() -> AnyPublisher<[ShowVisited], CustomError> {
     return Just([]).setFailureType(to: CustomError.self).eraseToAnyPublisher()
   }
 
@@ -118,13 +117,12 @@ final class FakeShowsVisitedLocalRepository: ShowsVisitedLocalRepository {
 }
 
 // MARK: - SearchLocalRepository
-final class FakeSearchLocalRepository: SearchLocalRepository {
-
-  public func saveSearch(query: String, userId: Int) -> AnyPublisher<Void, CustomError> {
-    return Empty().setFailureType(to: CustomError.self).eraseToAnyPublisher()
+final class FakeSearchLocalRepository: SearchLocalRepositoryProtocol {
+  public func saveSearch(query: String) -> AnyPublisher<Void, CustomError> {
+    return Just(()).setFailureType(to: CustomError.self).eraseToAnyPublisher()
   }
 
-  public func fetchSearchs(userId: Int) -> AnyPublisher<[Search], CustomError> {
-    return Empty().setFailureType(to: CustomError.self).eraseToAnyPublisher()
+  public func fetchRecentSearches() -> AnyPublisher<[Search], CustomError> {
+    return Just([]).setFailureType(to: CustomError.self).eraseToAnyPublisher()
   }
 }

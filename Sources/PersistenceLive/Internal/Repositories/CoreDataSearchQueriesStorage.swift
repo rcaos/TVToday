@@ -19,7 +19,7 @@ final class CoreDataSearchQueriesStorage {
   }
 }
 
-extension CoreDataSearchQueriesStorage: SearchLocalRepository {
+extension CoreDataSearchQueriesStorage: SearchLocalDataSource {
 
   public func saveSearch(query: String, userId: Int) -> AnyPublisher<Void, CustomError> {
     return Deferred { [store] in
@@ -32,9 +32,9 @@ extension CoreDataSearchQueriesStorage: SearchLocalRepository {
     .eraseToAnyPublisher()
   }
 
-  public func fetchSearchs(userId: Int) -> AnyPublisher<[Search], CustomError> {
+  public func fetchRecentSearches(userId: Int) -> AnyPublisher<[SearchDLO], CustomError> {
     return Deferred { [store] in
-      return Future<[Search], CustomError> { promise in
+      return Future<[SearchDLO], CustomError> { promise in
         let results = store.findAll(userId: userId).map { $0.toDomain() }
         promise(.success(results))
       }

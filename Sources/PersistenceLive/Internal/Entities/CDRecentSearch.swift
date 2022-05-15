@@ -26,8 +26,8 @@ final class CDRecentSearch: NSManagedObject {
 }
 
 extension CDRecentSearch {
-  func toDomain() -> Search {
-    return Search(query: query)
+  func toDomain() -> SearchDLO {
+    return SearchDLO(query: query)
   }
 }
 

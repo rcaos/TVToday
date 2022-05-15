@@ -14,8 +14,8 @@ import Persistence
 
 final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
   private let searchTVShowsUseCase: SearchTVShowsUseCase
-  private let fetchRecentSearchsUseCase: FetchSearchsUseCase
-  private let currentSearchSubject = CurrentValueSubject<String, Never>("")  /// ?????
+  private let fetchRecentSearchesUseCase: FetchSearchesUseCase
+  private let currentSearchSubject = CurrentValueSubject<String, Never>("")
 
   let viewState  = CurrentValueSubject<ResultViewState, Never>(.initial)
   let dataSource = CurrentValueSubject<[ResultSearchSectionModel], Never>([])
@@ -24,12 +24,14 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
   private let scheduler: AnySchedulerOf<DispatchQueue>
   private var disposeBag = Set<AnyCancellable>()
 
+  private var currentResultShows: [TVShowPage.TVShow] = []
+
   // MARK: - Init
   init(searchTVShowsUseCase: SearchTVShowsUseCase,
-       fetchRecentSearchsUseCase: FetchSearchsUseCase,
+       fetchRecentSearchesUseCase: FetchSearchesUseCase,
        scheduler: AnySchedulerOf<DispatchQueue> = .main) {
     self.searchTVShowsUseCase = searchTVShowsUseCase
-    self.fetchRecentSearchsUseCase = fetchRecentSearchsUseCase
+    self.fetchRecentSearchesUseCase = fetchRecentSearchesUseCase
     self.scheduler = scheduler
     subscribeToRecentsShowsChange()
     subscribeToSearchInput()
@@ -48,8 +50,10 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
     delegate?.resultsSearchViewModel(self, didSelectRecentSearch: query)
   }
 
-  func showIsPicked(idShow: Int) {
-    delegate?.resultsSearchViewModel(self, didSelectShow: idShow)
+  func showIsPicked(index: Int) {
+    if currentResultShows.indices.contains(index) {
+      delegate?.resultsSearchViewModel(self, didSelectShow: currentResultShows[index].id)
+    }
   }
 
   func getViewState() -> ResultViewState {
@@ -71,8 +75,8 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
     viewState
       .removeDuplicates()
       .filter { $0 == .initial }
-      .flatMap { [fetchRecentSearchsUseCase] _ -> AnyPublisher<[Search], CustomError> in
-        return fetchRecentSearchsUseCase.execute(requestValue: FetchSearchsUseCaseRequestValue())
+      .flatMap { [fetchRecentSearchesUseCase] _ -> AnyPublisher<[Search], CustomError> in
+        return fetchRecentSearchesUseCase.execute(requestValue: FetchSearchesUseCaseRequestValue())
       }
       .receive(on: scheduler)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] results in
@@ -102,19 +106,18 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
       .store(in: &disposeBag)
   }
 
-  private func processFetched(for response: TVShowResult) {
-    let fetchedShows = response.results ?? []
-
-    if fetchedShows.isEmpty {
+  private func processFetched(for response: TVShowPage) {
+    if response.showsList.isEmpty {
       viewState.send( .empty )
     } else {
       viewState.send( .populated )
     }
 
-    createSectionModel(recentSearchs: [], resultShows: fetchedShows)
+    currentResultShows = response.showsList
+    createSectionModel(recentSearchs: [], resultShows: response.showsList)
   }
 
-  private func createSectionModel(recentSearchs: [String], resultShows: [TVShow]) {
+  private func createSectionModel(recentSearchs: [String], resultShows: [TVShowPage.TVShow]) {
     let recentSearchsItem = recentSearchs.map { ResultSearchSectionItem.recentSearchs(items: $0) }
 
     let resultsShowsItem = resultShows

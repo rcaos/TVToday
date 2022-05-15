@@ -22,17 +22,17 @@ public struct TVShowDetailInfo {
   var maxScore: String = "/10"
   var countVote: String?
 
-  public init(show: TVShowDetailResult) {
+  public init(show: TVShowDetail) {
     id = show.id
     backDropPath = show.backDropPathURL
     nameShow = show.name
     yearsRelease = show.releaseYears
     duration = show.episodeDuration
-    genre = show.genreIds?.first?.name
-    numberOfEpisodes  = (show.numberOfEpisodes != nil) ? String(show.numberOfEpisodes!) : ""
+    genre = show.genreIds.first?.name
+    numberOfEpisodes = String(show.numberOfEpisodes)
     posterPath = show.posterPathURL
     overView = show.overview
-    score = (show.voteAverage != nil) ? String(show.voteAverage!) : ""
-    countVote = (show.voteCount != nil) ? String(show.voteCount!) : ""
+    score = String(show.voteAverage)
+    countVote = String(show.voteCount)
   }
 }

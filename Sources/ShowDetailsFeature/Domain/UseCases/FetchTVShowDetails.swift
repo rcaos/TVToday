@@ -14,7 +14,7 @@ import Foundation
 
 public protocol FetchTVShowDetailsUseCase {
   // MARK: - TODO Use another error maybe?
-  func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> AnyPublisher<TVShowDetailResult, DataTransferError>
+  func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> AnyPublisher<TVShowDetail, DataTransferError>
 }
 
 public struct FetchTVShowDetailsUseCaseRequestValue {
@@ -23,32 +23,23 @@ public struct FetchTVShowDetailsUseCaseRequestValue {
 
 // MARK: - FetchTVShowDetailsUseCase
 public final class DefaultFetchTVShowDetailsUseCase: FetchTVShowDetailsUseCase {
-  private let tvShowsRepository: TVShowsRepository
-  private let tvShowsVisitedRepository: ShowsVisitedLocalRepository
-  private let keychainRepository: KeychainRepository
+  private let tvShowDetailsRepository: TVShowsDetailsRepository
+  private let tvShowsVisitedRepository: ShowsVisitedLocalRepositoryProtocol // MARK: - TODO, Move this logic to TVShowsDetailsRepository
 
-  public init(tvShowsRepository: TVShowsRepository,
-              keychainRepository: KeychainRepository,
-              tvShowsVisitedRepository: ShowsVisitedLocalRepository) {
-    self.tvShowsRepository = tvShowsRepository
-    self.keychainRepository = keychainRepository
+  public init(tvShowDetailsRepository: TVShowsDetailsRepository,
+              tvShowsVisitedRepository: ShowsVisitedLocalRepositoryProtocol) {
+    self.tvShowDetailsRepository = tvShowDetailsRepository
     self.tvShowsVisitedRepository = tvShowsVisitedRepository
   }
 
-  public func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> AnyPublisher<TVShowDetailResult, DataTransferError> {
-    var idLogged = 0
-    if let userLogged = keychainRepository.fetchLoguedUser() {
-      idLogged = userLogged.id
-    }
-
-    return tvShowsRepository
+  public func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> AnyPublisher<TVShowDetail, DataTransferError> {
+    return tvShowDetailsRepository
       .fetchTVShowDetails(with: requestValue.identifier)
       .receive(on: DispatchQueue.main) // MARK: - TODO,
-      .flatMap { [tvShowsVisitedRepository] details -> AnyPublisher<TVShowDetailResult, DataTransferError> in
-        return tvShowsVisitedRepository.saveShow(id: details.id ?? 0,
-                                                 pathImage: details.posterPath ?? "",
-                                                 userId: idLogged)
-          .map { _ -> TVShowDetailResult in details }
+      .flatMap { [tvShowsVisitedRepository] details -> AnyPublisher<TVShowDetail, DataTransferError> in
+        return tvShowsVisitedRepository.saveShow(id: details.id,
+                                                 pathImage: details.posterPathURL?.absoluteString ?? "")
+          .map { _ -> TVShowDetail in details }
           .mapError { _ -> DataTransferError in DataTransferError.noResponse }
           .eraseToAnyPublisher()
       }

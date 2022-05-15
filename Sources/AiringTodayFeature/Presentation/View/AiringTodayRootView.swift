@@ -131,8 +131,6 @@ extension AiringTodayRootView: UICollectionViewDelegateFlowLayout {
   }
 
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    if let item = dataSource?.itemIdentifier(for: indexPath) {
-      viewModel.showIsPicked(with: item.show.id)
-    }
+    viewModel.showIsPicked(index: indexPath.row)
   }
 }

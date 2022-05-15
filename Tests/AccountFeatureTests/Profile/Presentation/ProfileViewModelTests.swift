@@ -21,7 +21,7 @@ class ProfileViewModelTests: XCTestCase {
 
   func test_When_User_Is_Logged_Should_Contains_Sections_On_DataSource() {
     // given
-    let accountResult = AccountResult.stub(hash: "", id: 1, userName: "UserName")
+    let accountResult = Account.stub(accountId: 1, userName: "UserName", avatarId: "mockHash")
     let sut: ProfileViewModelProtocol = ProfileViewModel(account: accountResult)
 
     // when
@@ -37,7 +37,7 @@ class ProfileViewModelTests: XCTestCase {
 }
 
 // MARK: - Helpers
-private func createSectionModel(with account: AccountResult) -> [ProfileSectionModel] {
+private func createSectionModel(with account: Account) -> [ProfileSectionModel] {
   let items: [ProfilesSectionItem] = [
     .userLists(items: .favorites),
     .userLists(items: .watchList)

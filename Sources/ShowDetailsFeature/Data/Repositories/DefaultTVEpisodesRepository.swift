@@ -12,44 +12,22 @@ import Networking
 import Shared
 
 public final class DefaultTVEpisodesRepository {
-  private let dataTransferService: DataTransferService
+  private let remoteDataSource: TVEpisodesRemoteDataSource
+  private let mapper: TVEpisodesMapperProtocol
+  private let imageBasePath: String
 
-  private let basePath: String?
-
-  public init(dataTransferService: DataTransferService,
-              basePath: String? = nil) {
-    self.dataTransferService = dataTransferService
-    self.basePath = basePath
+  public init(remoteDataSource: TVEpisodesRemoteDataSource, mapper: TVEpisodesMapperProtocol, imageBasePath: String) {
+    self.remoteDataSource = remoteDataSource
+    self.mapper = mapper
+    self.imageBasePath = imageBasePath
   }
 }
 
-// MARK: - TVEpisodesRepository
 extension DefaultTVEpisodesRepository: TVEpisodesRepository {
 
-  func fetchEpisodesList(for show: Int, season: Int) -> AnyPublisher<SeasonResult, DataTransferError> {
-    let endpoint = Endpoint<SeasonResult>(
-      path: "3/tv/\(show)/season/\(season)",
-      method: .get
-    )
-
-    return dataTransferService.request(with: endpoint)
-      .map { self.mapEpisodesWithBasePath(response: $0) }
+  func fetchEpisodesList(for show: Int, season: Int) -> AnyPublisher<TVShowSeason, DataTransferError> {
+    return remoteDataSource.fetchEpisodes(for: show, season: season)
+      .map { self.mapper.mapSeasonDTO($0, imageBasePath: self.imageBasePath, imageSize: .small) }
       .eraseToAnyPublisher()
-  }
-
-  private func mapEpisodesWithBasePath(response: SeasonResult) -> SeasonResult {
-    guard let basePath = basePath else {
-      return response
-    }
-
-    var newResponse = response
-
-    newResponse.episodes  = response.episodes?.map { (episode: Episode) -> Episode in
-      var mutableEpisode = episode
-      mutableEpisode.posterPath = basePath + "/t/p/w342" + ( episode.posterPath ?? "" )
-      return mutableEpisode
-    }
-
-    return newResponse
   }
 }

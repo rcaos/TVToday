@@ -55,7 +55,7 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
     return fetchVisitedShowsUseCase.execute(requestValue: FetchVisitedShowsUseCaseRequestValue())
   }
 
-  private func fetchGenres() -> AnyPublisher<GenreListResult, CustomError> {
+  private func fetchGenres() -> AnyPublisher<GenreList, CustomError> {
     return fetchGenresUseCase.execute(requestValue: FetchGenresUseCaseRequestValue())
       .mapError { error -> CustomError in return CustomError.transferError(error) }
       .eraseToAnyPublisher()
@@ -88,13 +88,13 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
             receiveValue: { [weak self] (visited, resultGenre) in
         guard let strongSelf = self else { return }
         strongSelf.processFetched(for: resultGenre)
-        strongSelf.createSectionModel(showsVisited: visited, genres: resultGenre.genres ?? [])
+        strongSelf.createSectionModel(showsVisited: visited, genres: resultGenre.genres)
       })
       .store(in: &disposeBag)
   }
 
-  private func processFetched(for response: GenreListResult) {
-    let fetchedGenres = (response.genres ?? [])
+  private func processFetched(for response: GenreList) {
+    let fetchedGenres = (response.genres)
     if fetchedGenres.isEmpty {
       viewState.send(.empty)
     } else {

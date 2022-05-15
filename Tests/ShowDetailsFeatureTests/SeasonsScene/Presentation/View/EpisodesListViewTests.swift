@@ -47,9 +47,9 @@ class EpisodesListViewTests: XCTestCase {
   func test_WhenViewModelDidPopulated_thenShow_PopulatedScreen() {
     // given
     let episodes = [
-      Episode.stub(id: 1, episodeNumber: 1, name: "Chapter 1"),
-      Episode.stub(id: 2, episodeNumber: 2, name: "Chapter 2"),
-      Episode.stub(id: 3, episodeNumber: 3, name: "Chapter 3")
+      TVShowEpisode.stub(id: 1, episodeNumber: 1, name: "Chapter 1"),
+      TVShowEpisode.stub(id: 2, episodeNumber: 2, name: "Chapter 2"),
+      TVShowEpisode.stub(id: 3, episodeNumber: 3, name: "Chapter 3")
     ]
 
     let initialState = EpisodesListViewModelMock(state: .populated,

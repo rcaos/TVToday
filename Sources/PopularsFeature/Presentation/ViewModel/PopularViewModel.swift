@@ -114,9 +114,9 @@ final class PopularViewModel: PopularViewModelProtocol {
       shows.removeAll()
     }
 
-    self.shows.append(contentsOf: response.showsList)
+    shows.append(contentsOf: response.showsList)
 
-    if self.shows.isEmpty {
+    if shows.isEmpty {
       viewStateObservableSubject.send(.empty)
       return
     }

@@ -12,7 +12,7 @@ protocol AiringTodayViewModelProtocol {
   // MARK: - Input
   func viewDidLoad()
   func didLoadNextPage()
-  func showIsPicked(with id: Int)
+  func showIsPicked(index: Int)
   func refreshView()
 
   // MARK: - Output

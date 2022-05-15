@@ -12,7 +12,7 @@ import XCTest
 
 class TVShowDetailViewModelGuestUsersTests: XCTestCase {
 
-  let detailResult = TVShowDetailResult.stub()
+  let detailResult = TVShowDetail.stub()
 
   var fetchLoggedUserMock: FetchLoggedUserMock!
   var fetchTVShowDetailsUseCaseMock: FetchTVShowDetailsUseCaseMock!

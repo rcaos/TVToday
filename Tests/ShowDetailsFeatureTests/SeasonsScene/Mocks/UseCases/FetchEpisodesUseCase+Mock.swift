@@ -10,10 +10,10 @@ import NetworkingInterface
 @testable import ShowDetailsFeature
 
 final class FetchEpisodesUseCaseMock: FetchEpisodesUseCase {
-  var result: SeasonResult?
+  var result: TVShowSeason?
   var error: DataTransferError?
 
-  func execute(requestValue: FetchEpisodesUseCaseRequestValue) -> AnyPublisher<SeasonResult, DataTransferError> {
+  func execute(requestValue: FetchEpisodesUseCaseRequestValue) -> AnyPublisher<TVShowSeason, DataTransferError> {
     if let error = error {
       return Fail(error: error).eraseToAnyPublisher()
     }

@@ -12,10 +12,10 @@ import Shared
 
 class FetchTVAccountStateMock: FetchTVAccountStates {
 
-  var result: TVShowAccountStateResult?
+  var result: TVShowAccountStatus?
   var error: DataTransferError?
 
-  func execute(requestValue: FetchTVAccountStatesRequestValue) -> AnyPublisher<TVShowAccountStateResult, DataTransferError> {
+  func execute(requestValue: FetchTVAccountStatesRequestValue) -> AnyPublisher<TVShowAccountStatus, DataTransferError> {
     if let error = error {
       return Fail(error: error).eraseToAnyPublisher()
     }

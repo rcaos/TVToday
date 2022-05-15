@@ -14,7 +14,7 @@ import XCTest
 
 class WatchListTapsTests: XCTestCase {
 
-  let detailResult = TVShowDetailResult.stub()
+  let detailResult = TVShowDetail.stub()
 
   var fetchLoggedUserMock: FetchLoggedUserMock!
   var fetchTVShowDetailsUseCaseMock: FetchTVShowDetailsUseCaseMock!
@@ -40,7 +40,7 @@ class WatchListTapsTests: XCTestCase {
     // given
     let initialWatchListState = false
     fetchTVShowDetailsUseCaseMock.result = self.detailResult
-    fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: false, isWatchList: initialWatchListState)
+    fetchTVAccountStateMock.result = TVShowAccountStatus.stub(showId: 1, isFavorite: false, isWatchList: initialWatchListState)
 
     let scheduler = DispatchQueue.test
 
@@ -101,7 +101,7 @@ class WatchListTapsTests: XCTestCase {
     // given
     let initialWatchListState = true
     fetchTVShowDetailsUseCaseMock.result = self.detailResult
-    fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: false, isWatchList: initialWatchListState)
+    fetchTVAccountStateMock.result = TVShowAccountStatus.stub(showId: 1, isFavorite: false, isWatchList: initialWatchListState)
 
     let scheduler = DispatchQueue.test
 

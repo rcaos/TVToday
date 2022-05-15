@@ -46,7 +46,7 @@ class EpisodesListViewModelMock: EpisodesListViewModelProtocol {
   init(state: EpisodesListViewModel.ViewState,
        numberOfSeasons: Int = 1,
        seasonSelected: Int = 1,
-       episodes: [Episode] = [],
+       episodes: [TVShowEpisode] = [],
        headerViewModel: SeasonHeaderViewModel? = nil) {
 
     // MARK: - TODO
@@ -63,7 +63,7 @@ class EpisodesListViewModelMock: EpisodesListViewModelProtocol {
 
 // MARK: - Helpers
 private func createSectionModel(_ headerViewModel: SeasonHeaderViewModel?,
-                                and episodes: [Episode]) -> [SeasonsSectionModel] {
+                                and episodes: [TVShowEpisode]) -> [SeasonsSectionModel] {
   var dataSourceSections = [SeasonsSectionModel]()
 
   if let viewModel = headerViewModel {

@@ -12,7 +12,7 @@ import XCTest
 
 class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
 
-  let detailResult = TVShowDetailResult.stub()
+  let detailResult = TVShowDetail.stub()
 
   var fetchLoggedUserMock: FetchLoggedUserMock!
   var fetchTVShowDetailsUseCaseMock: FetchTVShowDetailsUseCaseMock!
@@ -66,7 +66,7 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
   func test_For_Logged_User_When_UseCase_Respond_OK_ViewModel_Should_Contains_Populated_State() {
     // given
     fetchTVShowDetailsUseCaseMock.result = self.detailResult
-    fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: true, isWatchList: true)
+    fetchTVAccountStateMock.result = TVShowAccountStatus.stub(showId: 1, isFavorite: true, isWatchList: true)
 
     let sut: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
       1,
@@ -101,7 +101,7 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
 
   func test_For_Logged_User_When_ShowDetails_UseCase_Respond_Error_ViewModel_Should_Contains_Error_State() {
     // given
-    fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: true, isWatchList: true)
+    fetchTVAccountStateMock.result = TVShowAccountStatus.stub(showId: 1, isFavorite: true, isWatchList: true)
     fetchTVShowDetailsUseCaseMock.error = .noResponse
 
     let sut: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
@@ -197,7 +197,7 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
       .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // First Attempt got error
-    fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: true, isWatchList: true)
+    fetchTVAccountStateMock.result = TVShowAccountStatus.stub(showId: 1, isFavorite: true, isWatchList: true)
     fetchTVShowDetailsUseCaseMock.error = .noResponse
 
     // when
@@ -217,7 +217,7 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
   func test_For_Logged_When_Usecase_get_Favorite_State_ViewModel_Should_Contains_isFavorite_Value() {
     // given
     fetchTVShowDetailsUseCaseMock.result = self.detailResult
-    fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: true, isWatchList: true)
+    fetchTVAccountStateMock.result = TVShowAccountStatus.stub(showId: 1, isFavorite: true, isWatchList: true)
 
     let sut: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
       1,
@@ -251,7 +251,7 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
   func test_For_Logged_When_Usecase_get_Favorite_State_ViewModel_Should_Contains_isFavorite_False_Value() {
     // given
     fetchTVShowDetailsUseCaseMock.result = self.detailResult
-    fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: false, isWatchList: true)
+    fetchTVAccountStateMock.result = TVShowAccountStatus.stub(showId: 1, isFavorite: false, isWatchList: true)
 
     let sut: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
       1,
@@ -284,7 +284,7 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
   func test_For_Logged_When_Usecase_get_WatchList_State_ViewModel_Should_Contains_isFavorite_Value() {
     // given
     fetchTVShowDetailsUseCaseMock.result = self.detailResult
-    fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: true, isWatchList: true)
+    fetchTVAccountStateMock.result = TVShowAccountStatus.stub(showId: 1, isFavorite: true, isWatchList: true)
 
     let sut: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
       1,
@@ -317,7 +317,7 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
   func test_For_Logged_When_Usecase_get_WatchList_State_ViewModel_Should_Contains_isFavorite_False_Value() {
     // given
     fetchTVShowDetailsUseCaseMock.result = self.detailResult
-    fetchTVAccountStateMock.result = TVShowAccountStateResult.stub(id: 1, isFavorite: true, isWatchList: false)
+    fetchTVAccountStateMock.result = TVShowAccountStatus.stub(showId: 1, isFavorite: true, isWatchList: false)
 
     let sut: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
       1,

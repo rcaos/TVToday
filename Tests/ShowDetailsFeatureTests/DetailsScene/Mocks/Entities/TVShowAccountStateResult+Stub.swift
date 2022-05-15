@@ -7,13 +7,13 @@
 
 @testable import Shared
 
-extension TVShowAccountStateResult {
-  static func stub(id: Int = 1,
+extension TVShowAccountStatus {
+  static func stub(showId: Int = 1,
                    isFavorite: Bool = true,
                    isWatchList: Bool = true) -> Self {
-
-    TVShowAccountStateResult(id: id,
-                             isFavorite: isFavorite,
-                             isWatchList: isWatchList)
+    TVShowAccountStatus(
+      showId: showId,
+      isFavorite: isFavorite,
+      isWatchList: isWatchList)
   }
 }

@@ -17,14 +17,14 @@ final class ProfileViewModelMock: ProfileViewModelProtocol {
   let dataSource: CurrentValueSubject<[ProfileSectionModel], Never>
   let presentSignOutAlert: CurrentValueSubject<Bool, Never>
 
-  init(account: AccountResult) {
+  init(account: Account) {
     let accountSection = ProfileViewModelMock.createSectionModel(account: account)
 
     dataSource = CurrentValueSubject(accountSection)
     presentSignOutAlert = CurrentValueSubject(false)
   }
 
-  static func createSectionModel(account: AccountResult) -> [ProfileSectionModel] {
+  static func createSectionModel(account: Account) -> [ProfileSectionModel] {
 
     let items: [ProfilesSectionItem] = [
       .userLists(items: .favorites),

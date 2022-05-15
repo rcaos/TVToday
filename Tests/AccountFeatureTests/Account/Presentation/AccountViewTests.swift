@@ -39,7 +39,7 @@ class AccountViewTests: XCTestCase {
 
   func test_WhenViewIsLogged_thenShowProfileScreen() {
     // given
-    let accountViewModel = AccountViewModelMock(state: .profile(account: AccountResult.stub()))
+    let accountViewModel = AccountViewModelMock(state: .profile(account: Account.stub()))
 
     // when
     let viewController = AccountViewController(viewModel: accountViewModel, viewControllersFactory: factory)

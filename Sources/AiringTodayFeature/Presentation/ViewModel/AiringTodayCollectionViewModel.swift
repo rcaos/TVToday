@@ -19,9 +19,9 @@ struct AiringTodayCollectionViewModel: Hashable {
     showId = show.id
     showName = show.name
     if show.voteAverage == 0 {
-      average = String(show.voteAverage)
-    } else {
       average = "0.0"
+    } else {
+      average = String(show.voteAverage)
     }
     posterURL = show.backDropPath
   }

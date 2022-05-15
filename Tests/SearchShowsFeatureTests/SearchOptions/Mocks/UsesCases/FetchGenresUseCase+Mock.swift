@@ -11,9 +11,9 @@ import NetworkingInterface
 
 final class FetchGenresUseCaseMock: FetchGenresUseCase {
   var error: DataTransferError?
-  var result: GenreListResult?
+  var result: GenreList?
 
-  func execute(requestValue: FetchGenresUseCaseRequestValue) -> AnyPublisher<GenreListResult, DataTransferError> {
+  func execute(requestValue: FetchGenresUseCaseRequestValue) -> AnyPublisher<GenreList, DataTransferError> {
     if let error = error {
       return Fail(error: error).eraseToAnyPublisher()
     }

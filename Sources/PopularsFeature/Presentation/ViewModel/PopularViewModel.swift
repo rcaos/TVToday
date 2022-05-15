@@ -14,7 +14,7 @@ protocol PopularViewModelProtocol {
   // MARK: - Input
   func viewDidLoad()
   func didLoadNextPage()
-  func showIsPicked(with id: Int)
+  func showIsPicked(index: Int)
   func refreshView()
 
   // MARK: - Output
@@ -74,8 +74,10 @@ final class PopularViewModel: PopularViewModelProtocol {
     getShows(for: 1, showLoader: false)
   }
 
-  func showIsPicked(with id: Int) {
-    coordinator?.navigate(to: .showIsPicked(id))
+  func showIsPicked(index: Int) {
+    if shows.indices.contains(index) {
+      coordinator?.navigate(to: .showIsPicked(shows[index].id))
+    }
   }
 
   // MARK: - Private

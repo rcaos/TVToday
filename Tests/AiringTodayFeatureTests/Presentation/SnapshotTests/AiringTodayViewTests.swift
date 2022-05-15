@@ -5,10 +5,10 @@
 //  Created by Jeans Ruiz on 19/12/21.
 //
 
-import XCTest
-import SnapshotTesting
-
 @testable import AiringTodayFeature
+import CommonMocks
+import SnapshotTesting
+import XCTest
 
 class AiringTodayViewTests: XCTestCase {
 

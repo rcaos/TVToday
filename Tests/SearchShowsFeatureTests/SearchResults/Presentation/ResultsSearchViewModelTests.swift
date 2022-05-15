@@ -5,6 +5,7 @@
 //  Created by Jeans Ruiz on 8/7/20.
 //
 
+import CommonMocks
 import XCTest
 import Combine
 
@@ -31,7 +32,7 @@ class ResultsSearchViewModelTests: XCTestCase {
   func test_Restuts_is_Create_Should_Contains_Initial_State() {
     // given
     sut = ResultsSearchViewModel(
-      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchesUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
 
     var received = [ResultViewState]()
     sut.viewState.removeDuplicates()
@@ -51,7 +52,7 @@ class ResultsSearchViewModelTests: XCTestCase {
 
     sut = ResultsSearchViewModel(
       searchTVShowsUseCase: searchTVShowsUseCaseMock,
-      fetchRecentSearchsUseCase: fetchSearchsUseCaseMock,
+      fetchRecentSearchesUseCase: fetchSearchsUseCaseMock,
       scheduler: .immediate
     )
 
@@ -71,7 +72,7 @@ class ResultsSearchViewModelTests: XCTestCase {
   func test_When_Use_Case_DoestNot_Respond_yet_Should_ViewModel_Contains_Loading_State() {
     // given
     sut = ResultsSearchViewModel(
-      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchesUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
 
     var received = [ResultViewState]()
 
@@ -87,9 +88,9 @@ class ResultsSearchViewModelTests: XCTestCase {
 
   func test_When_Use_Case_Respond_with_Zero_Values_Should_ViewModel_Contains_Loading_State() {
     // given
-    searchTVShowsUseCaseMock.result = TVShowResult(page: 1, results: [], totalResults: 0, totalPages: 0)
+    searchTVShowsUseCaseMock.result = TVShowPage(page: 1, showsList: [], totalPages: 0, totalShows: 0)
     sut = ResultsSearchViewModel(
-      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchesUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
 
     var received = [ResultViewState]()
     sut.viewState.removeDuplicates()
@@ -104,11 +105,11 @@ class ResultsSearchViewModelTests: XCTestCase {
 
   func test_When_Use_Case_Respond_With_Data_Should_ViewModel_Contains_Populated_State() {
     // given
-    let shows = [TVShow.stub(id: 1, name: "Show 1")]
-    searchTVShowsUseCaseMock.result = TVShowResult(page: 1, results: shows, totalResults: 1, totalPages: 1)
+    let shows = [TVShowPage.TVShow.stub(id: 1, name: "Show 1")]
+    searchTVShowsUseCaseMock.result = TVShowPage(page: 1, showsList: shows, totalPages: 1, totalShows: 1)
 
     sut = ResultsSearchViewModel(
-      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchesUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
 
     var received = [ResultViewState]()
     sut.viewState.removeDuplicates()
@@ -123,14 +124,14 @@ class ResultsSearchViewModelTests: XCTestCase {
 
   func test_When_Use_Case_Respond_With_Data_Should_ViewModel_DataSource_Contains_Data() {
     // given
-    let shows = [
-      TVShow.stub(id: 1, name: "something Show 1"),
-      TVShow.stub(id: 2, name: "something Show 2")
+    let shows: [TVShowPage.TVShow] = [
+      .stub(id: 1, name: "something Show 1"),
+      .stub(id: 2, name: "something Show 2")
     ]
 
-    searchTVShowsUseCaseMock.result = TVShowResult(page: 1, results: shows, totalResults: 1, totalPages: 1)
+    searchTVShowsUseCaseMock.result = TVShowPage(page: 1, showsList: shows, totalPages: 1, totalShows: 2)
     sut = ResultsSearchViewModel(
-      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchesUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
 
     let expected = [
       [],
@@ -152,7 +153,7 @@ class ResultsSearchViewModelTests: XCTestCase {
     // given
     searchTVShowsUseCaseMock.error = .noResponse
     sut = ResultsSearchViewModel(
-      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchsUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
+      searchTVShowsUseCase: searchTVShowsUseCaseMock, fetchRecentSearchesUseCase: fetchSearchsUseCaseMock, scheduler: .immediate)
 
     var received = [ResultViewState]()
     sut.viewState.removeDuplicates()
@@ -168,7 +169,7 @@ class ResultsSearchViewModelTests: XCTestCase {
   }
 
   // MARK: - Map Results
-  private func createSectionModel(recentSearchs: [String], resultShows: [TVShow]) -> [ResultSearchSectionModel] {
+  private func createSectionModel(recentSearchs: [String], resultShows: [TVShowPage.TVShow]) -> [ResultSearchSectionModel] {
     var dataSource: [ResultSearchSectionModel] = []
 
     let recentSearchsItem = recentSearchs.map { ResultSearchSectionItem.recentSearchs(items: $0) }

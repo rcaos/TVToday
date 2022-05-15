@@ -61,10 +61,10 @@ class ResultsSearchViewTests: XCTestCase {
 
   func test_WhenViewIsPopulated_thenShowPopulatedScreen() {
     // given
-    let shows = [
-      TVShow.stub(id: 1, name: "Show 1", voteAverage: 1.0, posterPath: nil),
-      TVShow.stub(id: 2, name: "Show 2", voteAverage: 2.0, posterPath: nil),
-      TVShow.stub(id: 3, name: "Show 3", voteAverage: 3.0, posterPath: nil)
+    let shows: [TVShowPage.TVShow] = [
+      .stub(id: 1, name: "Show 1", voteAverage: 1.0, posterPath: nil),
+      .stub(id: 2, name: "Show 2", voteAverage: 2.0, posterPath: nil),
+      .stub(id: 3, name: "Show 3", voteAverage: 3.0, posterPath: nil)
     ]
     let dataSource = createSectionModel(recentSearchs: [], resultShows: shows)
 

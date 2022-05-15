@@ -12,9 +12,9 @@ import NetworkingInterface
 class FetchShowsUseCaseMock: FetchTVShowsUseCase {
 
   var error: DataTransferError?
-  var result: TVShowResult?
+  var result: TVShowPage?
 
-  func execute(requestValue: FetchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowResult, DataTransferError> {
+  func execute(requestValue: FetchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowPage, DataTransferError> {
     if let error = error {
       return Fail(error: error).eraseToAnyPublisher()
     }

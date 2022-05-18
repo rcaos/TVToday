@@ -6,6 +6,11 @@
 TVShows iOS app built with Combine, using the [TMDb API](https://www.themoviedb.org/).
 
 ## What I'm working on
+
+May, 2022
+
+* ⏳ Support Dynamic Type (_wip_
+
 April, 2022
 
 * ✅ Improve UseCases and Repositories use (Clear separation between Repositories and DataSources

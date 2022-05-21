@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import Shared
+import UI
 
 class FooterReusableView: UICollectionReusableView, Loadable {
 

@@ -7,23 +7,19 @@
 
 import UIKit
 import Combine
-import Shared
+import UI
 
-class AiringTodayRootView: NiblessView {
+protocol AiringTodayRootViewProtocol {
+  func stopRefresh()
+}
+
+class AiringTodayRootView: NiblessView, AiringTodayRootViewProtocol {
 
   private let viewModel: AiringTodayViewModelProtocol
+  private let customFlowLayout = CustomFlowLayout()
 
-  private let collectionView: UICollectionView = {
-    let flowLayout = UICollectionViewFlowLayout()
-    flowLayout.scrollDirection = .vertical
-    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
-    collectionView.translatesAutoresizingMaskIntoConstraints = false
-    collectionView.registerCell(cellType: AiringTodayCollectionViewCell.self)
-
-    collectionView.register(FooterReusableView.self,
-                            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
-                            withReuseIdentifier: "FooterReusableView")
-    collectionView.backgroundColor = .systemBackground
+  private lazy var collectionView: UICollectionView = {
+    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: customFlowLayout)
     return collectionView
   }()
 
@@ -38,8 +34,6 @@ class AiringTodayRootView: NiblessView {
   init(frame: CGRect = .zero, viewModel: AiringTodayViewModelProtocol) {
     self.viewModel = viewModel
     super.init(frame: frame)
-
-    addSubview(collectionView)
     setupUI()
   }
 
@@ -48,11 +42,31 @@ class AiringTodayRootView: NiblessView {
   }
 
   private func setupUI() {
+    addToHierarchy()
+    setupFlowLayout()
     setupCollectionView()
-    setupDataSource()
+    setupCollectionDataSource()
+    subscribeToDataSource()
   }
 
-  // MARK: - Setup CollectionView
+  private func addToHierarchy() {
+    addSubview(collectionView)
+    collectionView.translatesAutoresizingMaskIntoConstraints = false
+    collectionView.pin(to: self)
+  }
+
+  private func setupFlowLayout() {
+    customFlowLayout.sectionInsetReference = .fromContentInset
+    customFlowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+    customFlowLayout.minimumInteritemSpacing = 10
+    customFlowLayout.minimumLineSpacing = 10
+    customFlowLayout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+    customFlowLayout.headerReferenceSize = .zero
+    customFlowLayout.footerReferenceSize = CGSize(width: 0, height: 100)
+
+    customFlowLayout.scrollDirection = .vertical
+  }
+
   private func setupCollectionView() {
     collectionView.refreshControl = DefaultRefreshControl(refreshHandler: { [weak self] in
       self?.viewModel.refreshView()
@@ -63,6 +77,12 @@ class AiringTodayRootView: NiblessView {
                             withReuseIdentifier: "FooterReusableView")
     collectionView.delegate = self
 
+    collectionView.collectionViewLayout = customFlowLayout
+    collectionView.contentInsetAdjustmentBehavior = .always
+    collectionView.backgroundColor = .systemBackground
+  }
+
+  private func setupCollectionDataSource() {
     dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView,
                                                     cellProvider: { [weak self] collectionView, indexPath, viewModel in
       let cell = collectionView.dequeueReusableCell(with: AiringTodayCollectionViewCell.self, for: indexPath)
@@ -77,14 +97,18 @@ class AiringTodayRootView: NiblessView {
     })
 
     dataSource?.supplementaryViewProvider = { collectionView, kind, indexPath in
-      let footerView = collectionView.dequeueReusableSupplementaryView(
-        ofKind: kind,
-        withReuseIdentifier: "FooterReusableView", for: indexPath) as! FooterReusableView
-      return footerView
+      if kind == UICollectionView.elementKindSectionFooter {
+        let footerView = collectionView.dequeueReusableSupplementaryView(
+          ofKind: kind,
+          withReuseIdentifier: "FooterReusableView", for: indexPath) as! FooterReusableView
+        return footerView
+      } else {
+        return nil
+      }
     }
   }
 
-  private func setupDataSource() {
+  private func subscribeToDataSource() {
     viewModel
       .viewStateObservableSubject
       .map { $0.currentEntities }
@@ -101,21 +125,13 @@ class AiringTodayRootView: NiblessView {
       .store(in: &disposeBag)
   }
 
-  override func layoutSubviews() {
-    super.layoutSubviews()
-    collectionView.frame = bounds
+  override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    customFlowLayout.invalidateLayout()
   }
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
 extension AiringTodayRootView: UICollectionViewDelegateFlowLayout {
-
-  func collectionView(_ collectionView: UICollectionView,
-                      layout collectionViewLayout: UICollectionViewLayout,
-                      sizeForItemAt indexPath: IndexPath) -> CGSize {
-    let width = collectionView.frame.width
-    return CGSize(width: width, height: 275)
-  }
 
   func collectionView(_ collectionView: UICollectionView,
                       layout collectionViewLayout: UICollectionViewLayout,

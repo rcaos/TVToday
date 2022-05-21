@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Shared
 
 public struct TVShowCellViewModel: Hashable {
   private let showId: Int

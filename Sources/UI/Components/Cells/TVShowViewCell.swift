@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import UI
 
 public class TVShowViewCell: NiblessTableViewCell {
 

@@ -15,19 +15,22 @@ public extension UINavigationController {
 
     standard.titleTextAttributes = [
       .foregroundColor: UIColor.systemBlue,
-      .font: Font.montserrat.of(type: .bold, with: .normal)]
+      .font: UIFont.app_title3().bolded.designed(.rounded)
+    ]
 
-    let button = UIBarButtonItemAppearance(style: .plain)
-    button.normal.titleTextAttributes = [
-      NSAttributedString.Key.foregroundColor: UIColor.systemBlue,
-      .font: Font.montserrat.of(type: .bold, with: .normal)]
-    standard.buttonAppearance = button
-
-    let done = UIBarButtonItemAppearance(style: .done)
-    done.normal.titleTextAttributes = [
-      NSAttributedString.Key.foregroundColor: UIColor.systemBlue,
-      .font: Font.montserrat.of(type: .bold, with: .normal)]
-    standard.doneButtonAppearance = done
+    // MARK: - TODO, check this
+//
+//    let button = UIBarButtonItemAppearance(style: .plain)
+//    button.normal.titleTextAttributes = [
+//      NSAttributedString.Key.foregroundColor: UIColor.systemBlue,
+//      .font: Font.sanFrancisco.of(type: .bold, with: .normal)]
+//    standard.buttonAppearance = button
+//
+//    let done = UIBarButtonItemAppearance(style: .done)
+//    done.normal.titleTextAttributes = [
+//      NSAttributedString.Key.foregroundColor: UIColor.systemBlue,
+//      .font: Font.sanFrancisco.of(type: .bold, with: .normal)]
+//    standard.doneButtonAppearance = done
 
     UINavigationBar.appearance().standardAppearance = standard
   }

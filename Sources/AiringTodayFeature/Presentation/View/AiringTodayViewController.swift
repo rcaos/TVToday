@@ -9,11 +9,13 @@
 import UIKit
 import Combine
 import Shared
+import UI
 
 class AiringTodayViewController: NiblessViewController, Loadable, Retryable, Emptiable {
 
-  private var viewModel: AiringTodayViewModelProtocol
+  private let viewModel: AiringTodayViewModelProtocol
   private var disposeBag = Set<AnyCancellable>()
+  private var rootView: (AiringTodayRootViewProtocol & UIView)?
 
   init(viewModel: AiringTodayViewModelProtocol) {
     self.viewModel = viewModel
@@ -22,7 +24,8 @@ class AiringTodayViewController: NiblessViewController, Loadable, Retryable, Emp
 
   // MARK: - Life Cycle
   override func loadView() {
-    view = AiringTodayRootView(viewModel: viewModel)
+    rootView = AiringTodayRootView(viewModel: viewModel)
+    view = rootView
   }
 
   override func viewDidLoad() {
@@ -52,7 +55,7 @@ class AiringTodayViewController: NiblessViewController, Loadable, Retryable, Emp
 
     case .empty:
       hideLoadingView()
-      showEmptyView(with: "No shows for Today")
+      showEmptyView(with: "No shows for Today") // MARK: - TODO, localized
 
     case .error(let message):
       hideLoadingView()
@@ -68,6 +71,6 @@ class AiringTodayViewController: NiblessViewController, Loadable, Retryable, Emp
   }
 
   private func stopRefresh() {
-    (view as! AiringTodayRootView).stopRefresh()
+    rootView?.stopRefresh()
   }
 }

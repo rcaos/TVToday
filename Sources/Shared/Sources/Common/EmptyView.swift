@@ -26,7 +26,7 @@ public class EmptyView: NiblessView {
     return imageView
   }()
 
-  public let messageLabel = TVRegularLabel(frame: .zero)
+  public let messageLabel = UILabel(frame: .zero)
 
   public override init(frame: CGRect) {
     super.init(frame: frame)

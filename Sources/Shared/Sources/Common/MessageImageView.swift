@@ -41,7 +41,7 @@ public class MessageImageView: UIView {
 
     messageLabel.numberOfLines = 0
     messageLabel.textAlignment = .center
-    messageLabel.font = Font.sanFrancisco.of(type: .regular, with: .normal)
+    messageLabel.font = .app_body()
 
     imageView.contentMode = .scaleAspectFit
 

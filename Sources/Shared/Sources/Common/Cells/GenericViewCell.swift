@@ -11,7 +11,7 @@ import UI
 
 public class GenericViewCell: NiblessTableViewCell {
 
-  private let regularTextLabel = TVRegularLabel(frame: .zero)
+  private let regularTextLabel = UILabel(frame: .zero)
 
   public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -51,6 +51,6 @@ public class GenericViewCell: NiblessTableViewCell {
   }
 
   deinit {
-    print("deinit GenericViewCell")
+    print("deinit \(Self.self)")
   }
 }

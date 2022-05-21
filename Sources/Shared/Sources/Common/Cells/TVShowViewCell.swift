@@ -18,13 +18,14 @@ public class TVShowViewCell: NiblessTableViewCell {
     return imageView
   }()
 
-  private lazy var nameLabel: TVBoldLabel = {
-    let label = TVBoldLabel(frame: .zero)
+  private lazy var nameLabel: UILabel = {
+    let label = UILabel()
     label.numberOfLines = 0
+    label.font = UIFont.app_body().bolded
     return label
   }()
 
-  private let startYearLabel = TVRegularLabel(frame: .zero)
+  private let startYearLabel = UILabel(frame: .zero)
 
   private lazy var rightContainerStackView: UIStackView = {
     let stack = UIStackView(arrangedSubviews: [nameLabel, startYearLabel, averageStackView])
@@ -46,7 +47,7 @@ public class TVShowViewCell: NiblessTableViewCell {
     return imageView
   }()
 
-  private let averageLabel = TVRegularLabel(frame: .zero)
+  private let averageLabel = UILabel(frame: .zero)
 
   private lazy var averageStackView: UIStackView = {
     let stack = UIStackView(arrangedSubviews: [starImageView, averageLabel])

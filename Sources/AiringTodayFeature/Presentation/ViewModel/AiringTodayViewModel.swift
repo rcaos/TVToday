@@ -94,7 +94,12 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol {
       shows.removeAll()
     }
 
-    shows.append(contentsOf: response.showsList)
+    // Avoid duplicated elements, Maybe Can I use a Set<Hashable> instead
+    response.showsList.forEach { responseItem in
+      if shows.contains(where: { $0.id == responseItem.id }) == false {
+        shows.append(responseItem)
+      }
+    }
 
     if shows.isEmpty {
       viewStateObservableSubject.send(.empty)

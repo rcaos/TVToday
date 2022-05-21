@@ -162,14 +162,10 @@ let package = Package(
     .target(
       name: "Shared",
       dependencies: [
-        "UI",
         "NetworkingInterface",
         "Networking",
         .product(name: "Kingfisher", package: "Kingfisher"),
         .product(name: "CombineSchedulers", package: "combine-schedulers"),
-      ],
-      resources: [
-        .process("Resources/")
       ]
     ),
     .target(
@@ -226,7 +222,15 @@ let package = Package(
         "ShowDetailsFeatureInterface"
       ]
     ),
-    .target(name: "UI", resources: [.process("Resources/")]),
+    .target(
+      name: "UI",
+      dependencies: [
+        "Shared"
+      ],
+      resources: [
+        .process("Resources/")
+      ]
+    ),
 
     // MARK: - Demo modules
     .target(name: "AiringTodayFeatureDemo", dependencies: ["AiringTodayFeature"]),

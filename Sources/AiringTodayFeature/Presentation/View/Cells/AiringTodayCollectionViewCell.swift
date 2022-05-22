@@ -43,7 +43,7 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
   private lazy var bottomStackView: UIStackView = {
     let stack = UIStackView(arrangedSubviews: [
       showNameLabel,
-      starImageView,
+//      starImageView,
       averageLabel
     ])
     stack.axis = .horizontal
@@ -72,8 +72,6 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
     imageView.image = starFill
     imageView.contentMode = .scaleAspectFit
     imageView.tintColor = .systemYellow
-
-    imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
 
     return imageView
   }()
@@ -134,8 +132,12 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
   }
 
   private func activateConstraintsForAverageLabel() {
-    averageLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
     averageLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+    averageLabel.setContentHuggingPriority(.required, for: .horizontal)
+
+    showNameLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+    showNameLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+//    starImageView.setContentCompressionResistancePriority(.required, for: .horizontal)
   }
 
   override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {

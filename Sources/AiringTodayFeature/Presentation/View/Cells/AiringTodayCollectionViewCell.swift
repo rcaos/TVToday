@@ -23,7 +23,8 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
   private lazy var mainStackView: UIStackView = {
     let stack = UIStackView(arrangedSubviews: [
       //backImageView,
-      bottomView])
+      bottomStackView
+    ])
     stack.axis = .vertical
     stack.alignment = .fill
     stack.distribution = .fill
@@ -33,12 +34,26 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
 
   private let backImageView: UIImageView = {
     let imageView = UIImageView()
-    imageView.contentMode = .scaleToFill
+    //imageView.contentMode = .scaleToFill
+    //imageView.contentMode = .scaleAspectFill
     imageView.clipsToBounds = true
     return imageView
   }()
 
-  private let bottomView = UIView()
+  private lazy var bottomStackView: UIStackView = {
+    let stack = UIStackView(arrangedSubviews: [
+      showNameLabel,
+      starImageView,
+      averageLabel
+    ])
+    stack.axis = .horizontal
+    stack.alignment = .center
+    stack.distribution = .fill
+    stack.spacing = 5
+    stack.isLayoutMarginsRelativeArrangement = true
+    stack.layoutMargins = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+    return stack
+  }()
 
   private let showNameLabel: UILabel = {
     let label = UILabel()
@@ -47,17 +62,6 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
     label.adjustsFontForContentSizeCategory = true
     label.font = UIFont.app_title3().bolded
     return label
-  }()
-
-  private lazy var bottomRightStackView: UIStackView = {
-    let stack = UIStackView(arrangedSubviews: [
-      starImageView,
-      averageLabel])
-    stack.axis = .horizontal
-    stack.alignment = .center
-    stack.distribution = .fill
-    stack.spacing = 5
-    return stack
   }()
 
   private let starImageView: UIImageView = {
@@ -100,8 +104,6 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
   }
 
   private func constructHierarchy() {
-    bottomView.addSubview(showNameLabel)
-    bottomView.addSubview(bottomRightStackView)
     containerView.addSubview(mainStackView)
     contentView.addSubview(containerView)
   }
@@ -110,8 +112,6 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
     activateConstraintsForContainerView()
     activateConstraintsForMainStackView()
     activateConstraintsForPosterImageView()
-    activateConstraintsForBottomRightStackView()
-    activateConstraintsForNameShow()
     activateConstraintsForAverageLabel()
   }
 
@@ -128,36 +128,14 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
   private func activateConstraintsForPosterImageView() {
 //    backImageView.translatesAutoresizingMaskIntoConstraints = false
 //    NSLayoutConstraint.activate([
-//      backImageView.heightAnchor.constraint(equalTo: mainStackView.heightAnchor, multiplier: 0.8)
+//      //backImageView.heightAnchor.constraint(equalTo: mainStackView.heightAnchor, multiplier: 0.8)
+//      backImageView.heightAnchor.constraint(equalToConstant: 125)
 //    ])
-  }
-
-  private func activateConstraintsForBottomRightStackView() {
-    bottomRightStackView.translatesAutoresizingMaskIntoConstraints = false
-    bottomRightStackView.setContentCompressionResistancePriority(.required, for: .horizontal)
-    NSLayoutConstraint.activate([
-      bottomRightStackView.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: -8)
-    ])
-  }
-
-  private func activateConstraintsForNameShow() {
-    showNameLabel.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-      showNameLabel.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 8),
-      showNameLabel.trailingAnchor.constraint(equalTo: bottomRightStackView.leadingAnchor, constant: -8),
-      showNameLabel.topAnchor.constraint(equalTo: bottomView.topAnchor, constant: 8),
-      showNameLabel.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor, constant: -8)
-    ])
   }
 
   private func activateConstraintsForAverageLabel() {
     averageLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
     averageLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
-
-    averageLabel.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-      averageLabel.firstBaselineAnchor.constraint(equalTo: showNameLabel.firstBaselineAnchor)
-    ])
   }
 
   override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {

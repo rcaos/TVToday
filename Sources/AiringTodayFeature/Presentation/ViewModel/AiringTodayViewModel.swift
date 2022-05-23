@@ -40,8 +40,8 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol {
     getShows(for: 1)
   }
 
-  func didLoadNextPage() {
-    if case .paging(_, let nextPage) = viewStateObservableSubject.value {
+  func willDisplayRow(_ row: Int, outOf totalRows: Int) {
+    if case .paging(_, let nextPage) = viewStateObservableSubject.value, row == totalRows - 1 {
       getShows(for: nextPage)
     }
   }

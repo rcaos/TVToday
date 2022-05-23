@@ -21,16 +21,6 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
     return view
   }()
 
-  private let mainStackView: UIStackView = {
-    let stack = UIStackView(frame: .zero)
-    stack.axis = .vertical
-    stack.alignment = .center
-    stack.distribution = .fill
-    stack.spacing = 0
-    stack.translatesAutoresizingMaskIntoConstraints = false
-    return stack
-  }()
-
   private let backImageView: UIImageView = {
     let imageView = UIImageView()
     imageView.contentMode = .scaleAspectFill
@@ -106,14 +96,11 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
   }
 
   private func constructHierarchy() {
-    mainStackView.addArrangedSubview(backImageView)
-
     nameStackView.addArrangedSubview(showNameLabel)
-
     averageStackView.addArrangedSubview(starImageView)
     averageStackView.addArrangedSubview(averageLabel)
 
-    containerView.addSubview(mainStackView)
+    containerView.addSubview(backImageView)
     containerView.addSubview(nameStackView)
     containerView.addSubview(averageStackView)
 
@@ -125,7 +112,7 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
 
     var allConstraints: [NSLayoutConstraint] = []
     allConstraints += activateConstraintsForContainerView()
-    allConstraints += activateConstraintsForMainStackView()
+    allConstraints += activateConstraintsForBackImageView()
     allConstraints += activateConstraintsForPosterImageView()
     allConstraints += activateConstraintsForNameStackView()
     allConstraints += activateConstraintsForAverageStackView()
@@ -136,7 +123,7 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
     return [
       nameStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
       nameStackView.trailingAnchor.constraint(equalTo: averageStackView.leadingAnchor, constant: -5),
-      nameStackView.topAnchor.constraint(equalTo: mainStackView.bottomAnchor, constant: 10),
+      nameStackView.topAnchor.constraint(equalTo: backImageView.bottomAnchor, constant: 10),
       nameStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10)
     ]
   }
@@ -144,7 +131,7 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
   private func activateConstraintsForAverageStackView() -> [NSLayoutConstraint] {
     return [
       averageStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
-      averageStackView.topAnchor.constraint(equalTo: mainStackView.bottomAnchor, constant: 10)
+      averageStackView.topAnchor.constraint(equalTo: backImageView.bottomAnchor, constant: 10)
     ]
   }
 
@@ -157,11 +144,11 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
     ]
   }
 
-  private func activateConstraintsForMainStackView() -> [NSLayoutConstraint] {
+  private func activateConstraintsForBackImageView() -> [NSLayoutConstraint] {
     return [
-      mainStackView.topAnchor.constraint(equalTo: containerView.topAnchor),
-      mainStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-      mainStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor)
+      backImageView.topAnchor.constraint(equalTo: containerView.topAnchor),
+      backImageView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+      backImageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor)
     ]
   }
 

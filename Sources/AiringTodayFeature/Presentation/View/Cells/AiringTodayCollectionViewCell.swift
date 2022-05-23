@@ -36,14 +36,21 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
     return imageView
   }()
 
-  private lazy var bottomStackView: UIStackView = {
+  private let nameStackView: UIStackView = {
+    let stack = UIStackView(frame: .zero)
+    stack.axis = .horizontal
+    stack.alignment = .center
+    stack.distribution = .fill
+    stack.spacing = 0
+    return stack
+  }()
+
+  private let averageStackView: UIStackView = {
     let stack = UIStackView(frame: .zero)
     stack.axis = .horizontal
     stack.alignment = .fill
     stack.distribution = .fill
     stack.spacing = 5
-    stack.isLayoutMarginsRelativeArrangement = true
-    stack.layoutMargins = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
     return stack
   }()
 
@@ -52,7 +59,7 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
     label.numberOfLines = 3
     label.lineBreakMode = .byTruncatingTail
     label.adjustsFontForContentSizeCategory = true
-    label.font = UIFont.app_title3().bolded
+    label.font = UIFont.app_title2().bolded
     return label
   }()
 
@@ -95,38 +102,74 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
 
   private func constructHierarchy() {
     mainStackView.addArrangedSubview(backImageView)
-    mainStackView.addArrangedSubview(bottomStackView)
 
-    bottomStackView.addArrangedSubview(showNameLabel)
-    bottomStackView.addArrangedSubview(starImageView)
-    bottomStackView.addArrangedSubview(averageLabel)
+    nameStackView.addArrangedSubview(showNameLabel)
+
+    averageStackView.addArrangedSubview(starImageView)
+    averageStackView.addArrangedSubview(averageLabel)
 
     containerView.addSubview(mainStackView)
+    containerView.addSubview(nameStackView)
+    containerView.addSubview(averageStackView)
+
     contentView.addSubview(containerView)
   }
 
   private func activateConstraints() {
-    activateConstraintsForContainerView()
-    activateConstraintsForMainStackView()
-    activateConstraintsForPosterImageView()
     activateConstraintsForAverageLabel()
+
+    var allConstraints: [NSLayoutConstraint] = []
+    allConstraints += activateConstraintsForContainerView()
+    allConstraints += activateConstraintsForMainStackView()
+    allConstraints += activateConstraintsForPosterImageView()
+    allConstraints += activateConstraintsForNameStackView()
+    allConstraints += activateConstraintsForAverageStackView()
+    NSLayoutConstraint.activate(allConstraints)
   }
 
-  private func activateConstraintsForContainerView() {
+  private func activateConstraintsForNameStackView() -> [NSLayoutConstraint] {
+    nameStackView.translatesAutoresizingMaskIntoConstraints = false
+    return [
+      nameStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
+      nameStackView.trailingAnchor.constraint(equalTo: averageStackView.leadingAnchor, constant: -5),
+      nameStackView.topAnchor.constraint(equalTo: mainStackView.bottomAnchor, constant: 10),
+      nameStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -10)
+    ]
+  }
+
+  private func activateConstraintsForAverageStackView() -> [NSLayoutConstraint] {
+    averageStackView.translatesAutoresizingMaskIntoConstraints = false
+    return [
+      averageStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
+      averageStackView.topAnchor.constraint(equalTo: mainStackView.bottomAnchor, constant: 10)
+    ]
+  }
+
+  private func activateConstraintsForContainerView() -> [NSLayoutConstraint] {
     containerView.translatesAutoresizingMaskIntoConstraints = false
-    containerView.pin(to: contentView, insets: .init(top: 8, left: 8, bottom: 0, right: 8))
+    return [
+      containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+      containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+      containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+      containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+    ]
   }
 
-  private func activateConstraintsForMainStackView() {
+  private func activateConstraintsForMainStackView() -> [NSLayoutConstraint] {
     mainStackView.translatesAutoresizingMaskIntoConstraints = false
-    mainStackView.pin(to: containerView)
+    return [
+      mainStackView.topAnchor.constraint(equalTo: containerView.topAnchor),
+      mainStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+      mainStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor)
+    ]
   }
 
-  private func activateConstraintsForPosterImageView() {
+  private func activateConstraintsForPosterImageView() -> [NSLayoutConstraint] {
     backImageView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-      backImageView.heightAnchor.constraint(equalToConstant: 200)
-    ])
+    let aspectRatio = CGFloat(9.0 / 16.0)
+    return [
+      backImageView.heightAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: aspectRatio)
+    ]
   }
 
   private func activateConstraintsForAverageLabel() {
@@ -138,15 +181,5 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
 
     starImageView.setContentCompressionResistancePriority(.required, for: .horizontal)
     starImageView.setContentHuggingPriority(.required, for: .horizontal)
-  }
-
-  override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
-    setNeedsLayout()
-    layoutIfNeeded()
-    let size = contentView.systemLayoutSizeFitting(layoutAttributes.size)
-    var newFrame = layoutAttributes.frame
-    newFrame.size.height = ceil(size.height)  // note: don't change the width
-    layoutAttributes.frame = newFrame
-    return layoutAttributes
   }
 }

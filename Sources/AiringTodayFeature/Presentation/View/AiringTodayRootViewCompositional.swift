@@ -147,7 +147,7 @@ extension AiringTodayRootViewCompositional: UICollectionViewDelegateFlowLayout {
   }
 
   func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-//    let totalItems = dataSource?.snapshot().numberOfItems(inSection: .shows) ?? 0
-//    viewModel.willDisplayRow(indexPath.row, outOf: totalItems)
+    let totalItems = dataSource?.snapshot().numberOfItems(inSection: .shows) ?? 0
+    viewModel.willDisplayRow(indexPath.row, outOf: totalItems)
   }
 }

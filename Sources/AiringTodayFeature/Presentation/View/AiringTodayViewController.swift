@@ -24,7 +24,8 @@ class AiringTodayViewController: NiblessViewController, Loadable, Retryable, Emp
 
   // MARK: - Life Cycle
   override func loadView() {
-    rootView = AiringTodayRootView(viewModel: viewModel)
+    //rootView = AiringTodayRootView(viewModel: viewModel)
+    rootView = AiringTodayRootViewCompositional(viewModel: viewModel)
     view = rootView
   }
 

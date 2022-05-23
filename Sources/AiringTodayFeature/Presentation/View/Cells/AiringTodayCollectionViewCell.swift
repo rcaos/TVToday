@@ -1,6 +1,6 @@
 //
 //  AiringTodayCollectionViewCell.swift
-//  MyTvShows
+//  AiringToday
 //
 //  Created by Jeans on 10/2/19.
 //  Copyright © 2019 Jeans. All rights reserved.
@@ -20,13 +20,10 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
     return view
   }()
 
-  private lazy var mainStackView: UIStackView = {
-    let stack = UIStackView(arrangedSubviews: [
-      //backImageView,
-      bottomStackView
-    ])
+  private let mainStackView: UIStackView = {
+    let stack = UIStackView(frame: .zero)
     stack.axis = .vertical
-    stack.alignment = .fill
+    stack.alignment = .center
     stack.distribution = .fill
     stack.spacing = 0
     return stack
@@ -34,20 +31,15 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
 
   private let backImageView: UIImageView = {
     let imageView = UIImageView()
-    //imageView.contentMode = .scaleToFill
-    //imageView.contentMode = .scaleAspectFill
+    imageView.contentMode = .scaleAspectFill
     imageView.clipsToBounds = true
     return imageView
   }()
 
   private lazy var bottomStackView: UIStackView = {
-    let stack = UIStackView(arrangedSubviews: [
-      showNameLabel,
-      starImageView,
-      averageLabel
-    ])
+    let stack = UIStackView(frame: .zero)
     stack.axis = .horizontal
-    stack.alignment = .center
+    stack.alignment = .fill
     stack.distribution = .fill
     stack.spacing = 5
     stack.isLayoutMarginsRelativeArrangement = true
@@ -102,6 +94,13 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
   }
 
   private func constructHierarchy() {
+    mainStackView.addArrangedSubview(backImageView)
+    mainStackView.addArrangedSubview(bottomStackView)
+
+    bottomStackView.addArrangedSubview(showNameLabel)
+    bottomStackView.addArrangedSubview(starImageView)
+    bottomStackView.addArrangedSubview(averageLabel)
+
     containerView.addSubview(mainStackView)
     contentView.addSubview(containerView)
   }
@@ -124,11 +123,10 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
   }
 
   private func activateConstraintsForPosterImageView() {
-//    backImageView.translatesAutoresizingMaskIntoConstraints = false
-//    NSLayoutConstraint.activate([
-//      //backImageView.heightAnchor.constraint(equalTo: mainStackView.heightAnchor, multiplier: 0.8)
-//      backImageView.heightAnchor.constraint(equalToConstant: 125)
-//    ])
+    backImageView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      backImageView.heightAnchor.constraint(equalToConstant: 200)
+    ])
   }
 
   private func activateConstraintsForAverageLabel() {

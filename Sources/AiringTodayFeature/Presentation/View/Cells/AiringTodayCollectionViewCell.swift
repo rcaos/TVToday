@@ -17,6 +17,7 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
     view.backgroundColor = .secondarySystemBackground
     view.layer.cornerRadius = 14
     view.clipsToBounds = true
+    view.translatesAutoresizingMaskIntoConstraints = false
     return view
   }()
 
@@ -26,6 +27,7 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
     stack.alignment = .center
     stack.distribution = .fill
     stack.spacing = 0
+    stack.translatesAutoresizingMaskIntoConstraints = false
     return stack
   }()
 
@@ -33,6 +35,7 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
     let imageView = UIImageView()
     imageView.contentMode = .scaleAspectFill
     imageView.clipsToBounds = true
+    imageView.translatesAutoresizingMaskIntoConstraints = false
     return imageView
   }()
 
@@ -42,6 +45,7 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
     stack.alignment = .center
     stack.distribution = .fill
     stack.spacing = 0
+    stack.translatesAutoresizingMaskIntoConstraints = false
     return stack
   }()
 
@@ -51,6 +55,7 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
     stack.alignment = .fill
     stack.distribution = .fill
     stack.spacing = 5
+    stack.translatesAutoresizingMaskIntoConstraints = false
     return stack
   }()
 
@@ -116,7 +121,7 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
   }
 
   private func activateConstraints() {
-    activateConstraintsForAverageLabel()
+    setConstraintAttributes()
 
     var allConstraints: [NSLayoutConstraint] = []
     allConstraints += activateConstraintsForContainerView()
@@ -128,7 +133,6 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
   }
 
   private func activateConstraintsForNameStackView() -> [NSLayoutConstraint] {
-    nameStackView.translatesAutoresizingMaskIntoConstraints = false
     return [
       nameStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 8),
       nameStackView.trailingAnchor.constraint(equalTo: averageStackView.leadingAnchor, constant: -5),
@@ -138,7 +142,6 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
   }
 
   private func activateConstraintsForAverageStackView() -> [NSLayoutConstraint] {
-    averageStackView.translatesAutoresizingMaskIntoConstraints = false
     return [
       averageStackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -8),
       averageStackView.topAnchor.constraint(equalTo: mainStackView.bottomAnchor, constant: 10)
@@ -146,7 +149,6 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
   }
 
   private func activateConstraintsForContainerView() -> [NSLayoutConstraint] {
-    containerView.translatesAutoresizingMaskIntoConstraints = false
     return [
       containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
       containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
@@ -156,7 +158,6 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
   }
 
   private func activateConstraintsForMainStackView() -> [NSLayoutConstraint] {
-    mainStackView.translatesAutoresizingMaskIntoConstraints = false
     return [
       mainStackView.topAnchor.constraint(equalTo: containerView.topAnchor),
       mainStackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
@@ -165,14 +166,13 @@ class AiringTodayCollectionViewCell: NiblessCollectionViewCell {
   }
 
   private func activateConstraintsForPosterImageView() -> [NSLayoutConstraint] {
-    backImageView.translatesAutoresizingMaskIntoConstraints = false
     let aspectRatio = CGFloat(9.0 / 16.0)
     return [
       backImageView.heightAnchor.constraint(equalTo: containerView.widthAnchor, multiplier: aspectRatio)
     ]
   }
 
-  private func activateConstraintsForAverageLabel() {
+  private func setConstraintAttributes() {
     averageLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
     averageLabel.setContentHuggingPriority(.required, for: .horizontal)
 

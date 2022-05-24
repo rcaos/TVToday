@@ -55,7 +55,7 @@ class AiringTodayRootViewCompositional: NiblessView, AiringTodayRootViewProtocol
   private func setupFlowLayout() {
     let size = NSCollectionLayoutSize(
       widthDimension: NSCollectionLayoutDimension.fractionalWidth(1),
-      heightDimension: NSCollectionLayoutDimension.estimated(100)
+      heightDimension: NSCollectionLayoutDimension.estimated(250)
     )
     let item = NSCollectionLayoutItem(layoutSize: size)
     let group = NSCollectionLayoutGroup.horizontal(layoutSize: size, subitem: item, count: 1)
@@ -123,6 +123,10 @@ class AiringTodayRootViewCompositional: NiblessView, AiringTodayRootViewProtocol
         self?.dataSource?.apply(snapshot)
       })
       .store(in: &disposeBag)
+  }
+
+  override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    collectionView.collectionViewLayout.invalidateLayout()
   }
 }
 

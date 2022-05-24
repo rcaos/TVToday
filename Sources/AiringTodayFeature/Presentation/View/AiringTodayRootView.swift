@@ -89,9 +89,8 @@ class AiringTodayRootView: NiblessView, AiringTodayRootViewProtocol {
       cell.setViewModel(viewModel)
 
       // MARK: - TODO, Use willDisplayCell and trigger signal to ViewModel instead
-      if let totalItems = self?.dataSource?.snapshot().itemIdentifiers(inSection: .shows).count, indexPath.row == totalItems - 1 {
-        self?.viewModel.didLoadNextPage()
-      }
+      let totalItems = self?.dataSource?.snapshot().itemIdentifiers(inSection: .shows).count ?? 0
+      self?.viewModel.willDisplayRow(indexPath.row, outOf: totalItems)
 
       return cell
     })

@@ -9,6 +9,7 @@ import Combine
 import CombineSchedulers
 import NetworkingInterface
 import Shared
+import UI
 
 protocol PopularViewModelProtocol {
   // MARK: - Input

@@ -12,7 +12,8 @@ import Foundation
 public func buildFirstPageSnapshot() -> TVShowPage {
   let firstShow = TVShowPage.TVShow.stub(
     id: 1,
-    name: "title1 🐶",
+    name: "The Tonight Show Starring Jimmy Fallon With Dragon Ball Z and Breaking Bad",
+    voteAverage: 6.1,
     posterPath: URL(string: "mock"),
     backDropPath: URL(string: "mock"),
     overview: "overview"

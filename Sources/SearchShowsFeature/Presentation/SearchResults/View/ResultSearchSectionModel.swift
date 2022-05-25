@@ -5,7 +5,7 @@
 //  Created by Jeans Ruiz on 7/8/20.
 //
 
-import Shared
+import UI
 
 enum ResultSearchSectionModel: Hashable {
   case recentSearchs(items: [ResultSearchSectionItem])

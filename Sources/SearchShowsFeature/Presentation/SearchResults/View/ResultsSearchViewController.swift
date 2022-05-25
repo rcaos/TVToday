@@ -6,9 +6,10 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
-import UIKit
 import Combine
+import UIKit
 import Shared
+import UI
 
 class ResultsSearchViewController: NiblessViewController {
   private let viewModel: ResultsSearchViewModelProtocol

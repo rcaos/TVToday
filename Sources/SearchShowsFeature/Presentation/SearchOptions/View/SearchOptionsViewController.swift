@@ -7,7 +7,7 @@
 
 import UIKit
 import Combine
-import Shared
+import UI
 
 class SearchOptionsViewController: NiblessViewController, Loadable {
   private let viewModel: SearchOptionsViewModelProtocol

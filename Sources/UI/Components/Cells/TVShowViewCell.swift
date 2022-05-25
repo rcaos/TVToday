@@ -20,18 +20,25 @@ public class TVShowViewCell: NiblessTableViewCell {
   private lazy var nameLabel: UILabel = {
     let label = UILabel()
     label.numberOfLines = 0
-    label.font = UIFont.app_body().bolded
+    label.font = UIFont.app_title3().bolded
+    label.adjustsFontForContentSizeCategory = true
     return label
   }()
 
-  private let startYearLabel = UILabel(frame: .zero)
+  private let startYearLabel: UILabel = {
+    let label = UILabel(frame: .zero)
+    label.numberOfLines = 0
+    label.font = UIFont.app_body()
+    label.adjustsFontForContentSizeCategory = true
+    return label
+  }()
 
   private lazy var rightContainerStackView: UIStackView = {
     let stack = UIStackView(arrangedSubviews: [nameLabel, startYearLabel, averageStackView])
     stack.axis = .vertical
     stack.alignment = .leading
-    stack.distribution = .fill
-    stack.spacing = 8.0
+    stack.distribution = .fillEqually
+    stack.spacing = 5
     return stack
   }()
 
@@ -46,7 +53,13 @@ public class TVShowViewCell: NiblessTableViewCell {
     return imageView
   }()
 
-  private let averageLabel = UILabel(frame: .zero)
+  private let averageLabel: UILabel = {
+    let label = UILabel(frame: .zero)
+    label.numberOfLines = 0
+    label.font = UIFont.app_body()
+    label.adjustsFontForContentSizeCategory = true
+    return label
+  }()
 
   private lazy var averageStackView: UIStackView = {
     let stack = UIStackView(arrangedSubviews: [starImageView, averageLabel])
@@ -76,8 +89,7 @@ public class TVShowViewCell: NiblessTableViewCell {
   }
 
   private func constructHierarchy() {
-    addSubview(posterImageView)
-    addSubview(rightContainerStackView)
+    contentView.addSubview(posterImageView)
   }
 
   private func activateConstraints() {
@@ -87,20 +99,17 @@ public class TVShowViewCell: NiblessTableViewCell {
 
   private func activateConstraintsForPosterView() {
     posterImageView.translatesAutoresizingMaskIntoConstraints = false
+    posterImageView.setContentCompressionResistancePriority(.required, for: .vertical)
+
     NSLayoutConstraint.activate([
-      posterImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-      posterImageView.trailingAnchor.constraint(equalTo: rightContainerStackView.leadingAnchor, constant: -8),
-      posterImageView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-      posterImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
-      posterImageView.widthAnchor.constraint(equalToConstant: 150)
+      posterImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+      posterImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
+      posterImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+      posterImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.4),
+      posterImageView.heightAnchor.constraint(equalToConstant: 150)
     ])
   }
 
   private func activateConstraintsForLeftStackView() {
-    rightContainerStackView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-      rightContainerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-      rightContainerStackView.centerYAnchor.constraint(equalTo: centerYAnchor)
-    ])
   }
 }

@@ -1,6 +1,6 @@
 //
 //  TVShowViewCell.swift
-//  MyTvShows
+//  UI
 //
 //  Created by Jeans on 9/14/19.
 //  Copyright © 2019 Jeans. All rights reserved.
@@ -14,6 +14,8 @@ public class TVShowViewCell: NiblessTableViewCell {
     let imageView = UIImageView()
     imageView.image = UIImage(name: "newTV")
     imageView.contentMode = .scaleAspectFit
+    imageView.translatesAutoresizingMaskIntoConstraints = false
+    imageView.setContentCompressionResistancePriority(.required, for: .vertical)
     return imageView
   }()
 
@@ -39,6 +41,7 @@ public class TVShowViewCell: NiblessTableViewCell {
     stack.alignment = .leading
     stack.distribution = .fill
     stack.spacing = 5
+    stack.translatesAutoresizingMaskIntoConstraints = false
     return stack
   }()
 
@@ -81,47 +84,45 @@ public class TVShowViewCell: NiblessTableViewCell {
     activateConstraints()
   }
 
-  public func setModel(viewModel: TVShowCellViewModel) {
-    posterImageView.setImage(with: viewModel.posterPathURL)
-    nameLabel.text = viewModel.name
-    startYearLabel.text = viewModel.firstAirDate
-    averageLabel.text = viewModel.average
-  }
-
   private func constructHierarchy() {
     contentView.addSubview(posterImageView)
     contentView.addSubview(rightContainerStackView)
   }
 
   private func activateConstraints() {
-    activateConstraintsForPosterView()
-    activateConstraintsForLeftStackView()
+    var constraints = [NSLayoutConstraint]()
+    constraints.append(contentsOf: activateConstraintsForPosterView())
+    constraints.append(contentsOf: activateConstraintsForLeftStackView())
+    NSLayoutConstraint.activate(constraints)
   }
 
-  private func activateConstraintsForPosterView() {
-    posterImageView.translatesAutoresizingMaskIntoConstraints = false
-    posterImageView.setContentCompressionResistancePriority(.required, for: .vertical)
-
-    NSLayoutConstraint.activate([
+  private func activateConstraintsForPosterView() -> [NSLayoutConstraint] {
+    return [
       posterImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
       posterImageView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8),
       posterImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
       posterImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.4),
       posterImageView.heightAnchor.constraint(equalToConstant: 150)
-    ])
+    ]
   }
 
-  private func activateConstraintsForLeftStackView() {
-    rightContainerStackView.translatesAutoresizingMaskIntoConstraints = false
+  private func activateConstraintsForLeftStackView() -> [NSLayoutConstraint] {
     let centerConstraint = rightContainerStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
     centerConstraint.priority = .defaultHigh
-
-    NSLayoutConstraint.activate([
+    return [
       rightContainerStackView.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 8),
       rightContainerStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
       rightContainerStackView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: 8),
       rightContainerStackView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8),
       centerConstraint
-    ])
+    ]
+  }
+
+  // MARK: - Public
+  public func setModel(viewModel: TVShowCellViewModel) {
+    posterImageView.setImage(with: viewModel.posterPathURL)
+    nameLabel.text = viewModel.name
+    startYearLabel.text = viewModel.firstAirDate
+    averageLabel.text = viewModel.average
   }
 }

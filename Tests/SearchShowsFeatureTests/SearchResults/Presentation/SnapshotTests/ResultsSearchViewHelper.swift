@@ -5,9 +5,10 @@
 //  Created by Jeans Ruiz on 20/12/21.
 //
 
-@testable import SearchShowsFeature
-@testable import Shared
 import UIKit
+@testable import SearchShowsFeature
+import Shared
+import UI
 
 public func createSectionModel(recentSearchs: [String], resultShows: [TVShowPage.TVShow]) -> [ResultSearchSectionModel] {
   var dataSource: [ResultSearchSectionModel] = []

@@ -37,7 +37,7 @@ public class TVShowViewCell: NiblessTableViewCell {
     let stack = UIStackView(arrangedSubviews: [nameLabel, startYearLabel, averageStackView])
     stack.axis = .vertical
     stack.alignment = .leading
-    stack.distribution = .fillEqually
+    stack.distribution = .fill
     stack.spacing = 5
     return stack
   }()
@@ -90,6 +90,7 @@ public class TVShowViewCell: NiblessTableViewCell {
 
   private func constructHierarchy() {
     contentView.addSubview(posterImageView)
+    contentView.addSubview(rightContainerStackView)
   }
 
   private func activateConstraints() {
@@ -103,7 +104,7 @@ public class TVShowViewCell: NiblessTableViewCell {
 
     NSLayoutConstraint.activate([
       posterImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-      posterImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
+      posterImageView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8),
       posterImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
       posterImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.4),
       posterImageView.heightAnchor.constraint(equalToConstant: 150)
@@ -111,5 +112,16 @@ public class TVShowViewCell: NiblessTableViewCell {
   }
 
   private func activateConstraintsForLeftStackView() {
+    rightContainerStackView.translatesAutoresizingMaskIntoConstraints = false
+    let centerConstraint = rightContainerStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+    centerConstraint.priority = .defaultHigh
+
+    NSLayoutConstraint.activate([
+      rightContainerStackView.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 8),
+      rightContainerStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+      rightContainerStackView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: 8),
+      rightContainerStackView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8),
+      centerConstraint
+    ])
   }
 }

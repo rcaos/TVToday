@@ -10,7 +10,8 @@
 import Combine
 import CommonMocks
 @testable import PopularsFeature
-@testable import Shared
+import Shared
+import UI
 import XCTest
 
 class PopularViewModelTests: XCTestCase {
@@ -87,7 +88,8 @@ class PopularViewModelTests: XCTestCase {
 
     // and when
     fetchUseCaseMock.result = buildSecondPage()
-    sut.didLoadNextPage()
+    let totalCells = buildFirstPage().showsList.count + buildSecondPage().showsList.count
+    sut.willDisplayRow(totalCells - 1, outOf: totalCells)
 
     // then
     XCTAssertEqual(expected, received, "Should contains 3 values")

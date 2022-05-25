@@ -17,7 +17,7 @@ class PopularsRootView: NiblessView {
     let tableView = UITableView(frame: .zero, style: .plain)
     tableView.registerCell(cellType: TVShowViewCell.self)
     tableView.rowHeight = UITableView.automaticDimension
-    tableView.tableFooterView = UIView()
+    tableView.estimatedRowHeight = UITableView.automaticDimension
     tableView.contentInsetAdjustmentBehavior = .automatic
     return tableView
   }()
@@ -32,19 +32,20 @@ class PopularsRootView: NiblessView {
   init(frame: CGRect = .zero, viewModel: PopularViewModelProtocol) {
     self.viewModel = viewModel
     super.init(frame: frame)
-
-    addSubview(tableView)
     setupUI()
   }
 
-  func stopRefresh() {
-    tableView.refreshControl?.endRefreshing(with: 0.5)
-  }
-
   private func setupUI() {
+    setupHierarchy()
     setupTableView()
     setupDataSource()
     subscribe()
+  }
+
+  private func setupHierarchy() {
+    addSubview(tableView)
+    tableView.translatesAutoresizingMaskIntoConstraints = false
+    tableView.pin(to: self)
   }
 
   // MARK: - Setup TableView
@@ -62,9 +63,9 @@ class PopularsRootView: NiblessView {
       cell.setModel(viewModel: model)
 
       // MARK: - TODO, use willDisplay instead
-      if let totalItems = self?.dataSource?.snapshot().itemIdentifiers(inSection: .list).count, indexPath.row == totalItems - 1 {
-        self?.viewModel.didLoadNextPage()
-      }
+//      if let totalItems = self?.dataSource?.snapshot().itemIdentifiers(inSection: .list).count, indexPath.row == totalItems - 1 {
+//        self?.viewModel.didLoadNextPage()
+//      }
       return cell
     })
   }
@@ -85,17 +86,13 @@ class PopularsRootView: NiblessView {
       .store(in: &disposeBag)
   }
 
-  override func layoutSubviews() {
-    super.layoutSubviews()
-    tableView.frame = bounds
+  func stopRefresh() {
+    tableView.refreshControl?.endRefreshing(with: 0.5)
   }
 }
 
 // MARK: - UITableViewDelegate
 extension PopularsRootView: UITableViewDelegate {
-  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return 175.0
-  }
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)

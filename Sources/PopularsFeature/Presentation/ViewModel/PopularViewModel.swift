@@ -14,7 +14,7 @@ import UI
 protocol PopularViewModelProtocol {
   // MARK: - Input
   func viewDidLoad()
-  func didLoadNextPage()
+  func willDisplayRow(_ row: Int, outOf totalRows: Int)
   func showIsPicked(index: Int)
   func refreshView()
 
@@ -45,8 +45,8 @@ final class PopularViewModel: PopularViewModelProtocol {
     getShows(for: 1)
   }
 
-  func didLoadNextPage() {
-    if case .paging(_, let nextPage) = viewStateObservableSubject.value {
+  func willDisplayRow(_ row: Int, outOf totalRows: Int) {
+    if case .paging(_, let nextPage) = viewStateObservableSubject.value, row == totalRows - 1 {
       getShows(for: nextPage)
     }
   }

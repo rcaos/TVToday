@@ -15,7 +15,7 @@ class GenreTableViewCell: NiblessTableViewCell {
     let label = UILabel()
     label.numberOfLines = 0
     label.adjustsFontForContentSizeCategory = true
-    label.font = UIFont.app_body()
+    label.font = UIFont.app_title3()
     return label
   }()
 

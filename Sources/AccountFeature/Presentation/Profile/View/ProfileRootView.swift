@@ -17,7 +17,9 @@ class ProfileRootView: NiblessView {
     let tableView = UITableView(frame: .zero, style: .plain)
     tableView.rowHeight = UITableView.automaticDimension
     tableView.estimatedSectionHeaderHeight = 40
-    tableView.tableFooterView = UIView()
+    tableView.estimatedRowHeight = UITableView.automaticDimension
+    tableView.contentInsetAdjustmentBehavior = .automatic
+    tableView.tableFooterView = UIView()    
     return tableView
   }()
 
@@ -31,15 +33,20 @@ class ProfileRootView: NiblessView {
   init(frame: CGRect = .zero, viewModel: ProfileViewModelProtocol) {
     self.viewModel = viewModel
     super.init(frame: frame)
-
-    addSubview(tableView)
-    setupView()
+    setupUI()
   }
 
-  private func setupView() {
+  private func setupUI() {
+    setupHierarchy()
     setupTableView()
     setupDataSource()
     subscribe()
+  }
+
+  private func setupHierarchy() {
+    addSubview(tableView)
+    tableView.translatesAutoresizingMaskIntoConstraints = false
+    tableView.pin(to: self)
   }
 
   private func setupTableView() {
@@ -82,11 +89,6 @@ class ProfileRootView: NiblessView {
         self?.dataSource?.apply(snapshot)
       })
       .store(in: &disposeBag)
-  }
-
-  override func layoutSubviews() {
-    super.layoutSubviews()
-    tableView.frame = bounds
   }
 
   // MARK: - Build Cells

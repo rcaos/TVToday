@@ -11,7 +11,13 @@ import UI
 
 class GenreTableViewCell: NiblessTableViewCell {
 
-  private let regularTextLabel = TVRegularLabel()
+  private let label: UILabel = {
+    let label = UILabel()
+    label.numberOfLines = 0
+    label.adjustsFontForContentSizeCategory = true
+    label.font = UIFont.app_body()
+    return label
+  }()
 
   public var viewModel: GenreViewModelProtocol?
 
@@ -22,7 +28,7 @@ class GenreTableViewCell: NiblessTableViewCell {
 
   func setViewModel(_ viewModel: GenreViewModelProtocol) {
     self.viewModel = viewModel
-    regularTextLabel.text = viewModel.name
+    label.text = viewModel.name
   }
 
   private func setupUI() {
@@ -32,19 +38,16 @@ class GenreTableViewCell: NiblessTableViewCell {
   }
 
   private func constructHierarchy() {
-    contentView.addSubview(regularTextLabel)
+    contentView.addSubview(label)
   }
 
   private func activateConstraints() {
-    activateConstraintsForLabel()
-  }
-
-  private func activateConstraintsForLabel() {
-    regularTextLabel.translatesAutoresizingMaskIntoConstraints = false
+    label.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
-      regularTextLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-      regularTextLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 5),
-      regularTextLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+      label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+      label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+      label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
+      label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
     ])
   }
 }

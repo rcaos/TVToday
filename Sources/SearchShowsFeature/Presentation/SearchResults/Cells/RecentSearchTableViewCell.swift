@@ -11,7 +11,7 @@ import UI
 
 class RecentSearchTableViewCell: NiblessTableViewCell {
 
-  private let titleLabel = TVRegularLabel()
+  private let titleLabel = UILabel()
 
   private let accessoryImageView: UIImageView = {
     let imageView = UIImageView()

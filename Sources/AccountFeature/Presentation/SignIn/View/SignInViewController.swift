@@ -8,7 +8,7 @@
 
 import Foundation
 import Combine
-import Shared
+import UI
 
 class SignInViewController: NiblessViewController {
   private let viewModel: SignInViewModelProtocol

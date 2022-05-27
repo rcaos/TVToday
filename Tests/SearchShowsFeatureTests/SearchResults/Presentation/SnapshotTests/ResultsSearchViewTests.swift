@@ -63,7 +63,7 @@ class ResultsSearchViewTests: XCTestCase {
     // given
     let shows: [TVShowPage.TVShow] = [
       .stub(id: 1, name: "Show 1", voteAverage: 1.0, posterPath: nil),
-      .stub(id: 2, name: "Show 2", voteAverage: 2.0, posterPath: nil),
+      .stub(id: 2, name: "Show 2 with a long name, this cell could increase it's height. Other Line and another and another and another and another Line", voteAverage: 2.0, posterPath: nil),
       .stub(id: 3, name: "Show 3", voteAverage: 3.0, posterPath: nil)
     ]
     let dataSource = createSectionModel(recentSearchs: [], resultShows: shows)

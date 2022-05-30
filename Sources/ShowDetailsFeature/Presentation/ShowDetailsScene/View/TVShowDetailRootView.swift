@@ -138,47 +138,52 @@ class TVShowDetailRootView: NiblessView {
     view.addSubview(rightSelectorView)
 
     episodeLabel.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-      episodeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-      episodeLabel.topAnchor.constraint(equalTo: view.topAnchor),
-      episodeLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-    ])
-
     numberEpisodesLabel.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-      numberEpisodesLabel.trailingAnchor.constraint(equalTo: rightSelectorView.leadingAnchor, constant: -10),
-      numberEpisodesLabel.topAnchor.constraint(equalTo: view.topAnchor),
-      numberEpisodesLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-    ])
-
     rightSelectorView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-      rightSelectorView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-      rightSelectorView.widthAnchor.constraint(equalToConstant: 22),
-      rightSelectorView.heightAnchor.constraint(equalToConstant: 22),
-      rightSelectorView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-    ])
 
+    episodeLabel.setContentHuggingPriority(.defaultLow, for: .vertical)
+    episodeLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+    episodeLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+
+    numberEpisodesLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+    numberEpisodesLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+
+    numberEpisodesLabel.numberOfLines = 1
+
+    NSLayoutConstraint.activate([
+      episodeLabel.topAnchor.constraint(equalTo: view.topAnchor),
+      episodeLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+      episodeLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+      episodeLabel.trailingAnchor.constraint(equalTo: numberEpisodesLabel.leadingAnchor, constant: -8),
+
+      numberEpisodesLabel.topAnchor.constraint(equalTo: view.topAnchor),
+      numberEpisodesLabel.trailingAnchor.constraint(equalTo: rightSelectorView.leadingAnchor, constant: -8),
+
+      rightSelectorView.lastBaselineAnchor.constraint(equalTo: numberEpisodesLabel.lastBaselineAnchor),
+      rightSelectorView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+      rightSelectorView.widthAnchor.constraint(equalToConstant: 22),
+      rightSelectorView.heightAnchor.constraint(equalToConstant: 22)
+    ])
     return view
   }()
 
   private lazy var episodeLabel: UILabel = {
     let label = UILabel()
+    label.font = UIFont.app_body()
     label.text = "Episode Guide"
     label.translatesAutoresizingMaskIntoConstraints = false
     label.numberOfLines = 0
     label.adjustsFontForContentSizeCategory = true
-    label.setContentCompressionResistancePriority(.required, for: .vertical)
     return label
   }()
 
   private lazy var numberEpisodesLabel: UILabel = {
     let label = UILabel()
+    label.font = UIFont.app_body()
     label.text = "1123"
     label.translatesAutoresizingMaskIntoConstraints = false
-    label.numberOfLines = 0
+    label.numberOfLines = 1
     label.adjustsFontForContentSizeCategory = true
-    label.setContentCompressionResistancePriority(.required, for: .vertical)
     return label
   }()
 

@@ -235,8 +235,9 @@ class TVShowDetailRootView: NiblessView {
     overViewText.textAlignment = NSTextAlignment.justified
     overViewText.isSelectable = true
     overViewText.isEditable = false
-    overViewText.font = .app_callout() //Font.sanFrancisco.of(type: .regular, with: .custom(16))
+    overViewText.font = .app_callout()
     overViewText.backgroundColor = .secondarySystemBackground
+    overViewText.adjustsFontForContentSizeCategory = true
     return overViewText
   }()
 

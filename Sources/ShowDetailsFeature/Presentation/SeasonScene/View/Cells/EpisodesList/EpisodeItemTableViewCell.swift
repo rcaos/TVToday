@@ -133,19 +133,21 @@ class EpisodeItemTableViewCell: NiblessTableViewCell {
   private func activateConstraintsForPosterView() {
     episodeImageView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
-      episodeImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-      episodeImageView.trailingAnchor.constraint(equalTo: rightContainerStackView.leadingAnchor, constant: -8),
-      episodeImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.25),
       episodeImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-      episodeImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
+      episodeImageView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8),
+      episodeImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+      episodeImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.4),
+      episodeImageView.heightAnchor.constraint(equalToConstant: 150)
     ])
   }
 
   private func activateConstraintsForLeftStackView() {
     rightContainerStackView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
+      rightContainerStackView.leadingAnchor.constraint(equalTo: episodeImageView.trailingAnchor, constant: 8),
       rightContainerStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-      rightContainerStackView.centerYAnchor.constraint(equalTo: centerYAnchor)
+      rightContainerStackView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: 8),
+      rightContainerStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
     ])
   }
 

@@ -245,22 +245,13 @@ class TVShowDetailRootView: NiblessView {
   private lazy var votesViewContainer: UIView = {
     let view = UIView()
     view.addSubview(voteContainerStackView)
-    view.addSubview(criticLabel)
-
     voteContainerStackView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
       voteContainerStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-      voteContainerStackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.4),
+      voteContainerStackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.5),
       voteContainerStackView.topAnchor.constraint(equalTo: view.topAnchor),
       voteContainerStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
     ])
-
-    criticLabel.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-      criticLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-      criticLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-    ])
-
     return view
   }()
 
@@ -318,16 +309,6 @@ class TVShowDetailRootView: NiblessView {
   private lazy var countVoteLabel: UILabel = {
     let label = UILabel()
     label.text = "3054"
-    label.translatesAutoresizingMaskIntoConstraints = false
-    label.numberOfLines = 0
-    label.adjustsFontForContentSizeCategory = true
-    label.setContentCompressionResistancePriority(.required, for: .vertical)
-    return label
-  }()
-
-  private lazy var criticLabel: UILabel = {
-    let label = UILabel()
-    label.text = "Critic Reviews"
     label.translatesAutoresizingMaskIntoConstraints = false
     label.numberOfLines = 0
     label.adjustsFontForContentSizeCategory = true

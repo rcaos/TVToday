@@ -159,7 +159,7 @@ class TVShowDetailRootView: NiblessView {
       numberEpisodesLabel.topAnchor.constraint(equalTo: view.topAnchor),
       numberEpisodesLabel.trailingAnchor.constraint(equalTo: rightSelectorView.leadingAnchor, constant: -8),
 
-      rightSelectorView.lastBaselineAnchor.constraint(equalTo: numberEpisodesLabel.lastBaselineAnchor),
+      rightSelectorView.centerYAnchor.constraint(equalTo: numberEpisodesLabel.centerYAnchor),
       rightSelectorView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
       rightSelectorView.widthAnchor.constraint(equalToConstant: 22),
       rightSelectorView.heightAnchor.constraint(equalToConstant: 22)

@@ -73,6 +73,7 @@ class TVShowDetailRootView: NiblessView {
     return label
   }()
 
+  // MARK: - TODO, this could be replace by a UIStackView  t.t
   private lazy var releaseContainerView: UIView = {
     let view = UIView()
     view.addSubview(yearsReleaseLabel)
@@ -89,7 +90,8 @@ class TVShowDetailRootView: NiblessView {
     durationLabel.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
       durationLabel.topAnchor.constraint(equalTo: view.topAnchor),
-      durationLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+      durationLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+      durationLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8)
     ])
 
     return view

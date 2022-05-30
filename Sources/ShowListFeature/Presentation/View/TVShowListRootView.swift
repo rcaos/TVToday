@@ -57,7 +57,7 @@ class TVShowListRootView: NiblessView {
   }
 
   private func setupDataSource() {
-    dataSource = UITableViewDiffableDataSource(tableView: tableView, cellProvider: { [weak self] tableView, indexPath, model in
+    dataSource = UITableViewDiffableDataSource(tableView: tableView, cellProvider: { tableView, indexPath, model in
       let cell = tableView.dequeueReusableCell(with: TVShowViewCell.self, for: indexPath)
       cell.setModel(viewModel: model)
       return cell

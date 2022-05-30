@@ -19,6 +19,7 @@ class EpisodeItemTableViewCell: NiblessTableViewCell {
     imageView.image = UIImage(name: "placeholder")
     imageView.contentMode = .scaleAspectFill
     imageView.clipsToBounds = true
+    imageView.translatesAutoresizingMaskIntoConstraints = false
     return imageView
   }()
 
@@ -113,43 +114,43 @@ class EpisodeItemTableViewCell: NiblessTableViewCell {
   }
 
   private func activateConstraints() {
-    activateConstraintsForSeparatorView()
-    activateConstraintsForPosterView()
-    activateConstraintsForLeftStackView()
+    var constraints = [NSLayoutConstraint]()
+    constraints.append(contentsOf: activateConstraintsForSeparatorView())
+    constraints.append(contentsOf: activateConstraintsForPosterView())
+    constraints.append(contentsOf: activateConstraintsForLeftStackView())
+    NSLayoutConstraint.activate(constraints)
   }
 
-  private func activateConstraintsForSeparatorView() {
+  private func activateConstraintsForSeparatorView()  -> [NSLayoutConstraint] {
     separatorView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
+    return [
       separatorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
       separatorView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
       separatorView.topAnchor.constraint(equalTo: contentView.topAnchor),
       separatorView.heightAnchor.constraint(equalToConstant: 1.0)
-    ])
+    ]
   }
 
-  private func activateConstraintsForPosterView() {
-    episodeImageView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
+  private func activateConstraintsForPosterView() -> [NSLayoutConstraint] {
+    return [
       episodeImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
       episodeImageView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8),
       episodeImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-      episodeImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.4),
+      episodeImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.35),
       episodeImageView.heightAnchor.constraint(equalToConstant: 150)
-    ])
+    ]
   }
 
-  private func activateConstraintsForLeftStackView() {
+  private func activateConstraintsForLeftStackView() -> [NSLayoutConstraint] {
     let centerConstraint = rightContainerStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
     centerConstraint.priority = .defaultHigh
-
-    NSLayoutConstraint.activate([
+    return [
       rightContainerStackView.leadingAnchor.constraint(equalTo: episodeImageView.trailingAnchor, constant: 8),
       rightContainerStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
       rightContainerStackView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: 8),
       rightContainerStackView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8),
       centerConstraint
-    ])
+    ]
   }
 
   override func prepareForReuse() {

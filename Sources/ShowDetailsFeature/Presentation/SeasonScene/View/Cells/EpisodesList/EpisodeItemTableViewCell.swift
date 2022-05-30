@@ -44,9 +44,7 @@ class EpisodeItemTableViewCell: NiblessTableViewCell {
     stack.alignment = .leading
     stack.distribution = .fill
     stack.spacing = 8.0
-
-    stack.setContentCompressionResistancePriority(.required, for: .horizontal)
-
+    stack.translatesAutoresizingMaskIntoConstraints = false
     return stack
   }()
 
@@ -142,12 +140,15 @@ class EpisodeItemTableViewCell: NiblessTableViewCell {
   }
 
   private func activateConstraintsForLeftStackView() {
-    rightContainerStackView.translatesAutoresizingMaskIntoConstraints = false
+    let centerConstraint = rightContainerStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+    centerConstraint.priority = .defaultHigh
+
     NSLayoutConstraint.activate([
       rightContainerStackView.leadingAnchor.constraint(equalTo: episodeImageView.trailingAnchor, constant: 8),
       rightContainerStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
       rightContainerStackView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: 8),
-      rightContainerStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
+      rightContainerStackView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8),
+      centerConstraint
     ])
   }
 

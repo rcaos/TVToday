@@ -17,6 +17,7 @@ class TVShowListRootView: NiblessView {
     let tableView = UITableView(frame: .zero, style: .plain)
     tableView.registerCell(cellType: TVShowViewCell.self)
     tableView.rowHeight = UITableView.automaticDimension
+    tableView.estimatedRowHeight = UITableView.automaticDimension
     tableView.tableFooterView = UIView()
     tableView.contentInsetAdjustmentBehavior = .automatic
     return tableView
@@ -92,10 +93,6 @@ class TVShowListRootView: NiblessView {
 
 // MARK: - UITableViewDelegate
 extension TVShowListRootView: UITableViewDelegate {
-  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return 175.0
-  }
-
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
     viewModel.showIsPicked(index: indexPath.row)

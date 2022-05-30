@@ -217,9 +217,10 @@ let package = Package(
       name: "ShowListFeatureInterface",
       dependencies: [
         "Networking",
-        "Shared",
         "Persistence",
-        "ShowDetailsFeatureInterface"
+        "Shared",
+        "ShowDetailsFeatureInterface",
+        "UI"
       ]
     ),
     .target(

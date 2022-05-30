@@ -12,7 +12,7 @@ import UI
 
 class SeasonEpisodeCollectionViewCell: NiblessCollectionViewCell {
 
-  private let seasonNumber = TVRegularLabel()
+  private let seasonNumber = UILabel()
 
   override var isSelected: Bool {
     didSet {

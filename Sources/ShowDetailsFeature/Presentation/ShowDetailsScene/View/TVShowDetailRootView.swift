@@ -64,9 +64,9 @@ class TVShowDetailRootView: NiblessView {
     return stack
   }()
 
-  private lazy var nameLabel: TVBoldLabel = {
-    let label = TVBoldLabel()
-    label.tvSize = .custom(26)
+  private lazy var nameLabel: UILabel = {
+    let label = UILabel()
+    label.font = .app_title1().bolded
     label.setContentCompressionResistancePriority(.required, for: .vertical)
     return label
   }()
@@ -93,8 +93,8 @@ class TVShowDetailRootView: NiblessView {
     return view
   }()
 
-  private lazy var yearsReleaseLabel: TVRegularLabel = {
-    let label = TVRegularLabel()
+  private lazy var yearsReleaseLabel: UILabel = {
+    let label = UILabel()
     label.text = "1997 - 2002"
     label.translatesAutoresizingMaskIntoConstraints = false
     label.numberOfLines = 0
@@ -103,8 +103,8 @@ class TVShowDetailRootView: NiblessView {
     return label
   }()
 
-  private lazy var durationLabel: TVRegularLabel = {
-    let label = TVRegularLabel()
+  private lazy var durationLabel: UILabel = {
+    let label = UILabel()
     label.text = "23 min"
     label.translatesAutoresizingMaskIntoConstraints = false
     label.numberOfLines = 0
@@ -113,8 +113,8 @@ class TVShowDetailRootView: NiblessView {
     return label
   }()
 
-  private lazy var genreLabel: TVRegularLabel = {
-    let label = TVRegularLabel()
+  private lazy var genreLabel: UILabel = {
+    let label = UILabel()
     label.text = "Drama"
     label.translatesAutoresizingMaskIntoConstraints = false
     label.numberOfLines = 0
@@ -155,8 +155,8 @@ class TVShowDetailRootView: NiblessView {
     return view
   }()
 
-  private lazy var episodeLabel: TVRegularLabel = {
-    let label = TVRegularLabel()
+  private lazy var episodeLabel: UILabel = {
+    let label = UILabel()
     label.text = "Episode Guide"
     label.translatesAutoresizingMaskIntoConstraints = false
     label.numberOfLines = 0
@@ -165,8 +165,8 @@ class TVShowDetailRootView: NiblessView {
     return label
   }()
 
-  private lazy var numberEpisodesLabel: TVRegularLabel = {
-    let label = TVRegularLabel()
+  private lazy var numberEpisodesLabel: UILabel = {
+    let label = UILabel()
     label.text = "1123"
     label.translatesAutoresizingMaskIntoConstraints = false
     label.numberOfLines = 0
@@ -223,7 +223,7 @@ class TVShowDetailRootView: NiblessView {
     overViewText.textAlignment = NSTextAlignment.justified
     overViewText.isSelectable = true
     overViewText.isEditable = false
-    overViewText.font = Font.sanFrancisco.of(type: .regular, with: .custom(16))
+    overViewText.font = .app_callout() //Font.sanFrancisco.of(type: .regular, with: .custom(16))
     overViewText.backgroundColor = .secondarySystemBackground
     return overViewText
   }()
@@ -279,9 +279,9 @@ class TVShowDetailRootView: NiblessView {
     return stack
   }()
 
-  private lazy var scoreLabel: TVBoldLabel = {
-    let label = TVBoldLabel()
-    label.tvSize = .custom(20)
+  private lazy var scoreLabel: UILabel = {
+    let label = UILabel()
+    label.font = .app_title3().bolded //label.tvSize = .custom(20)
     label.text = "7.8/"
     label.translatesAutoresizingMaskIntoConstraints = false
     label.numberOfLines = 0
@@ -290,9 +290,10 @@ class TVShowDetailRootView: NiblessView {
     return label
   }()
 
-  private lazy var maxScoreLabel: TVRegularLabel = {
-    let label = TVRegularLabel()
-    label.tvSize = .custom(22)
+  private lazy var maxScoreLabel: UILabel = {
+    let label = UILabel()
+    //label.tvSize = .custom(22)
+    label.font = .app_title2()
     label.text = "10"
     label.translatesAutoresizingMaskIntoConstraints = false
     label.numberOfLines = 0
@@ -301,8 +302,8 @@ class TVShowDetailRootView: NiblessView {
     return label
   }()
 
-  private lazy var countVoteLabel: TVRegularLabel = {
-    let label = TVRegularLabel()
+  private lazy var countVoteLabel: UILabel = {
+    let label = UILabel()
     label.text = "3054"
     label.translatesAutoresizingMaskIntoConstraints = false
     label.numberOfLines = 0
@@ -311,8 +312,8 @@ class TVShowDetailRootView: NiblessView {
     return label
   }()
 
-  private lazy var criticLabel: TVRegularLabel = {
-    let label = TVRegularLabel()
+  private lazy var criticLabel: UILabel = {
+    let label = UILabel()
     label.text = "Critic Reviews"
     label.translatesAutoresizingMaskIntoConstraints = false
     label.numberOfLines = 0

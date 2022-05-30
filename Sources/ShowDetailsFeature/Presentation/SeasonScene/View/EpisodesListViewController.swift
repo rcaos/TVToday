@@ -9,7 +9,7 @@
 import UIKit
 import Combine
 import CoreGraphics
-import Shared
+import UI
 
 class EpisodesListViewController: NiblessViewController, Loadable, Retryable {
 

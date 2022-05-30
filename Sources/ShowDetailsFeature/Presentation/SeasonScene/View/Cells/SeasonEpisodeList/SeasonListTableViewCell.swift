@@ -8,7 +8,7 @@
 
 import UIKit
 import Combine
-import Shared
+import UI
 
 class SeasonListTableViewCell: NiblessTableViewCell {
   private let collectionView: UICollectionView = {

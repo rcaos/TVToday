@@ -35,6 +35,10 @@ class HeaderSeasonsTableViewCell: NiblessTableViewCell {
 
   private func setupViews() {
     showNameLabel.font =  .app_title2().bolded
+    showNameLabel.numberOfLines = 0
+
+    seasonsLabel.font = UIFont.app_callout()
+    seasonsLabel.numberOfLines = 0
     seasonsLabel.textColor = .secondaryLabel
     seasonsLabel.text = "Seasons:"
   }

@@ -20,6 +20,7 @@ class EpisodesListRootView: NiblessView {
     tableView.registerCell(cellType: EpisodeItemTableViewCell.self)
 
     tableView.rowHeight = UITableView.automaticDimension
+    tableView.estimatedRowHeight = UITableView.automaticDimension
     tableView.tableFooterView = UIView()
     tableView.contentInsetAdjustmentBehavior = .automatic
     return tableView
@@ -120,12 +121,10 @@ extension EpisodesListRootView: UITableViewDelegate {
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
     switch indexPath.section {
-    case 0:
-      return UITableView.automaticDimension
-    case 1:
+    case 1: // Collection with Seasons
       return 65.0
     default:
-      return 110.0
+      return UITableView.automaticDimension
     }
   }
 

@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  TVShowPage.swift
 //  
 //
 //  Created by Jeans Ruiz on 30/04/22.
@@ -30,6 +30,13 @@ public struct TVShowPage {
     public let genreIds: [Int]  // [35]
     public let voteAverage: Double // 7.3
     public let voteCount: Int // 14s
+  }
+
+  public init(page: Int, showsList: [TVShow], totalPages: Int, totalShows: Int) {
+    self.page = page
+    self.showsList = showsList
+    self.totalPages = totalPages
+    self.totalShows = totalShows
   }
 }
 

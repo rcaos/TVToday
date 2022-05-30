@@ -67,6 +67,8 @@ class TVShowDetailRootView: NiblessView {
   private lazy var nameLabel: UILabel = {
     let label = UILabel()
     label.font = .app_title1().bolded
+    label.numberOfLines = 0
+    label.adjustsFontForContentSizeCategory = true
     label.setContentCompressionResistancePriority(.required, for: .vertical)
     return label
   }()
@@ -95,6 +97,7 @@ class TVShowDetailRootView: NiblessView {
 
   private lazy var yearsReleaseLabel: UILabel = {
     let label = UILabel()
+    label.font = UIFont.app_body()
     label.text = "1997 - 2002"
     label.translatesAutoresizingMaskIntoConstraints = false
     label.numberOfLines = 0
@@ -105,6 +108,7 @@ class TVShowDetailRootView: NiblessView {
 
   private lazy var durationLabel: UILabel = {
     let label = UILabel()
+    label.font = UIFont.app_body()
     label.text = "23 min"
     label.translatesAutoresizingMaskIntoConstraints = false
     label.numberOfLines = 0
@@ -115,6 +119,7 @@ class TVShowDetailRootView: NiblessView {
 
   private lazy var genreLabel: UILabel = {
     let label = UILabel()
+    label.font = UIFont.app_body()
     label.text = "Drama"
     label.translatesAutoresizingMaskIntoConstraints = false
     label.numberOfLines = 0

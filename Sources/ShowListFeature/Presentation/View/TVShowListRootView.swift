@@ -60,11 +60,6 @@ class TVShowListRootView: NiblessView {
     dataSource = UITableViewDiffableDataSource(tableView: tableView, cellProvider: { [weak self] tableView, indexPath, model in
       let cell = tableView.dequeueReusableCell(with: TVShowViewCell.self, for: indexPath)
       cell.setModel(viewModel: model)
-
-      // MARK: - TODO, use willDisplay instead
-      if let totalItems = self?.dataSource?.snapshot().itemIdentifiers(inSection: .list).count, indexPath.row == totalItems - 1 {
-        self?.viewModel.didLoadNextPage()
-      }
       return cell
     })
   }
@@ -96,5 +91,10 @@ extension TVShowListRootView: UITableViewDelegate {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
     viewModel.showIsPicked(index: indexPath.row)
+  }
+
+  func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    let totalItems = dataSource?.snapshot().itemIdentifiers(inSection: .list).count ?? 0
+    viewModel.willDisplayRow(indexPath.row, outOf: totalItems)
   }
 }

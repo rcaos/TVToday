@@ -8,6 +8,7 @@
 import XCTest
 import Combine
 import Shared
+import UI
 
 @testable import ShowListFeature
 
@@ -15,7 +16,7 @@ class TVShowListViewModelMock: TVShowListViewModelProtocol {
 
   func viewDidLoad() { }
 
-  func didLoadNextPage() { }
+  func willDisplayRow(_ row: Int, outOf totalRows: Int) { }
 
   func showIsPicked(index: Int) { }
 

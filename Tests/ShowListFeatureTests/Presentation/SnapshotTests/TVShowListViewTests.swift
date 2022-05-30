@@ -8,9 +8,9 @@
 import CommonMocks
 import SnapshotTesting
 import XCTest
+import UI
 
 @testable import ShowListFeature
-@testable import Shared
 
 class TVShowListViewTests: XCTestCase {
 

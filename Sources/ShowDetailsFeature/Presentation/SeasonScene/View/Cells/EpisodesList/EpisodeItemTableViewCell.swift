@@ -22,9 +22,21 @@ class EpisodeItemTableViewCell: NiblessTableViewCell {
     return imageView
   }()
 
-  private let episodeNameLabel = UILabel(frame: .zero)
+  private lazy var episodeNameLabel: UILabel = {
+    let label = UILabel()
+    label.numberOfLines = 0
+    label.font = UIFont.app_title3().bolded
+    label.adjustsFontForContentSizeCategory = true
+    return label
+  }()
 
-  private let releaseLabel = UILabel(frame: .zero)
+  private let releaseLabel: UILabel = {
+    let label = UILabel(frame: .zero)
+    label.numberOfLines = 0
+    label.font = UIFont.app_body()
+    label.adjustsFontForContentSizeCategory = true
+    return label
+  }()
 
   private lazy var rightContainerStackView: UIStackView = {
     let stack = UIStackView(arrangedSubviews: [episodeNameLabel, releaseLabel, averageStackView])
@@ -49,7 +61,13 @@ class EpisodeItemTableViewCell: NiblessTableViewCell {
     return imageView
   }()
 
-  private let averageLabel = UILabel(frame: .zero)
+  private let averageLabel: UILabel = {
+    let label = UILabel(frame: .zero)
+    label.numberOfLines = 0
+    label.font = UIFont.app_body()
+    label.adjustsFontForContentSizeCategory = true
+    return label
+  }()
 
   private lazy var averageStackView: UIStackView = {
     let stack = UIStackView(arrangedSubviews: [starImageView, averageLabel])

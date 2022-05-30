@@ -285,7 +285,7 @@ class TVShowDetailRootView: NiblessView {
 
   private lazy var scoreLabel: UILabel = {
     let label = UILabel()
-    label.font = .app_title3().bolded //label.tvSize = .custom(20)
+    label.font = .app_title3().bolded
     label.text = "7.8/"
     label.translatesAutoresizingMaskIntoConstraints = false
     label.numberOfLines = 0
@@ -296,7 +296,6 @@ class TVShowDetailRootView: NiblessView {
 
   private lazy var maxScoreLabel: UILabel = {
     let label = UILabel()
-    //label.tvSize = .custom(22)
     label.font = .app_title2()
     label.text = "10"
     label.translatesAutoresizingMaskIntoConstraints = false

@@ -5,7 +5,7 @@
 //  Created by Jeans Ruiz on 8/21/20.
 //
 
-import Shared
+import UI
 import WebKit
 
 class AuthPermissionRootView: NiblessView {

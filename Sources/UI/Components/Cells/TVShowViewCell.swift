@@ -1,29 +1,25 @@
 //
-//  EpisodeItemTableViewCell.swift
-//  MyTvShows
+//  TVShowViewCell.swift
+//  UI
 //
-//  Created by Jeans on 9/23/19.
+//  Created by Jeans on 9/14/19.
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
 import UIKit
-import Shared
-import UI
 
-class EpisodeItemTableViewCell: NiblessTableViewCell {
+public class TVShowViewCell: NiblessTableViewCell {
 
-  private let separatorView = UIView()
-
-  private let episodeImageView: UIImageView = {
+  private let posterImageView: UIImageView = {
     let imageView = UIImageView()
-    imageView.image = UIImage(name: "placeholder")
-    imageView.contentMode = .scaleAspectFill
-    imageView.clipsToBounds = true
+    imageView.image = UIImage(name: "newTV")
+    imageView.contentMode = .scaleAspectFit
     imageView.translatesAutoresizingMaskIntoConstraints = false
+    imageView.setContentCompressionResistancePriority(.required, for: .vertical)
     return imageView
   }()
 
-  private lazy var episodeNameLabel: UILabel = {
+  private lazy var nameLabel: UILabel = {
     let label = UILabel()
     label.numberOfLines = 0
     label.font = UIFont.app_title3().bolded
@@ -31,7 +27,7 @@ class EpisodeItemTableViewCell: NiblessTableViewCell {
     return label
   }()
 
-  private let releaseLabel: UILabel = {
+  private let startYearLabel: UILabel = {
     let label = UILabel(frame: .zero)
     label.numberOfLines = 0
     label.font = UIFont.app_body()
@@ -40,11 +36,11 @@ class EpisodeItemTableViewCell: NiblessTableViewCell {
   }()
 
   private lazy var rightContainerStackView: UIStackView = {
-    let stack = UIStackView(arrangedSubviews: [episodeNameLabel, releaseLabel, averageStackView])
+    let stack = UIStackView(arrangedSubviews: [nameLabel, startYearLabel, averageStackView])
     stack.axis = .vertical
     stack.alignment = .leading
     stack.distribution = .fill
-    stack.spacing = 8.0
+    stack.spacing = 5
     stack.translatesAutoresizingMaskIntoConstraints = false
     return stack
   }()
@@ -77,67 +73,36 @@ class EpisodeItemTableViewCell: NiblessTableViewCell {
     return stack
   }()
 
-  private var viewModel: EpisodeItemViewModel?
-
   public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
     setupUI()
-  }
-
-  func setModel(viewModel: EpisodeItemViewModel) {
-    self.viewModel = viewModel
-
-    let episodeNumber = viewModel.episodeNumber ?? ""
-    let episodeName = viewModel.episodeName ?? ""
-    episodeNameLabel.text = "\(episodeNumber) \(episodeName)"
-    releaseLabel.text = viewModel.releaseDate
-    averageLabel.text = viewModel.average
-    episodeImageView.setImage(with: viewModel.posterURL, placeholder: UIImage(name: "placeholder"))
   }
 
   private func setupUI() {
     backgroundColor = .secondarySystemBackground
     constructHierarchy()
     activateConstraints()
-    setupViews()
-  }
-
-  private func setupViews() {
-    separatorView.backgroundColor = .separator
-    separatorView.alpha = 0.2
   }
 
   private func constructHierarchy() {
-    contentView.addSubview(separatorView)
-    contentView.addSubview(episodeImageView)
+    contentView.addSubview(posterImageView)
     contentView.addSubview(rightContainerStackView)
   }
 
   private func activateConstraints() {
     var constraints = [NSLayoutConstraint]()
-    constraints.append(contentsOf: activateConstraintsForSeparatorView())
     constraints.append(contentsOf: activateConstraintsForPosterView())
     constraints.append(contentsOf: activateConstraintsForLeftStackView())
     NSLayoutConstraint.activate(constraints)
   }
 
-  private func activateConstraintsForSeparatorView()  -> [NSLayoutConstraint] {
-    separatorView.translatesAutoresizingMaskIntoConstraints = false
-    return [
-      separatorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-      separatorView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-      separatorView.topAnchor.constraint(equalTo: contentView.topAnchor),
-      separatorView.heightAnchor.constraint(equalToConstant: 1.0)
-    ]
-  }
-
   private func activateConstraintsForPosterView() -> [NSLayoutConstraint] {
     return [
-      episodeImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-      episodeImageView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8),
-      episodeImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-      episodeImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.35),
-      episodeImageView.heightAnchor.constraint(equalToConstant: 150)
+      posterImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+      posterImageView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8),
+      posterImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+      posterImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.4),
+      posterImageView.heightAnchor.constraint(equalToConstant: 150)
     ]
   }
 
@@ -145,7 +110,7 @@ class EpisodeItemTableViewCell: NiblessTableViewCell {
     let centerConstraint = rightContainerStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
     centerConstraint.priority = .defaultHigh
     return [
-      rightContainerStackView.leadingAnchor.constraint(equalTo: episodeImageView.trailingAnchor, constant: 8),
+      rightContainerStackView.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 8),
       rightContainerStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
       rightContainerStackView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: 8),
       rightContainerStackView.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8),
@@ -153,7 +118,11 @@ class EpisodeItemTableViewCell: NiblessTableViewCell {
     ]
   }
 
-  override func prepareForReuse() {
-    episodeImageView.image = nil
+  // MARK: - Public
+  public func setModel(viewModel: TVShowCellViewModel) {
+    posterImageView.setImage(with: viewModel.posterPathURL)
+    nameLabel.text = viewModel.name
+    startYearLabel.text = viewModel.firstAirDate
+    averageLabel.text = viewModel.average
   }
 }

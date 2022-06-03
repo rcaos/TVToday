@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import UI
 
 public class ErrorView: NiblessView {
 
@@ -26,8 +25,8 @@ public class ErrorView: NiblessView {
     return imageView
   }()
 
-  private let titleLabel = TVBoldLabel(frame: .zero)
-  let messageLabel = TVRegularLabel(frame: .zero)
+  private let titleLabel = UILabel()
+  let messageLabel = UILabel(frame: .zero)
   private let retryButton = LoadableButton(frame: .zero)
 
   var retry: (() -> Void)?
@@ -71,15 +70,15 @@ public class ErrorView: NiblessView {
   private func configureViews() {
     backgroundColor = .systemBackground
 
-    titleLabel.text = "Oops!"
-    titleLabel.tvSize = .custom(25)
+    titleLabel.text = "Oops!" // MARK: TODO, localized
+    titleLabel.font = UIFont.app_title2().bolded
     messageLabel.numberOfLines = 0
 
     retryButton.setTitle("Retry", for: .normal)
     retryButton.defaultTitle = "Retry"
     retryButton.backgroundColor = .systemBlue
-    retryButton.setTitleColor(.white, for: .normal) // MARK: - TODO, change?
-    retryButton.titleLabel?.font = Font.sanFrancisco.of(type: .regular, with: .normal)
+    retryButton.setTitleColor(.white, for: .normal) // MARK: - TODO, change color?
+    retryButton.titleLabel?.font = UIFont.app_body()
 
     retryButton.contentEdgeInsets = UIEdgeInsets(top: 7, left: 15, bottom: 7, right: 15)
 

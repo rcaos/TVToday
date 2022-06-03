@@ -7,7 +7,7 @@
 
 import UIKit
 import Combine
-import Shared
+import UI
 
 class SearchOptionRootView: NiblessView {
 
@@ -18,6 +18,8 @@ class SearchOptionRootView: NiblessView {
     tableView.rowHeight = UITableView.automaticDimension
     tableView.tableFooterView = UIView()
     tableView.contentInsetAdjustmentBehavior = .automatic
+    tableView.sectionHeaderHeight = UITableView.automaticDimension
+    tableView.estimatedSectionHeaderHeight = 30
     return tableView
   }()
 

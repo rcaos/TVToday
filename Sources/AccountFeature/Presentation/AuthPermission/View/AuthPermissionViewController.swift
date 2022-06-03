@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Shared
+import UI
 
 class AuthPermissionViewController: NiblessViewController {
 

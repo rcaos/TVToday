@@ -13,7 +13,7 @@ class AiringTodayViewModelMock: AiringTodayViewModelProtocol {
 
   func viewDidLoad() { }
 
-  func didLoadNextPage() { }
+  func willDisplayRow(_ row: Int, outOf totalRows: Int) { }
 
   func showIsPicked(index id: Int) { }
 

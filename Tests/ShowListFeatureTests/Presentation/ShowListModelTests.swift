@@ -11,7 +11,8 @@ import CommonMocks
 import Combine
 import XCTest
 @testable import ShowListFeature
-@testable import Shared
+import Shared
+import UI
 
 class TVShowListViewModelTests: XCTestCase {
   private var fetchUseCaseMock: FetchShowsUseCaseMock!
@@ -66,14 +67,17 @@ class TVShowListViewModelTests: XCTestCase {
 
   func test_When_ask_for_second_page_ViewModel_Should_contains_Populated_State_with_Second_Page() {
     // given
+    let firstPage = buildFirstPage()
+    let secondPage = buildSecondPage()
+
     let sut: TVShowListViewModelProtocol = TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, scheduler: .immediate, coordinator: nil)
-    let firstPage = buildFirstPage().showsList.map { TVShowCellViewModel(show: $0) }
-    let secondPage = (buildFirstPage().showsList + buildSecondPage().showsList).map { TVShowCellViewModel(show: $0) }
+    let firstPageModels = firstPage.showsList.map { TVShowCellViewModel(show: $0) }
+    let secondPageModels = (firstPage.showsList + secondPage.showsList).map { TVShowCellViewModel(show: $0) }
 
     let expected = [
       SimpleViewState<TVShowCellViewModel>.loading,
-      SimpleViewState<TVShowCellViewModel>.paging(firstPage, next: 2),
-      SimpleViewState<TVShowCellViewModel>.populated(secondPage)
+      SimpleViewState<TVShowCellViewModel>.paging(firstPageModels, next: 2),
+      SimpleViewState<TVShowCellViewModel>.populated(secondPageModels)
     ]
     var received = [SimpleViewState<TVShowCellViewModel>]()
 
@@ -81,12 +85,14 @@ class TVShowListViewModelTests: XCTestCase {
       .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
-    fetchUseCaseMock.result = buildFirstPage()
+    fetchUseCaseMock.result = firstPage
     sut.viewDidLoad()
 
     // and when
-    fetchUseCaseMock.result = buildSecondPage()
-    sut.didLoadNextPage()
+    fetchUseCaseMock.result = secondPage
+
+    let total = firstPage.showsList.count + secondPage.showsList.count
+    sut.willDisplayRow(total - 1 , outOf: total)
 
     // then
     XCTAssertEqual(expected, received, "Should contains 3 values")

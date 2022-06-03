@@ -7,8 +7,9 @@
 
 import CommonMocks
 @testable import PopularsFeature
-@testable import Shared
+import Shared
 import SnapshotTesting
+import UI
 import XCTest
 
 class PopularViewTests: XCTestCase {

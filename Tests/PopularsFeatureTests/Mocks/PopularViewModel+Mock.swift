@@ -7,13 +7,14 @@
 
 import Combine
 import Shared
+import UI
 @testable import PopularsFeature
 
 class PopularViewModelMock: PopularViewModelProtocol {
 
   func viewDidLoad() { }
 
-  func didLoadNextPage() { }
+  func willDisplayRow(_ row: Int, outOf totalRows: Int) { }
 
   func showIsPicked(index: Int) { }
 

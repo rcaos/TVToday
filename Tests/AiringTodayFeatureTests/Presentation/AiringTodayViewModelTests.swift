@@ -99,7 +99,8 @@ class AiringTodayViewModelTests: XCTestCase {
 
     // and
     fetchUseCaseMock.result = buildSecondPage()
-    sut.didLoadNextPage()
+    let totalShows = buildFirstPage().showsList.count + buildSecondPage().showsList.count
+    sut.willDisplayRow(totalShows - 1, outOf: totalShows)
 
     // then
     XCTAssertEqual(expected, received, "Should contains 3 values")
@@ -187,8 +188,11 @@ class AiringTodayViewModelTests: XCTestCase {
 
   func test_Jump_from_States_Paginated_Error_Populated() {
     // given
-    let firstPageVM = buildFirstPage().showsList.map { AiringTodayCollectionViewModel(show: $0) }
-    let secondPageVM = (buildFirstPage().showsList + buildSecondPage().showsList).map { AiringTodayCollectionViewModel(show: $0) }
+    let firstPage = buildFirstPage()
+    let secondPage = buildSecondPage()
+
+    let firstPageVM = firstPage.showsList.map { AiringTodayCollectionViewModel(show: $0) }
+    let secondPageVM = (firstPage.showsList + secondPage.showsList).map { AiringTodayCollectionViewModel(show: $0) }
 
     let sut: AiringTodayViewModelProtocol
     sut = AiringTodayViewModel(fetchTVShowsUseCase: self.fetchUseCaseMock,
@@ -206,18 +210,19 @@ class AiringTodayViewModelTests: XCTestCase {
       .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
-    fetchUseCaseMock.result = buildFirstPage()
+    fetchUseCaseMock.result = firstPage
     sut.viewDidLoad()
 
     // and
     fetchUseCaseMock.result = nil
     fetchUseCaseMock.error = .noResponse
-    sut.didLoadNextPage()
+    sut.willDisplayRow(firstPage.showsList.count - 1, outOf: firstPage.showsList.count)
 
     // again
-    fetchUseCaseMock.result = buildSecondPage()
+    fetchUseCaseMock.result = secondPage
     fetchUseCaseMock.error = nil
-    sut.didLoadNextPage()
+    let totalShows = firstPage.showsList.count + secondPage.showsList.count
+    sut.willDisplayRow(totalShows - 1, outOf: totalShows)
 
     // then
     XCTAssertEqual(expected, received, "AiringTodayViewModel should contains Paginated State")

@@ -10,8 +10,9 @@ import XCTest
 import Combine
 
 @testable import SearchShowsFeature
-@testable import Persistence
-@testable import Shared
+import Persistence
+import Shared
+import UI
 
 class ResultsSearchViewModelTests: XCTestCase {
 

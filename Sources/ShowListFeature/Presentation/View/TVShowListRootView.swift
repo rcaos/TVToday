@@ -7,7 +7,7 @@
 
 import UIKit
 import Combine
-import Shared
+import UI
 
 class TVShowListRootView: NiblessView {
 
@@ -17,6 +17,7 @@ class TVShowListRootView: NiblessView {
     let tableView = UITableView(frame: .zero, style: .plain)
     tableView.registerCell(cellType: TVShowViewCell.self)
     tableView.rowHeight = UITableView.automaticDimension
+    tableView.estimatedRowHeight = UITableView.automaticDimension
     tableView.tableFooterView = UIView()
     tableView.contentInsetAdjustmentBehavior = .automatic
     return tableView
@@ -56,14 +57,9 @@ class TVShowListRootView: NiblessView {
   }
 
   private func setupDataSource() {
-    dataSource = UITableViewDiffableDataSource(tableView: tableView, cellProvider: { [weak self] tableView, indexPath, model in
+    dataSource = UITableViewDiffableDataSource(tableView: tableView, cellProvider: { tableView, indexPath, model in
       let cell = tableView.dequeueReusableCell(with: TVShowViewCell.self, for: indexPath)
       cell.setModel(viewModel: model)
-
-      // MARK: - TODO, use willDisplay instead
-      if let totalItems = self?.dataSource?.snapshot().itemIdentifiers(inSection: .list).count, indexPath.row == totalItems - 1 {
-        self?.viewModel.didLoadNextPage()
-      }
       return cell
     })
   }
@@ -92,12 +88,13 @@ class TVShowListRootView: NiblessView {
 
 // MARK: - UITableViewDelegate
 extension TVShowListRootView: UITableViewDelegate {
-  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return 175.0
-  }
-
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
     viewModel.showIsPicked(index: indexPath.row)
+  }
+
+  func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    let totalItems = dataSource?.snapshot().itemIdentifiers(inSection: .list).count ?? 0
+    viewModel.willDisplayRow(indexPath.row, outOf: totalItems)
   }
 }

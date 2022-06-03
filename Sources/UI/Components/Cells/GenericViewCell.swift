@@ -1,15 +1,14 @@
 //
-//  GenreTableViewCell.swift
-//  SearchShows
+//  GenreViewCell.swift
+//  UI
 //
-//  Created by Jeans Ruiz on 7/28/20.
+//  Created by Jeans on 9/14/19.
+//  Copyright © 2019 Jeans. All rights reserved.
 //
 
 import UIKit
-import Shared
-import UI
 
-class GenreTableViewCell: NiblessTableViewCell {
+public class GenericViewCell: NiblessTableViewCell {
 
   private let label: UILabel = {
     let label = UILabel()
@@ -19,22 +18,20 @@ class GenreTableViewCell: NiblessTableViewCell {
     return label
   }()
 
-  public var viewModel: GenreViewModelProtocol?
-
   public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
     setupUI()
   }
 
-  func setViewModel(_ viewModel: GenreViewModelProtocol) {
-    self.viewModel = viewModel
-    label.text = viewModel.name
+  public func setTitle(with title: String?) {
+    label.text = title
   }
 
   private func setupUI() {
     backgroundColor = .secondarySystemBackground
     constructHierarchy()
     activateConstraints()
+    configureViews()
   }
 
   private func constructHierarchy() {
@@ -49,5 +46,9 @@ class GenreTableViewCell: NiblessTableViewCell {
       label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
       label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
     ])
+  }
+
+  private func configureViews() {
+    accessoryType = .disclosureIndicator
   }
 }

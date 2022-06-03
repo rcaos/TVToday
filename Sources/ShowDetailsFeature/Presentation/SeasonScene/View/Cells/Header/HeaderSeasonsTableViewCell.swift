@@ -11,8 +11,8 @@ import UI
 
 class HeaderSeasonsTableViewCell: NiblessTableViewCell {
 
-  private let showNameLabel = TVRegularLabel()
-  private let seasonsLabel = TVRegularLabel()
+  private let showNameLabel = UILabel()
+  private let seasonsLabel = UILabel()
 
   var viewModel: SeasonHeaderViewModel?
 
@@ -34,7 +34,11 @@ class HeaderSeasonsTableViewCell: NiblessTableViewCell {
   }
 
   private func setupViews() {
-    showNameLabel.font = Font.sanFrancisco.of(type: .bold, with: .custom(22))
+    showNameLabel.font =  .app_title2().bolded
+    showNameLabel.numberOfLines = 0
+
+    seasonsLabel.font = UIFont.app_callout()
+    seasonsLabel.numberOfLines = 0
     seasonsLabel.textColor = .secondaryLabel
     seasonsLabel.text = "Seasons:"
   }

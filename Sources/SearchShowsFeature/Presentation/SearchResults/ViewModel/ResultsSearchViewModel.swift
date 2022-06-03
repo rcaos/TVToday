@@ -10,6 +10,7 @@ import Foundation
 import Combine
 import CombineSchedulers
 import Shared
+import UI
 import Persistence
 
 final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {

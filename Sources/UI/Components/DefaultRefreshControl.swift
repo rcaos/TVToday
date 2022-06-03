@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import UI
 
 public class DefaultRefreshControl: UIRefreshControl {
 
@@ -21,9 +20,13 @@ public class DefaultRefreshControl: UIRefreshControl {
     super.init()
     self.tintColor = tintColor
     self.backgroundColor = backgroundColor
-    self.attributedTitle = NSAttributedString(string: attributedTitle,
-                                              attributes: [NSAttributedString.Key.font: Font.sanFrancisco.of(type: .light, with: .custom(12)),
-                                                           NSAttributedString.Key.foregroundColor: tintColor])
+    self.attributedTitle = NSAttributedString(
+      string: attributedTitle,
+      attributes: [
+        NSAttributedString.Key.font: UIFont.app_caption1(),
+        NSAttributedString.Key.foregroundColor: tintColor
+      ]
+    )
     addTarget(self, action: #selector(refreshControlAction), for: .valueChanged)
   }
 
@@ -31,7 +34,6 @@ public class DefaultRefreshControl: UIRefreshControl {
     fatalError()
   }
 
-  // MARK: - Selectors
   @objc func refreshControlAction() {
     refreshHandler()
   }

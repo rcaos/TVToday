@@ -5,11 +5,13 @@
 //  Created by Jeans Ruiz on 7/20/20.
 //
 
-import UIKit
-import Shared
+
 import Persistence
+import Shared
 import ShowDetailsFeatureInterface
 import ShowListFeatureInterface
+import UI
+import UIKit
 
 final class DIContainer {
 

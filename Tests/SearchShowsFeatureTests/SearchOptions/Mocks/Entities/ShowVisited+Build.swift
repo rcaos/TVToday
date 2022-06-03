@@ -19,6 +19,6 @@ func buildShowVisited() -> [ShowVisited] {
 func buildGenres() -> [Genre] {
   return [
     Genre.stub(id: 1, name: "Genre 1"),
-    Genre.stub(id: 2, name: "Genre 2")
+    Genre.stub(id: 2, name: "Genre with a long name to show how the cell could increase its height")
   ]
 }

@@ -7,11 +7,10 @@
 //
 
 import UIKit
-import UI
 
 public class MessageView: UIView {
 
-  public let messageLabel = TVRegularLabel(frame: .zero)
+  public let messageLabel = UILabel(frame: .zero)
 
   public override init(frame: CGRect) {
     super.init(frame: frame)

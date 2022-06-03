@@ -1,25 +1,22 @@
 //
-//  AiringTodayRootView.swift
-//  AiringToday
+//  AiringTodayRootViewCompositional.swift
+//  
 //
-//  Created by Jeans Ruiz on 8/21/20.
+//  Created by Jeans Ruiz on 23/05/22.
 //
 
 import UIKit
 import Combine
 import UI
 
-protocol AiringTodayRootViewProtocol {
-  func stopRefresh()
-}
-
-class AiringTodayRootView: NiblessView, AiringTodayRootViewProtocol {
+class AiringTodayRootViewCompositional: NiblessView, AiringTodayRootViewProtocol {
 
   private let viewModel: AiringTodayViewModelProtocol
-  private let customFlowLayout = CustomFlowLayout()
 
   private lazy var collectionView: UICollectionView = {
-    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: customFlowLayout)
+    let layout = UICollectionViewFlowLayout()
+    layout.scrollDirection = .vertical
+    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     return collectionView
   }()
 
@@ -56,15 +53,26 @@ class AiringTodayRootView: NiblessView, AiringTodayRootViewProtocol {
   }
 
   private func setupFlowLayout() {
-    customFlowLayout.sectionInsetReference = .fromContentInset
-    customFlowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-    customFlowLayout.minimumInteritemSpacing = 10
-    customFlowLayout.minimumLineSpacing = 10
-    customFlowLayout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-    customFlowLayout.headerReferenceSize = .zero
-    customFlowLayout.footerReferenceSize = CGSize(width: 0, height: 100)
+    let size = NSCollectionLayoutSize(
+      widthDimension: NSCollectionLayoutDimension.fractionalWidth(1),
+      heightDimension: NSCollectionLayoutDimension.estimated(250)
+    )
+    let item = NSCollectionLayoutItem(layoutSize: size)
+    let group = NSCollectionLayoutGroup.horizontal(layoutSize: size, subitem: item, count: 1)
 
-    customFlowLayout.scrollDirection = .vertical
+    let section = NSCollectionLayoutSection(group: group)
+    section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
+    section.interGroupSpacing = 10
+
+    let sectionFooter = NSCollectionLayoutBoundarySupplementaryItem(
+      layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(44)),
+      elementKind: UICollectionView.elementKindSectionFooter,
+      alignment: .bottom)
+
+    section.boundarySupplementaryItems = [sectionFooter]
+
+    let layout = UICollectionViewCompositionalLayout(section: section)
+    collectionView.collectionViewLayout = layout
   }
 
   private func setupCollectionView() {
@@ -76,22 +84,15 @@ class AiringTodayRootView: NiblessView, AiringTodayRootViewProtocol {
     collectionView.register(FooterReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
                             withReuseIdentifier: "FooterReusableView")
     collectionView.delegate = self
-
-    collectionView.collectionViewLayout = customFlowLayout
     collectionView.contentInsetAdjustmentBehavior = .always
     collectionView.backgroundColor = .systemBackground
   }
 
   private func setupCollectionDataSource() {
     dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView,
-                                                    cellProvider: { [weak self] collectionView, indexPath, viewModel in
+                                                    cellProvider: { collectionView, indexPath, viewModel in
       let cell = collectionView.dequeueReusableCell(with: AiringTodayCollectionViewCell.self, for: indexPath)
       cell.setViewModel(viewModel)
-
-      // MARK: - TODO, Use willDisplayCell and trigger signal to ViewModel instead
-      let totalItems = self?.dataSource?.snapshot().itemIdentifiers(inSection: .shows).count ?? 0
-      self?.viewModel.willDisplayRow(indexPath.row, outOf: totalItems)
-
       return cell
     })
 
@@ -125,12 +126,12 @@ class AiringTodayRootView: NiblessView, AiringTodayRootViewProtocol {
   }
 
   override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-    customFlowLayout.invalidateLayout()
+    collectionView.collectionViewLayout.invalidateLayout()
   }
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
-extension AiringTodayRootView: UICollectionViewDelegateFlowLayout {
+extension AiringTodayRootViewCompositional: UICollectionViewDelegateFlowLayout {
 
   func collectionView(_ collectionView: UICollectionView,
                       layout collectionViewLayout: UICollectionViewLayout,
@@ -147,5 +148,10 @@ extension AiringTodayRootView: UICollectionViewDelegateFlowLayout {
 
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     viewModel.showIsPicked(index: indexPath.row)
+  }
+
+  func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    let totalItems = dataSource?.snapshot().numberOfItems(inSection: .shows) ?? 0
+    viewModel.willDisplayRow(indexPath.row, outOf: totalItems)
   }
 }

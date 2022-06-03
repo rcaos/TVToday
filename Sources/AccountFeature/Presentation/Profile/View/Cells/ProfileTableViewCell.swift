@@ -11,7 +11,7 @@ import Shared
 import UI
 
 class ProfileTableViewCell: NiblessTableViewCell {
-  private let nameLabel = TVRegularLabel(frame: .zero)
+  private let nameLabel = UILabel(frame: .zero)
 
   private let avatarImageView: UIImageView = {
     let imageView = UIImageView()
@@ -41,7 +41,7 @@ class ProfileTableViewCell: NiblessTableViewCell {
   }
 
   private func setupViews() {
-    nameLabel.tvSize = .custom(25)
+    nameLabel.font = .app_title3().bolded
     nameLabel.textAlignment  = .center
   }
 

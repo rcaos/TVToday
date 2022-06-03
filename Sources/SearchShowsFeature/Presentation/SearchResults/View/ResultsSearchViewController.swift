@@ -6,9 +6,10 @@
 //  Copyright © 2019 Jeans. All rights reserved.
 //
 
-import UIKit
 import Combine
+import UIKit
 import Shared
+import UI
 
 class ResultsSearchViewController: NiblessViewController {
   private let viewModel: ResultsSearchViewModelProtocol
@@ -133,18 +134,6 @@ class ResultsSearchViewController: NiblessViewController {
 
 // MARK: - UITableViewDelegate
 extension ResultsSearchViewController: UITableViewDelegate {
-  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    let viewState = viewModel.getViewState()
-
-    switch viewState {
-    case .initial:
-      return UITableView.automaticDimension
-    case .populated:
-      return 175.0
-    default:
-      return 0
-    }
-  }
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     if let model = dataSource?.itemIdentifier(for: indexPath) {

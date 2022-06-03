@@ -40,8 +40,8 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol {
     getShows(for: 1)
   }
 
-  func didLoadNextPage() {
-    if case .paging(_, let nextPage) = viewStateObservableSubject.value {
+  func willDisplayRow(_ row: Int, outOf totalRows: Int) {
+    if case .paging(_, let nextPage) = viewStateObservableSubject.value, row == totalRows - 1 {
       getShows(for: nextPage)
     }
   }
@@ -94,7 +94,12 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol {
       shows.removeAll()
     }
 
-    shows.append(contentsOf: response.showsList)
+    // Avoid duplicated elements, Maybe Can I use a Set<Hashable> instead
+    response.showsList.forEach { responseItem in
+      if shows.contains(where: { $0.id == responseItem.id }) == false {
+        shows.append(responseItem)
+      }
+    }
 
     if shows.isEmpty {
       viewStateObservableSubject.send(.empty)

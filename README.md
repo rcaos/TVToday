@@ -54,6 +54,7 @@ So you need to leverage your Unit tests, Snapshot Tests and Demo targets to save
 - KeychainSwift
 - Swift Package Manager
 - Dark Mode support
+- Dynamic Type support
 
 ## Requirements
 1. Xcode 13.0+

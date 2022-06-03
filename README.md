@@ -7,10 +7,12 @@ TVShows iOS app built with Combine, using the [TMDb API](https://www.themoviedb.
 
 ## What I'm working on
 
-May, 2022
+June, 2022
+* ⏳ Localize UI and requests to endpoint (_wip_
+* ⏳ Solve TODO's
 
-* ⏳ Support Dynamic Type (_wip_
-* ⏳ Localize UI and requests to endpoint
+May, 2022
+* ✅ Support Dynamic Type 
 
 April, 2022
 
@@ -73,7 +75,13 @@ Last snapshot tests were created using `Xcode 13.2.1`, with Simulator `iPhone SE
 
 ## Screenshots
 
-### Dark Mode
+### Dynamic Type
+<p>
+<img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/dynamic-type-1.png" width="600">
+<img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/dynamic-type-2.png" width="600">
+</p>
+
+## Dark Mode
 <p>
 <img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/dark/01.png" width="215" height="383">
 <img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/dark/02.png" width="215" height="383">
@@ -85,7 +93,7 @@ Last snapshot tests were created using `Xcode 13.2.1`, with Simulator `iPhone SE
 <img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/dark/08.png" width="215" height="383">
 </p>
 
-### Light Mode
+## Light Mode
 <p>
 <img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/light/01.png" width="215" height="383">
 <img src="https://github.com/rcaos/TVToday/blob/master/Screenshots/light/02.png" width="215" height="383">

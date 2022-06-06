@@ -33,7 +33,7 @@ public class AppDIContainer {
   private lazy var apiDataTransferService: DataTransferService = {
     let queryParameters = [
       "api_key": appConfigurations.apiKey,
-      "language": NSLocale.preferredLanguages.first ?? "en"
+      "language": Locale.current.languageCode ?? "en"
     ]
 
     let configuration = ApiDataNetworkConfig(

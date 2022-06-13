@@ -19,7 +19,7 @@
 "search_section_genres_title" = "Géneros de TV";
 
 "account_title" = "Mi Cuenta";
-"account_greetings" = "Hola %@!";
+"account_greetings" = "Hola";
 "account_favorites_cell" = "Mis Favoritos";
 "account_watchlist_cell" = "Ver más tarde";
 "account_logout" = "Desloguearse";

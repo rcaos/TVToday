@@ -25,10 +25,9 @@ public enum Strings: String, CaseIterable {
   /// Favorites
   case accountFavoritesCell = "account_favorites_cell"
 
-  /// Hi %@!
-  public static func accountGreetings(_ p1: Any) -> String {
-    return Strings.tr("Localizable", "account_greetings", String(describing: p1))
-  }
+  /// Hi
+  case accountGreetings = "account_greetings"
+
   /// Sign out
   case accountLogout = "account_logout"
 

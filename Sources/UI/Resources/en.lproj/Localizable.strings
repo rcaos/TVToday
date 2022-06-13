@@ -19,7 +19,7 @@
 "search_section_genres_title" = "TVShows Genres";
 
 "account_title" = "Account";
-"account_greetings" = "Hi %@!";
+"account_greetings" = "Hi"; // MARK, TODO, change
 "account_favorites_cell" = "Favorites";
 "account_watchlist_cell" = "Watch List";
 "account_logout" = "Sign out";  // MARK, TODO, change

@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
   name: "TVToday",
+  defaultLocalization: "en",
   platforms: [
     .iOS(.v14)
   ],

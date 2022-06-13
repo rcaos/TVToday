@@ -12,11 +12,11 @@
 "popular_title" = "Series de TV Populares";
 "popular_tabbar" = "Populares";
 
-"search_title" = "Busqueda"
-"search_tabbar" = "Busqueda"
-"search_placeholder" = "Busca una Serie de TV"
-"search_section_recent_title" = "Series recien visitadas"
-"search_section_genres_title" = "Géneros de TV"
+"search_title" = "Busqueda";
+"search_tabbar" = "Busqueda";
+"search_placeholder" = "Busca una Serie de TV";
+"search_section_recent_title" = "Series recien visitadas";
+"search_section_genres_title" = "Géneros de TV";
 
 "account_title" = "Mi Cuenta";
 "account_greetings" = "Hola %@!";

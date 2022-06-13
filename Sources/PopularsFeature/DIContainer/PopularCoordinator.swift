@@ -9,6 +9,7 @@
 import UIKit
 import Shared
 import ShowDetailsFeatureInterface
+import UI
 
 class PopularCoordinator: NavigationCoordinator, PopularCoordinatorProtocol {
 
@@ -46,7 +47,7 @@ class PopularCoordinator: NavigationCoordinator, PopularCoordinatorProtocol {
   // MARK: - Default Step
   fileprivate func navigateToPopularFeature() {
     let popularController = dependencies.buildPopularViewController(coordinator: self)
-    popularController.navigationItem.title = "Popular TV Shows"
+    popularController.navigationItem.title = Strings.popularTitle.localized()
     navigationController.pushViewController(popularController, animated: true)
   }
 

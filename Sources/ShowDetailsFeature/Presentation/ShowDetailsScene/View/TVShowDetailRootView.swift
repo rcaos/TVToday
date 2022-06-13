@@ -170,7 +170,7 @@ class TVShowDetailRootView: NiblessView {
   private lazy var episodeLabel: UILabel = {
     let label = UILabel()
     label.font = UIFont.app_body()
-    label.text = "Episode Guide"
+    label.text = Strings.detailsEpisodeGuide.localized()
     label.translatesAutoresizingMaskIntoConstraints = false
     label.numberOfLines = 0
     label.adjustsFontForContentSizeCategory = true

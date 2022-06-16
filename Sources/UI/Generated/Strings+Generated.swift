@@ -61,6 +61,9 @@ public enum Strings: String, CaseIterable {
   /// Search TV Show
   case searchPlaceholder = "search_placeholder"
 
+  /// Recent Searchs
+  case searchResultsRecentSearchsTitle = "search_results_recent_searchs_title"
+
   /// TVShows Genres
   case searchSectionGenresTitle = "search_section_genres_title"
 

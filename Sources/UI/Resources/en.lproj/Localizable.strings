@@ -24,13 +24,13 @@
 "account_favorites_cell" = "Favorites";
 "account_watchlist_cell" = "Watch List";
 "account_logout" = "Sign out";  // MARK, TODO, change
-
 "account_alert_title" = "Are you sure you want to Sign out?";
 "account_alert_logout" = "Sign out";
 "account_alert_cancel" = "Cancel";
-
 "account_title_login" = "Login";
 "account_title_detail_button" = "Sign in with TheMovieDB";
+"account_favorite_list_title" = "Favorites";
+"account_favorite_watchList_title" = "Watch List";
 
 "details_episode_guide" = "Episode Guide";
 

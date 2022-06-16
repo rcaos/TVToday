@@ -26,6 +26,12 @@ public enum Strings: String, CaseIterable {
   case accountAlertTitle = "account_alert_title"
 
   /// Favorites
+  case accountFavoriteListTitle = "account_favorite_list_title"
+
+  /// Watch List
+  case accountFavoriteWatchListTitle = "account_favorite_watchList_title"
+
+  /// Favorites
   case accountFavoritesCell = "account_favorites_cell"
 
   /// Hi
@@ -70,7 +76,7 @@ public enum Strings: String, CaseIterable {
   /// TVShows Genres
   case searchSectionGenresTitle = "search_section_genres_title"
 
-  /// Recently TVShows visited
+  /// Recently TVShows Visited
   case searchSectionRecentTitle = "search_section_recent_title"
 
   /// Search
@@ -79,7 +85,7 @@ public enum Strings: String, CaseIterable {
   /// Search TV Shows
   case searchTitle = "search_title"
 
-  /// Seasons
+  /// Seasons:
   case seasonsSectionTitle = "seasons_section_title"
 
   /// All Episodes

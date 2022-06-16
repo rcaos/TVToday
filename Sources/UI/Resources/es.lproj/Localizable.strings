@@ -24,13 +24,13 @@
 "account_favorites_cell" = "Mis Favoritos";
 "account_watchlist_cell" = "Ver más tarde";
 "account_logout" = "Terminar Sesión";
-
 "account_alert_title" = "¿Está seguro que desea terminar la Sesión?";
 "account_alert_logout" = "Terminar Sesión";
 "account_alert_cancel" = "Cancelar";
-
 "account_title_login" = "Iniciar sesión";
 "account_title_detail_button" = "Iniciar sessión con TheMovieDB";
+"account_favorite_list_title" = "Favoritos";
+"account_favorite_watchList_title" = "Ver más tarde";
 
 "details_episode_guide" = "Guía de Episodios";
 

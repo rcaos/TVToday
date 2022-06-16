@@ -22,6 +22,9 @@ public enum Strings: String, CaseIterable {
   /// Sign out
   case accountAlertLogout = "account_alert_logout"
 
+  /// Are you sure you want to Sign out?
+  case accountAlertTitle = "account_alert_title"
+
   /// Favorites
   case accountFavoritesCell = "account_favorites_cell"
 

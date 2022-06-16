@@ -25,6 +25,7 @@
 "account_watchlist_cell" = "Watch List";
 "account_logout" = "Sign out";  // MARK, TODO, change
 
+"account_alert_title" = "Are you sure you want to Sign out?";
 "account_alert_logout" = "Sign out";
 "account_alert_cancel" = "Cancel";
 

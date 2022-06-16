@@ -37,7 +37,7 @@ enum ResultSearchSectionView: Hashable {
   var header: String? {
     switch self {
     case .recentSearch:
-      return "Recent Searchs"
+      return Strings.searchResultsRecentSearchsTitle.localized()
     default:
       return nil
     }

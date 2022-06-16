@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UI
 import Shared
 import ShowDetailsFeatureInterface
 
@@ -57,7 +58,7 @@ public class TVShowDetailCoordinator: TVShowDetailCoordinatorProtocol {
   // MARK: - Navigate Seasons List
   fileprivate func navigateToSeasonsScreen(with showId: Int) {
     let seasonsVC = dependencies.buildEpisodesViewController(with: showId)
-    seasonsVC.title = "All Episodes"
+    seasonsVC.title = Strings.seasonsTitle.localized()
     navigationController.pushViewController(seasonsVC, animated: true)
   }
 }

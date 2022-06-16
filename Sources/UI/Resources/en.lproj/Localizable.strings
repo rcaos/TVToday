@@ -1,0 +1,38 @@
+/* 
+  Localizable.strings
+  TVToday
+
+  Created by Jeans Ruiz on 6/06/22.
+  
+*/
+
+"airing_today_title" = "Today on TV";
+"airing_today_tabbar" = "Today";
+
+"popular_title" = "Popular TV Shows";
+"popular_tabbar" = "Popular";
+
+"search_title" = "Search TV Shows";
+"search_tabbar" = "Search";
+"search_placeholder" = "Search TV Show";
+"search_section_recent_title" = "Recently TVShows Visited";
+"search_section_genres_title" = "TVShows Genres";
+"search_results_recent_searchs_title" = "Recent Searchs";
+
+"account_title" = "Account";
+"account_greetings" = "Hi"; // MARK, TODO, change
+"account_favorites_cell" = "Favorites";
+"account_watchlist_cell" = "Watch List";
+"account_logout" = "Sign out";  // MARK, TODO, change
+
+"account_alert_title" = "Are you sure you want to Sign out?";
+"account_alert_logout" = "Sign out";
+"account_alert_cancel" = "Cancel";
+
+"account_title_login" = "Login";
+"account_title_detail_button" = "Sign in with TheMovieDB";
+
+"details_episode_guide" = "Episode Guide";
+
+"seasons_title" = "All Episodes";
+"seasons_section_title" = "Seasons:";

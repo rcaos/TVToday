@@ -1,0 +1,38 @@
+/* 
+  Localizable.strings
+  TVToday
+
+  Created by Jeans Ruiz on 6/06/22.
+  
+*/
+
+"airing_today_title" = "Hoy en TV";
+"airing_today_tabbar" = "Hoy";
+
+"popular_title" = "Series de TV Populares";
+"popular_tabbar" = "Populares";
+
+"search_title" = "Busqueda";
+"search_tabbar" = "Busqueda";
+"search_placeholder" = "Busca una Serie de TV";
+"search_section_recent_title" = "Series recien vistas";
+"search_section_genres_title" = "Géneros de TV";
+"search_results_recent_searchs_title" = "Búsquedas recientes";
+
+"account_title" = "Mi Cuenta";
+"account_greetings" = "Hola";
+"account_favorites_cell" = "Mis Favoritos";
+"account_watchlist_cell" = "Ver más tarde";
+"account_logout" = "Terminar Sesión";
+
+"account_alert_title" = "¿Está seguro que desea terminar la Sesión?";
+"account_alert_logout" = "Terminar Sesión";
+"account_alert_cancel" = "Cancelar";
+
+"account_title_login" = "Iniciar sesión";
+"account_title_detail_button" = "Iniciar sessión con TheMovieDB";
+
+"details_episode_guide" = "Guía de Episodios";
+
+"seasons_title" = "Todos los Episodios";
+"seasons_section_title" = "Temporadas:";

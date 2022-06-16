@@ -1,0 +1,14 @@
+## https://github.com/SwiftGen/SwiftGen/tree/6.4.0/Documentation/
+
+input_dir: ../Sources/UI/Resources/
+output_dir: ../Sources/UI/Generated/
+
+strings:
+  inputs:
+    - en.lproj
+  outputs:
+    - templatePath: structured-swift5-custom.stencil
+      params:
+        enumName: Strings
+        publicAccess: true
+      output: Strings+Generated.swift

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UI
 import Shared
 import ShowDetailsFeatureInterface
 import ShowListFeatureInterface
@@ -46,7 +47,7 @@ class SearchCoordinator: NavigationCoordinator, SearchCoordinatorProtocol {
   // MARK: - Main Search Screen
   fileprivate func navigateToSearchFeature() {
     let searchVC = dependencies.buildSearchViewController(coordinator: self)
-    searchVC.navigationItem.title = "Search TV Shows"
+    searchVC.navigationItem.title = Strings.searchTitle.localized()
     navigationController.pushViewController(searchVC, animated: true)
   }
 

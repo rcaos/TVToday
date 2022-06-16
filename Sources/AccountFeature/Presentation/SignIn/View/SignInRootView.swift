@@ -15,7 +15,7 @@ class SignInRootView: NiblessView {
   let signInButton: LoadableButton = {
     let button = LoadableButton(type: .custom)
     button.setBackgroundImage(UIImage(name: "loginbackground"), for: .normal)
-    button.defaultTitle = "Sign in with TheMovieDB"
+    button.defaultTitle = Strings.accountTitleDetailButton.localized()
     button.titleLabel?.font = .boldSystemFont(ofSize: 20)
     button.heightAnchor.constraint(equalToConstant: 65).isActive = true
     button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 30)

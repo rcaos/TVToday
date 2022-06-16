@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
   name: "TVToday",
+  defaultLocalization: "en",
   platforms: [
     .iOS(.v14)
   ],
@@ -166,6 +167,13 @@ let package = Package(
         "Networking",
         .product(name: "Kingfisher", package: "Kingfisher"),
         .product(name: "CombineSchedulers", package: "combine-schedulers"),
+      ]
+    ),
+    .testTarget(
+      name: "SharedTests",
+      dependencies: [
+        "Shared",
+        "UI"
       ]
     ),
     .target(

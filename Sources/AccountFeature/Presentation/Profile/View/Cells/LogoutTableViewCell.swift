@@ -18,7 +18,7 @@ class LogoutTableViewCell: NiblessTableViewCell {
 
   private func setupUI() {
     backgroundColor = .secondarySystemBackground
-    textLabel?.text = "Sign out"
+    textLabel?.text = Strings.accountLogout.localized()
     textLabel?.textAlignment = .center
     textLabel?.textColor = .red
   }

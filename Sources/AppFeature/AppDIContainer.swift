@@ -21,6 +21,7 @@ import ShowDetailsFeatureInterface
 import ShowListFeature
 import ShowListFeatureInterface
 import UIKit
+import UI
 
 public class AppDIContainer {
 
@@ -28,12 +29,17 @@ public class AppDIContainer {
 
   public init(appConfigurations: AppConfigurationProtocol) {
     self.appConfigurations = appConfigurations
+
+    language = Language(languageStrings: Locale.preferredLanguages) ?? .en
+    Strings.currentLocale = Locale(identifier: language.rawValue)
   }
+
+  private let language: Language
 
   private lazy var apiDataTransferService: DataTransferService = {
     let queryParameters = [
       "api_key": appConfigurations.apiKey,
-      "language": NSLocale.preferredLanguages.first ?? "en"
+      "language": language.rawValue
     ]
 
     let configuration = ApiDataNetworkConfig(

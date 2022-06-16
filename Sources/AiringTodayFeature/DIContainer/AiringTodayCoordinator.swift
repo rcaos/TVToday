@@ -9,6 +9,7 @@
 import UIKit
 import Shared
 import ShowDetailsFeatureInterface
+import UI
 
 class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinatorProtocol {
 
@@ -46,7 +47,7 @@ class AiringTodayCoordinator: NavigationCoordinator, AiringTodayCoordinatorProto
 
   private func navigateToTodayFeature() {
     let airingTodayController = dependencies.buildAiringTodayViewController(coordinator: self)
-    airingTodayController.navigationItem.title = "Today on TV"
+    airingTodayController.navigationItem.title = Strings.airingTodayTitle.localized()
     navigationController.pushViewController(airingTodayController, animated: true)
   }
 

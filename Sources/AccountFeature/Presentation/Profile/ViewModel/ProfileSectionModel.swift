@@ -6,7 +6,7 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import Foundation
+import UI
 
 enum ProfileSectionModel: Equatable {
   case userInfo(items: [ProfilesSectionItem])
@@ -48,7 +48,14 @@ enum ProfilesSectionItem: Hashable {
   case logout(items: String)
 }
 
-enum UserListType: String, Hashable {
-  case favorites = "Favorites"
-  case watchList = "Watch List"
+enum UserListType: Hashable {
+  case favorites
+  case watchList
+  
+  var localizedDescription: String {
+    switch self {
+    case .favorites: return Strings.accountFavoritesCell.localized()
+    case .watchList: return Strings.accountWatchlistCell.localized()
+    }
+  }
 }

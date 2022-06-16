@@ -52,7 +52,7 @@ class SearchViewController: NiblessViewController {
     searchController.obscuresBackgroundDuringPresentation = false
     searchController.hidesNavigationBarDuringPresentation = false
 
-    searchController.searchBar.placeholder = "Search TV Show"
+    searchController.searchBar.placeholder = Strings.searchPlaceholder.localized()
     searchController.searchResultsUpdater = self
     searchController.searchBar.delegate = self
 

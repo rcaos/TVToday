@@ -6,6 +6,7 @@
 //
 
 import Shared
+import UI
 
 enum SearchOptionsSectionModel {
   case showsVisited(items: [SearchSectionItem])
@@ -37,9 +38,9 @@ enum SearchOptionsSectionView: Hashable {
   var header: String? {
     switch self {
     case .showsVisited:
-      return "Recently TVShows Visited"
+      return Strings.searchSectionRecentTitle.localized()
     case .genres:
-      return "TVShows Genres"
+      return Strings.searchSectionGenresTitle.localized()
     }
   }
 }

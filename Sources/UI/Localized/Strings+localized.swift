@@ -23,6 +23,6 @@ private func buildBundleForLocalization(_ locale: Locale) -> Bundle? {
   return Bundle(path: pathBundle)
 }
 
-public func lprojFileNameForLanguageCode(_ locale: Locale) -> String {
+private func lprojFileNameForLanguageCode(_ locale: Locale) -> String {
   return Language(rawValue: locale.languageCode ?? "en")?.rawValue ?? "en"
 }

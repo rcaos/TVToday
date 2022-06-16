@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import UI
 import Shared
 import ShowDetailsFeatureInterface
 import ShowListFeatureInterface
@@ -65,14 +66,14 @@ public class TVShowListCoordinator: TVShowListCoordinatorProtocol {
   // MARK: - Navigate to Favorites User
   fileprivate func navigateToFavorites() {
     let viewController = dependencies.buildShowListViewController_ForFavorites(coordinator: self, stepOrigin: .favoriteList)
-    viewController.title = "Favorites"
+    viewController.title = Strings.accountFavoriteListTitle.localized()
     navigationController.pushViewController(viewController, animated: true)
   }
 
   // MARK: - Navigate to WatchList User
   fileprivate func navigateToWatchList() {
     let viewController = dependencies.buildShowListViewController_ForWatchList(coordinator: self, stepOrigin: .watchList)
-    viewController.title = "Watch List"
+    viewController.title = Strings.accountFavoriteWatchListTitle.localized()
     navigationController.pushViewController(viewController, animated: true)
   }
 

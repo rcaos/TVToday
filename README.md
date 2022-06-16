@@ -8,8 +8,8 @@ TVShows iOS app built with Combine, using the [TMDb API](https://www.themoviedb.
 ## What I'm working on
 
 June, 2022
-* ⏳ Localize UI and requests to endpoint (_wip_
-* ⏳ Solve TODO's
+* ⏳ Solve TODO's (_wip_
+* ✅ Localize UI and requests to endpoint
 
 May, 2022
 * ✅ Support Dynamic Type 
@@ -55,6 +55,7 @@ So you need to leverage your Unit tests, Snapshot Tests and Demo targets to save
 - Swift Package Manager
 - Dark Mode support
 - Dynamic Type support
+- English and Spanish Localized
 
 ## Requirements
 1. Xcode 13.0+

@@ -100,7 +100,7 @@ class ProfileRootView: NiblessView {
 
   private func buildCellForUserLists(_ tableView: UITableView, at indexPath: IndexPath, element: UserListType) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(with: GenericViewCell.self, for: indexPath)
-    cell.setTitle(with: element.rawValue)
+    cell.setTitle(with: element.localizedDescription)
     return cell
   }
 

@@ -49,10 +49,10 @@ class AccountViewController: NiblessViewController {
     switch state {
     case .login:
       let loginVC = viewControllersFactory.makeSignInViewController()
-      transition(to: loginVC, with: "Login")
+      transition(to: loginVC, with: Strings.accountTitleLogin.localized())
     case .profile(let account):
       let profileVC = viewControllersFactory.makeProfileViewController(with: account)
-      transition(to: profileVC, with: "Account")
+      transition(to: profileVC, with: Strings.accountTitle.localized())
     }
   }
 

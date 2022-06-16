@@ -42,15 +42,15 @@ class ProfileViewController: NiblessViewController {
   }
 
   private func showSignOutActionSheet() {
-    let signOutAction = UIAlertAction(title: "Sign out",
+    let signOutAction = UIAlertAction(title: Strings.accountAlertLogout.localized(),
                                       style: .destructive) { [weak self] _ in
       self?.viewModel.didTapLogoutButton()
     }
 
-    let actionSheet = UIAlertController(title: "Are you sure you want to Sign out?",
+    let actionSheet = UIAlertController(title: Strings.accountAlertTitle.localized(),
                                         message: nil,
                                         preferredStyle: .actionSheet)
-    let cancelTitle = "Cancel"
+    let cancelTitle = Strings.accountAlertCancel.localized()
     let cancelActionButton = UIAlertAction(title: cancelTitle, style: .cancel) { _ in
       self.dismiss(animated: true)
     }

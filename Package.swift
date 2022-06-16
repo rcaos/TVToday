@@ -169,6 +169,13 @@ let package = Package(
         .product(name: "CombineSchedulers", package: "combine-schedulers"),
       ]
     ),
+    .testTarget(
+      name: "SharedTests",
+      dependencies: [
+        "Shared",
+        "UI"
+      ]
+    ),
     .target(
       name: "ShowDetailsFeature",
       dependencies: [

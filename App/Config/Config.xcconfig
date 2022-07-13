@@ -8,6 +8,8 @@ IMAGE_BASE_URL=https:$(SLASH)/image.tmdb.org
 
 AUTHENTICATE_BASE_URL=https:$(SLASH)/themoviedb.org/authenticate
 
+GRAVATAR_BASE_URL=https:$(SLASH)/gravatar.com/avatar
+
 // Default
 ASSETCATALOG_COMPILER_APPICON_NAME=AppIcon
 

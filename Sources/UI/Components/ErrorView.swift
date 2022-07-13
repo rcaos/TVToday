@@ -70,14 +70,13 @@ public class ErrorView: NiblessView {
   private func configureViews() {
     backgroundColor = .systemBackground
 
-    titleLabel.text = "Oops!" // MARK: TODO, localized
+    titleLabel.text = Strings.commomErrorTitle.localized()
     titleLabel.font = UIFont.app_title2().bolded
     messageLabel.numberOfLines = 0
 
-    retryButton.setTitle("Retry", for: .normal)
-    retryButton.defaultTitle = "Retry"
+    retryButton.setTitle(Strings.commonErrorRetry.localized(), for: .normal)
     retryButton.backgroundColor = .systemBlue
-    retryButton.setTitleColor(.white, for: .normal) // MARK: - TODO, change color?
+    retryButton.setTitleColor(.white, for: .normal)
     retryButton.titleLabel?.font = UIFont.app_body()
 
     retryButton.contentEdgeInsets = UIEdgeInsets(top: 7, left: 15, bottom: 7, right: 15)

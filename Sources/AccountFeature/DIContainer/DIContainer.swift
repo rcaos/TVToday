@@ -17,7 +17,8 @@ final class DIContainer {
     return DefaultAuthRepository(
       remoteDataSource: DefaultAuthRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
       requestTokenRepository: dependencies.requestTokenRepository,
-      accessTokenRepository: dependencies.accessTokenRepository
+      accessTokenRepository: dependencies.accessTokenRepository,
+      tokenMapper: RequestTokenMapper(authenticateBaseURL: dependencies.authenticateBaseURL)
     )
   }()
 

@@ -36,3 +36,6 @@
 
 "seasons_title" = "All Episodes";
 "seasons_section_title" = "Seasons:";
+
+"commom_error_title" = "Oops!";
+"common_error_retry" = "Retry";

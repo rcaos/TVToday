@@ -58,6 +58,12 @@ public enum Strings: String, CaseIterable {
   /// Today on TV
   case airingTodayTitle = "airing_today_title"
 
+  /// Oops!
+  case commomErrorTitle = "commom_error_title"
+
+  /// Retry
+  case commonErrorRetry = "common_error_retry"
+
   /// Episode Guide
   case detailsEpisodeGuide = "details_episode_guide"
 

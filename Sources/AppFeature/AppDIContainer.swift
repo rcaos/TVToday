@@ -113,6 +113,7 @@ public class AppDIContainer {
     let dependencies = AccountFeature.ModuleDependencies(apiDataTransferService: apiDataTransferService,
                                                          imagesBaseURL: appConfigurations.imagesBaseURL,
                                                          authenticateBaseURL: appConfigurations.authenticateBaseURL,
+                                                         gravatarBaseURL: appConfigurations.gravatarBaseURL,
                                                          requestTokenRepository: requestTokenRepository,
                                                          accessTokenRepository: accessTokenRepository,
                                                          userLoggedRepository: loggedUserRepository,showListBuilder: self)

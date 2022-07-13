@@ -35,4 +35,11 @@ final class AppConfigurations: AppConfigurationProtocol {
     }
     return imageBaseURL
   }()
+
+  lazy var authenticateBaseURL: String = {
+    guard let authenticateBaseURL = Bundle.main.object(forInfoDictionaryKey: "AUTHENTICATE_BASE_URL") as? String else {
+      fatalError("Authenticate Base URL must not be empty in plist")
+    }
+    return authenticateBaseURL
+  }()
 }

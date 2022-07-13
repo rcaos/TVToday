@@ -12,7 +12,6 @@ public class TVShowViewCell: NiblessTableViewCell {
 
   private let posterImageView: UIImageView = {
     let imageView = UIImageView()
-    imageView.image = UIImage(name: "newTV")
     imageView.contentMode = .scaleAspectFit
     imageView.translatesAutoresizingMaskIntoConstraints = false
     imageView.setContentCompressionResistancePriority(.required, for: .vertical)

@@ -20,7 +20,7 @@ public class ErrorView: NiblessView {
 
   private let imageView: UIImageView = {
     let imageView = UIImageView()
-    imageView.image = UIImage(name: "Error003")
+    imageView.image = UIImage(name: "error.placeholder")
     imageView.contentMode = .scaleAspectFit
     return imageView
   }()

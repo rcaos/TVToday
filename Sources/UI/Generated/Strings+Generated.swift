@@ -61,6 +61,9 @@ public enum Strings: String, CaseIterable {
   /// Oops!
   case commomErrorTitle = "commom_error_title"
 
+  /// No shows for Today :(
+  case commonEmptyTitle = "common_empty_title"
+
   /// Retry
   case commonErrorRetry = "common_error_retry"
 

@@ -24,6 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                                 tabBarController: UITabBarController(),
                                                 apiDataTransferService: apiDataTransferService,
                                                 imagesBaseURL: appConfigurations.imagesBaseURL,
+                                                gravatarBaseURL: appConfigurations.gravatarBaseURL,
                                                 authenticateBaseURL: appConfigurations.authenticateBaseURL)
     coordinator?.start()
     return true
@@ -52,9 +53,10 @@ struct AppConfigurations {
   let apiBaseURL: URL
   let imagesBaseURL: String
   let authenticateBaseURL: String
+  let gravatarBaseURL: String
 }
 
-func buildAppConfigurations() -> AppConfigurations {
+private func buildAppConfigurations() -> AppConfigurations {
   guard let apiKey = Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String else {
     fatalError("ApiKey must not be empty in plist")
   }
@@ -75,5 +77,12 @@ func buildAppConfigurations() -> AppConfigurations {
     fatalError("Authenticate Base URL must not be empty in plist")
   }
 
-  return AppConfigurations(apiKey: apiKey, apiBaseURL: apiBaseURL, imagesBaseURL: imageBaseURL, authenticateBaseURL: authenticateBaseURL)
+  guard let gravatarBaseURL = Bundle.main.object(forInfoDictionaryKey: "GRAVATAR_BASE_URL") as? String else {
+    fatalError("Gravatar BaseURL Base URL must not be empty in plist")
+  }
+
+  return AppConfigurations(apiKey: apiKey, apiBaseURL: apiBaseURL,
+                           imagesBaseURL: imageBaseURL,
+                           authenticateBaseURL: authenticateBaseURL,
+                           gravatarBaseURL: gravatarBaseURL)
 }

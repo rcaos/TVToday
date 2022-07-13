@@ -17,6 +17,7 @@ public class AccountFeatureDemoCoordinator: Coordinator {
   private let apiDataTransferService: DataTransferService
   private let imagesBaseURL: String
   private let authenticateBaseURL: String
+  private let gravatarBaseURL: String
   private var childCoordinators = [Coordinator]()
 
   // MARK: - Life Cycle
@@ -24,11 +25,13 @@ public class AccountFeatureDemoCoordinator: Coordinator {
               tabBarController: UITabBarController,
               apiDataTransferService: DataTransferService,
               imagesBaseURL: String,
+              gravatarBaseURL: String,
               authenticateBaseURL: String) {
     self.window = window
     self.tabBarController = tabBarController
     self.apiDataTransferService = apiDataTransferService
     self.imagesBaseURL = imagesBaseURL
+    self.gravatarBaseURL = gravatarBaseURL
     self.authenticateBaseURL = authenticateBaseURL
   }
 
@@ -51,6 +54,7 @@ public class AccountFeatureDemoCoordinator: Coordinator {
     let dependencies = AccountFeature.ModuleDependencies(apiDataTransferService: apiDataTransferService,
                                                          imagesBaseURL: imagesBaseURL,
                                                          authenticateBaseURL: authenticateBaseURL,
+                                                         gravatarBaseURL: gravatarBaseURL,
                                                          requestTokenRepository: FakeRequestTokenRepository(),
                                                          accessTokenRepository: FakeAccessTokenRepository(),
                                                          userLoggedRepository: FakeLoggedUserRepository(),

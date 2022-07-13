@@ -26,11 +26,7 @@ class ProfileTableViewCell: NiblessTableViewCell {
 
   func setModel(with entity: Account) {
     nameLabel.text = Strings.accountGreetings.localized() + " \(entity.userName)!"
-
-    if let hash = entity.avatar?.hashId {
-      let imageURL = "https://www.gravatar.com/avatar/\(hash)"  // MARK: - TODO, move to configuration
-      avatarImageView.setImage(with: URL(string: imageURL))
-    }
+    avatarImageView.setImage(with: entity.avatarURL)
   }
 
   private func setupUI() {

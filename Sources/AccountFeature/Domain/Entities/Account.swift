@@ -11,9 +11,5 @@ import Foundation
 public struct Account: Hashable {
   let id: Int
   let userName: String
-  let avatar: Avatar?
-}
-
-public struct Avatar: Hashable {
-  let hashId: String?
+  let avatarURL: URL?
 }

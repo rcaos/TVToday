@@ -24,7 +24,6 @@ class AiringTodayViewController: NiblessViewController, Loadable, Retryable, Emp
 
   // MARK: - Life Cycle
   override func loadView() {
-    //rootView = AiringTodayRootView(viewModel: viewModel)
     rootView = AiringTodayRootViewCompositional(viewModel: viewModel)
     view = rootView
   }
@@ -56,7 +55,7 @@ class AiringTodayViewController: NiblessViewController, Loadable, Retryable, Emp
 
     case .empty:
       hideLoadingView()
-      showEmptyView(with: "No shows for Today") // MARK: - TODO, localized
+      showEmptyView(with: Strings.commonEmptyTitle.localized())
 
     case .error(let message):
       hideLoadingView()

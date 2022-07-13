@@ -43,7 +43,6 @@ let package = Package(
     .target(
       name: "AppFeature",
       dependencies: [
-        // TODO, check graph here
         "AccountFeature",
         "AiringTodayFeature",
         "KeyChainStorage",

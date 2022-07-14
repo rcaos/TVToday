@@ -7,8 +7,11 @@ TVShows iOS app built with Combine, using the [TMDb API](https://www.themoviedb.
 
 ## What I'm working on
 
-June, 2022
+
+July, 2022
 * ⏳ Solve TODO's (_wip_
+
+June, 2022
 * ✅ Localize UI and requests to endpoint
 
 May, 2022

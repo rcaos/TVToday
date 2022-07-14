@@ -6,11 +6,18 @@
 //
 
 @testable import AiringTodayFeature
+import UI
+import Shared
 import CommonMocks
 import SnapshotTesting
 import XCTest
 
 class AiringTodayViewTests: XCTestCase {
+
+  override class func setUp() {
+    super.setUp()
+    Strings.currentLocale = Locale(identifier: Language.en.rawValue)
+  }
 
   override func setUp() {
     super.setUp()

@@ -20,7 +20,6 @@ public class EmptyView: NiblessView {
 
   private let imageView: UIImageView = {
     let imageView = UIImageView()
-    imageView.image = UIImage(name: "newTV")
     imageView.contentMode = .scaleAspectFit
     return imageView
   }()
@@ -41,8 +40,7 @@ public class EmptyView: NiblessView {
   private func configureViews() {
     backgroundColor = .systemBackground
     messageLabel.numberOfLines = 0
-    // MARK: TODO, rename image
-    imageView.image = UIImage(name: "Error009")
+    imageView.image = UIImage(name: "empty.placeholder")
   }
 
   private func constructHierarchy() {

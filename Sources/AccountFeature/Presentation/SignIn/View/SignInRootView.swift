@@ -24,7 +24,7 @@ class SignInRootView: NiblessView {
 
   private let tvImageView: UIImageView = {
     let imageView = UIImageView()
-    imageView.image = UIImage(name: "newTV")
+    imageView.image = UIImage(name: "account.tv")
     imageView.contentMode = .scaleAspectFit
     return imageView
   }()

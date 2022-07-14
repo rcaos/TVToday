@@ -16,6 +16,8 @@ public struct ModuleDependencies {
 
   let apiDataTransferService: DataTransferService
   let imagesBaseURL: String
+  let authenticateBaseURL: String
+  let gravatarBaseURL: String
   let showListBuilder: ModuleShowListDetailsBuilder
   let requestTokenRepository: RequestTokenRepositoryProtocol
   let accessTokenRepository: AccessTokenRepositoryProtocol
@@ -23,6 +25,8 @@ public struct ModuleDependencies {
 
   public init(apiDataTransferService: DataTransferService,
               imagesBaseURL: String,
+              authenticateBaseURL: String,
+              gravatarBaseURL: String,
               requestTokenRepository: RequestTokenRepositoryProtocol,
               accessTokenRepository: AccessTokenRepositoryProtocol,
               userLoggedRepository: LoggedUserRepositoryProtocol,
@@ -30,6 +34,8 @@ public struct ModuleDependencies {
   ) {
     self.apiDataTransferService = apiDataTransferService
     self.imagesBaseURL = imagesBaseURL
+    self.authenticateBaseURL = authenticateBaseURL
+    self.gravatarBaseURL = gravatarBaseURL
     self.showListBuilder = showListBuilder
     self.requestTokenRepository = requestTokenRepository
     self.accessTokenRepository = accessTokenRepository

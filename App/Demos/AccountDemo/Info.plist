@@ -8,6 +8,10 @@
 	<string>$(API_KEY)</string>
 	<key>IMAGE_BASE_URL</key>
 	<string>$(IMAGE_BASE_URL)</string>
+	<key>AUTHENTICATE_BASE_URL</key>
+	<string>$(AUTHENTICATE_BASE_URL)</string>
+	<key>GRAVATAR_BASE_URL</key>
+	<string>$(GRAVATAR_BASE_URL)</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

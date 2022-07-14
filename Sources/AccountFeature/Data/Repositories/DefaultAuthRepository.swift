@@ -16,13 +16,16 @@ final class DefaultAuthRepository {
   private let remoteDataSource: AuthRemoteDataSource
   private let requestTokenRepository: RequestTokenRepositoryProtocol
   private let accessTokenRepository: AccessTokenRepositoryProtocol
+  private let tokenMapper: RequestTokenMapperProtocol
 
   init(remoteDataSource: AuthRemoteDataSource,
        requestTokenRepository: RequestTokenRepositoryProtocol,
-       accessTokenRepository: AccessTokenRepositoryProtocol) {
+       accessTokenRepository: AccessTokenRepositoryProtocol,
+       tokenMapper: RequestTokenMapperProtocol) {
     self.remoteDataSource = remoteDataSource
     self.requestTokenRepository = requestTokenRepository
     self.accessTokenRepository = accessTokenRepository
+    self.tokenMapper = tokenMapper
   }
 }
 
@@ -33,8 +36,7 @@ extension DefaultAuthRepository: AuthRepository {
   func requestToken() -> AnyPublisher<NewRequestToken, DataTransferError> {
     return remoteDataSource.requestToken()
       .tryMap { result -> NewRequestToken in
-        // MARK: - TODO, Inject URL base instead
-        let newToken = try self.mapRequestToken(basePath: "https://www.themoviedb.org/authenticate", result: result)
+        let newToken = try self.tokenMapper.mapRequestToken(model: result)
         self.requestTokenRepository.saveRequestToken (result.token)
         return newToken
       }
@@ -42,17 +44,6 @@ extension DefaultAuthRepository: AuthRepository {
         return DataTransferError.noResponse // MARk: - TODO, change error
       }
       .eraseToAnyPublisher()
-  }
-
-  // MARK: - TODO, move to Mapping file
-  private func mapRequestToken(basePath: String, result: NewRequestTokenDTO) throws -> NewRequestToken {
-    if result.success == true,
-       let url = URL(string: "\(basePath)/\(result.token)") {
-      return NewRequestToken(token: result.token, url: url)
-    } else {
-      print("cannot Convert request token= \(result), basePath=\(basePath)")
-      throw DataTransferError.noResponse // MARk: - TODO, change error
-    }
   }
 
   func createSession() -> AnyPublisher<NewSession, DataTransferError> {

@@ -5,6 +5,7 @@
 //  Created by Jeans Ruiz on 8/8/20.
 //
 
+import Foundation
 @testable import AccountFeature
 
 extension Account {
@@ -12,12 +13,12 @@ extension Account {
   static func stub(
     accountId: Int = 1,
     userName: String = "userName",
-    avatarId: String? = nil
+    avatarURL: URL? = nil
   ) -> Self {
     Account(
       id: accountId,
       userName: userName,
-      avatar: Avatar(hashId: avatarId)
+      avatarURL: avatarURL
     )
   }
 }

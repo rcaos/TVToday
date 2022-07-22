@@ -9,7 +9,7 @@ import Combine
 import Shared
 
 public protocol FetchSearchesUseCase {
-  func execute(requestValue: FetchSearchesUseCaseRequestValue) -> AnyPublisher<[Search], CustomError>
+  func execute(requestValue: FetchSearchesUseCaseRequestValue) -> AnyPublisher<[Search], ErrorEnvelope>
 }
 
 public struct FetchSearchesUseCaseRequestValue {
@@ -23,7 +23,7 @@ public final class DefaultFetchSearchesUseCase: FetchSearchesUseCase {
     self.searchLocalRepository = searchLocalRepository
   }
 
-  public func execute(requestValue: FetchSearchesUseCaseRequestValue) -> AnyPublisher<[Search], CustomError> {
+  public func execute(requestValue: FetchSearchesUseCaseRequestValue) -> AnyPublisher<[Search], ErrorEnvelope> {
     return searchLocalRepository.fetchRecentSearches()
   }
 }

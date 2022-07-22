@@ -21,7 +21,7 @@ class ProfileViewModelTests: XCTestCase {
 
   func test_When_User_Is_Logged_Should_Contains_Sections_On_DataSource() {
     // given
-    let accountResult = Account.stub(accountId: 1, userName: "UserName", avatarId: "mockHash")
+    let accountResult = Account.stub(accountId: 1, userName: "UserName", avatarURL: URL(string: ""))
     let sut: ProfileViewModelProtocol = ProfileViewModel(account: accountResult)
 
     // when

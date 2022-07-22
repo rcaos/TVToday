@@ -9,7 +9,7 @@ import Combine
 import Shared
 
 public protocol FetchVisitedShowsUseCase {
-  func execute(requestValue: FetchVisitedShowsUseCaseRequestValue) -> AnyPublisher<[ShowVisited], CustomError>
+  func execute(requestValue: FetchVisitedShowsUseCaseRequestValue) -> AnyPublisher<[ShowVisited], ErrorEnvelope>
 }
 
 public struct FetchVisitedShowsUseCaseRequestValue {
@@ -24,7 +24,7 @@ public final class DefaultFetchVisitedShowsUseCase: FetchVisitedShowsUseCase {
     self.showsVisitedLocalRepository = showsVisitedLocalRepository
   }
 
-  public func execute(requestValue: FetchVisitedShowsUseCaseRequestValue) -> AnyPublisher<[ShowVisited], CustomError> {
+  public func execute(requestValue: FetchVisitedShowsUseCaseRequestValue) -> AnyPublisher<[ShowVisited], ErrorEnvelope> {
     return showsVisitedLocalRepository.fetchVisitedShows()
   }
 }

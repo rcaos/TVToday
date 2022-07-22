@@ -26,9 +26,9 @@ final class CoreDataShowVisitedStorage {
 
 extension CoreDataShowVisitedStorage: ShowsVisitedLocalDataSource {
 
-  public func saveShow(id: Int, pathImage: String, userId: Int) -> AnyPublisher<Void, CustomError> {
+  public func saveShow(id: Int, pathImage: String, userId: Int) -> AnyPublisher<Void, ErrorEnvelope> {
     return Deferred { [store, limitStorage] in
-      return Future<Void, CustomError> { promise in
+      return Future<Void, ErrorEnvelope> { promise in
         store.delete(showId: id)
         store.deleteLimitStorage(userId: userId, until: limitStorage)
         store.insert(id: id, pathImage: pathImage, userId: userId)
@@ -38,9 +38,9 @@ extension CoreDataShowVisitedStorage: ShowsVisitedLocalDataSource {
     .eraseToAnyPublisher()
   }
 
-  public func fetchVisitedShows(userId: Int) -> AnyPublisher<[ShowVisitedDLO], CustomError> {
+  public func fetchVisitedShows(userId: Int) -> AnyPublisher<[ShowVisitedDLO], ErrorEnvelope> {
     return Deferred { [store] in
-      return Future<[ShowVisitedDLO], CustomError> { promise in
+      return Future<[ShowVisitedDLO], ErrorEnvelope> { promise in
         let results = store.findAll(for: userId).map { $0.toDomain() }
         promise(.success(results))
       }

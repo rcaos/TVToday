@@ -79,12 +79,12 @@ final class FakeLoggedUserRepository: LoggedUserRepositoryProtocol {
 
 // MARK: - ShowsVisitedLocalRepository
 final class FakeShowsVisitedLocalRepository: ShowsVisitedLocalRepositoryProtocol {
-  func saveShow(id: Int, pathImage: String) -> AnyPublisher<Void, CustomError> {
-    return Just(()).setFailureType(to: CustomError.self).eraseToAnyPublisher()
+  func saveShow(id: Int, pathImage: String) -> AnyPublisher<Void, ErrorEnvelope> {
+    return Just(()).setFailureType(to: ErrorEnvelope.self).eraseToAnyPublisher()
   }
 
-  func fetchVisitedShows() -> AnyPublisher<[ShowVisited], CustomError> {
-    return Just([]).setFailureType(to: CustomError.self).eraseToAnyPublisher()
+  func fetchVisitedShows() -> AnyPublisher<[ShowVisited], ErrorEnvelope> {
+    return Just([]).setFailureType(to: ErrorEnvelope.self).eraseToAnyPublisher()
   }
 
   public func recentVisitedShowsDidChange() -> AnyPublisher<Bool, Never> {

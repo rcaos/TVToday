@@ -11,8 +11,13 @@ import XCTest
 @testable import SearchShowsFeature
 @testable import Shared
 @testable import Persistence
+import UI
 
 class SearchShowsOptionsViewTests: XCTestCase {
+
+  override class func setUp() {
+    Strings.currentLocale = Locale(identifier: Language.en.rawValue)
+  }
 
   override func setUp() {
     super.setUp()

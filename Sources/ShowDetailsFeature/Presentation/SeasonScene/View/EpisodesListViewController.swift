@@ -19,7 +19,7 @@ class EpisodesListViewController: NiblessViewController, Loadable, Retryable {
 
   private let loadingView = LoadingView(frame: .zero)
   private let emptyView = MessageImageView(message: "No episodes available", image: "tvshowEmpty")
-  private let errorView = MessageImageView(message: "Unable to connect to server", image: "error")
+  private let errorView = MessageImageView(message: "Unable to connect to server", image: "error.list.placeholder")
 
   private var disposeBag = Set<AnyCancellable>()
 

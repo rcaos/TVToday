@@ -7,11 +7,17 @@
 
 import XCTest
 import SnapshotTesting
+import Shared
+import UI
 @testable import AccountFeature
 
 class AccountViewTests: XCTestCase {
 
   private let factory = AccountViewControllerFactoryMock()
+
+  override class func setUp() {
+    Strings.currentLocale = Locale(identifier: Language.en.rawValue)
+  }
 
   override func setUp() {
     super.setUp()

@@ -10,18 +10,18 @@ import Persistence
 import Shared
 
 final class FetchVisitedShowsUseCaseMock: FetchVisitedShowsUseCase {
-  var error: CustomError?
+  var error: ErrorEnvelope?
   var result: [ShowVisited]?
 
-  func execute(requestValue: FetchVisitedShowsUseCaseRequestValue) -> AnyPublisher<[ShowVisited], CustomError> {
+  func execute(requestValue: FetchVisitedShowsUseCaseRequestValue) -> AnyPublisher<[ShowVisited], ErrorEnvelope> {
     if let error = error {
       return Fail(error: error).eraseToAnyPublisher()
     }
 
     if let result = result {
-      return Just(result).setFailureType(to: CustomError.self).eraseToAnyPublisher()
+      return Just(result).setFailureType(to: ErrorEnvelope.self).eraseToAnyPublisher()
     }
 
-    return Empty().setFailureType(to: CustomError.self).eraseToAnyPublisher()
+    return Empty().setFailureType(to: ErrorEnvelope.self).eraseToAnyPublisher()
   }
 }

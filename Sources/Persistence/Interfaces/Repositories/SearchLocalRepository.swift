@@ -19,12 +19,12 @@ public final class SearchLocalRepository {
 }
 
 extension SearchLocalRepository: SearchLocalRepositoryProtocol {
-  public func saveSearch(query: String) -> AnyPublisher<Void, CustomError> {
+  public func saveSearch(query: String) -> AnyPublisher<Void, ErrorEnvelope> {
     let userId = loggedUserRepository.getUser()?.id ?? 0
     return dataSource.saveSearch(query: query, userId: userId)
   }
 
-  public func fetchRecentSearches() -> AnyPublisher<[Search], CustomError> {
+  public func fetchRecentSearches() -> AnyPublisher<[Search], ErrorEnvelope> {
     let userId = loggedUserRepository.getUser()?.id ?? 0
     return dataSource.fetchRecentSearches(userId: userId)
       .map {

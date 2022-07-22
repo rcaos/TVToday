@@ -11,18 +11,18 @@ import Combine
 @testable import Persistence
 
 final class FetchSearchsUseCaseMock: FetchSearchesUseCase {
-  var error: CustomError?
+  var error: ErrorEnvelope?
   var result: [Search]?
 
-  public func execute(requestValue: FetchSearchesUseCaseRequestValue) -> AnyPublisher<[Search], CustomError> {
+  public func execute(requestValue: FetchSearchesUseCaseRequestValue) -> AnyPublisher<[Search], ErrorEnvelope> {
     if let error = error {
       return Fail(error: error).eraseToAnyPublisher()
     }
 
     if let result = result {
-      return Just(result).setFailureType(to: CustomError.self).eraseToAnyPublisher()
+      return Just(result).setFailureType(to: ErrorEnvelope.self).eraseToAnyPublisher()
     }
 
-    return Empty().setFailureType(to: CustomError.self).eraseToAnyPublisher()
+    return Empty().setFailureType(to: ErrorEnvelope.self).eraseToAnyPublisher()
   }
 }

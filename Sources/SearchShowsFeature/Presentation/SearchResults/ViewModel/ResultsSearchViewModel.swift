@@ -76,7 +76,7 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
     viewState
       .removeDuplicates()
       .filter { $0 == .initial }
-      .flatMap { [fetchRecentSearchesUseCase] _ -> AnyPublisher<[Search], CustomError> in
+      .flatMap { [fetchRecentSearchesUseCase] _ -> AnyPublisher<[Search], ErrorEnvelope> in
         return fetchRecentSearchesUseCase.execute(requestValue: FetchSearchesUseCaseRequestValue())
       }
       .receive(on: scheduler)

@@ -51,21 +51,21 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
   }
 
   // MARK: - Private
-  private func fetchRecentShows() -> AnyPublisher<[ShowVisited], CustomError> {
+  private func fetchRecentShows() -> AnyPublisher<[ShowVisited], ErrorEnvelope> {
     return fetchVisitedShowsUseCase.execute(requestValue: FetchVisitedShowsUseCaseRequestValue())
   }
 
-  private func fetchGenres() -> AnyPublisher<GenreList, CustomError> {
+  private func fetchGenres() -> AnyPublisher<GenreList, ErrorEnvelope> {
     return fetchGenresUseCase.execute(requestValue: FetchGenresUseCaseRequestValue())
-      .mapError { error -> CustomError in return CustomError.transferError(error) }
+      .mapError { error -> ErrorEnvelope in return ErrorEnvelope(transferError: error) }
       .eraseToAnyPublisher()
   }
 
-  private func recentShowsDidChanged() -> AnyPublisher<[ShowVisited], CustomError> {
+  private func recentShowsDidChanged() -> AnyPublisher<[ShowVisited], ErrorEnvelope> {
     return recentVisitedShowsDidChange.execute()
       .filter { $0 }
-      .flatMap { [weak self] _ -> AnyPublisher<[ShowVisited], CustomError> in
-        guard let strongSelf = self else { return Just([]).setFailureType(to: CustomError.self).eraseToAnyPublisher() }
+      .flatMap { [weak self] _ -> AnyPublisher<[ShowVisited], ErrorEnvelope> in
+        guard let strongSelf = self else { return Just([]).setFailureType(to: ErrorEnvelope.self).eraseToAnyPublisher() }
         return strongSelf.fetchRecentShows()
       }
       .eraseToAnyPublisher()

@@ -9,6 +9,6 @@ import Combine
 import Shared
 
 public protocol SearchLocalDataSource {
-  func saveSearch(query: String, userId: Int) -> AnyPublisher<Void, CustomError>
-  func fetchRecentSearches(userId: Int) -> AnyPublisher<[SearchDLO], CustomError>
+  func saveSearch(query: String, userId: Int) -> AnyPublisher<Void, ErrorEnvelope>
+  func fetchRecentSearches(userId: Int) -> AnyPublisher<[SearchDLO], ErrorEnvelope>
 }

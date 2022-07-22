@@ -10,9 +10,9 @@ import Combine
 import Shared
 
 public protocol ShowsVisitedLocalRepositoryProtocol {
-  func saveShow(id: Int, pathImage: String) -> AnyPublisher<Void, CustomError>
+  func saveShow(id: Int, pathImage: String) -> AnyPublisher<Void, ErrorEnvelope>
 
-  func fetchVisitedShows() -> AnyPublisher<[ShowVisited], CustomError>
+  func fetchVisitedShows() -> AnyPublisher<[ShowVisited], ErrorEnvelope>
 
   func recentVisitedShowsDidChange() -> AnyPublisher<Bool, Never>
 }

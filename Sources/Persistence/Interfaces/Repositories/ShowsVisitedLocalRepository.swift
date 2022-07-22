@@ -19,12 +19,12 @@ public final class ShowsVisitedLocalRepository {
 }
 
 extension ShowsVisitedLocalRepository: ShowsVisitedLocalRepositoryProtocol {
-  public func saveShow(id: Int, pathImage: String) -> AnyPublisher<Void, CustomError> {
+  public func saveShow(id: Int, pathImage: String) -> AnyPublisher<Void, ErrorEnvelope> {
     let userId = loggedUserRepository.getUser()?.id ?? 0
     return dataSource.saveShow(id: id, pathImage: pathImage, userId: userId)
   }
 
-  public func fetchVisitedShows() -> AnyPublisher<[ShowVisited], CustomError> {
+  public func fetchVisitedShows() -> AnyPublisher<[ShowVisited], ErrorEnvelope> {
     let userId = loggedUserRepository.getUser()?.id ?? 0
     return dataSource.fetchVisitedShows(userId: userId)
       .map {

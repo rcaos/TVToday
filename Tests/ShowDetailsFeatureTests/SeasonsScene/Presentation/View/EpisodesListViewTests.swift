@@ -11,6 +11,7 @@ import CombineSchedulers
 
 @testable import ShowDetailsFeature
 @testable import Shared
+import UI
 
 func configureWith(_ viewController: UIViewController, style: UIUserInterfaceStyle) {
   viewController.overrideUserInterfaceStyle = style
@@ -20,6 +21,10 @@ func configureWith(_ viewController: UIViewController, style: UIUserInterfaceSty
 class EpisodesListViewTests: XCTestCase {
 
   private var headerViewModel: SeasonHeaderViewModel!
+
+  override class func setUp() {
+    Strings.currentLocale = Locale(identifier: Language.en.rawValue)
+  }
 
   override func setUp() {
     super.setUp()

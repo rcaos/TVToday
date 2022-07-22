@@ -8,11 +8,16 @@
 import CommonMocks
 import SnapshotTesting
 import XCTest
+import Shared
 import UI
 
 @testable import ShowListFeature
 
 class TVShowListViewTests: XCTestCase {
+
+  override class func setUp() {
+    Strings.currentLocale = Locale(identifier: Language.en.rawValue)
+  }
 
   override func setUp() {
     super.setUp()

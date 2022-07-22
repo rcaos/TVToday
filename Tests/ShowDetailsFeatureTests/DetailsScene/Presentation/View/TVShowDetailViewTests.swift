@@ -10,8 +10,13 @@ import XCTest
 
 @testable import ShowDetailsFeature
 @testable import Shared
+import UI
 
 class TVShowDetailViewTests: XCTestCase {
+
+  override class func setUp() {
+    Strings.currentLocale = Locale(identifier: Language.en.rawValue)
+  }
 
   override func setUp() {
     super.setUp()

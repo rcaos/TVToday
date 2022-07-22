@@ -14,6 +14,10 @@ import XCTest
 
 class PopularViewTests: XCTestCase {
 
+  override class func setUp() {
+    Strings.currentLocale = Locale(identifier: Language.en.rawValue)
+  }
+
   override func setUp() {
     super.setUp()
     isRecording = false

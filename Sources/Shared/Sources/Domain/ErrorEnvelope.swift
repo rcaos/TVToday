@@ -1,5 +1,5 @@
 //
-//  CustomError.swift
+//  ErrorEnvelope.swift
 //  TVToday
 //
 //  Created by Jeans Ruiz on 6/26/20.

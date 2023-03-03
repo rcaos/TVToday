@@ -7,10 +7,6 @@ TVShows iOS app built with Combine, using the [TMDb API](https://www.themoviedb.
 
 ## What I'm working on
 
-
-July, 2022
-* ⏳ Solve TODO's (_wip_
-
 June, 2022
 * ✅ Localize UI and requests to endpoint
 
@@ -69,7 +65,7 @@ So you need to leverage your Unit tests, Snapshot Tests and Demo targets to save
 
 
 ## Snapshot Tests
-Last snapshot tests were created using `Xcode 13.2.1`, with Simulator `iPhone SE (2nd generation) iOS 15.2`
+Last snapshot tests were created using `Xcode 14.2`, with Simulator `iPhone SE (3rd generation) iOS 16.2`
 
 ## Project evolution
 - Monolith: https://github.com/rcaos/TVToday/releases/tag/v0.3.0

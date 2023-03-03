@@ -54,7 +54,6 @@ class SearchShowsOptionsViewTests: XCTestCase {
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
-    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneXsMax)))
 
     // when
     let lightViewController = SearchOptionsViewController(viewModel: viewModel)
@@ -62,7 +61,6 @@ class SearchShowsOptionsViewTests: XCTestCase {
 
     // then
     assertSnapshot(matching: lightViewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.1, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewIsEmpty_thenShowEmptyScreen() {

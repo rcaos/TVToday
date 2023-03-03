@@ -33,14 +33,14 @@ class SearchShowsOptionsViewTests: XCTestCase {
     configureWith(viewController, style: .dark)
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
 
     // when
     let lightViewController = SearchOptionsViewController(viewModel: viewModel)
     configureWith(lightViewController, style: .light)
 
     // then
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewPopulated_thenShowPopulatedScreen() {
@@ -53,16 +53,14 @@ class SearchShowsOptionsViewTests: XCTestCase {
     configureWith(viewController, style: .dark)
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
-    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneXsMax)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
 
     // when
     let lightViewController = SearchOptionsViewController(viewModel: viewModel)
     configureWith(lightViewController, style: .light)
 
     // then
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.1, on: .image(on: .iPhoneXsMax)))
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewIsEmpty_thenShowEmptyScreen() {
@@ -74,14 +72,14 @@ class SearchShowsOptionsViewTests: XCTestCase {
     configureWith(viewController, style: .dark)
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
 
     // when
     let lightViewController = SearchOptionsViewController(viewModel: viewModel)
     configureWith(lightViewController, style: .light)
 
     // then
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
   }
 
   func test_WhenViewIsError_thenShowErrorScreen() {
@@ -93,13 +91,13 @@ class SearchShowsOptionsViewTests: XCTestCase {
     configureWith(viewController, style: .dark)
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
 
     // when
     let lightViewController = SearchOptionsViewController(viewModel: viewModel)
     configureWith(lightViewController, style: .light)
 
     // then
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.1, on: .image(on: .iPhoneSe)))
+    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
   }
 }

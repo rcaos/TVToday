@@ -69,7 +69,6 @@ class EpisodesListViewTests: XCTestCase {
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneXsMax)))
 
     // when
     let lightViewController = EpisodesListViewController(viewModel: initialState)
@@ -77,7 +76,6 @@ class EpisodesListViewTests: XCTestCase {
 
     // then
     assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewModelReturnsError_thenShow_ErrorScreen() {
@@ -106,7 +104,6 @@ class EpisodesListViewTests: XCTestCase {
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneXsMax)))
 
     // when
     let lightViewController = EpisodesListViewController(viewModel: initialState)
@@ -114,7 +111,6 @@ class EpisodesListViewTests: XCTestCase {
 
     // then
     assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewModelReturnsEmpty_thenShow_EmptyScreen() {

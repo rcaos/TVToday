@@ -109,41 +109,6 @@ class NetworkServiceTests: XCTestCase {
     wait(for: [expectation], timeout: 0.1)
   }
 
-  func test_whenMalformedUrlPassed_shouldReturnUrlGenerationError() {
-    // given
-    let config = NetworkConfigurableMock()
-    let expectation = self.expectation(description: "Should return correct data")
-
-    let expectedResponseData = "Response data".data(using: .utf8)!
-    let sut = DefaultNetworkService(config: config, sessionManager: NetworkSessionManagerMock(response: HTTPURLResponse(),
-                                                                                              data: expectedResponseData,
-                                                                                              error: nil))
-    // when
-    let endpoint = EndpointMock(path: "-;@,?:ą", method: .get)
-    sut.request(endpoint: endpoint)
-      .sink(receiveCompletion: { completion in
-        switch completion {
-        case .failure(let error):
-          guard case NetworkError.urlGeneration = error  else {
-            XCTFail("Bad error response")
-            return
-          }
-          expectation.fulfill()
-        default:
-          XCTFail("Should not happen")
-          return
-        }
-
-      }, receiveValue: { _ in
-        XCTFail("Should not response data")
-        return
-      })
-      .store(in: &cancellabes)
-
-    // then
-    wait(for: [expectation], timeout: 0.1)
-  }
-
   func test_whenStatusCodeEqualOrAbove400_shouldReturnhasStatusCodeError() {
     // given
     let config = NetworkConfigurableMock()

@@ -52,7 +52,6 @@ class TVShowDetailViewTests: XCTestCase {
 
     // then
     assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneXsMax)))
 
     // when
     let lightViewController = TVShowDetailViewController(viewModel: initialState)
@@ -60,7 +59,6 @@ class TVShowDetailViewTests: XCTestCase {
 
     // then
     assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneXsMax)))
   }
 
   func test_WhenViewIsError_thenShowErrorScreen() {

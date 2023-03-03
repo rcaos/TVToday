@@ -65,7 +65,9 @@ So you need to leverage your Unit tests, Snapshot Tests and Demo targets to save
 
 
 ## Snapshot Tests
-Last snapshot tests were created using `Xcode 14.2`, with Simulator `iPhone SE (3rd generation) iOS 16.2`
+Last snapshot tests were created using an Apple Silicon with `Xcode 14.2`, Simulator `iPhone SE (3rd generation) iOS 16.2`
+> ⚠️ Warning: Snapshots must be compared using the exact same simulator that originally took the reference to avoid discrepancies between images.
+
 
 ## Project evolution
 - Monolith: https://github.com/rcaos/TVToday/releases/tag/v0.3.0

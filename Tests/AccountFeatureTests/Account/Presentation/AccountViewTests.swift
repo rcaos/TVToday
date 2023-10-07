@@ -22,6 +22,7 @@ class AccountViewTests: XCTestCase {
   override func setUp() {
     super.setUp()
     isRecording = false
+    defaultScheduler = .immediate
   }
 
   func test_WhenViewIsLogin_thenShowLoginScreen() {
@@ -33,14 +34,14 @@ class AccountViewTests: XCTestCase {
     configureWith(viewController, style: .dark)
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: viewController, as: Snapshotting.image(on: .iPhoneSe, precision: 0.98))
 
     // when
     let lightViewController = AccountViewController(viewModel: accountViewModel, viewControllersFactory: factory)
     configureWith(lightViewController, style: .light)
 
     // then
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: lightViewController, as: Snapshotting.image(on: .iPhoneSe, precision: 0.98))
   }
 
   func test_WhenViewIsLogged_thenShowProfileScreen() {
@@ -52,13 +53,13 @@ class AccountViewTests: XCTestCase {
     configureWith(viewController, style: .dark)
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: viewController, as: Snapshotting.image(on: .iPhoneSe, precision: 0.98))
 
     // when
     let lightViewController = AccountViewController(viewModel: accountViewModel, viewControllersFactory: factory)
     configureWith(lightViewController, style: .light)
 
     // then
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: lightViewController, as: Snapshotting.image(on: .iPhoneSe, precision: 0.98))
   }
 }

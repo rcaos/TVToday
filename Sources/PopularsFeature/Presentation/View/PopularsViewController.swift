@@ -39,7 +39,7 @@ class PopularsViewController: NiblessViewController, Loadable, Retryable, Emptia
   private func subscribe() {
     viewModel
       .viewStateObservableSubject
-      .receive(on: DispatchQueue.main)
+      .receive(on: defaultScheduler)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] state in
         self?.handleTableState(with: state)
       })

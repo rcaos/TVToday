@@ -6,10 +6,11 @@
 //
 
 import Combine
-import Shared
-import Persistence
-import NetworkingInterface
 import Foundation
+import NetworkingInterface
+import Persistence
+import Shared
+import UI
 
 public protocol SearchTVShowsUseCase {
   func execute(requestValue: SearchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowPage, DataTransferError>
@@ -33,7 +34,7 @@ final class DefaultSearchTVShowsUseCase: SearchTVShowsUseCase {
 
   func execute(requestValue: SearchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowPage, DataTransferError> {
     return tvShowsPageRepository.searchShowsFor(query: requestValue.query, page: requestValue.page)
-      .receive(on: DispatchQueue.main)  // MARK: - TODO, Change
+      .receive(on: defaultScheduler)
       .flatMap { resultSearch -> AnyPublisher<TVShowPage, DataTransferError> in
         if requestValue.page == 1 {
           return self.searchsLocalRepository.saveSearch(query: requestValue.query)

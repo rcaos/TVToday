@@ -43,7 +43,7 @@ class SearchOptionsViewController: NiblessViewController, Loadable {
 
   private func bindViewState() {
     viewModel.viewState
-      .receive(on: DispatchQueue.main)
+      .receive(on: defaultScheduler)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] viewState in
         self?.handleTableState(with: viewState)
       })

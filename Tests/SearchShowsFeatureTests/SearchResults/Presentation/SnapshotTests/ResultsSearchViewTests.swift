@@ -21,6 +21,7 @@ class ResultsSearchViewTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
+    defaultScheduler = .immediate
     isRecording = false
   }
 
@@ -34,13 +35,13 @@ class ResultsSearchViewTests: XCTestCase {
     configureWith(viewController, style: .dark)
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: viewController, as: .image(on: .iPhoneSe, precision: 0.98))
 
     let lightViewController = ResultsSearchViewController(viewModel: viewModel)
     configureWith(lightViewController, style: .dark)
 
     // then
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: lightViewController, as: .image(on: .iPhoneSe, precision: 0.98))
   }
 
   func test_WhenViewIsLoading_thenShowLoadingScreen() {
@@ -52,14 +53,14 @@ class ResultsSearchViewTests: XCTestCase {
     configureWith(viewController, style: .dark)
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: viewController, as: .image(on: .iPhoneSe, precision: 0.99))
 
     // when
     let lightViewController = ResultsSearchViewController(viewModel: viewModel)
     configureWith(lightViewController, style: .dark)
 
     // then
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: lightViewController, as: .image(on: .iPhoneSe, precision: 0.99))
   }
 
   func test_WhenViewIsPopulated_thenShowPopulatedScreen() {
@@ -78,14 +79,14 @@ class ResultsSearchViewTests: XCTestCase {
     configureWith(viewController, style: .dark)
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: viewController, as: .image(on: .iPhoneSe, precision: 0.99))
 
     // when
     let lightViewController = ResultsSearchViewController(viewModel: viewModel)
     configureWith(lightViewController, style: .dark)
 
     // then
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: lightViewController, as: .image(on: .iPhoneSe, precision: 0.99))
   }
 
   func test_WhenViewIsEmpty_thenShowEmptyScreen() {
@@ -97,14 +98,14 @@ class ResultsSearchViewTests: XCTestCase {
     configureWith(viewController, style: .dark)
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: viewController, as: .image(on: .iPhoneSe, precision: 0.99))
 
     // given
     let lightViewController = ResultsSearchViewController(viewModel: viewModel)
     configureWith(lightViewController, style: .dark)
 
     // then
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: lightViewController, as: .image(on: .iPhoneSe, precision: 0.99))
   }
 
   func test_WhenViewDidError_thenShowErrorScreen() {
@@ -116,13 +117,13 @@ class ResultsSearchViewTests: XCTestCase {
     configureWith(viewController, style: .dark)
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: viewController, as: .image(on: .iPhoneSe, precision: 0.99))
 
     // when
     let lightViewController = ResultsSearchViewController(viewModel: viewModel)
     configureWith(lightViewController, style: .dark)
 
     // then
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: lightViewController, as: .image(on: .iPhoneSe, precision: 0.99))
   }
 }

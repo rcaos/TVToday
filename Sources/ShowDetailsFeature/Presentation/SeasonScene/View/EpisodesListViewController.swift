@@ -52,7 +52,7 @@ class EpisodesListViewController: NiblessViewController, Loadable, Retryable {
   private func subscribeToViewState() {
     viewModel
       .viewState
-      .receive(on: DispatchQueue.main)
+      .receive(on: defaultScheduler)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] state in
         self?.configureView(with: state)
       })

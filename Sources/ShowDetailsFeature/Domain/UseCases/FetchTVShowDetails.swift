@@ -7,10 +7,11 @@
 //
 
 import Combine
-import NetworkingInterface
-import Shared
-import Persistence
 import Foundation
+import NetworkingInterface
+import Persistence
+import Shared
+import UI
 
 public protocol FetchTVShowDetailsUseCase {
   // MARK: - TODO Use another error maybe?
@@ -35,7 +36,7 @@ public final class DefaultFetchTVShowDetailsUseCase: FetchTVShowDetailsUseCase {
   public func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> AnyPublisher<TVShowDetail, DataTransferError> {
     return tvShowDetailsRepository
       .fetchTVShowDetails(with: requestValue.identifier)
-      .receive(on: DispatchQueue.main) // MARK: - TODO,
+      .receive(on: defaultScheduler)
       .flatMap { [tvShowsVisitedRepository] details -> AnyPublisher<TVShowDetail, DataTransferError> in
         return tvShowsVisitedRepository.saveShow(id: details.id,
                                                  pathImage: details.posterPathURL?.absoluteString ?? "")

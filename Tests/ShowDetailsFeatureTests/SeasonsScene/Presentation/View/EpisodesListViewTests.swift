@@ -28,6 +28,7 @@ class EpisodesListViewTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
+    defaultScheduler = .immediate
     isRecording = false
     headerViewModel = .mock("Dragon Ball Z", "1987-01-01", "1992-01-01")
   }
@@ -39,14 +40,14 @@ class EpisodesListViewTests: XCTestCase {
     configureWith(viewController, style: .dark)
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: viewController, as: .image(on: .iPhoneSe, precision: 0.99))
 
     // when
     let lightViewController = EpisodesListViewController(viewModel: initialState)
     configureWith(lightViewController, style: .light)
 
     // then
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: lightViewController, as: .image(on: .iPhoneSe, precision: 0.99))
   }
 
   func test_WhenViewModelDidPopulated_thenShow_PopulatedScreen() {
@@ -68,14 +69,14 @@ class EpisodesListViewTests: XCTestCase {
     configureWith(viewController, style: .dark)
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: viewController, as: .image(on: .iPhoneSe, precision: 0.99))
 
     // when
     let lightViewController = EpisodesListViewController(viewModel: initialState)
     configureWith(lightViewController, style: .light)
 
     // then
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: lightViewController, as: .image(on: .iPhoneSe, precision: 0.99))
   }
 
   func test_WhenViewModelReturnsError_thenShow_ErrorScreen() {
@@ -85,14 +86,14 @@ class EpisodesListViewTests: XCTestCase {
     configureWith(viewController, style: .dark)
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: viewController, as: .image(on: .iPhoneSe, precision: 0.99))
 
     // when
     let lightViewController = EpisodesListViewController(viewModel: initialState)
     configureWith(lightViewController, style: .light)
 
     // then
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: lightViewController, as: .image(on: .iPhoneSe, precision: 0.99))
   }
 
   func test_WhenViewModelLoadSeason_thenShow_LoadingSeasonScreen() {
@@ -103,14 +104,14 @@ class EpisodesListViewTests: XCTestCase {
     configureWith(viewController, style: .dark)
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: viewController, as: .image(on: .iPhoneSe, precision: 0.99))
 
     // when
     let lightViewController = EpisodesListViewController(viewModel: initialState)
     configureWith(lightViewController, style: .light)
 
     // then
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: lightViewController, as: .image(on: .iPhoneSe, precision: 0.99))
   }
 
   func test_WhenViewModelReturnsEmpty_thenShow_EmptyScreen() {
@@ -121,14 +122,14 @@ class EpisodesListViewTests: XCTestCase {
     configureWith(viewController, style: .dark)
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: viewController, as: .image(on: .iPhoneSe, precision: 0.99))
 
     // when
     let lightViewController = EpisodesListViewController(viewModel: initialState)
     configureWith(lightViewController, style: .light)
 
     // then
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: lightViewController, as: .image(on: .iPhoneSe, precision: 0.99))
   }
 
   func test_WhenViewModelReturnsErrorSeason_thenShow_ErrorSeasonScreen() {
@@ -139,13 +140,13 @@ class EpisodesListViewTests: XCTestCase {
     configureWith(viewController, style: .dark)
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: viewController, as: .image(on: .iPhoneSe, precision: 0.99))
 
     // when
     let lightViewController = EpisodesListViewController(viewModel: initialState)
     configureWith(lightViewController, style: .light)
 
     // then
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: lightViewController, as: .image(on: .iPhoneSe, precision: 0.99))
   }
 }

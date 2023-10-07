@@ -74,8 +74,7 @@ class SeasonListTableViewCell: NiblessTableViewCell {
         snapShot.appendItems(data, toSection: .season)
         return snapShot
       }
-    // MARK: - TODO, this cause snapshot tests fails
-    // .receive(on: DispatchQueue.main)
+      .receive(on: defaultScheduler)
       .sink(receiveValue: { [weak self] snapshot in
         self?.dataSource?.apply(snapshot)
       })
@@ -84,8 +83,7 @@ class SeasonListTableViewCell: NiblessTableViewCell {
     viewModel
       .seasonSelected
       .filter { $0 > 0 }
-    // MARK: - TODO, Recive using scheduler causes snapshot test fails
-    // .receive(on: DispatchQueue.main)
+      .receive(on: defaultScheduler)
       .sink(receiveValue: { [weak self] season in
         self?.selectedSeason(at: season)
       })

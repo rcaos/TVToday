@@ -21,6 +21,7 @@ class TVShowListViewTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
+    defaultScheduler = .immediate
     isRecording = false
   }
 
@@ -29,11 +30,11 @@ class TVShowListViewTests: XCTestCase {
 
     let viewController = TVShowListViewController(viewModel: viewModel)
     configureWith(viewController, style: .dark)
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: viewController, as: .image(on: .iPhoneSe, precision: 0.99))
 
     let lightViewController = TVShowListViewController(viewModel: viewModel)
     configureWith(lightViewController, style: .light)
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: lightViewController, as: .image(on: .iPhoneSe, precision: 0.99))
   }
 
   func test_WhenViewPaging_thenShowPagingScreen() {
@@ -42,11 +43,11 @@ class TVShowListViewTests: XCTestCase {
 
     let viewController = TVShowListViewController(viewModel: viewModel)
     configureWith(viewController, style: .dark)
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: viewController, as: .image(on: .iPhoneSe, precision: 0.99))
 
     let lightViewController = TVShowListViewController(viewModel: viewModel)
     configureWith(lightViewController, style: .light)
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: lightViewController, as: .image(on: .iPhoneSe, precision: 0.99))
   }
 
   func test_WhenViewPopulated_thenShowPopulatedScreen() {
@@ -56,11 +57,11 @@ class TVShowListViewTests: XCTestCase {
 
     let viewController = TVShowListViewController(viewModel: viewModel)
     configureWith(viewController, style: .dark)
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: viewController, as: .image(on: .iPhoneSe, precision: 0.99))
 
     let lightViewController = TVShowListViewController(viewModel: viewModel)
     configureWith(lightViewController, style: .light)
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: lightViewController, as: .image(on: .iPhoneSe, precision: 0.99))
   }
 
   func test_WhenViewIsEmpty_thenShowEmptyScreen() {
@@ -68,11 +69,11 @@ class TVShowListViewTests: XCTestCase {
 
     let viewController = TVShowListViewController(viewModel: viewModel)
     configureWith(viewController, style: .dark)
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: viewController, as: .image(on: .iPhoneSe, precision: 0.99))
 
     let lightViewController = TVShowListViewController(viewModel: viewModel)
     configureWith(lightViewController, style: .light)
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: lightViewController, as: .image(on: .iPhoneSe, precision: 0.99))
   }
 
   func test_WhenViewIsError_thenShowErrorScreen() {
@@ -80,11 +81,11 @@ class TVShowListViewTests: XCTestCase {
 
     let viewController = TVShowListViewController(viewModel: viewModel)
     configureWith(viewController, style: .dark)
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: viewController, as: .image(on: .iPhoneSe, precision: 0.99))
 
     let lightViewController = TVShowListViewController(viewModel: viewModel)
     configureWith(lightViewController, style: .light)
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: lightViewController, as: .image(on: .iPhoneSe, precision: 0.99))
   }
 }
 

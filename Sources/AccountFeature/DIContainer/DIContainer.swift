@@ -15,7 +15,7 @@ final class DIContainer {
 
   private lazy var authRepository: AuthRepository = {
     return DefaultAuthRepository(
-      remoteDataSource: DefaultAuthRemoteDataSource(dataTransferService: dependencies.apiDataTransferService, apiClient: dependencies.apiClient),
+      remoteDataSource: DefaultAuthRemoteDataSource(apiClient: dependencies.apiClient),
       requestTokenRepository: dependencies.requestTokenRepository,
       accessTokenRepository: dependencies.accessTokenRepository,
       tokenMapper: RequestTokenMapper(authenticateBaseURL: dependencies.authenticateBaseURL)
@@ -24,7 +24,7 @@ final class DIContainer {
 
   private lazy var accountRepository: AccountRepository = {
     return DefaultAccountRepository(
-      remoteDataSource: DefaultAccountRemoteDataSource(dataTransferService: dependencies.apiDataTransferService, apiClient: dependencies.apiClient),
+      remoteDataSource: DefaultAccountRemoteDataSource(apiClient: dependencies.apiClient),
       accessTokenRepository: dependencies.accessTokenRepository,
       userLoggedRepository: dependencies.userLoggedRepository,
       gravatarBaseURL: dependencies.gravatarBaseURL

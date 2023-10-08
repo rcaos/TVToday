@@ -19,7 +19,7 @@ protocol AccountViewModelProtocol: AuthPermissionViewModelDelegate {
 }
 
 final class AccountViewModel: AccountViewModelProtocol {
-  private let createNewSession: CreateSessionUseCase
+  private let createNewSession: () -> CreateSessionUseCase
   private let fetchLoggedUser: FetchLoggedUser
   private let fetchAccountDetails: () -> FetchAccountDetailsUseCase
   private let deleteLoggedUser: DeleteLoggedUserUseCase
@@ -32,11 +32,12 @@ final class AccountViewModel: AccountViewModelProtocol {
   let viewState: CurrentValueSubject<AccountViewState, Never> = .init(.login)
 
   // MARK: - Initializers
-  init(createNewSession: CreateSessionUseCase,
-       fetchAccountDetails: @escaping () -> FetchAccountDetailsUseCase,
-       fetchLoggedUser: FetchLoggedUser,
-       deleteLoggedUser: DeleteLoggedUserUseCase,
-       scheduler: AnySchedulerOf<DispatchQueue> = .main
+  init(
+    createNewSession: @escaping () -> CreateSessionUseCase,
+    fetchAccountDetails: @escaping () -> FetchAccountDetailsUseCase,
+    fetchLoggedUser: FetchLoggedUser,
+    deleteLoggedUser: DeleteLoggedUserUseCase,
+    scheduler: AnySchedulerOf<DispatchQueue> = .main
   ) {
     self.createNewSession = createNewSession
     self.fetchAccountDetails = fetchAccountDetails
@@ -65,31 +66,13 @@ final class AccountViewModel: AccountViewModelProtocol {
     }
   }
 
-  private func createSession() {
-    createNewSession.execute()
-      .flatMap { [weak self] () -> AnyPublisher<Account, DataTransferError> in
-        guard let strongSelf = self else {
-          return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher()
-        }
-        return strongSelf.fetchDetailsAccount()
-      }
-      .receive(on: scheduler)
-      .sink(receiveCompletion: { [weak self] completion in
-        switch completion {
-        case .failure:
-          self?.viewState.send(.login)
-        case .finished:
-          break
-        }
-      },
-            receiveValue: { [weak self] accountDetails in
-        self?.viewState.send(.profile(account: accountDetails))
-      })
-      .store(in: &disposeBag)
-  }
+  private func createSession() async {
 
-  private func fetchDetailsAccount() -> AnyPublisher<Account, DataTransferError> {
-    return fetchAccountDetails().execute()
+    if await createNewSession().execute() {
+      await fetchUserDetails()
+    } else {
+      viewState.send(.login)
+    }
   }
 
   private func logoutUser() {
@@ -112,8 +95,8 @@ extension AccountViewModel: SignInViewModelDelegate {
 
 // MARK: - AuthPermissionViewModelDelegate
 extension AccountViewModel: AuthPermissionViewModelDelegate {
-  func authPermissionViewModel(didSignedIn signedIn: Bool) {
-    createSession()
+  func authPermissionViewModel(didSignedIn signedIn: Bool) async {
+    await createSession()
     navigateTo(step: .authorizationIsComplete)
   }
 }

@@ -15,7 +15,7 @@ final class DIContainer {
 
   private lazy var authRepository: AuthRepository = {
     return DefaultAuthRepository(
-      remoteDataSource: DefaultAuthRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      remoteDataSource: DefaultAuthRemoteDataSource(dataTransferService: dependencies.apiDataTransferService, apiClient: dependencies.apiClient),
       requestTokenRepository: dependencies.requestTokenRepository,
       accessTokenRepository: dependencies.accessTokenRepository,
       tokenMapper: RequestTokenMapper(authenticateBaseURL: dependencies.authenticateBaseURL)
@@ -54,7 +54,7 @@ final class DIContainer {
       return DefaultDeleteLoggedUserUseCase(loggedRepository: dependencies.userLoggedRepository)
     }
 
-    accountViewModel = AccountViewModel(createNewSession: makeCreateSessionUseCase(),
+    accountViewModel = AccountViewModel(createNewSession: { makeCreateSessionUseCase() },
                                         fetchAccountDetails: { makeFetchAccountDetailsUseCase() },
                                         fetchLoggedUser: makeFetchLoggedUserUseCase(),
                                         deleteLoggedUser: makeDeleteLoggedUserUseCase())

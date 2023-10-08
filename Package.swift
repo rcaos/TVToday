@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -37,7 +37,8 @@ let package = Package(
     .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "14.0.0"),
     .package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.9.1"),
     .package(url: "https://github.com/pointfreeco/combine-schedulers", .exactItem("0.5.3")),
-    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.14.1")
+    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.14.1"),
+    .package(url: "https://github.com/pointfreeco/swift-concurrency-extras.git", .rangeItem(.upToNextMajor(from: "1.0.0")))
   ],
   targets: [
     .target(
@@ -69,7 +70,8 @@ let package = Package(
       name: "AccountFeatureTests",
       dependencies: [
         "AccountFeature",
-        .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+        .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+        .product(name: "ConcurrencyExtras", package: "swift-concurrency-extras")
       ],
       exclude: [
         "SignIn/Presentation/__Snapshots__",
@@ -105,7 +107,12 @@ let package = Package(
       ]
     ),
     .target(name: "Networking", dependencies: ["NetworkingInterface"]),
-    .testTarget(name: "NetworkingTests", dependencies: ["Networking"]),
+    .testTarget(
+      name: "NetworkingTests",
+      dependencies: [
+        "Networking"
+      ]
+    ),
     .target(name: "NetworkingInterface"),
     .target(name: "Persistence", dependencies: ["Shared"]),
     .target(

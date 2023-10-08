@@ -17,7 +17,7 @@ public final class DefaultTVShowsRemoteDataSource: TVShowsRemoteDataSourceProtoc
   }
 
   public func fetchAiringTodayShows(page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError> {
-    let endpoint = Endpoint<TVShowPageDTO>(
+    let endpoint = Networking.Endpoint<TVShowPageDTO>(
       path: "3/tv/airing_today",
       method: .get,
       queryParameters: ["page": page]
@@ -26,7 +26,7 @@ public final class DefaultTVShowsRemoteDataSource: TVShowsRemoteDataSourceProtoc
   }
 
   public func fetchPopularShows(page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError> {
-    let endpoint = Endpoint<TVShowPageDTO>(
+    let endpoint = Networking.Endpoint<TVShowPageDTO>(
       path: "3/tv/popular",
       method: .get,
       queryParameters: ["page": page]
@@ -35,7 +35,7 @@ public final class DefaultTVShowsRemoteDataSource: TVShowsRemoteDataSourceProtoc
   }
 
   public func fetchShowsByGenre(genreId: Int, page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError> {
-    let endpoint = Endpoint<TVShowPageDTO>(
+    let endpoint = Networking.Endpoint<TVShowPageDTO>(
       path: "3/discover/tv",
       method: .get,
       queryParameters: [
@@ -50,7 +50,7 @@ public final class DefaultTVShowsRemoteDataSource: TVShowsRemoteDataSourceProtoc
   }
 
   public func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError> {
-    let endpoint = Endpoint<TVShowPageDTO>(
+    let endpoint = Networking.Endpoint<TVShowPageDTO>(
       path: "3/search/tv",
       method: .get,
       queryParameters: [

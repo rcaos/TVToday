@@ -19,7 +19,7 @@ public class AccountTVShowsDetailsRemoteDataSource {
 
 extension AccountTVShowsDetailsRemoteDataSource: AccountTVShowsDetailsRemoteDataSourceProtocol {
   public func markAsFavorite(tvShowId: Int, userId: String, session: String, favorite: Bool) -> AnyPublisher<TVShowActionStatusDTO, DataTransferError> {
-    let endpoint = Endpoint<TVShowActionStatusDTO>(
+    let endpoint = Networking.Endpoint<TVShowActionStatusDTO>(
       path: "3/account/\(userId)/favorite",
       method: .post,
       queryParameters: [
@@ -35,7 +35,7 @@ extension AccountTVShowsDetailsRemoteDataSource: AccountTVShowsDetailsRemoteData
   }
 
   public func saveToWatchList(tvShowId: Int, userId: String, session: String, watchedList: Bool) -> AnyPublisher<TVShowActionStatusDTO, DataTransferError> {
-    let endpoint = Endpoint<TVShowActionStatusDTO>(
+    let endpoint = Networking.Endpoint<TVShowActionStatusDTO>(
       path: "3/account/\(userId)/watchlist",
       method: .post,
       queryParameters: [
@@ -51,7 +51,7 @@ extension AccountTVShowsDetailsRemoteDataSource: AccountTVShowsDetailsRemoteData
   }
 
   public func fetchTVShowStatus(tvShowId: Int, sessionId: String) -> AnyPublisher<TVShowAccountStatusDTO, DataTransferError> {
-    let endpoint = Endpoint<TVShowAccountStatusDTO>(
+    let endpoint = Networking.Endpoint<TVShowAccountStatusDTO>(
       path: "3/tv/\(String(tvShowId))/account_states",
       method: .get,
       queryParameters: [

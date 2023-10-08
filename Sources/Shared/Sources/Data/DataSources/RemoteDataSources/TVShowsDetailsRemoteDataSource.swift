@@ -17,7 +17,7 @@ public final class TVShowsDetailsRemoteDataSource: TVShowsDetailsRemoteDataSourc
   }
 
   public func fetchTVShowDetails(with showId: Int) -> AnyPublisher<TVShowDetailDTO, DataTransferError> {
-    let endpoint = Endpoint<TVShowDetailDTO>(
+    let endpoint = Networking.Endpoint<TVShowDetailDTO>(
       path: "3/tv/\(showId)",
       method: .get
     )

@@ -4,7 +4,6 @@
 
 import Foundation
 import Combine
-import CombineSchedulers
 import NetworkingInterface
 import Shared
 
@@ -25,8 +24,6 @@ final class AccountViewModel: AccountViewModelProtocol {
   private let deleteLoggedUser: DeleteLoggedUserUseCase
 
   weak var coordinator: AccountCoordinatorProtocol?
-  private var disposeBag = Set<AnyCancellable>()
-  private let scheduler: AnySchedulerOf<DispatchQueue>
 
   // MARK: - Public Api
   let viewState: CurrentValueSubject<AccountViewState, Never> = .init(.login)
@@ -36,14 +33,12 @@ final class AccountViewModel: AccountViewModelProtocol {
     createNewSession: @escaping () -> CreateSessionUseCase,
     fetchAccountDetails: @escaping () -> FetchAccountDetailsUseCase,
     fetchLoggedUser: FetchLoggedUser,
-    deleteLoggedUser: DeleteLoggedUserUseCase,
-    scheduler: AnySchedulerOf<DispatchQueue> = .main
+    deleteLoggedUser: DeleteLoggedUserUseCase
   ) {
     self.createNewSession = createNewSession
     self.fetchAccountDetails = fetchAccountDetails
     self.fetchLoggedUser = fetchLoggedUser
     self.deleteLoggedUser = deleteLoggedUser
-    self.scheduler = scheduler
   }
 
   func viewDidLoad() async {
@@ -67,7 +62,6 @@ final class AccountViewModel: AccountViewModelProtocol {
   }
 
   private func createSession() async {
-
     if await createNewSession().execute() {
       await fetchUserDetails()
     } else {

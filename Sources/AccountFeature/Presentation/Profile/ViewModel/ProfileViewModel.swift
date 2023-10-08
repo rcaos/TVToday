@@ -10,7 +10,6 @@ class ProfileViewModel: ProfileViewModelProtocol {
   // MARK: - Public Api
   let dataSource = CurrentValueSubject<[ProfileSectionModel], Never>([])
   let presentSignOutAlert = CurrentValueSubject<Bool, Never>(false)
-  private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializer
   init(account: Account) {

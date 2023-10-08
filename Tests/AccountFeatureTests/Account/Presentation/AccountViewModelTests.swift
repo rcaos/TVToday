@@ -28,8 +28,7 @@ class AccountViewModelTests: XCTestCase {
       createNewSession: { self.createSessionUseCaseMock },
       fetchAccountDetails: { self.fetchAccountDetailsUseCaseMock },
       fetchLoggedUser: fetchLoggedUserMock,
-      deleteLoggedUser: deleteLoggedUserUseCaseMock,
-      scheduler: .immediate
+      deleteLoggedUser: deleteLoggedUserUseCaseMock
     )
   }
 

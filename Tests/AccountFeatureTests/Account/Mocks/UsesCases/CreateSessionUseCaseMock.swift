@@ -1,7 +1,4 @@
 //
-//  CreateSessionUseCaseMock.swift
-//  AccountTV-Unit-Tests
-//
 //  Created by Jeans Ruiz on 8/8/20.
 //
 
@@ -24,5 +21,13 @@ final class CreateSessionUseCaseMock: CreateSessionUseCase {
     }
 
     return Empty().setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
+  }
+
+  func execute() async -> Bool {
+    if error != nil {
+      return false
+    }
+
+    return result != nil
   }
 }

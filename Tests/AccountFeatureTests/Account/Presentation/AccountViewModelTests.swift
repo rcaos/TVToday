@@ -1,15 +1,11 @@
 //
-//  AccountViewModelTests.swift
-//  TVToday
-//
 //  Created by Jeans Ruiz on 6/19/20.
-//  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import Combine
-import XCTest
 @testable import AccountFeature
-@testable import Shared
+import Combine
+import Shared
+import XCTest
 
 class AccountViewModelTests: XCTestCase {
 
@@ -29,7 +25,7 @@ class AccountViewModelTests: XCTestCase {
     deleteLoggedUserUseCaseMock = DeleteLoguedUserUseCaseMock()
     disposeBag = []
     sut = AccountViewModel(
-      createNewSession: createSessionUseCaseMock,
+      createNewSession: { self.createSessionUseCaseMock },
       fetchAccountDetails: { self.fetchAccountDetailsUseCaseMock },
       fetchLoggedUser: fetchLoggedUserMock,
       deleteLoggedUser: deleteLoggedUserUseCaseMock,
@@ -95,7 +91,8 @@ class AccountViewModelTests: XCTestCase {
 
     // when
     await sut.viewDidLoad()
-    authPermission.signIn()
+    await authPermission.signIn()
+    await Task.yield()
 
     // then
     XCTAssertEqual(expected, received, "Should receives two values")
@@ -117,7 +114,8 @@ class AccountViewModelTests: XCTestCase {
 
     // when
     await sut.viewDidLoad()
-    authPermission.signIn()
+    await authPermission.signIn()
+    await Task.yield()
 
     // then
     XCTAssertEqual(expected, received, "Should receives two values")

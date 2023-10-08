@@ -1,7 +1,4 @@
 //
-//  File.swift
-//  
-//
 //  Created by Jeans Ruiz on 20/04/22.
 //
 
@@ -102,7 +99,7 @@ final class FakeRequestTokenRepository: RequestTokenRepositoryProtocol {
   }
 }
 
-final class FakeAccessTokenRepository: AccessTokenRepositoryProtocol{
+final class FakeAccessTokenRepository: AccessTokenRepositoryProtocol {
   private var privateToken: String = "6b007b57648a1e65096290fe9a6239c9a66fc8c0"
 
   func saveAccessToken(_ token: String) {

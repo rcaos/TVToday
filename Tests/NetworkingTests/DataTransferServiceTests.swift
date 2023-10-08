@@ -34,7 +34,7 @@ class DataTransferServiceTests: XCTestCase {
     let sut = DefaultDataTransferService(with: networkService)
 
     // when
-    sut.request(with: Endpoint<MockModel>(path: "http://mock.endpoint.com", method: .get))
+    sut.request(with: Networking.Endpoint<MockModel>(path: "http://mock.endpoint.com", method: .get))
       .sink(receiveCompletion: { completion in
         guard case .finished = completion else {
           XCTFail("Should load to completed successfully")
@@ -65,7 +65,7 @@ class DataTransferServiceTests: XCTestCase {
 
     let sut = DefaultDataTransferService(with: networkService)
     // when
-    sut.request(with: Endpoint<MockModel>(path: "http://mock.endpoint.com", method: .get))
+    sut.request(with: Networking.Endpoint<MockModel>(path: "http://mock.endpoint.com", method: .get))
       .sink(receiveCompletion: { completion in
         switch completion {
         case .failure:
@@ -98,7 +98,7 @@ class DataTransferServiceTests: XCTestCase {
 
     let sut = DefaultDataTransferService(with: networkService)
     // when
-    sut.request(with: Endpoint<MockModel>(path: "http://mock.endpoint.com", method: .get))
+    sut.request(with: Networking.Endpoint<MockModel>(path: "http://mock.endpoint.com", method: .get))
       .sink(receiveCompletion: { completion in
         switch completion {
         case .failure(let error):
@@ -135,7 +135,7 @@ class DataTransferServiceTests: XCTestCase {
 
     let sut = DefaultDataTransferService(with: networkService)
     // when
-    sut.request(with: Endpoint<MockModel>(path: "http://mock.endpoint.com", method: .get))
+    sut.request(with: Networking.Endpoint<MockModel>(path: "http://mock.endpoint.com", method: .get))
       .sink(receiveCompletion: { completion in
         switch completion {
         case .failure(let error):

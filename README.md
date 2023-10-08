@@ -57,15 +57,18 @@ So you need to leverage your Unit tests, Snapshot Tests and Demo targets to save
 - English and Spanish Localized
 
 ## Requirements
-1. Xcode 13.0+
+1. Xcode 15.0+
 
 ## Getting started
 1. Clone this repository.
 2. Open `App/TVToday.xcodeproj` and have fun.
 
+## Testing
+- I use plain tests and Snapshot tests
+- Check the test Plan associated to the AppFeature to run all the test availables
 
 ## Snapshot Tests
-Last snapshot tests were created using an Apple Silicon with `Xcode 14.2`, Simulator `iPhone SE (3rd generation) iOS 16.2`
+Last snapshot tests were created using an Apple Silicon with `Xcode 15.0`, Simulator `iPhone SE (3rd generation) iOS 17.0 (21A328)`
 > ⚠️ Warning: Snapshots must be compared using the exact same simulator that originally took the reference to avoid discrepancies between images.
 
 

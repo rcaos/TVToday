@@ -32,7 +32,6 @@ final class DefaultAuthRepository {
 // MARK: - AuthRepository
 extension DefaultAuthRepository: AuthRepository {
 
-
   func requestToken() -> AnyPublisher<NewRequestToken, DataTransferError> {
     return remoteDataSource.requestToken()
       .tryMap { result -> NewRequestToken in
@@ -56,5 +55,32 @@ extension DefaultAuthRepository: AuthRepository {
         return NewSession(success: $0.success, sessionId: $0.sessionId)
       }
       .eraseToAnyPublisher()
+  }
+
+  func requestToken() async -> NewRequestToken? {
+    do {
+      let dto = try await remoteDataSource.requestToken()
+      let tokenModel = try tokenMapper.mapRequestToken(model: dto)
+      requestTokenRepository.saveRequestToken(tokenModel.token)
+      return tokenModel
+    } catch {
+      #warning("todo: log error")
+      return nil
+    }
+  }
+
+  func createSession() async -> NewSession? {
+    guard let requestToken = requestTokenRepository.getRequestToken() else {
+      return nil
+    }
+
+    do {
+      let dto = try await remoteDataSource.createSession(requestToken: requestToken)
+      accessTokenRepository.saveAccessToken(dto.sessionId)
+      return NewSession(success: dto.success, sessionId: dto.sessionId)
+    } catch {
+      #warning("todo: log")
+      return nil
+    }
   }
 }

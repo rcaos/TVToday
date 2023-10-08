@@ -11,8 +11,10 @@ import Networking
 
 final class DefaultAuthRemoteDataSource: AuthRemoteDataSource {
   private let dataTransferService: DataTransferService
+  private let apiClient: ApiClient
 
-  init(dataTransferService: DataTransferService) {
+  init(dataTransferService: DataTransferService, apiClient: ApiClient) {
+    self.apiClient = apiClient
     self.dataTransferService = dataTransferService
   }
 
@@ -33,5 +35,24 @@ final class DefaultAuthRemoteDataSource: AuthRemoteDataSource {
       ]
     )
     return dataTransferService.request(with: endpoint)
+  }
+
+  func requestToken() async throws -> NewRequestTokenDTO {
+    let endpoint = Endpoint(
+      path: "3/authentication/token/new",
+      method: .get
+    )
+    return try await apiClient.apiRequest(endpoint: endpoint, as: NewRequestTokenDTO.self)
+  }
+
+  func createSession(requestToken: String) async throws -> NewSessionDTO {
+    let endpoint = Endpoint<NewSessionDTO>(
+      path: "3/authentication/session/new",
+      method: .post,
+      queryParameters: [
+        "request_token": requestToken
+      ]
+    )
+    return try await apiClient.apiRequest(endpoint: endpoint, as: NewSessionDTO.self)
   }
 }

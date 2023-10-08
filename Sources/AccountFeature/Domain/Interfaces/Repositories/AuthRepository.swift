@@ -12,4 +12,7 @@ import NetworkingInterface
 protocol AuthRepository {
   func requestToken() -> AnyPublisher<NewRequestToken, DataTransferError>
   func createSession() -> AnyPublisher<NewSession, DataTransferError>
+
+  func requestToken() async -> NewRequestToken?
+  func createSession() async -> NewSession?
 }

@@ -1,7 +1,4 @@
 //
-//  AuthPermissionRootView.swift
-//  AccountTV
-//
 //  Created by Jeans Ruiz on 8/21/20.
 //
 

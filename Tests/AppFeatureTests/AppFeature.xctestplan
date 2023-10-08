@@ -1,0 +1,73 @@
+{
+  "configurations" : [
+    {
+      "id" : "E06F5D92-1E9E-48B8-AD4E-139DB1B3CF93",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AccountFeatureTests",
+        "name" : "AccountFeatureTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AiringTodayFeatureTests",
+        "name" : "AiringTodayFeatureTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "NetworkingTests",
+        "name" : "NetworkingTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PopularsFeatureTests",
+        "name" : "PopularsFeatureTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SearchShowsFeatureTests",
+        "name" : "SearchShowsFeatureTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SharedTests",
+        "name" : "SharedTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ShowDetailsFeatureTests",
+        "name" : "ShowDetailsFeatureTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ShowListFeatureTests",
+        "name" : "ShowListFeatureTests"
+      }
+    }
+  ],
+  "version" : 1
+}

@@ -1,7 +1,4 @@
 //
-//  SignInRootView.swift
-//  AccountTV
-//
 //  Created by Jeans Ruiz on 8/21/20.
 //
 
@@ -51,7 +48,9 @@ class SignInRootView: NiblessView {
   private func setupBindables() {
     signInButton.addAction(
       UIAction(handler: { [viewModel] _ in
-        viewModel.signInDidTapped()
+        Task {
+          await viewModel.signInDidTapped()
+        }
       }),
       for: .touchUpInside
     )

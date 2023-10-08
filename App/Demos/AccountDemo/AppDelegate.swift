@@ -8,6 +8,7 @@
 import UIKit
 import AccountFeatureDemo
 import Networking
+import NetworkingInterface
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,15 +21,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     let appConfigurations = buildAppConfigurations()
     let apiDataTransferService = buildDataTransferService(appConfigurations: appConfigurations)
-    coordinator = AccountFeatureDemoCoordinator(window: window!,
-                                                tabBarController: UITabBarController(),
-                                                apiDataTransferService: apiDataTransferService,
-                                                imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                gravatarBaseURL: appConfigurations.gravatarBaseURL,
-                                                authenticateBaseURL: appConfigurations.authenticateBaseURL)
+    coordinator = AccountFeatureDemoCoordinator(
+      window: window!,
+      tabBarController: UITabBarController(),
+      apiDataTransferService: apiDataTransferService,
+      apiClient: buildApiClient(appConfigurations: appConfigurations),
+      imagesBaseURL: appConfigurations.imagesBaseURL,
+      gravatarBaseURL: appConfigurations.gravatarBaseURL,
+      authenticateBaseURL: appConfigurations.authenticateBaseURL
+    )
     coordinator?.start()
     return true
   }
+}
+
+private func buildApiClient(appConfigurations: AppConfigurations) -> ApiClient {
+  let config = NetworkConfig(
+    baseURL: appConfigurations.apiBaseURL,
+    headers: [
+      "Content-Type": "application/json; charset=utf-8"
+    ],
+    queryParameters: [
+      "api_key": appConfigurations.apiKey,
+      "language": NSLocale.preferredLanguages.first ?? "en"
+    ]
+  )
+  return ApiClient.live(networkConfig: config)
 }
 
 func buildDataTransferService(appConfigurations: AppConfigurations) -> DefaultDataTransferService {

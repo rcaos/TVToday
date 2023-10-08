@@ -6,10 +6,7 @@
 //  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import Combine
 import Foundation
-import NetworkingInterface
-import Networking
 import Shared
 
 final class DefaultAuthRepository {
@@ -31,31 +28,6 @@ final class DefaultAuthRepository {
 
 // MARK: - AuthRepository
 extension DefaultAuthRepository: AuthRepository {
-
-  func requestToken() -> AnyPublisher<NewRequestToken, DataTransferError> {
-    return remoteDataSource.requestToken()
-      .tryMap { result -> NewRequestToken in
-        let newToken = try self.tokenMapper.mapRequestToken(model: result)
-        self.requestTokenRepository.saveRequestToken (result.token)
-        return newToken
-      }
-      .mapError { error -> DataTransferError in
-        return DataTransferError.noResponse // MARk: - TODO, change error
-      }
-      .eraseToAnyPublisher()
-  }
-
-  func createSession() -> AnyPublisher<NewSession, DataTransferError> {
-    guard let requestToken = requestTokenRepository.getRequestToken() else {
-      return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher()
-    }
-    return remoteDataSource.createSession(requestToken: requestToken)
-      .map {
-        self.accessTokenRepository.saveAccessToken($0.sessionId)
-        return NewSession(success: $0.success, sessionId: $0.sessionId)
-      }
-      .eraseToAnyPublisher()
-  }
 
   func requestToken() async -> NewRequestToken? {
     do {

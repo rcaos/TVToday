@@ -17,7 +17,7 @@ final class DefaultAuthRemoteDataSource: AuthRemoteDataSource {
   }
 
   func requestToken() -> AnyPublisher<NewRequestTokenDTO, DataTransferError> {
-    let endpoint = Endpoint<NewRequestTokenDTO>(
+    let endpoint = Networking.Endpoint<NewRequestTokenDTO>(
       path: "3/authentication/token/new",
       method: .get
     )
@@ -25,7 +25,7 @@ final class DefaultAuthRemoteDataSource: AuthRemoteDataSource {
   }
 
   func createSession(requestToken: String) -> AnyPublisher<NewSessionDTO, DataTransferError> {
-    let endpoint = Endpoint<NewSessionDTO>(
+    let endpoint = Networking.Endpoint<NewSessionDTO>(
       path: "3/authentication/session/new",
       method: .post,
       queryParameters: [

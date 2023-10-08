@@ -42,4 +42,17 @@ extension DefaultAccountRepository: AccountRepository {
       }
       .eraseToAnyPublisher()
   }
+
+  public func getAccountDetails() async -> Account? {
+    do {
+      let sessionId = accessTokenRepository.getAccessToken()
+      let dto = try await remoteDataSource.getAccountDetails(session: sessionId)
+
+      let avatarURL = URL(string: "\(self.gravatarBaseURL)/\(dto.avatar?.gravatar?.hash ?? "" )")
+      return Account(id: dto.id, userName: dto.userName, avatarURL: avatarURL)
+    } catch  {
+      #warning("todo: log")
+      return nil
+    }
+  }
 }

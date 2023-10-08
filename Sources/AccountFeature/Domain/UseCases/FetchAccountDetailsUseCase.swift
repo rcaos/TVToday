@@ -1,9 +1,5 @@
 //
-//  FetchAccountDetailsUseCase.swift
-//  AccountFeature
-//
 //  Created by Jeans Ruiz on 6/21/20.
-//  Copyright © 2020 Jeans. All rights reserved.
 //
 
 import Combine
@@ -12,6 +8,7 @@ import NetworkingInterface
 
 protocol FetchAccountDetailsUseCase {
   func execute() -> AnyPublisher<Account, DataTransferError>
+  func execute() async -> Account?
 }
 
 final class DefaultFetchAccountDetailsUseCase: FetchAccountDetailsUseCase {
@@ -23,5 +20,9 @@ final class DefaultFetchAccountDetailsUseCase: FetchAccountDetailsUseCase {
 
   func execute() -> AnyPublisher<Account, DataTransferError> {
     return accountRepository.getAccountDetails()
+  }
+
+  func execute() async -> Account? {
+    return await accountRepository.getAccountDetails()
   }
 }

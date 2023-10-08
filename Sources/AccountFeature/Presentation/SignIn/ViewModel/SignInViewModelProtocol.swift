@@ -3,7 +3,6 @@
 //
 
 import Foundation
-import Combine
 
 protocol SignInViewModelDelegate: AnyObject {
   func signInViewModel(_ signInViewModel: SignInViewModel, didTapSignInButton url: URL)
@@ -14,7 +13,7 @@ protocol SignInViewModelProtocol {
   func signInDidTapped() async
 
   // MARK: - Output
-  var viewState: CurrentValueSubject<SignInViewState, Never> { get }
+  var viewState: Published<SignInViewState>.Publisher { get }
   var delegate: SignInViewModelDelegate? { get set }
 }
 

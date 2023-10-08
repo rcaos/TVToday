@@ -3,13 +3,14 @@
 //
 
 import Foundation
-import Combine
 
 @MainActor
 class SignInViewModel: SignInViewModelProtocol {
   private let createTokenUseCase: CreateTokenUseCase
 
-  let viewState: CurrentValueSubject<SignInViewState, Never> = .init(.initial)
+  @Published private var viewStateInternal: SignInViewState = .initial
+  public var viewState: Published<SignInViewState>.Publisher { $viewStateInternal }
+
   weak var delegate: SignInViewModelDelegate?
 
   init(createTokenUseCase: CreateTokenUseCase) {
@@ -18,7 +19,7 @@ class SignInViewModel: SignInViewModelProtocol {
 
   // MARK: - Public
   func signInDidTapped() async {
-    viewState.send(.loading)
+    viewStateInternal = .loading
     if let url = await createTokenUseCase.execute() {
       delegate?.signInViewModel(self, didTapSignInButton: url)
     }

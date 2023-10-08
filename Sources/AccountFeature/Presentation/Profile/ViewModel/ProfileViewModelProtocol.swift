@@ -1,7 +1,4 @@
 //
-//  ProfileViewModelProtocol.swift
-//  AccountTV
-//
 //  Created by Jeans Ruiz on 8/8/20.
 //
 

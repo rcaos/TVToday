@@ -28,7 +28,7 @@ public final class DefaultDataTransferService {
 extension DefaultDataTransferService: DataTransferService {
 
   // MARK: - Private
-  private func decode<T: Decodable>(data: Data, decoder: ResponseDecoder) throws -> T {
+  private func decode<T: Decodable>(data: Data, decoder: ResponseDecoder_Old) throws -> T {
     do {
       let result: T = try decoder.decode(data)
       return result

@@ -21,7 +21,7 @@ public class Endpoint<R>: ResponseRequestable {
   public var bodyParametersEncodable: Encodable?
   public var bodyParameters: [String: Any]
   public var bodyEncoding: BodyEncoding
-  public var responseDecoder: ResponseDecoder
+  public var responseDecoder: ResponseDecoder_Old
 
   public init(path: String,
               isFullPath: Bool = false,
@@ -32,7 +32,7 @@ public class Endpoint<R>: ResponseRequestable {
               bodyParametersEncodable: Encodable? = nil,
               bodyParameters: [String: Any] = [:],
               bodyEncoding: BodyEncoding = .jsonSerializationData,
-              responseDecoder: ResponseDecoder = JSONResponseDecoder()) {
+              responseDecoder: ResponseDecoder_Old = JSONResponseDecoder()) {
     self.path = path
     self.isFullPath = isFullPath
     self.method = method

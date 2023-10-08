@@ -25,7 +25,7 @@ public protocol DataTransferErrorResolver {
   func resolve(error: NetworkError) -> Error
 }
 
-public protocol ResponseDecoder {
+public protocol ResponseDecoder_Old {
   func decode<T: Decodable>(_ data: Data) throws -> T
 }
 

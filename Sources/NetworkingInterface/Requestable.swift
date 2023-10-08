@@ -21,26 +21,8 @@ public protocol Requestable {
   func urlRequest(with networkConfig: NetworkConfigurable) throws -> URLRequest
 }
 
-public enum HTTPMethodType: String {
-  case get     = "GET"
-  case head    = "HEAD"
-  case post    = "POST"
-  case put     = "PUT"
-  case patch   = "PATCH"
-  case delete  = "DELETE"
-}
-
-public enum BodyEncoding {
-  case jsonSerializationData
-  case stringEncodingAscii
-}
-
 public protocol ResponseRequestable: Requestable {
   associatedtype Response
 
-  var responseDecoder: ResponseDecoder { get }
-}
-
-public enum RequestGenerationError: Error {
-  case components
+  var responseDecoder: ResponseDecoder_Old { get }
 }

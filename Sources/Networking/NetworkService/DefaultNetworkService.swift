@@ -39,6 +39,7 @@ public final class DefaultNetworkService: NetworkService {
   private func handleResponse(data: Data, response: URLResponse) throws -> Data {
     if let response = response as? HTTPURLResponse {
       if (200...299).contains(response.statusCode) {
+        logger.log(responseData: data, response: response)
         return data
       } else {
         let error = NetworkError.error(statusCode: response.statusCode, data: data)
@@ -77,10 +78,4 @@ public final class DefaultNetworkService: NetworkService {
         .eraseToAnyPublisher()
     }
   }
-}
-
-func printIfDebug(_ string: String) {
-  #if DEBUG
-  print(string)
-  #endif
 }

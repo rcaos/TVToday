@@ -3,12 +3,8 @@
 //
 
 import Foundation
-import Combine
-import Shared
-import NetworkingInterface
 
 protocol CreateTokenUseCase {
-  func execute() -> AnyPublisher<URL, DataTransferError>
   func execute() async -> URL?
 }
 
@@ -17,14 +13,6 @@ final class DefaultCreateTokenUseCase: CreateTokenUseCase {
 
   init(authRepository: AuthRepository) {
     self.authRepository = authRepository
-  }
-
-  func execute() -> AnyPublisher<URL, DataTransferError> {
-    authRepository.requestToken()
-      .map {
-        return $0.url
-      }
-      .eraseToAnyPublisher()
   }
 
   func execute() async -> URL? {

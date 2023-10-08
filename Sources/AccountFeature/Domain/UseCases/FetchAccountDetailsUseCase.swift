@@ -2,7 +2,7 @@
 //  Created by Jeans Ruiz on 6/21/20.
 //
 
-import NetworkingInterface
+import Foundation
 
 protocol FetchAccountDetailsUseCase {
   func execute() async -> Account?

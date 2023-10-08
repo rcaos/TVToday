@@ -65,7 +65,7 @@ So you need to leverage your Unit tests, Snapshot Tests and Demo targets to save
 
 ## Testing
 - I use plain tests and Snapshot tests
-- Check the test Plan associated to the AppFeature to run all the test availables
+- Check the test Plan associated to the AppFeature to run all the availabe tests
 
 ## Snapshot Tests
 Last snapshot tests were created using an Apple Silicon with `Xcode 15.0`, Simulator `iPhone SE (3rd generation) iOS 17.0 (21A328)`

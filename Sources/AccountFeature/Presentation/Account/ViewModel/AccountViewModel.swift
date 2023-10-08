@@ -95,6 +95,8 @@ extension AccountViewModel: SignInViewModelDelegate {
 
 // MARK: - AuthPermissionViewModelDelegate
 extension AccountViewModel: AuthPermissionViewModelDelegate {
+
+  @MainActor
   func authPermissionViewModel(didSignedIn signedIn: Bool) async {
     await createSession()
     navigateTo(step: .authorizationIsComplete)

@@ -46,8 +46,10 @@ class AccountViewController: NiblessViewController {
   private func setupUI(with state: AccountViewState) {
     switch state {
     case .login:
-      let loginVC = viewControllersFactory.makeSignInViewController()
-      transition(to: loginVC, with: Strings.accountTitleLogin.localized())
+      Task {
+        let loginVC = await viewControllersFactory.makeSignInViewController()
+        transition(to: loginVC, with: Strings.accountTitleLogin.localized())
+      }
     case .profile(let account):
       let profileVC = viewControllersFactory.makeProfileViewController(with: account)
       transition(to: profileVC, with: Strings.accountTitle.localized())
@@ -64,6 +66,6 @@ class AccountViewController: NiblessViewController {
 
 // MARK: - AccountViewControllerFactory
 protocol AccountViewControllerFactory {
-  func makeSignInViewController() -> UIViewController
+  func makeSignInViewController() async -> UIViewController
   func makeProfileViewController(with account: Account) -> UIViewController
 }

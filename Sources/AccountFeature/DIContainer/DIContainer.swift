@@ -1,7 +1,4 @@
 //
-//  DIContainer.swift
-//  Account
-//
 //  Created by Jeans Ruiz on 7/20/20.
 //
 
@@ -73,13 +70,16 @@ final class DIContainer {
 
 // MARK: - AccountCoordinatorDependencies
 extension DIContainer: AccountCoordinatorDependencies {
+
+  @MainActor
   func buildAccountViewController(coordinator: AccountCoordinatorProtocol?) -> UIViewController {
     guard let accountViewModel = accountViewModel else { return UIViewController(nibName: nil, bundle: nil) }
     accountViewModel.coordinator = coordinator
     return AccountViewController(viewModel: accountViewModel, viewControllersFactory: self)
   }
 
-  func buildAuthPermissionViewController(url: URL, delegate: AuthPermissionViewModelDelegate?) -> AuthPermissionViewController {
+  @MainActor
+  func buildAuthPermissionViewController(url: URL, delegate: AuthPermissionViewModelDelegate?) async -> AuthPermissionViewController {
     let authViewModel = AuthPermissionViewModel(url: url)
     authViewModel.delegate = delegate
     return AuthPermissionViewController(viewModel: authViewModel)
@@ -93,7 +93,9 @@ extension DIContainer: AccountCoordinatorDependencies {
 
 // MARK: - AccountViewControllerFactory
 extension DIContainer: AccountViewControllerFactory {
-  func makeSignInViewController() -> UIViewController {
+
+  @MainActor
+  func makeSignInViewController() async -> UIViewController {
     let signViewModel = SignInViewModel(createTokenUseCase: makeCreateTokenUseCase())
     signViewModel.delegate = accountViewModel
     return SignInViewController(viewModel: signViewModel)

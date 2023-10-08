@@ -64,7 +64,7 @@ class SearchViewController: NiblessViewController {
 
   private func bindSearchBarText() {
     viewModel.searchBarTextSubject
-      .receive(on: DispatchQueue.main)
+      .receive(on: defaultScheduler)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] value in
         self?.searchController.searchBar.text = value
       })

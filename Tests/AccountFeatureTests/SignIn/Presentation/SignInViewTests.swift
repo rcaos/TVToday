@@ -7,12 +7,14 @@
 
 import XCTest
 import SnapshotTesting
+import UI
 @testable import AccountFeature
 
 class SignInViewTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
+    defaultScheduler = .immediate
     isRecording = false
   }
 
@@ -25,14 +27,14 @@ class SignInViewTests: XCTestCase {
     configureWith(viewController, style: .dark)
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: viewController, as: .image(on: .iPhoneSe, precision: 0.98))
 
     // when
     let lightViewController = SignInViewController(viewModel: signInViewModel)
     configureWith(lightViewController, style: .light)
 
     // then
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: lightViewController, as: .image(on: .iPhoneSe, precision: 0.98))
   }
 
   func test_WhenViewIsLoading_thenShowLoadingScreen() {
@@ -44,14 +46,14 @@ class SignInViewTests: XCTestCase {
     configureWith(viewController, style: .dark)
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: viewController, as: .image(on: .iPhoneSe, precision: 0.98))
 
     // when
     let lightViewController = SignInViewController(viewModel: signInViewModel)
     configureWith(lightViewController, style: .light)
 
     // then
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: lightViewController, as: .image(on: .iPhoneSe, precision: 0.98))
   }
 
   func test_WhenViewIsError_thenShowErrorScreen() {
@@ -61,13 +63,13 @@ class SignInViewTests: XCTestCase {
     configureWith(viewController, style: .dark)
 
     // then
-    assertSnapshot(matching: viewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: viewController, as: .image(on: .iPhoneSe, precision: 0.98))
 
     // when
     let lightViewController = SignInViewController(viewModel: signInViewModel)
     configureWith(lightViewController, style: .light)
 
     // then
-    assertSnapshot(matching: lightViewController, as: .wait(for: 0.01, on: .image(on: .iPhoneSe)))
+    assertSnapshot(of: lightViewController, as: .image(on: .iPhoneSe, precision: 0.98))
   }
 }

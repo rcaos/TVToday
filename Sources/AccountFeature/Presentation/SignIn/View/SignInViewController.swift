@@ -34,7 +34,7 @@ class SignInViewController: NiblessViewController {
   fileprivate func subscribe() {
     viewModel
       .viewState
-      .receive(on: DispatchQueue.main)
+      .receive(on: defaultScheduler)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] state in
         self?.setupView(with: state)
       })

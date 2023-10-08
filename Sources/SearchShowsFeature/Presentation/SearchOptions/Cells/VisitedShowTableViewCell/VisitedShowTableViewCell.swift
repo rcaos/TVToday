@@ -67,7 +67,7 @@ class VisitedShowTableViewCell: NiblessTableViewCell {
         snapShot.appendItems(shows, toSection: .header)
         return snapShot
       }
-      .receive(on: DispatchQueue.main)
+      .receive(on: defaultScheduler)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] snapshot in
         self?.dataSource?.apply(snapshot)
       })

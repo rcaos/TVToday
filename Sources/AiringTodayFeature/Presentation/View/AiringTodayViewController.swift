@@ -38,7 +38,7 @@ class AiringTodayViewController: NiblessViewController, Loadable, Retryable, Emp
   private func subscribeToViewState() {
     viewModel
       .viewStateObservableSubject
-      .receive(on: DispatchQueue.main)
+      .receive(on: defaultScheduler)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] viewstate in
         self?.handleViewState(with: viewstate)
       })

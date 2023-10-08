@@ -3,7 +3,6 @@
 //
 
 import Foundation
-import Combine
 import NetworkingInterface
 import Shared
 
@@ -14,7 +13,7 @@ enum AccountViewState: Equatable {
 
 protocol AccountViewModelProtocol: AuthPermissionViewModelDelegate {
   func viewDidLoad() async
-  var viewState: CurrentValueSubject<AccountViewState, Never> { get }
+  var viewState: Published<AccountViewState>.Publisher { get }
 }
 
 final class AccountViewModel: AccountViewModelProtocol {
@@ -26,7 +25,8 @@ final class AccountViewModel: AccountViewModelProtocol {
   weak var coordinator: AccountCoordinatorProtocol?
 
   // MARK: - Public Api
-  let viewState: CurrentValueSubject<AccountViewState, Never> = .init(.login)
+  @Published private var viewStateInternal = AccountViewState.login
+  var viewState: Published<AccountViewState>.Publisher { $viewStateInternal }
 
   // MARK: - Initializers
   init(
@@ -49,15 +49,15 @@ final class AccountViewModel: AccountViewModelProtocol {
     if fetchLoggedUser.execute() != nil {
       await fetchUserDetails()
     } else {
-      viewState.send(.login)
+      viewStateInternal = .login
     }
   }
 
   private func fetchUserDetails() async {
     if let accountDetails = await fetchAccountDetails().execute() {
-      viewState.send(.profile(account: accountDetails))
+      viewStateInternal = .profile(account: accountDetails)
     } else {
-      viewState.send(.login)
+      viewStateInternal = .login
     }
   }
 
@@ -65,13 +65,13 @@ final class AccountViewModel: AccountViewModelProtocol {
     if await createNewSession().execute() {
       await fetchUserDetails()
     } else {
-      viewState.send(.login)
+      viewStateInternal = .login
     }
   }
 
   private func logoutUser() {
     deleteLoggedUser.execute()
-    viewState.send(.login)
+    viewStateInternal = .login
   }
 
   // MARK: - Navigation

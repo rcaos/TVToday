@@ -9,7 +9,7 @@ class SignInViewModel: SignInViewModelProtocol {
   private let createTokenUseCase: CreateTokenUseCase
 
   @Published private var viewStateInternal: SignInViewState = .initial
-  public var viewState: Published<SignInViewState>.Publisher { $viewStateInternal }
+  var viewState: Published<SignInViewState>.Publisher { $viewStateInternal }
 
   weak var delegate: SignInViewModelDelegate?
 

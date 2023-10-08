@@ -2,7 +2,7 @@
 //  Created by Jeans Ruiz on 8/8/20.
 //
 
-import Combine
+import Foundation
 
 protocol ProfileViewModelDelegate: AnyObject {
   func profileViewModel(didTapLogoutButton tapped: Bool)
@@ -16,6 +16,6 @@ protocol ProfileViewModelProtocol {
   var delegate: ProfileViewModelDelegate? { get set }
 
   // MARK: - Output
-  var dataSource: CurrentValueSubject<[ProfileSectionModel], Never> { get }
-  var presentSignOutAlert: CurrentValueSubject<Bool, Never> { get }
+  var dataSource: Published<[ProfileSectionModel]>.Publisher { get }
+  var presentSignOutAlert: Published<Bool>.Publisher { get }
 }

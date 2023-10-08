@@ -20,7 +20,7 @@ class SignInViewModelTests: XCTestCase {
 
   func test_UseCase_Doesnot_Called_ViewModel_Should_Contains_Initial_State() async {
     // given
-    let sut: SignInViewModelProtocol = await SignInViewModel(createTokenUseCase: createTokenUseCase, scheduler: .immediate)
+    let sut: SignInViewModelProtocol = await SignInViewModel(createTokenUseCase: createTokenUseCase)
 
     // when
     let expected = [SignInViewState.initial]
@@ -35,7 +35,7 @@ class SignInViewModelTests: XCTestCase {
 
   func test_UseCase_Doesnot_Responds_Yet_ViewModel_Should_Contains_Loading_State() async {
     // given
-    let sut: SignInViewModelProtocol = await SignInViewModel(createTokenUseCase: createTokenUseCase, scheduler: .immediate)
+    let sut: SignInViewModelProtocol = await SignInViewModel(createTokenUseCase: createTokenUseCase)
 
     // when
     let expected = [
@@ -60,7 +60,7 @@ class SignInViewModelTests: XCTestCase {
     createTokenUseCase.result = expectedURL
     let delegate = SignInViewModelDelegateMock()
 
-    var sut: SignInViewModelProtocol = await SignInViewModel(createTokenUseCase: createTokenUseCase, scheduler: .immediate)
+    var sut: SignInViewModelProtocol = await SignInViewModel(createTokenUseCase: createTokenUseCase)
     sut.delegate = delegate
 
     // when

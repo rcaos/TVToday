@@ -51,10 +51,12 @@ final class DIContainer {
       return DefaultDeleteLoggedUserUseCase(loggedRepository: dependencies.userLoggedRepository)
     }
 
-    accountViewModel = AccountViewModel(createNewSession: { makeCreateSessionUseCase() },
-                                        fetchAccountDetails: { makeFetchAccountDetailsUseCase() },
-                                        fetchLoggedUser: makeFetchLoggedUserUseCase(),
-                                        deleteLoggedUser: makeDeleteLoggedUserUseCase())
+    accountViewModel = AccountViewModel(
+      createNewSession: { makeCreateSessionUseCase() },
+      fetchAccountDetails: { makeFetchAccountDetailsUseCase() },
+      fetchLoggedUser: { makeFetchLoggedUserUseCase() },
+      deleteLoggedUser: { makeDeleteLoggedUserUseCase() }
+    )
   }
 
   // MARK: - Build Module Coordinator

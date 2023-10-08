@@ -18,9 +18,9 @@ protocol AccountViewModelProtocol: AuthPermissionViewModelDelegate {
 
 final class AccountViewModel: AccountViewModelProtocol {
   private let createNewSession: () -> CreateSessionUseCase
-  private let fetchLoggedUser: FetchLoggedUser
+  private let fetchLoggedUser: () -> FetchLoggedUser
   private let fetchAccountDetails: () -> FetchAccountDetailsUseCase
-  private let deleteLoggedUser: DeleteLoggedUserUseCase
+  private let deleteLoggedUser: () -> DeleteLoggedUserUseCase
 
   weak var coordinator: AccountCoordinatorProtocol?
 
@@ -32,8 +32,8 @@ final class AccountViewModel: AccountViewModelProtocol {
   init(
     createNewSession: @escaping () -> CreateSessionUseCase,
     fetchAccountDetails: @escaping () -> FetchAccountDetailsUseCase,
-    fetchLoggedUser: FetchLoggedUser,
-    deleteLoggedUser: DeleteLoggedUserUseCase
+    fetchLoggedUser: @escaping () -> FetchLoggedUser,
+    deleteLoggedUser: @escaping () -> DeleteLoggedUserUseCase
   ) {
     self.createNewSession = createNewSession
     self.fetchAccountDetails = fetchAccountDetails
@@ -46,7 +46,7 @@ final class AccountViewModel: AccountViewModelProtocol {
   }
 
   private func checkIsLogged() async {
-    if fetchLoggedUser.execute() != nil {
+    if fetchLoggedUser().execute() != nil {
       await fetchUserDetails()
     } else {
       viewStateInternal = .login
@@ -70,7 +70,7 @@ final class AccountViewModel: AccountViewModelProtocol {
   }
 
   private func logoutUser() {
-    deleteLoggedUser.execute()
+    deleteLoggedUser().execute()
     viewStateInternal = .login
   }
 

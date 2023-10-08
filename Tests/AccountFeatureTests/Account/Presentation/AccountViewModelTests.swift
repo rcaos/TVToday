@@ -27,8 +27,8 @@ class AccountViewModelTests: XCTestCase {
     sut = AccountViewModel(
       createNewSession: { self.createSessionUseCaseMock },
       fetchAccountDetails: { self.fetchAccountDetailsUseCaseMock },
-      fetchLoggedUser: fetchLoggedUserMock,
-      deleteLoggedUser: deleteLoggedUserUseCaseMock
+      fetchLoggedUser: { self.fetchLoggedUserMock },
+      deleteLoggedUser: { self.deleteLoggedUserUseCaseMock }
     )
   }
 

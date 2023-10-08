@@ -1,9 +1,5 @@
 //
-//  AccountViewModel.swift
-//  TVToday
-//
 //  Created by Jeans Ruiz on 6/19/20.
-//  Copyright © 2020 Jeans. All rights reserved.
 //
 
 import Foundation
@@ -18,14 +14,14 @@ enum AccountViewState: Equatable {
 }
 
 protocol AccountViewModelProtocol: AuthPermissionViewModelDelegate {
-  func viewDidLoad()
+  func viewDidLoad() async
   var viewState: CurrentValueSubject<AccountViewState, Never> { get }
 }
 
 final class AccountViewModel: AccountViewModelProtocol {
   private let createNewSession: CreateSessionUseCase
   private let fetchLoggedUser: FetchLoggedUser
-  private let fetchAccountDetails: FetchAccountDetailsUseCase
+  private let fetchAccountDetails: () -> FetchAccountDetailsUseCase
   private let deleteLoggedUser: DeleteLoggedUserUseCase
 
   weak var coordinator: AccountCoordinatorProtocol?
@@ -37,7 +33,7 @@ final class AccountViewModel: AccountViewModelProtocol {
 
   // MARK: - Initializers
   init(createNewSession: CreateSessionUseCase,
-       fetchAccountDetails: FetchAccountDetailsUseCase,
+       fetchAccountDetails: @escaping () -> FetchAccountDetailsUseCase,
        fetchLoggedUser: FetchLoggedUser,
        deleteLoggedUser: DeleteLoggedUserUseCase,
        scheduler: AnySchedulerOf<DispatchQueue> = .main
@@ -49,33 +45,24 @@ final class AccountViewModel: AccountViewModelProtocol {
     self.scheduler = scheduler
   }
 
-  func viewDidLoad() {
-    checkIsLogged()
+  func viewDidLoad() async {
+    await checkIsLogged()
   }
 
-  private func checkIsLogged() {
+  private func checkIsLogged() async {
     if fetchLoggedUser.execute() != nil {
-      fetchUserDetails()
+      await fetchUserDetails()
     } else {
       viewState.send(.login)
     }
   }
 
-  private func fetchUserDetails() {
-    fetchDetailsAccount()
-      .receive(on: scheduler)
-      .sink(receiveCompletion: { [weak self] completion in
-        switch completion {
-        case .failure:
-          self?.viewState.send(.login)
-        case .finished:
-          break
-        }
-      },
-            receiveValue: { [weak self] accountDetails in
-        self?.viewState.send(.profile(account: accountDetails))
-      })
-      .store(in: &disposeBag)
+  private func fetchUserDetails() async {
+    if let accountDetails = await fetchAccountDetails().execute() {
+      viewState.send(.profile(account: accountDetails))
+    } else {
+      viewState.send(.login)
+    }
   }
 
   private func createSession() {
@@ -102,7 +89,7 @@ final class AccountViewModel: AccountViewModelProtocol {
   }
 
   private func fetchDetailsAccount() -> AnyPublisher<Account, DataTransferError> {
-    return fetchAccountDetails.execute()
+    return fetchAccountDetails().execute()
   }
 
   private func logoutUser() {

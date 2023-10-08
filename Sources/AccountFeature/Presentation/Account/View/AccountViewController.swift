@@ -1,9 +1,5 @@
 //
-//  AccountViewController.swift
-//  TVToday
-//
 //  Created by Jeans Ruiz on 6/19/20.
-//  Copyright © 2020 Jeans. All rights reserved.
 //
 
 import UIKit
@@ -30,8 +26,10 @@ class AccountViewController: NiblessViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    viewModel.viewDidLoad()
-    subscribe()
+    Task {
+      await viewModel.viewDidLoad()
+      subscribe()
+    }
   }
 
   // MARK: - Setup UI

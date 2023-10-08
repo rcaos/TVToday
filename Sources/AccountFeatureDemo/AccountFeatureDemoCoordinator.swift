@@ -14,7 +14,6 @@ import ShowListFeatureInterface
 public class AccountFeatureDemoCoordinator: Coordinator {
   private let window: UIWindow
   private let tabBarController: UITabBarController
-  private let apiDataTransferService: DataTransferService
   private let apiClient: ApiClient
   private let imagesBaseURL: String
   private let authenticateBaseURL: String
@@ -25,7 +24,6 @@ public class AccountFeatureDemoCoordinator: Coordinator {
   public init(
     window: UIWindow,
     tabBarController: UITabBarController,
-    apiDataTransferService: DataTransferService,
     apiClient: ApiClient,
     imagesBaseURL: String,
     gravatarBaseURL: String,
@@ -33,7 +31,6 @@ public class AccountFeatureDemoCoordinator: Coordinator {
   ) {
     self.window = window
     self.tabBarController = tabBarController
-    self.apiDataTransferService = apiDataTransferService
     self.apiClient = apiClient
     self.imagesBaseURL = imagesBaseURL
     self.gravatarBaseURL = gravatarBaseURL
@@ -57,7 +54,6 @@ public class AccountFeatureDemoCoordinator: Coordinator {
 
   private func buildAccountCoordinator(in navigation: UINavigationController) {
     let dependencies = AccountFeature.ModuleDependencies(
-      apiDataTransferService: apiDataTransferService,
       apiClient: apiClient,
       imagesBaseURL: imagesBaseURL,
       authenticateBaseURL: authenticateBaseURL,

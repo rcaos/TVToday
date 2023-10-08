@@ -10,7 +10,7 @@ import Combine
 
 final class AccountViewModelMock: AccountViewModelProtocol {
 
-  func viewDidLoad() { }
+  func viewDidLoad() async { }
 
   let viewState: CurrentValueSubject<AccountViewState, Never>
 

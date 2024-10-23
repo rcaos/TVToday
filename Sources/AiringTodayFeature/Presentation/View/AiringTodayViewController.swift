@@ -1,9 +1,5 @@
 //
-//  AiringTodayViewController.swift
-//  MyMovies
-//
 //  Created by Jeans on 8/21/19.
-//  Copyright © 2019 Jeans. All rights reserved.
 //
 
 import UIKit
@@ -32,7 +28,10 @@ class AiringTodayViewController: NiblessViewController, Loadable, Retryable, Emp
     super.viewDidLoad()
 
     subscribeToViewState()
-    viewModel.viewDidLoad()
+
+    Task {
+      await viewModel.viewDidLoad()
+    }
   }
 
   private func subscribeToViewState() {
@@ -59,9 +58,12 @@ class AiringTodayViewController: NiblessViewController, Loadable, Retryable, Emp
 
     case .error(let message):
       hideLoadingView()
-      showMessageView(with: message,
-                      errorHandler: { [weak self] in
-                        self?.viewModel.refreshView()
+      showMessageView(
+        with: message,
+        errorHandler: { [weak self] in
+          Task {
+            await self?.viewModel.refreshView()
+          }
       })
 
     default:

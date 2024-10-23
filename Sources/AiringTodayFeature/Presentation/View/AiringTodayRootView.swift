@@ -1,7 +1,4 @@
 //
-//  AiringTodayRootView.swift
-//  AiringToday
-//
 //  Created by Jeans Ruiz on 8/21/20.
 //
 
@@ -69,7 +66,9 @@ class AiringTodayRootView: NiblessView, AiringTodayRootViewProtocol {
 
   private func setupCollectionView() {
     collectionView.refreshControl = DefaultRefreshControl(refreshHandler: { [weak self] in
-      self?.viewModel.refreshView()
+      Task {
+        await self?.viewModel.refreshView()
+      }
     })
 
     collectionView.registerCell(cellType: AiringTodayCollectionViewCell.self)
@@ -90,7 +89,10 @@ class AiringTodayRootView: NiblessView, AiringTodayRootViewProtocol {
 
       // MARK: - TODO, Use willDisplayCell and trigger signal to ViewModel instead
       let totalItems = self?.dataSource?.snapshot().itemIdentifiers(inSection: .shows).count ?? 0
-      self?.viewModel.willDisplayRow(indexPath.row, outOf: totalItems)
+      
+      Task {
+        await self?.viewModel.willDisplayRow(indexPath.row, outOf: totalItems)
+      }
 
       return cell
     })

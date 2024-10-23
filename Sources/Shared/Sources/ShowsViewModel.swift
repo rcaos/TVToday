@@ -1,9 +1,5 @@
 //
-//  ShowsViewModel.swift
-//  MyTvShows
-//
 //  Created by Jeans on 9/16/19.
-//  Copyright © 2019 Jeans. All rights reserved.
 //
 
 import Foundation
@@ -25,26 +21,17 @@ public protocol ShowsViewModel: AnyObject {
 
 extension ShowsViewModel {
 
-  public func getShows(for page: Int, showLoader: Bool = true) {
-
+  public func getShows(for page: Int, showLoader: Bool = true) async {
     if viewStateObservableSubject.value.isInitialPage, showLoader {
       viewStateObservableSubject.send(.loading)
     }
 
     let request = FetchTVShowsUseCaseRequestValue(page: page)
-
-    fetchTVShowsUseCase.execute(requestValue: request)
-      .receive(on: scheduler)
-      .sink(receiveCompletion: { [weak self] completion in
-        switch completion {
-        case let .failure(error):
-          self?.handleError(error)
-        case .finished: break
-        }
-      }, receiveValue: { [weak self] result in
-        self?.processFetched(for: result, currentPage: page)
-      })
-      .store(in: &disposeBag)
+    if let showPage = await fetchTVShowsUseCase.execute(request: request) {
+      processFetched(for: showPage, currentPage: page)
+    } else {
+      handleError(DataTransferError.noResponse)
+    }
   }
 
   private func handleError(_ error: DataTransferError) {

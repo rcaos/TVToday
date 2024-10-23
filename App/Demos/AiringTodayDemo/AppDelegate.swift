@@ -1,13 +1,11 @@
 //
-//  AppDelegate.swift
-//  AiringTodayDemo
-//
 //  Created by Jeans Ruiz on 20/04/22.
 //
 
 import UIKit
 import AiringTodayFeatureDemo
 import Networking
+import NetworkingInterface
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,13 +18,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     let appConfigurations = buildAppConfigurations()
     let apiDataTransferService = buildDataTransferService(appConfigurations: appConfigurations)
-    coordinator = TodayDemoCoordinator(window: window!,
-                                       tabBarController: UITabBarController(),
-                                       apiDataTransferService: apiDataTransferService,
-                                       imagesBaseURL: appConfigurations.imagesBaseURL)
+    coordinator = TodayDemoCoordinator(
+      window: window!,
+      tabBarController: UITabBarController(),
+      apiDataTransferService: apiDataTransferService,
+      apiClient: buildApiClient(appConfigurations: appConfigurations),
+      imagesBaseURL: appConfigurations.imagesBaseURL
+    )
     coordinator?.start()
     return true
   }
+}
+
+private func buildApiClient(appConfigurations: AppConfigurations) -> ApiClient {
+  let config = NetworkConfig(
+    baseURL: appConfigurations.apiBaseURL,
+    headers: [
+      "Content-Type": "application/json; charset=utf-8"
+    ],
+    queryParameters: [
+      "api_key": appConfigurations.apiKey,
+      "language": NSLocale.preferredLanguages.first ?? "en"
+    ]
+  )
+  return ApiClient.live(networkConfig: config)
 }
 
 func buildDataTransferService(appConfigurations: AppConfigurations) -> DefaultDataTransferService {

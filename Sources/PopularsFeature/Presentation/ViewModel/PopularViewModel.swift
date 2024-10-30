@@ -4,7 +4,6 @@
 
 import Algorithms
 import Combine
-import CombineSchedulers
 import NetworkingInterface
 import Shared
 import UI
@@ -25,14 +24,13 @@ final class PopularViewModel: PopularViewModelProtocol {
   var showsCells: [TVShowCellViewModel] = []
   let viewStateObservableSubject: CurrentValueSubject<SimpleViewState<TVShowCellViewModel>, Never> = .init(.loading)
   weak var coordinator: PopularCoordinatorProtocol?
-  var scheduler: AnySchedulerOf<DispatchQueue>
 
   // MARK: - Initializers
-  init(fetchTVShowsUseCase: FetchTVShowsUseCase,
-       scheduler: AnySchedulerOf<DispatchQueue> = .main,
-       coordinator: PopularCoordinatorProtocol?) {
+  init(
+    fetchTVShowsUseCase: FetchTVShowsUseCase,
+    coordinator: PopularCoordinatorProtocol?
+  ) {
     self.fetchTVShowsUseCase = fetchTVShowsUseCase
-    self.scheduler = scheduler
     self.coordinator = coordinator
     shows = []
   }

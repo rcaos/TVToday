@@ -27,7 +27,6 @@ let package = Package(
     .library(name: "ShowListFeatureInterface", targets: ["ShowListFeatureInterface"]),
     .library(name: "UI", targets: ["UI"]),
     .library(name: "AccountFeatureDemo", targets: ["AccountFeatureDemo"]),
-    .library(name: "AiringTodayFeatureDemo", targets: ["AiringTodayFeatureDemo"]),
     .library(name: "PopularsFeatureDemo", targets: ["PopularsFeatureDemo"]),
     .library(name: "SearchShowsFeatureDemo", targets: ["SearchShowsFeatureDemo"]),
     .library(name: "ShowDetailsFeatureDemo", targets: ["ShowDetailsFeatureDemo"]),
@@ -84,7 +83,7 @@ let package = Package(
         "Shared",
         "ShowDetailsFeatureInterface",
         "UI",
-        .product(name: "CombineSchedulers", package: "combine-schedulers")
+        .product(name: "CombineSchedulers", package: "combine-schedulers") // remove it
       ]
     ),
     .testTarget(
@@ -247,7 +246,6 @@ let package = Package(
     ),
 
     // MARK: - Demo modules
-    .target(name: "AiringTodayFeatureDemo", dependencies: ["AiringTodayFeature"]),
     .target(name: "PopularsFeatureDemo", dependencies: ["PopularsFeature"]),
     .target(name: "SearchShowsFeatureDemo", dependencies: ["SearchShowsFeature"]),
     .target(name: "AccountFeatureDemo", dependencies: ["AccountFeature"]),

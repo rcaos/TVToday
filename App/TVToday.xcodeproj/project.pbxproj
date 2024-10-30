@@ -27,9 +27,10 @@
 		7741E9DA280F11E800A9F208 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7741E9C8280F118A00A9F208 /* LaunchScreen.storyboard */; };
 		7741E9DC280F3DDE00A9F208 /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 7741E9DB280F3DDE00A9F208 /* AppFeature */; };
 		7741E9E0280F84D800A9F208 /* AppConfigurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7741E9DF280F84D800A9F208 /* AppConfigurations.swift */; };
+		77507FB62CD2546F00676D2E /* AiringTodayFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 77507FB52CD2546F00676D2E /* AiringTodayFeature */; };
+		77507FB82CD2550000676D2E /* TodayDemoCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77507FB72CD2550000676D2E /* TodayDemoCoordinator.swift */; };
 		7763E9432810AFED00138736 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7763E9422810AFED00138736 /* AppDelegate.swift */; };
 		7763E94C2810AFF100138736 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7763E94B2810AFF100138736 /* Assets.xcassets */; };
-		7763E9592810B36E00138736 /* AiringTodayFeatureDemo in Frameworks */ = {isa = PBXBuildFile; productRef = 7763E9582810B36E00138736 /* AiringTodayFeatureDemo */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -92,6 +93,7 @@
 		7741E9D2280F118A00A9F208 /* info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = info.plist; sourceTree = "<group>"; };
 		7741E9DE280F83B900A9F208 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		7741E9DF280F84D800A9F208 /* AppConfigurations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfigurations.swift; sourceTree = "<group>"; };
+		77507FB72CD2550000676D2E /* TodayDemoCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TodayDemoCoordinator.swift; sourceTree = "<group>"; };
 		7763E9402810AFED00138736 /* AiringTodayDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AiringTodayDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7763E9422810AFED00138736 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7763E94B2810AFF100138736 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -151,7 +153,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7763E9592810B36E00138736 /* AiringTodayFeatureDemo in Frameworks */,
+				77507FB62CD2546F00676D2E /* AiringTodayFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,6 +248,7 @@
 		7763E9412810AFED00138736 /* AiringTodayDemo */ = {
 			isa = PBXGroup;
 			children = (
+				77507FB72CD2550000676D2E /* TodayDemoCoordinator.swift */,
 				7763E9422810AFED00138736 /* AppDelegate.swift */,
 				7763E94B2810AFF100138736 /* Assets.xcassets */,
 				7763E9502810AFF100138736 /* Info.plist */,
@@ -426,7 +429,7 @@
 			);
 			name = AiringTodayDemo;
 			packageProductDependencies = (
-				7763E9582810B36E00138736 /* AiringTodayFeatureDemo */,
+				77507FB52CD2546F00676D2E /* AiringTodayFeature */,
 			);
 			productName = AiringTodayDemo;
 			productReference = 7763E9402810AFED00138736 /* AiringTodayDemo.app */;
@@ -641,6 +644,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7763E9432810AFED00138736 /* AppDelegate.swift in Sources */,
+				77507FB82CD2550000676D2E /* TodayDemoCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1312,9 +1316,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = AppFeature;
 		};
-		7763E9582810B36E00138736 /* AiringTodayFeatureDemo */ = {
+		77507FB52CD2546F00676D2E /* AiringTodayFeature */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = AiringTodayFeatureDemo;
+			productName = AiringTodayFeature;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

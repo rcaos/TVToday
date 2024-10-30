@@ -16,34 +16,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     window = UIWindow(frame: UIScreen.main.bounds)
 
     let appConfigurations = buildAppConfigurations()
-    let apiDataTransferService = buildDataTransferService(appConfigurations: appConfigurations)
     coordinator = PopularDemoCoordinator(
       window: window!,
       tabBarController: UITabBarController(),
-      apiDataTransferService: apiDataTransferService,
       apiCLient: buildApiClient(appConfigurations: appConfigurations),
       imagesBaseURL: appConfigurations.imagesBaseURL
     )
     coordinator?.start()
     return true
   }
-}
-
-func buildDataTransferService(appConfigurations: AppConfigurations) -> DefaultDataTransferService {
-  let queryParameters = [
-    "api_key": appConfigurations.apiKey,
-    "language": NSLocale.preferredLanguages.first ?? "en"
-  ]
-
-  let configuration = ApiDataNetworkConfig(
-    baseURL: appConfigurations.apiBaseURL,
-    headers: [
-      "Content-Type": "application/json; charset=utf-8"
-    ],
-    queryParameters: queryParameters
-  )
-  let networkService = DefaultNetworkService(config: configuration)
-  return DefaultDataTransferService(with: networkService)
 }
 
 private func buildApiClient(appConfigurations: AppConfigurations) -> ApiClient {

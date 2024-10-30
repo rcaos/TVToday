@@ -24,7 +24,7 @@ final class DIContainer {
   // MARK: - Uses Cases
   private func makeFetchPopularShowsUseCase() -> FetchTVShowsUseCase {
     let showsPageRepository = DefaultTVShowsPageRepository(
-      showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService, apiClient: dependencies.apiClient),
+      showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(apiClient: dependencies.apiClient),
       mapper: DefaultTVShowPageMapper(),
       imageBasePath: dependencies.imagesBaseURL
     )

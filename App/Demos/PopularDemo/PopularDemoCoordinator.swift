@@ -11,23 +11,20 @@ import ShowDetailsFeatureInterface
 public class PopularDemoCoordinator: Coordinator {
   private let window: UIWindow
   private let tabBarController: UITabBarController
-  private let apiDataTransferService: DataTransferService
   private let apiClient: ApiClient
   private let imagesBaseURL: String
   private var childCoordinators = [Coordinator]()
 
-  // MARK: - Life Cycle
-  public init(window: UIWindow,
-              tabBarController: UITabBarController,
-              apiDataTransferService: DataTransferService,
-              apiCLient: ApiClient,
-              imagesBaseURL: String) {
-    self.window = window
-    self.tabBarController = tabBarController
-    self.apiDataTransferService = apiDataTransferService
-    self.apiClient = apiCLient
-    self.imagesBaseURL = imagesBaseURL
-  }
+  public init(
+    window: UIWindow,
+    tabBarController: UITabBarController,
+    apiCLient: ApiClient,
+    imagesBaseURL: String) {
+      self.window = window
+      self.tabBarController = tabBarController
+      self.apiClient = apiCLient
+      self.imagesBaseURL = imagesBaseURL
+    }
 
   public func start() {
     showMainFeatures()
@@ -46,7 +43,7 @@ public class PopularDemoCoordinator: Coordinator {
 
   private func buildPopularScene(in navigation: UINavigationController) {
     let dependencies = PopularsFeature.ModuleDependencies(
-      apiDataTransferService: apiDataTransferService, apiClient: apiClient,
+      apiClient: apiClient,
       imagesBaseURL: imagesBaseURL,
       showDetailsBuilder: self
     )

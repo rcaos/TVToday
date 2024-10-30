@@ -9,20 +9,15 @@ import Shared
 import ShowDetailsFeatureInterface
 
 public struct ModuleDependencies {
-
-  let apiDataTransferService: DataTransferService
   let apiClient: ApiClient
   let imagesBaseURL: String
   let showDetailsBuilder: ModuleShowDetailsBuilder
 
   public init(
-    apiDataTransferService: DataTransferService,
     apiClient: ApiClient,
     imagesBaseURL: String,
     showDetailsBuilder: ModuleShowDetailsBuilder
   ) {
-
-    self.apiDataTransferService = apiDataTransferService
     self.apiClient = apiClient
     self.imagesBaseURL = imagesBaseURL
     self.showDetailsBuilder = showDetailsBuilder

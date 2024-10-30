@@ -51,8 +51,8 @@ public final class DefaultTVShowsRemoteDataSource: TVShowsRemoteDataSourceProtoc
     return try await apiClient.apiRequest(endpoint: endpoint, as: TVShowPageDTO.self)
   }
 
-  public func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError> {
-    let endpoint = Networking.Endpoint<TVShowPageDTO>(
+  public func searchShowsFor(query: String, page: Int) async throws -> TVShowPageDTO {
+    let endpoint = Endpoint(
       path: "3/search/tv",
       method: .get,
       queryParameters: [
@@ -60,6 +60,6 @@ public final class DefaultTVShowsRemoteDataSource: TVShowsRemoteDataSourceProtoc
         "page": page
       ]
     )
-    return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
+    return try await apiClient.apiRequest(endpoint: endpoint, as: TVShowPageDTO.self)
   }
 }

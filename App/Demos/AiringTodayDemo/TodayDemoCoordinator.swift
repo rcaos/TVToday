@@ -8,7 +8,6 @@ import Shared
 import NetworkingInterface
 import ShowDetailsFeatureInterface
 
-// todo, its this module really needed, Move to demo app instead
 public class TodayDemoCoordinator: Coordinator {
   private let window: UIWindow
   private let tabBarController: UITabBarController

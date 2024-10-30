@@ -6,15 +6,10 @@ import Combine
 import Networking
 import NetworkingInterface
 
-//wip
 public final class DefaultTVShowsRemoteDataSource: TVShowsRemoteDataSourceProtocol {
-  #warning("todo remove it")
-  private let dataTransferService: DataTransferService
-
   private let apiClient: ApiClient
 
-  public init(dataTransferService: DataTransferService,  apiClient: ApiClient) {
-    self.dataTransferService = dataTransferService
+  public init(apiClient: ApiClient) {
     self.apiClient = apiClient
   }
 

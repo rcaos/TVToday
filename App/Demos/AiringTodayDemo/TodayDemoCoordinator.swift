@@ -11,7 +11,6 @@ import ShowDetailsFeatureInterface
 public class TodayDemoCoordinator: Coordinator {
   private let window: UIWindow
   private let tabBarController: UITabBarController
-  private let apiDataTransferService: DataTransferService
   private let apiClient: ApiClient
   private let imagesBaseURL: String
   private var childCoordinators = [Coordinator]()
@@ -19,13 +18,11 @@ public class TodayDemoCoordinator: Coordinator {
   public init(
     window: UIWindow,
     tabBarController: UITabBarController,
-    apiDataTransferService: DataTransferService,
     apiClient: ApiClient,
     imagesBaseURL: String
   ) {
     self.window = window
     self.tabBarController = tabBarController
-    self.apiDataTransferService = apiDataTransferService
     self.apiClient = apiClient
     self.imagesBaseURL = imagesBaseURL
   }
@@ -47,7 +44,6 @@ public class TodayDemoCoordinator: Coordinator {
 
   private func buildTodayScene(in navigation: UINavigationController) {
     let dependencies = AiringTodayFeature.ModuleDependencies(
-      apiDataTransferService: apiDataTransferService,
       apiClient: apiClient,
       imagesBaseURL: imagesBaseURL,
       showDetailsBuilder: self

@@ -1,13 +1,11 @@
 //
-//  AppDelegate.swift
-//  ShowListDemo
-//
 //  Created by Jeans Ruiz on 21/04/22.
 //
 
 import UIKit
 import ShowListFeatureDemo
 import Networking
+import NetworkingInterface
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,31 +17,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     window = UIWindow(frame: UIScreen.main.bounds)
 
     let appConfigurations = buildAppConfigurations()
-    let apiDataTransferService = buildDataTransferService(appConfigurations: appConfigurations)
-    coordinator = ShowListDemoCoordinator(window: window!,
-                                             tabBarController: UITabBarController(),
-                                             apiDataTransferService: apiDataTransferService,
-                                             imagesBaseURL: appConfigurations.imagesBaseURL)
+    coordinator = ShowListDemoCoordinator(
+      window: window!,
+      tabBarController: UITabBarController(),
+      apiClient: buildApiClient(appConfigurations: appConfigurations),
+      imagesBaseURL: appConfigurations.imagesBaseURL
+    )
     coordinator?.start()
     return true
   }
 }
 
-func buildDataTransferService(appConfigurations: AppConfigurations) -> DefaultDataTransferService {
-  let queryParameters = [
-    "api_key": appConfigurations.apiKey,
-    "language": NSLocale.preferredLanguages.first ?? "en"
-  ]
-
-  let configuration = ApiDataNetworkConfig(
+private func buildApiClient(appConfigurations: AppConfigurations) -> ApiClient {
+  let config = NetworkConfig(
     baseURL: appConfigurations.apiBaseURL,
     headers: [
       "Content-Type": "application/json; charset=utf-8"
     ],
-    queryParameters: queryParameters
+    queryParameters: [
+      "api_key": appConfigurations.apiKey,
+      "language": NSLocale.preferredLanguages.first ?? "en"
+    ]
   )
-  let networkService = DefaultNetworkService(config: configuration)
-  return DefaultDataTransferService(with: networkService)
+  return ApiClient.live(networkConfig: config)
 }
 
 struct AppConfigurations {

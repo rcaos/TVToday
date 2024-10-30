@@ -28,8 +28,7 @@ let package = Package(
     .library(name: "UI", targets: ["UI"]),
     .library(name: "AccountFeatureDemo", targets: ["AccountFeatureDemo"]),
     .library(name: "SearchShowsFeatureDemo", targets: ["SearchShowsFeatureDemo"]),
-    .library(name: "ShowDetailsFeatureDemo", targets: ["ShowDetailsFeatureDemo"]),
-    .library(name: "ShowListFeatureDemo", targets: ["ShowListFeatureDemo"])
+    .library(name: "ShowDetailsFeatureDemo", targets: ["ShowDetailsFeatureDemo"])
   ],
   dependencies: [
     .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "14.0.0"),
@@ -249,7 +248,6 @@ let package = Package(
     .target(name: "SearchShowsFeatureDemo", dependencies: ["SearchShowsFeature"]),
     .target(name: "AccountFeatureDemo", dependencies: ["AccountFeature"]),
     .target(name: "ShowDetailsFeatureDemo", dependencies: ["ShowDetailsFeature"]),
-    .target(name: "ShowListFeatureDemo", dependencies: ["ShowListFeature"]),
 
     // MARK: - Common For test Targets
     .target(

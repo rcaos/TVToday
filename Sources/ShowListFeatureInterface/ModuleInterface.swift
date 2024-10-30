@@ -1,7 +1,4 @@
 //
-//  Module.swift
-//  TVShowsList
-//
 //  Created by Jeans Ruiz on 6/27/20.
 //
 
@@ -11,25 +8,22 @@ import Shared
 import ShowDetailsFeatureInterface
 
 public struct ModuleDependencies {
-
-  public let apiDataTransferService: DataTransferService
   public let apiClient: ApiClient
   public let imagesBaseURL: String
   public let loggedUserRepository: LoggedUserRepositoryProtocol
   public let showDetailsBuilder: ModuleShowDetailsBuilder
 
   public init(
-    apiDataTransferService: DataTransferService,
     apiClient: ApiClient,
     imagesBaseURL: String,
     loggedUserRepository: LoggedUserRepositoryProtocol,
-    showDetailsBuilder: ModuleShowDetailsBuilder) {
-      self.apiDataTransferService = apiDataTransferService
-      self.apiClient = apiClient
-      self.imagesBaseURL = imagesBaseURL
-      self.loggedUserRepository = loggedUserRepository
-      self.showDetailsBuilder = showDetailsBuilder
-    }
+    showDetailsBuilder: ModuleShowDetailsBuilder
+  ) {
+    self.apiClient = apiClient
+    self.imagesBaseURL = imagesBaseURL
+    self.loggedUserRepository = loggedUserRepository
+    self.showDetailsBuilder = showDetailsBuilder
+  }
 }
 
 public protocol ModuleShowListDetailsBuilder {

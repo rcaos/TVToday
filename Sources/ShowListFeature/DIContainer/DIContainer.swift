@@ -1,7 +1,4 @@
 //
-//  DIContainer.swift
-//  TVShowsList
-//
 //  Created by Jeans Ruiz on 8/12/20.
 //
 
@@ -15,12 +12,13 @@ final class DIContainer {
 
   // MARK: - Repositories
   private lazy var accountShowsRepository: AccountTVShowsRepository = {
-    return DefaultAccountTVShowsRepository(
-      showsPageRemoteDataSource: AccountTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
-      mapper: DefaultTVShowPageMapper(),
-      imageBasePath: dependencies.imagesBaseURL,
-      loggedUserRepository: dependencies.loggedUserRepository
-    )
+    fatalError()
+//    return DefaultAccountTVShowsRepository(
+//      showsPageRemoteDataSource: AccountTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+//      mapper: DefaultTVShowPageMapper(),
+//      imageBasePath: dependencies.imagesBaseURL,
+//      loggedUserRepository: dependencies.loggedUserRepository
+//    )
   }()
 
   // MARK: - Initializer
@@ -68,7 +66,7 @@ final class DIContainer {
   // MARK: - Build Uses Cases
   private func makeShowListByGenreUseCase(genreId: Int) -> FetchTVShowsUseCase {
     let showsPageRepository = DefaultTVShowsPageRepository(
-      showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService, apiClient: dependencies.apiClient),
+      showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(apiClient: dependencies.apiClient),
       mapper: DefaultTVShowPageMapper(),
       imageBasePath: dependencies.imagesBaseURL
     )

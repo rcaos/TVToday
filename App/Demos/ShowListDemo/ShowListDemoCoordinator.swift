@@ -1,7 +1,4 @@
 //
-//  File.swift
-//  
-//
 //  Created by Jeans Ruiz on 21/04/22.
 //
 
@@ -15,18 +12,20 @@ import ShowListFeatureInterface
 public class ShowListDemoCoordinator: Coordinator {
   private let window: UIWindow
   private let tabBarController: UITabBarController
-  private let apiDataTransferService: DataTransferService
+  private let apiClient: ApiClient
   private let imagesBaseURL: String
   private var childCoordinators = [Coordinator]()
 
   // MARK: - Life Cycle
-  public init(window: UIWindow,
-              tabBarController: UITabBarController,
-              apiDataTransferService: DataTransferService,
-              imagesBaseURL: String) {
+  public init(
+    window: UIWindow,
+    tabBarController: UITabBarController,
+    apiClient: ApiClient,
+    imagesBaseURL: String
+  ) {
     self.window = window
     self.tabBarController = tabBarController
-    self.apiDataTransferService = apiDataTransferService
+    self.apiClient = apiClient
     self.imagesBaseURL = imagesBaseURL
   }
 
@@ -46,10 +45,12 @@ public class ShowListDemoCoordinator: Coordinator {
   }
 
   private func buildListScene(in navigation: UINavigationController) {
-    let dependencies = ShowListFeatureInterface.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                                   imagesBaseURL: imagesBaseURL,
-                                                                   loggedUserRepository: FakeLoggedRepository(),
-                                                                   showDetailsBuilder: self)
+    let dependencies = ShowListFeatureInterface.ModuleDependencies(
+      apiClient: apiClient,
+      imagesBaseURL: imagesBaseURL,
+      loggedUserRepository: FakeLoggedRepository(),
+      showDetailsBuilder: self
+    )
     let module = ShowListFeature.Module(dependencies: dependencies)
     let coordinator = module.buildModuleCoordinator(in: navigation, delegate: nil)
     //coordinator.navigate(to: .favoriteList) // Need a valid token

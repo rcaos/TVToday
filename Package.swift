@@ -124,8 +124,7 @@ let package = Package(
         "Networking",
         "Shared",
         "ShowDetailsFeatureInterface",
-        "UI",
-        .product(name: "CombineSchedulers", package: "combine-schedulers")
+        "UI"
       ]
     ),
     .testTarget(

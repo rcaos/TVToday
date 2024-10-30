@@ -2,6 +2,7 @@
 //  Created by Jeans Ruiz on 1/05/22.
 //
 
+import Algorithms
 import Combine
 import NetworkingInterface
 import Shared
@@ -72,17 +73,13 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol {
     }
   }
 
+  //todo
   private func processFetched(for response: TVShowPage, currentPage: Int) {
     if currentPage == 1 {
       shows.removeAll()
     }
-
-    // Avoid duplicated elements, Maybe Can I use a Set<Hashable> instead
-    response.showsList.forEach { responseItem in
-      if shows.contains(where: { $0.id == responseItem.id }) == false {
-        shows.append(responseItem)
-      }
-    }
+    let uniqueShows = (shows + response.showsList).uniqued(on: \.id)
+    shows = uniqueShows
 
     if shows.isEmpty {
       viewStateObservableSubject.send(.empty)

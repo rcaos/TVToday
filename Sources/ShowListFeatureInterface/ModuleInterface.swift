@@ -13,19 +13,23 @@ import ShowDetailsFeatureInterface
 public struct ModuleDependencies {
 
   public let apiDataTransferService: DataTransferService
+  public let apiClient: ApiClient
   public let imagesBaseURL: String
   public let loggedUserRepository: LoggedUserRepositoryProtocol
   public let showDetailsBuilder: ModuleShowDetailsBuilder
 
-  public init(apiDataTransferService: DataTransferService,
-              imagesBaseURL: String,
-              loggedUserRepository: LoggedUserRepositoryProtocol,
-              showDetailsBuilder: ModuleShowDetailsBuilder) {
-    self.apiDataTransferService = apiDataTransferService
-    self.imagesBaseURL = imagesBaseURL
-    self.loggedUserRepository = loggedUserRepository
-    self.showDetailsBuilder = showDetailsBuilder
-  }
+  public init(
+    apiDataTransferService: DataTransferService,
+    apiClient: ApiClient,
+    imagesBaseURL: String,
+    loggedUserRepository: LoggedUserRepositoryProtocol,
+    showDetailsBuilder: ModuleShowDetailsBuilder) {
+      self.apiDataTransferService = apiDataTransferService
+      self.apiClient = apiClient
+      self.imagesBaseURL = imagesBaseURL
+      self.loggedUserRepository = loggedUserRepository
+      self.showDetailsBuilder = showDetailsBuilder
+    }
 }
 
 public protocol ModuleShowListDetailsBuilder {

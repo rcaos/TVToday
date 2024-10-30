@@ -15,7 +15,6 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol {
   private var showsCells: [AiringTodayCollectionViewModel] = []
 
   private weak var coordinator: AiringTodayCoordinatorProtocol?
-  private var disposeBag = Set<AnyCancellable>()
 
   init(
     fetchTVShowsUseCase: @escaping () -> FetchTVShowsUseCase,

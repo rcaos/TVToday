@@ -1,9 +1,5 @@
 //
-//  TVShowListViewController.swift
-//  MyTvShows
-//
 //  Created by Jeans on 8/26/19.
-//  Copyright © 2019 Jeans. All rights reserved.
 //
 
 import UIKit
@@ -31,7 +27,10 @@ class TVShowListViewController: NiblessViewController, Loadable, Retryable, Empt
   override func viewDidLoad() {
     super.viewDidLoad()
     subscribeToViewState()
-    viewModel.viewDidLoad()
+
+    Task {
+      await viewModel.viewDidLoad()
+    }
   }
 
   deinit {
@@ -83,7 +82,9 @@ class TVShowListViewController: NiblessViewController, Loadable, Retryable, Empt
       rootView?.tableView.separatorStyle = .none
       showMessageView(with: message,
                       errorHandler: { [weak self] in
-                        self?.viewModel.refreshView()
+        Task {
+          await self?.viewModel.refreshView()
+        }
       })
     }
   }

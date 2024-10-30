@@ -210,7 +210,7 @@ let package = Package(
       name: "ShowListFeature",
       dependencies: [
         "ShowListFeatureInterface",
-        .product(name: "CombineSchedulers", package: "combine-schedulers"),
+        .product(name: "Algorithms", package: "swift-algorithms")
       ]
     ),
     .testTarget(

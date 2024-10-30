@@ -26,7 +26,6 @@ final class PopularViewModel: PopularViewModelProtocol {
   let viewStateObservableSubject: CurrentValueSubject<SimpleViewState<TVShowCellViewModel>, Never> = .init(.loading)
   weak var coordinator: PopularCoordinatorProtocol?
   var scheduler: AnySchedulerOf<DispatchQueue>
-  var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Initializers
   init(fetchTVShowsUseCase: FetchTVShowsUseCase,

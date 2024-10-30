@@ -1,7 +1,4 @@
 //
-//  SearchOptionsViewController.swift
-//  SearchShows
-//
 //  Created by Jeans Ruiz on 7/7/20.
 //
 
@@ -29,7 +26,10 @@ class SearchOptionsViewController: NiblessViewController, Loadable {
   override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
-    viewModel.viewDidLoad()
+
+    Task {
+      await viewModel.viewDidLoad()
+    }
   }
 
   private func setupUI() {

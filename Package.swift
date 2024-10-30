@@ -148,7 +148,7 @@ let package = Package(
         "ShowDetailsFeatureInterface",
         "ShowListFeatureInterface",
         "UI",
-        .product(name: "CombineSchedulers", package: "combine-schedulers")
+        .product(name: "Algorithms", package: "swift-algorithms")
       ]
     ),
     .testTarget(

@@ -1,10 +1,8 @@
 //
-//  SearchOptionsViewModel.swift
-//  SearchShows
-//
 //  Created by Jeans Ruiz on 7/7/20.
 //
 
+import Algorithms
 import Foundation
 import Combine
 import CombineSchedulers
@@ -12,18 +10,22 @@ import Shared
 import Persistence
 import NetworkingInterface
 
+#warning("wip todo")
+#warning("recover coredata datasource")
+#warning("recover reactivity")
 final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
 
   weak var delegate: SearchOptionsViewModelDelegate?
 
   private let fetchGenresUseCase: FetchGenresUseCase
-  private let fetchVisitedShowsUseCase: FetchVisitedShowsUseCase
-  private let recentVisitedShowsDidChange: RecentVisitedShowDidChangeUseCase
+  
+//  private let fetchVisitedShowsUseCase: FetchVisitedShowsUseCase
+//  private let recentVisitedShowsDidChange: RecentVisitedShowDidChangeUseCase
 
   let viewState = CurrentValueSubject<SearchViewState, Never>(.loading)
   let dataSource = CurrentValueSubject<[SearchOptionsSectionModel], Never>([])
-  private let scheduler: AnySchedulerOf<DispatchQueue>
-  private var disposeBag = Set<AnyCancellable>()
+//  private let scheduler: AnySchedulerOf<DispatchQueue> // todo, delete?
+
 
   // MARK: - Initializer
   init(fetchGenresUseCase: FetchGenresUseCase,
@@ -31,14 +33,14 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
        recentVisitedShowsDidChange: RecentVisitedShowDidChangeUseCase,
        scheduler: AnySchedulerOf<DispatchQueue> = .main) {
     self.fetchGenresUseCase = fetchGenresUseCase
-    self.fetchVisitedShowsUseCase = fetchVisitedShowsUseCase
-    self.recentVisitedShowsDidChange = recentVisitedShowsDidChange
-    self.scheduler = scheduler
+//    self.fetchVisitedShowsUseCase = fetchVisitedShowsUseCase
+//    self.recentVisitedShowsDidChange = recentVisitedShowsDidChange
+//    self.scheduler = scheduler
   }
 
   // MARK: - Public
-  public func viewDidLoad() {
-    fetchGenresAndRecentShows()
+  public func viewDidLoad() async {
+    await fetchGenresAndRecentShows()
   }
 
   public func modelIsPicked(with item: SearchSectionItem) {
@@ -51,51 +53,55 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
   }
 
   // MARK: - Private
-  private func fetchRecentShows() -> AnyPublisher<[ShowVisited], ErrorEnvelope> {
-    return fetchVisitedShowsUseCase.execute(requestValue: FetchVisitedShowsUseCaseRequestValue())
+//  private func fetchRecentShows() -> AnyPublisher<[ShowVisited], ErrorEnvelope> {
+//    return fetchVisitedShowsUseCase.execute(requestValue: FetchVisitedShowsUseCaseRequestValue())
+//  }
+
+//  private func recentShowsDidChanged() -> AnyPublisher<[ShowVisited], ErrorEnvelope> {
+//    return recentVisitedShowsDidChange.execute()
+//      .filter { $0 }
+//      .flatMap { [weak self] _ -> AnyPublisher<[ShowVisited], ErrorEnvelope> in
+//        guard let strongSelf = self else { return Just([]).setFailureType(to: ErrorEnvelope.self).eraseToAnyPublisher() }
+//        return strongSelf.fetchRecentShows()
+//      }
+//      .eraseToAnyPublisher()
+//  }
+
+  private func fetchGenresAndRecentShows() async {
+    do {
+      let resultGenre = try await fetchGenresUseCase.execute()
+      processFetched(for: resultGenre)
+      //let visited = try await fetchVisitedShowsUseCase.execute()
+      createSectionModel(showsVisited: [], genres: resultGenre.genres.uniqued(on: \.id))
+    } catch {
+      viewState.send(.error("error fetching genres")) // todo, recover error
+    }
   }
 
-  private func fetchGenres() -> AnyPublisher<GenreList, ErrorEnvelope> {
-    return fetchGenresUseCase.execute(requestValue: FetchGenresUseCaseRequestValue())
-      .mapError { error -> ErrorEnvelope in return ErrorEnvelope(transferError: error) }
-      .eraseToAnyPublisher()
-  }
-
-  private func recentShowsDidChanged() -> AnyPublisher<[ShowVisited], ErrorEnvelope> {
-    return recentVisitedShowsDidChange.execute()
-      .filter { $0 }
-      .flatMap { [weak self] _ -> AnyPublisher<[ShowVisited], ErrorEnvelope> in
-        guard let strongSelf = self else { return Just([]).setFailureType(to: ErrorEnvelope.self).eraseToAnyPublisher() }
-        return strongSelf.fetchRecentShows()
-      }
-      .eraseToAnyPublisher()
-  }
-
-  private func fetchGenresAndRecentShows() {
-    Publishers.CombineLatest(
-      recentShowsDidChanged(),
-      fetchGenres()
-    )
-      .receive(on: scheduler)
-      .sink(receiveCompletion: { [weak self] completion in
-        switch completion {
-        case let .failure(error):
-          self?.viewState.send(.error(error.localizedDescription))
-        case .finished:
-          break
-        }
-      },
-            receiveValue: { [weak self] (visited, resultGenre) in
-        guard let strongSelf = self else { return }
-        strongSelf.processFetched(for: resultGenre)
-        strongSelf.createSectionModel(showsVisited: visited, genres: resultGenre.genres)
-      })
-      .store(in: &disposeBag)
-  }
+//  private func fetchGenresAndRecentShows_old() {
+//    Publishers.CombineLatest(
+//      recentShowsDidChanged(),
+//      fetchGenres()
+//    )
+//      .receive(on: scheduler)
+//      .sink(receiveCompletion: { [weak self] completion in
+//        switch completion {
+//        case let .failure(error):
+//          self?.viewState.send(.error(error.localizedDescription))
+//        case .finished:
+//          break
+//        }
+//      },
+//            receiveValue: { [weak self] (visited, resultGenre) in
+//        guard let strongSelf = self else { return }
+//        strongSelf.processFetched(for: resultGenre)
+//        strongSelf.createSectionModel(showsVisited: visited, genres: resultGenre.genres)
+//      })
+//      .store(in: &disposeBag)
+//  }
 
   private func processFetched(for response: GenreList) {
-    let fetchedGenres = (response.genres)
-    if fetchedGenres.isEmpty {
+    if response.genres.isEmpty {
       viewState.send(.empty)
     } else {
       viewState.send(.populated )

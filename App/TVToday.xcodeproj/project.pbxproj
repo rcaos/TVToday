@@ -31,9 +31,9 @@
 		77507FBE2CD275F700676D2E /* ShowListDemoCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77507FBD2CD275F700676D2E /* ShowListDemoCoordinator.swift */; };
 		77507FC02CD2763500676D2E /* ShowListFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 77507FBF2CD2763500676D2E /* ShowListFeature */; };
 		77507FC22CD28E2E00676D2E /* SearchShowsDemoCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77507FC12CD28E2E00676D2E /* SearchShowsDemoCoordinator.swift */; };
-		77507FC42CD28E4400676D2E /* SearchShowsFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 77507FC32CD28E4400676D2E /* SearchShowsFeature */; };
 		7763E9432810AFED00138736 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7763E9422810AFED00138736 /* AppDelegate.swift */; };
 		7763E94C2810AFF100138736 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7763E94B2810AFF100138736 /* Assets.xcassets */; };
+		7795E25C2CD2909900FFA8CE /* SearchShowsFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 7795E25B2CD2909900FFA8CE /* SearchShowsFeature */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -135,7 +135,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				77507FC42CD28E4400676D2E /* SearchShowsFeature in Frameworks */,
+				7795E25C2CD2909900FFA8CE /* SearchShowsFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -378,7 +378,7 @@
 			);
 			name = SearchShowsDemo;
 			packageProductDependencies = (
-				77507FC32CD28E4400676D2E /* SearchShowsFeature */,
+				7795E25B2CD2909900FFA8CE /* SearchShowsFeature */,
 			);
 			productName = SearchShowsDemo;
 			productReference = 770BA0D02810FAC0009CE6A8 /* SearchShowsDemo.app */;
@@ -1328,7 +1328,7 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = ShowListFeature;
 		};
-		77507FC32CD28E4400676D2E /* SearchShowsFeature */ = {
+		7795E25B2CD2909900FFA8CE /* SearchShowsFeature */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SearchShowsFeature;
 		};

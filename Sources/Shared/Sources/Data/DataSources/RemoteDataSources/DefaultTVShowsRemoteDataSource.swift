@@ -6,6 +6,7 @@ import Combine
 import Networking
 import NetworkingInterface
 
+//wip
 public final class DefaultTVShowsRemoteDataSource: TVShowsRemoteDataSourceProtocol {
   #warning("todo remove it")
   private let dataTransferService: DataTransferService
@@ -26,13 +27,13 @@ public final class DefaultTVShowsRemoteDataSource: TVShowsRemoteDataSourceProtoc
     return try await apiClient.apiRequest(endpoint: endpoint, as: TVShowPageDTO.self)
   }
 
-  public func fetchPopularShows(page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError> {
-    let endpoint = Networking.Endpoint<TVShowPageDTO>(
+  public func fetchPopularShows(page: Int) async throws -> TVShowPageDTO {
+    let endpoint = Endpoint(
       path: "3/tv/popular",
       method: .get,
       queryParameters: ["page": page]
     )
-    return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
+    return try await apiClient.apiRequest(endpoint: endpoint, as: TVShowPageDTO.self)
   }
 
   public func fetchShowsByGenre(genreId: Int, page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError> {

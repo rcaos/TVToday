@@ -1,9 +1,5 @@
 //
-//  PupularShowsViewController.swift
-//  MyMovies
-//
 //  Created by Jeans on 8/21/19.
-//  Copyright © 2019 Jeans. All rights reserved.
 //
 
 import UIKit
@@ -33,7 +29,10 @@ class PopularsViewController: NiblessViewController, Loadable, Retryable, Emptia
   override func viewDidLoad() {
     super.viewDidLoad()
     subscribe()
-    viewModel.viewDidLoad()
+
+    Task {
+      await viewModel.viewDidLoad()
+    }
   }
 
   private func subscribe() {
@@ -79,7 +78,9 @@ class PopularsViewController: NiblessViewController, Loadable, Retryable, Emptia
       rootView?.tableView.tableFooterView = nil
       rootView?.tableView.separatorStyle = .none
       showMessageView(with: message, errorHandler: { [weak self] in
-        self?.viewModel.refreshView()
+        Task {
+          await self?.viewModel.refreshView()
+        }
       })
     }
   }

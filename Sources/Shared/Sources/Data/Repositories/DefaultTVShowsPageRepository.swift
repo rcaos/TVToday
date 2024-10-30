@@ -17,22 +17,26 @@ public final class DefaultTVShowsPageRepository {
   }
 }
 
+//wip
 extension DefaultTVShowsPageRepository: TVShowsPageRepository {
   public func fetchAiringTodayShows(page: Int) async -> TVShowPage? {
     do {
       let dto = try await showsPageRemoteDataSource.fetchAiringTodayShows(page: page)
-      let domain = mapper.mapTVShowPage(dto, imageBasePath: imageBasePath, imageSize: .medium)
-      return domain
+      return mapper.mapTVShowPage(dto, imageBasePath: imageBasePath, imageSize: .medium)
     } catch {
-      #warning("todo: log error, check error strategies")
+      #warning("todo: log error, reseach error and logging strategies")
       return nil
     }
   }
 
-  public func fetchPopularShows(page: Int) -> AnyPublisher<TVShowPage, DataTransferError> {
-    return showsPageRemoteDataSource.fetchPopularShows(page: page)
-      .map { self.mapper.mapTVShowPage($0, imageBasePath: self.imageBasePath, imageSize: .medium) }
-      .eraseToAnyPublisher()
+  public func fetchPopularShows(page: Int) async -> TVShowPage? {
+    do {
+      let dto = try await showsPageRemoteDataSource.fetchPopularShows(page: page)
+      return mapper.mapTVShowPage(dto, imageBasePath: imageBasePath, imageSize: .medium)
+    } catch {
+      #warning("todo: log error, reseach error and logging strategies")
+      return nil
+    }
   }
 
   public func fetchShowsByGenre(genreId: Int, page: Int) -> AnyPublisher<TVShowPage, DataTransferError> {

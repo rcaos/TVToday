@@ -1,11 +1,7 @@
 //
-//  DefaultFetchPopularTVShowsUseCase.swift
-//  AiringToday
-//
 //  Created by Jeans Ruiz on 6/28/20.
 //
 
-import Combine
 import Shared
 import NetworkingInterface
 
@@ -16,7 +12,7 @@ final class DefaultFetchPopularTVShowsUseCase: FetchTVShowsUseCase {
     self.tvShowsPageRepository = tvShowsPageRepository
   }
 
-  func execute(requestValue: FetchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowPage, DataTransferError> {
-    return tvShowsPageRepository.fetchPopularShows(page: requestValue.page)
+  func execute(request: FetchTVShowsUseCaseRequestValue) async -> TVShowPage? {
+    return await tvShowsPageRepository.fetchPopularShows(page: request.page)
   }
 }

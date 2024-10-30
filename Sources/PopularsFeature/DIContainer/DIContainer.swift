@@ -1,7 +1,4 @@
 //
-//  DIContainer.swift
-//  PopularShows
-//
 //  Created by Jeans Ruiz on 7/20/20.
 //
 
@@ -27,7 +24,7 @@ final class DIContainer {
   // MARK: - Uses Cases
   private func makeFetchPopularShowsUseCase() -> FetchTVShowsUseCase {
     let showsPageRepository = DefaultTVShowsPageRepository(
-      showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService, apiClient: dependencies.apiClient),
       mapper: DefaultTVShowPageMapper(),
       imageBasePath: dependencies.imagesBaseURL
     )

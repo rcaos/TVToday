@@ -1,10 +1,8 @@
 //
-//  PopularViewModel.swift
-//  
-//
 //  Created by Jeans Ruiz on 4/05/22.
 //
 
+import Algorithms
 import Combine
 import CombineSchedulers
 import NetworkingInterface
@@ -12,11 +10,10 @@ import Shared
 import UI
 
 protocol PopularViewModelProtocol {
-  // MARK: - Input
-  func viewDidLoad()
-  func willDisplayRow(_ row: Int, outOf totalRows: Int)
+  func viewDidLoad() async
+  func willDisplayRow(_ row: Int, outOf totalRows: Int) async
   func showIsPicked(index: Int)
-  func refreshView()
+  func refreshView() async
 
   // MARK: - Output
   var viewStateObservableSubject: CurrentValueSubject<SimpleViewState<TVShowCellViewModel>, Never> { get }
@@ -41,18 +38,18 @@ final class PopularViewModel: PopularViewModelProtocol {
     shows = []
   }
 
-  func viewDidLoad() {
-    getShows(for: 1)
+  func viewDidLoad() async {
+    await getShows(for: 1)
   }
 
-  func willDisplayRow(_ row: Int, outOf totalRows: Int) {
+  func willDisplayRow(_ row: Int, outOf totalRows: Int) async {
     if case .paging(_, let nextPage) = viewStateObservableSubject.value, row == totalRows - 1 {
-      getShows(for: nextPage)
+      await getShows(for: nextPage)
     }
   }
 
-  func refreshView() {
-    getShows(for: 1, showLoader: false)
+  func refreshView() async {
+    await getShows(for: 1, showLoader: false)
   }
 
   func showIsPicked(index: Int) {
@@ -61,32 +58,19 @@ final class PopularViewModel: PopularViewModelProtocol {
     }
   }
 
-  // MARK: - Private
-  private func getShows(for page: Int, showLoader: Bool = true) {
-
+  private func getShows(for page: Int, showLoader: Bool = true) async {
     if viewStateObservableSubject.value.isInitialPage, showLoader {
       viewStateObservableSubject.send(.loading)
     }
 
-    let request = FetchTVShowsUseCaseRequestValue(page: page)
-
-    fetchTVShowsUseCase.execute(requestValue: request)
-      .receive(on: scheduler)
-      .sink(receiveCompletion: { [weak self] completion in
-        switch completion {
-        case let .failure(error):
-          self?.handleError(error)
-        case .finished: break
-        }
-      }, receiveValue: { [weak self] result in
-        self?.processFetched(for: result, currentPage: page)
-      })
-      .store(in: &disposeBag)
-  }
-
-  private func handleError(_ error: DataTransferError) {
-    if viewStateObservableSubject.value.isInitialPage {
-      viewStateObservableSubject.send(.error(error.localizedDescription))
+    let response = await fetchTVShowsUseCase.execute(request: .init(page: page))
+    if let response {
+      processFetched(for: response, currentPage: page)
+    } else {
+      if viewStateObservableSubject.value.isInitialPage {
+        #warning("todo, change message")
+        viewStateObservableSubject.send(.error("Error to load TVShows"))
+      }
     }
   }
 
@@ -94,8 +78,8 @@ final class PopularViewModel: PopularViewModelProtocol {
     if currentPage == 1 {
       shows.removeAll()
     }
-
-    shows.append(contentsOf: response.showsList)
+    let uniqueShows = (shows + response.showsList).uniqued(on: \.id)
+    shows = uniqueShows
 
     if shows.isEmpty {
       viewStateObservableSubject.send(.empty)

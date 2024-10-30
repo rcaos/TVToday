@@ -72,12 +72,6 @@ final class AiringTodayViewModel: AiringTodayViewModelProtocol {
     }
   }
 
-  private func handleError(_ error: DataTransferError) {
-    if viewStateObservableSubject.value.isInitialPage {
-      viewStateObservableSubject.send(.error(error.localizedDescription))
-    }
-  }
-
   private func processFetched(for response: TVShowPage, currentPage: Int) {
     if currentPage == 1 {
       shows.removeAll()

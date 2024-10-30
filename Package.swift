@@ -37,7 +37,8 @@ let package = Package(
     .package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.9.1"),
     .package(url: "https://github.com/pointfreeco/combine-schedulers", .exactItem("0.5.3")),
     .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.14.1"),
-    .package(url: "https://github.com/pointfreeco/swift-concurrency-extras.git", .rangeItem(.upToNextMajor(from: "1.0.0")))
+    .package(url: "https://github.com/pointfreeco/swift-concurrency-extras.git", .rangeItem(.upToNextMajor(from: "1.0.0"))),
+    .package(url: "https://github.com/apple/swift-algorithms.git", from: "1.2.0")
   ],
   targets: [
     .target(
@@ -82,7 +83,8 @@ let package = Package(
         "Networking",
         "Shared",
         "ShowDetailsFeatureInterface",
-        "UI"
+        "UI",
+        .product(name: "Algorithms", package: "swift-algorithms")
       ]
     ),
     .testTarget(
@@ -124,7 +126,8 @@ let package = Package(
         "Networking",
         "Shared",
         "ShowDetailsFeatureInterface",
-        "UI"
+        "UI",
+        .product(name: "Algorithms", package: "swift-algorithms")
       ]
     ),
     .testTarget(
@@ -168,7 +171,7 @@ let package = Package(
         "NetworkingInterface",
         "Networking",
         .product(name: "Kingfisher", package: "Kingfisher"),
-        .product(name: "CombineSchedulers", package: "combine-schedulers"),
+        .product(name: "CombineSchedulers", package: "combine-schedulers")
       ]
     ),
     .testTarget(

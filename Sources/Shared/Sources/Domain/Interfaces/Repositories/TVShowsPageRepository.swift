@@ -5,12 +5,11 @@
 import Combine
 import NetworkingInterface
 
-// todo, clean this
+// wip
 public protocol TVShowsPageRepository {
-//  func fetchAiringTodayShows(page: Int) -> AnyPublisher<TVShowPage, DataTransferError>
-  func fetchPopularShows(page: Int) -> AnyPublisher<TVShowPage, DataTransferError>
   func fetchShowsByGenre(genreId: Int, page: Int) -> AnyPublisher<TVShowPage, DataTransferError>
   func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowPage, DataTransferError>
 
-  func fetchAiringTodayShows(page: Int) async -> TVShowPage?
+  func fetchAiringTodayShows(page: Int) async -> TVShowPage? // todo, return nil?? nahhh
+  func fetchPopularShows(page: Int) async -> TVShowPage?
 }

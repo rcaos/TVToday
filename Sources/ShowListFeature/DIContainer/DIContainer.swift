@@ -12,13 +12,12 @@ final class DIContainer {
 
   // MARK: - Repositories
   private lazy var accountShowsRepository: AccountTVShowsRepository = {
-    fatalError()
-//    return DefaultAccountTVShowsRepository(
-//      showsPageRemoteDataSource: AccountTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
-//      mapper: DefaultTVShowPageMapper(),
-//      imageBasePath: dependencies.imagesBaseURL,
-//      loggedUserRepository: dependencies.loggedUserRepository
-//    )
+    return DefaultAccountTVShowsRepository(
+      showsPageRemoteDataSource: AccountTVShowsRemoteDataSource(apiClient: dependencies.apiClient),
+      mapper: DefaultTVShowPageMapper(),
+      imageBasePath: dependencies.imagesBaseURL,
+      loggedUserRepository: dependencies.loggedUserRepository
+    )
   }()
 
   // MARK: - Initializer

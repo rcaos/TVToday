@@ -3,7 +3,6 @@
 //
 
 import UIKit
-import PopularsFeatureDemo
 import Networking
 import NetworkingInterface
 

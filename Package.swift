@@ -27,7 +27,6 @@ let package = Package(
     .library(name: "ShowListFeatureInterface", targets: ["ShowListFeatureInterface"]),
     .library(name: "UI", targets: ["UI"]),
     .library(name: "AccountFeatureDemo", targets: ["AccountFeatureDemo"]),
-    .library(name: "PopularsFeatureDemo", targets: ["PopularsFeatureDemo"]),
     .library(name: "SearchShowsFeatureDemo", targets: ["SearchShowsFeatureDemo"]),
     .library(name: "ShowDetailsFeatureDemo", targets: ["ShowDetailsFeatureDemo"]),
     .library(name: "ShowListFeatureDemo", targets: ["ShowListFeatureDemo"])
@@ -247,7 +246,6 @@ let package = Package(
     ),
 
     // MARK: - Demo modules
-    .target(name: "PopularsFeatureDemo", dependencies: ["PopularsFeature"]),
     .target(name: "SearchShowsFeatureDemo", dependencies: ["SearchShowsFeature"]),
     .target(name: "AccountFeatureDemo", dependencies: ["AccountFeature"]),
     .target(name: "ShowDetailsFeatureDemo", dependencies: ["ShowDetailsFeature"]),

@@ -17,18 +17,19 @@ import ShowListFeatureInterface
 public class SearchShowsDemoCoordinator: Coordinator {
   private let window: UIWindow
   private let tabBarController: UITabBarController
-  private let apiDataTransferService: DataTransferService
+  private let apiClient: ApiClient
   private let imagesBaseURL: String
   private var childCoordinators = [Coordinator]()
 
-  // MARK: - Life Cycle
-  public init(window: UIWindow,
-              tabBarController: UITabBarController,
-              apiDataTransferService: DataTransferService,
-              imagesBaseURL: String) {
+  public init(
+    window: UIWindow,
+    tabBarController: UITabBarController,
+    apiClient: ApiClient,
+    imagesBaseURL: String
+  ) {
     self.window = window
     self.tabBarController = tabBarController
-    self.apiDataTransferService = apiDataTransferService
+    self.apiClient = apiClient
     self.imagesBaseURL = imagesBaseURL
   }
 
@@ -48,12 +49,14 @@ public class SearchShowsDemoCoordinator: Coordinator {
   }
 
   private func buildSearchScene(in navigation: UINavigationController) {
-    let dependencies = SearchShowsFeature.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                             imagesBaseURL: imagesBaseURL,
-                                                             showsPersistence: FakeShowsVisitedLocalRepository(),
-                                                             searchsPersistence: FakeSearchLocalRepository(),
-                                                             showDetailsBuilder: self,
-                                                             showListBuilder: self)
+    let dependencies = SearchShowsFeature.ModuleDependencies(
+      apiClient: apiClient,
+      imagesBaseURL: imagesBaseURL,
+      showsPersistence: FakeShowsVisitedLocalRepository(),
+      searchsPersistence: FakeSearchLocalRepository(),
+      showDetailsBuilder: self,
+      showListBuilder: self
+    )
     let module = SearchShowsFeature.Module(dependencies: dependencies)
     let coordinator = module.buildSearchCoordinator(in: navigation)
     coordinator.start()

@@ -27,13 +27,11 @@ let package = Package(
     .library(name: "ShowListFeatureInterface", targets: ["ShowListFeatureInterface"]),
     .library(name: "UI", targets: ["UI"]),
     .library(name: "AccountFeatureDemo", targets: ["AccountFeatureDemo"]),
-    .library(name: "SearchShowsFeatureDemo", targets: ["SearchShowsFeatureDemo"]),
     .library(name: "ShowDetailsFeatureDemo", targets: ["ShowDetailsFeatureDemo"])
   ],
   dependencies: [
     .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "14.0.0"),
     .package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.9.1"),
-    .package(url: "https://github.com/pointfreeco/combine-schedulers", .exactItem("0.5.3")),
     .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.14.1"),
     .package(url: "https://github.com/pointfreeco/swift-concurrency-extras.git", .rangeItem(.upToNextMajor(from: "1.0.0"))),
     .package(url: "https://github.com/apple/swift-algorithms.git", from: "1.2.0")
@@ -168,8 +166,7 @@ let package = Package(
       dependencies: [
         "NetworkingInterface",
         "Networking",
-        .product(name: "Kingfisher", package: "Kingfisher"),
-        .product(name: "CombineSchedulers", package: "combine-schedulers")
+        .product(name: "Kingfisher", package: "Kingfisher")
       ]
     ),
     .testTarget(
@@ -183,8 +180,7 @@ let package = Package(
       name: "ShowDetailsFeature",
       dependencies: [
         "ShowDetailsFeatureInterface",
-        "UI",
-        .product(name: "CombineSchedulers", package: "combine-schedulers"),
+        "UI"
       ]
     ),
     .testTarget(
@@ -245,7 +241,6 @@ let package = Package(
     ),
 
     // MARK: - Demo modules
-    .target(name: "SearchShowsFeatureDemo", dependencies: ["SearchShowsFeature"]),
     .target(name: "AccountFeatureDemo", dependencies: ["AccountFeature"]),
     .target(name: "ShowDetailsFeatureDemo", dependencies: ["ShowDetailsFeature"]),
 

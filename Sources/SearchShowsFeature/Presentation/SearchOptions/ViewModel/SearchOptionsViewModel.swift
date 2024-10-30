@@ -5,7 +5,6 @@
 import Algorithms
 import Foundation
 import Combine
-import CombineSchedulers
 import Shared
 import Persistence
 import NetworkingInterface
@@ -24,14 +23,12 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
 
   let viewState = CurrentValueSubject<SearchViewState, Never>(.loading)
   let dataSource = CurrentValueSubject<[SearchOptionsSectionModel], Never>([])
-//  private let scheduler: AnySchedulerOf<DispatchQueue> // todo, delete?
 
-
-  // MARK: - Initializer
-  init(fetchGenresUseCase: FetchGenresUseCase,
-       fetchVisitedShowsUseCase: FetchVisitedShowsUseCase,
-       recentVisitedShowsDidChange: RecentVisitedShowDidChangeUseCase,
-       scheduler: AnySchedulerOf<DispatchQueue> = .main) {
+  init(
+    fetchGenresUseCase: FetchGenresUseCase,
+    fetchVisitedShowsUseCase: FetchVisitedShowsUseCase,
+    recentVisitedShowsDidChange: RecentVisitedShowDidChangeUseCase
+  ) {
     self.fetchGenresUseCase = fetchGenresUseCase
 //    self.fetchVisitedShowsUseCase = fetchVisitedShowsUseCase
 //    self.recentVisitedShowsDidChange = recentVisitedShowsDidChange

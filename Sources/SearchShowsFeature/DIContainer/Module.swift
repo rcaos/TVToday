@@ -11,8 +11,6 @@ import ShowDetailsFeatureInterface
 import ShowListFeatureInterface
 
 public struct ModuleDependencies {
-
-  let apiDataTransferService: DataTransferService
   let apiClient: ApiClient
   let imagesBaseURL: String
   let showsPersistence: ShowsVisitedLocalRepositoryProtocol
@@ -22,21 +20,21 @@ public struct ModuleDependencies {
   let showListBuilder: ModuleShowListDetailsBuilder
 
   public init(
-    apiDataTransferService: DataTransferService,
     apiClient: ApiClient,
     imagesBaseURL: String,
     showsPersistence: ShowsVisitedLocalRepositoryProtocol,
     searchsPersistence: SearchLocalRepositoryProtocol,
     showDetailsBuilder: ModuleShowDetailsBuilder,
-    showListBuilder: ModuleShowListDetailsBuilder) {
-      self.apiDataTransferService = apiDataTransferService
-      self.apiClient = apiClient
-      self.imagesBaseURL = imagesBaseURL
-      self.showsPersistence = showsPersistence
-      self.searchsPersistence = searchsPersistence
-      self.showDetailsBuilder = showDetailsBuilder
-      self.showListBuilder = showListBuilder
-    }
+    showListBuilder: ModuleShowListDetailsBuilder
+  ) {
+
+    self.apiClient = apiClient
+    self.imagesBaseURL = imagesBaseURL
+    self.showsPersistence = showsPersistence
+    self.searchsPersistence = searchsPersistence
+    self.showDetailsBuilder = showDetailsBuilder
+    self.showListBuilder = showListBuilder
+  }
 }
 
 // MARK: - Entry to Module

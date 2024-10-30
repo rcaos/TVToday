@@ -20,7 +20,7 @@ final class DIContainer {
   // MARK: - Repositories
   private lazy var genresRepository: GenresRepository = {
     return DefaultGenreRepository(
-      remoteDataSource: DefaultGenreRemoteDataSource(dataTransferService: dependencies.apiDataTransferService)
+      remoteDataSource: DefaultGenreRemoteDataSource(apiClient: dependencies.apiClient)
     )
   }()
 
@@ -42,7 +42,7 @@ final class DIContainer {
   // MARK: - Search Feature Uses Cases
   private func makeSearchShowsUseCase() -> SearchTVShowsUseCase {
     let tvShowsPageRepository = DefaultTVShowsPageRepository(
-      showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService, apiClient: dependencies.apiClient),
+      showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(apiClient: dependencies.apiClient),
       mapper: DefaultTVShowPageMapper(),
       imageBasePath: dependencies.imagesBaseURL
     )

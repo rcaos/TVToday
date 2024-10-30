@@ -36,8 +36,8 @@ public final class DefaultTVShowsRemoteDataSource: TVShowsRemoteDataSourceProtoc
     return try await apiClient.apiRequest(endpoint: endpoint, as: TVShowPageDTO.self)
   }
 
-  public func fetchShowsByGenre(genreId: Int, page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError> {
-    let endpoint = Networking.Endpoint<TVShowPageDTO>(
+  public func fetchShowsByGenre(genreId: Int, page: Int) async throws -> TVShowPageDTO {
+    let endpoint = Endpoint(
       path: "3/discover/tv",
       method: .get,
       queryParameters: [
@@ -48,7 +48,7 @@ public final class DefaultTVShowsRemoteDataSource: TVShowsRemoteDataSourceProtoc
         "include_null_first_air_dates": "false"
       ]
     )
-    return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
+    return try await apiClient.apiRequest(endpoint: endpoint, as: TVShowPageDTO.self)
   }
 
   public func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowPageDTO, DataTransferError> {

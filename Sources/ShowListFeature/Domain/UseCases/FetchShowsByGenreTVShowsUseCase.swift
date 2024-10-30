@@ -18,7 +18,7 @@ final class DefaultFetchShowsByGenreTVShowsUseCase: FetchTVShowsUseCase {
     self.tvShowsPageRepository = tvShowsPageRepository
   }
 
-  func execute(requestValue: FetchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowPage, DataTransferError> {
-    return tvShowsPageRepository.fetchShowsByGenre(genreId: genreId, page: requestValue.page)
+  func execute(request: FetchTVShowsUseCaseRequestValue) async -> TVShowPage? {
+    return await tvShowsPageRepository.fetchShowsByGenre(genreId: genreId, page: request.page)
   }
 }

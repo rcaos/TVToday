@@ -39,10 +39,14 @@ extension DefaultTVShowsPageRepository: TVShowsPageRepository {
     }
   }
 
-  public func fetchShowsByGenre(genreId: Int, page: Int) -> AnyPublisher<TVShowPage, DataTransferError> {
-    return showsPageRemoteDataSource.fetchShowsByGenre(genreId: genreId, page: page)
-      .map { self.mapper.mapTVShowPage($0, imageBasePath: self.imageBasePath, imageSize: .medium) }
-      .eraseToAnyPublisher()
+  public func fetchShowsByGenre(genreId: Int, page: Int) async -> TVShowPage? {
+    do {
+      let dto = try await showsPageRemoteDataSource.fetchShowsByGenre(genreId: genreId, page: page)
+      return mapper.mapTVShowPage(dto, imageBasePath: imageBasePath, imageSize: .medium)
+    } catch {
+      #warning("todo: log error, reseach error and logging strategies")
+      return nil
+    }
   }
 
   public func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowPage, DataTransferError> {

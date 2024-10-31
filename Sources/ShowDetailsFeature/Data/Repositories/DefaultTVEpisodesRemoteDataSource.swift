@@ -1,28 +1,24 @@
 //
-//  DefaultTVEpisodesRemoteDataSource.swift
-//  
-//
 //  Created by Jeans Ruiz on 5/05/22.
 //
 
-import Combine
 import Networking
 import NetworkingInterface
 
 public final class DefaultTVEpisodesRemoteDataSource {
-  private let dataTransferService: DataTransferService
+  private let apiClient: ApiClient
 
-  public init(dataTransferService: DataTransferService) {
-    self.dataTransferService = dataTransferService
+  public init(apiClient: ApiClient) {
+    self.apiClient = apiClient
   }
 }
 
 extension DefaultTVEpisodesRemoteDataSource: TVEpisodesRemoteDataSource {
-  public func fetchEpisodes(for showId: Int, season: Int) -> AnyPublisher<TVShowSeasonDTO, DataTransferError> {
-    let endpoint = Endpoint<TVShowSeasonDTO>(
+  public func fetchEpisodes(for showId: Int, season: Int) async throws -> TVShowSeasonDTO {
+    let endpoint = Endpoint(
       path: "3/tv/\(showId)/season/\(season)",
       method: .get
     )
-    return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
+    return try await apiClient.apiRequest(endpoint: endpoint, as: TVShowSeasonDTO.self)
   }
 }

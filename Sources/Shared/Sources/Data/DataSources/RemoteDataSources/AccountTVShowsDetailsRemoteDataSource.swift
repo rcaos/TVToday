@@ -1,63 +1,59 @@
 //
-//  AccountTVShowsDetailsRemoteDataSource.swift
-//  
-//
 //  Created by Jeans Ruiz on 13/05/22.
 //
 
-import Combine
 import Networking
 import NetworkingInterface
 
 public class AccountTVShowsDetailsRemoteDataSource {
-  private let dataTransferService: DataTransferService
+  private let apiClient: ApiClient
 
-  public init(dataTransferService: DataTransferService) {
-    self.dataTransferService = dataTransferService
+  public init(apiClient: ApiClient) {
+    self.apiClient = apiClient
   }
 }
 
 extension AccountTVShowsDetailsRemoteDataSource: AccountTVShowsDetailsRemoteDataSourceProtocol {
-  public func markAsFavorite(tvShowId: Int, userId: String, session: String, favorite: Bool) -> AnyPublisher<TVShowActionStatusDTO, DataTransferError> {
-    let endpoint = Networking.Endpoint<TVShowActionStatusDTO>(
+  public func markAsFavorite(tvShowId: Int, userId: String, session: String, favorite: Bool) async throws -> TVShowActionStatusDTO {
+    let endpoint = Endpoint(
       path: "3/account/\(userId)/favorite",
       method: .post,
       queryParameters: [
         "session_id": session
       ],
-      bodyParameters: [
+      bodyParamaters: [
         "media_type": "tv",
         "media_id": tvShowId,
         "favorite": favorite
       ]
     )
-    return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
+    return try await apiClient.apiRequest(endpoint: endpoint, as: TVShowActionStatusDTO.self)
   }
 
-  public func saveToWatchList(tvShowId: Int, userId: String, session: String, watchedList: Bool) -> AnyPublisher<TVShowActionStatusDTO, DataTransferError> {
-    let endpoint = Networking.Endpoint<TVShowActionStatusDTO>(
+  public func saveToWatchList(tvShowId: Int, userId: String, session: String, watchedList: Bool) async throws -> TVShowActionStatusDTO {
+    let endpoint = Endpoint(
       path: "3/account/\(userId)/watchlist",
       method: .post,
       queryParameters: [
         "session_id": session
       ],
-      bodyParameters: [
+      bodyParamaters: [
         "media_type": "tv",
         "media_id": tvShowId,
         "watchlist": watchedList
       ]
     )
-    return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
+    return try await apiClient.apiRequest(endpoint: endpoint, as: TVShowActionStatusDTO.self)
   }
 
-  public func fetchTVShowStatus(tvShowId: Int, sessionId: String) -> AnyPublisher<TVShowAccountStatusDTO, DataTransferError> {
-    let endpoint = Networking.Endpoint<TVShowAccountStatusDTO>(
+  public func fetchTVShowStatus(tvShowId: Int, sessionId: String) async throws -> TVShowAccountStatusDTO {
+    let endpoint = Endpoint(
       path: "3/tv/\(String(tvShowId))/account_states",
       method: .get,
       queryParameters: [
         "session_id": sessionId
       ]
     )
-    return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
+    return try await apiClient.apiRequest(endpoint: endpoint, as: TVShowAccountStatusDTO.self)
   }
 }

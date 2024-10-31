@@ -1,7 +1,4 @@
 //
-//  DIContainer.swift
-//  ShowDetails
-//
 //  Created by Jeans Ruiz on 8/12/20.
 //
 
@@ -16,7 +13,7 @@ final class DIContainer {
   // MARK: - Repositories
   private lazy var accountShowsRepository: AccountTVShowsDetailsRepository = {
     return DefaultAccountTVShowsDetailsRepository(
-      showsRemoteDataSource: AccountTVShowsDetailsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      showsRemoteDataSource: AccountTVShowsDetailsRemoteDataSource(apiClient: dependencies.apiClient),
       mapper: DefaultAccountTVShowDetailsMapper(),
       loggedUserRepository: dependencies.loggedUserRepository
     )
@@ -24,7 +21,7 @@ final class DIContainer {
 
   private lazy var episodesRepository: TVEpisodesRepository = {
     return DefaultTVEpisodesRepository(
-      remoteDataSource: DefaultTVEpisodesRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      remoteDataSource: DefaultTVEpisodesRemoteDataSource(apiClient: dependencies.apiClient),
       mapper: TVEpisodesMapper(),
       imageBasePath: dependencies.imagesBaseURL
     )
@@ -72,7 +69,7 @@ final class DIContainer {
   // MARK: - Uses Cases for Show Details
   private func makeFetchShowDetailsUseCase() -> FetchTVShowDetailsUseCase {
     let tvShowDetailsRepository = DefaultTVShowsDetailRepository(
-      showsPageRemoteDataSource: TVShowsDetailsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      showsPageRemoteDataSource: TVShowsDetailsRemoteDataSource(apiClient: dependencies.apiClient),
       mapper: DefaultTVShowDetailsMapper(),
       imageBasePath: dependencies.imagesBaseURL
     )

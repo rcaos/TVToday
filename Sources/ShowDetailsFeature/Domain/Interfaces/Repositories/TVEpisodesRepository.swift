@@ -1,9 +1,5 @@
 //
-//  TVEpisodesRepository.swift
-//  TVToday
-//
 //  Created by Jeans Ruiz on 1/20/20.
-//  Copyright © 2020 Jeans. All rights reserved.
 //
 
 import Combine
@@ -16,7 +12,7 @@ protocol TVEpisodesRepository {
 }
 
 public protocol TVEpisodesRemoteDataSource {
-  func fetchEpisodes(for showId: Int, season: Int) -> AnyPublisher<TVShowSeasonDTO, DataTransferError>
+  func fetchEpisodes(for showId: Int, season: Int) async throws -> TVShowSeasonDTO
 }
 
 public protocol TVEpisodesMapperProtocol {

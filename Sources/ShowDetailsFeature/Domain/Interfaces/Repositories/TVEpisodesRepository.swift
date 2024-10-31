@@ -2,13 +2,12 @@
 //  Created by Jeans Ruiz on 1/20/20.
 //
 
-import Combine
 import Foundation
 import NetworkingInterface
 import Shared
 
 protocol TVEpisodesRepository {
-  func fetchEpisodesList(for show: Int, season: Int) -> AnyPublisher<TVShowSeason, DataTransferError> // MARK: - TODO, Change Name
+  func fetchEpisodesList(for show: Int, season: Int) async throws -> TVShowSeason // MARK: - TODO, Change Name
 }
 
 public protocol TVEpisodesRemoteDataSource {

@@ -29,8 +29,8 @@ public struct Endpoint: URLRequestable {
   let headerParamaters: [String: String]
   let queryParametersEncodable: Encodable?
   let queryParameters: [String: Any]
-  let bodyParamatersEncodable: Encodable?
-  let bodyParamaters: [String: Any]
+  let bodyParamatersEncodable: Encodable? // fix typo
+  let bodyParamaters: [String: Any] // fix typo
   let bodyEncoding: BodyEncoding
   public let responseDecoder: ResponseDecoder
 

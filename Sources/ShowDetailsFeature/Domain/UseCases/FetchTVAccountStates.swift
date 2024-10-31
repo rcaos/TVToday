@@ -1,17 +1,11 @@
 //
-//  FetchTVAccountStates.swift
-//  TVToday
-//
 //  Created by Jeans Ruiz on 6/23/20.
-//  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import Combine
 import Shared
-import NetworkingInterface
 
 protocol FetchTVAccountStates {
-  func execute(requestValue: FetchTVAccountStatesRequestValue) -> AnyPublisher<TVShowAccountStatus, DataTransferError>
+  func execute(request: FetchTVAccountStatesRequestValue) async throws -> TVShowAccountStatus
 }
 
 struct FetchTVAccountStatesRequestValue {
@@ -25,7 +19,7 @@ final class DefaultFetchTVAccountStates: FetchTVAccountStates {
     self.accountShowsRepository = accountShowsRepository
   }
 
-  func execute(requestValue: FetchTVAccountStatesRequestValue) -> AnyPublisher<TVShowAccountStatus, DataTransferError> {
-    return accountShowsRepository.fetchTVShowStatus(tvShowId: requestValue.showId)
+  func execute(request: FetchTVAccountStatesRequestValue) async throws -> TVShowAccountStatus {
+    return try await accountShowsRepository.fetchTVShowStatus(tvShowId: request.showId)
   }
 }

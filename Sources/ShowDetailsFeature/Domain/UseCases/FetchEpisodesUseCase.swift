@@ -1,16 +1,9 @@
 //
-//  FetchEpisodesUseCase.swift
-//  TVToday
-//
 //  Created by Jeans Ruiz on 1/20/20.
-//  Copyright © 2020 Jeans. All rights reserved.
 //
-
-import Combine
-import NetworkingInterface
 
 protocol FetchEpisodesUseCase {
-  func execute(requestValue: FetchEpisodesUseCaseRequestValue) -> AnyPublisher<TVShowSeason, DataTransferError>
+  func execute(request: FetchEpisodesUseCaseRequestValue) async throws -> TVShowSeason
 }
 
 struct FetchEpisodesUseCaseRequestValue {
@@ -27,10 +20,10 @@ final class DefaultFetchEpisodesUseCase: FetchEpisodesUseCase {
     self.episodesRepository = episodesRepository
   }
 
-  func execute(requestValue: FetchEpisodesUseCaseRequestValue) -> AnyPublisher<TVShowSeason, DataTransferError> {
-    return episodesRepository.fetchEpisodesList(
-      for: requestValue.showIdentifier,
-      season: requestValue.seasonNumber
+  func execute(request: FetchEpisodesUseCaseRequestValue) async throws -> TVShowSeason {
+    return try await episodesRepository.fetchEpisodesList(
+      for: request.showIdentifier,
+      season: request.seasonNumber
     )
   }
 }

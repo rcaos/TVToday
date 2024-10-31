@@ -1,17 +1,12 @@
 //
-//  MarkAsFavoriteUseCase.swift
-//  TVToday
-//
 //  Created by Jeans Ruiz on 6/23/20.
-//  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import Combine
 import Shared
 import NetworkingInterface
 
 public protocol MarkAsFavoriteUseCase {
-  func execute(requestValue: MarkAsFavoriteUseCaseRequestValue) -> AnyPublisher<Bool, DataTransferError>
+  func execute(request: MarkAsFavoriteUseCaseRequestValue) async throws -> Bool
 }
 
 public struct MarkAsFavoriteUseCaseRequestValue {
@@ -26,12 +21,11 @@ public final class DefaultMarkAsFavoriteUseCase: MarkAsFavoriteUseCase {
     self.accountShowsRepository = accountShowsRepository
   }
 
-  public func execute(requestValue: MarkAsFavoriteUseCaseRequestValue) -> AnyPublisher<Bool, DataTransferError> {
-    return accountShowsRepository.markAsFavorite(
-      tvShowId: requestValue.showId,
-      favorite: requestValue.favorite
+  public func execute(request: MarkAsFavoriteUseCaseRequestValue) async throws -> Bool {
+    _ = try await accountShowsRepository.markAsFavorite(
+      tvShowId: request.showId,
+      favorite: request.favorite
     )
-      .map { _ in requestValue.favorite }
-      .eraseToAnyPublisher()
+    return request.favorite
   }
 }

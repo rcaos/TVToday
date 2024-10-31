@@ -7,20 +7,19 @@ TVShows iOS app built with Combine, using the [TMDb API](https://www.themoviedb.
 
 ## What I'm working on
 
-June, 2022
-* ✅ Localize UI and requests to endpoint
+* ⏳ Migrating Networking layer from Combine to Async await (https://github.com/rcaos/TVToday/tree/networking-async)
 
-May, 2022
-* ✅ Support Dynamic Type 
+- ✅ Localize UI and requests to endpoint
+- ✅ Support Dynamic Type 
 
-April, 2022
 
-* ✅ Improve UseCases and Repositories use (Clear separation between Repositories and DataSources
-* ✅ Moving from Realm to Core Data
-* ✅ Add demo apps for feature modules.
-* ✅ Fix testability on Schedulers
+- ✅ Improve UseCases and Repositories use (Clear separation between Repositories and DataSources
 
-March, 2022
+- ✅ Moving from Realm to Core Data
+
+- ✅ Add demo apps for feature modules.
+
+- ✅ Fix testability on Schedulers
 
 - ✅ Migrate from RxDataSources to UICollectionViewDiffableDataSource
 - ✅ Migrate from RxSwift to Combine

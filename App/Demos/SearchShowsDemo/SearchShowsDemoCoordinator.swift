@@ -1,7 +1,4 @@
 //
-//  File.swift
-//  
-//
 //  Created by Jeans Ruiz on 20/04/22.
 //
 
@@ -121,11 +118,9 @@ final class FakeShowsVisitedLocalRepository: ShowsVisitedLocalRepositoryProtocol
 
 // MARK: - SearchLocalRepository
 final class FakeSearchLocalRepository: SearchLocalRepositoryProtocol {
-  public func saveSearch(query: String) -> AnyPublisher<Void, ErrorEnvelope> {
-    return Just(()).setFailureType(to: ErrorEnvelope.self).eraseToAnyPublisher()
-  }
+  public func saveSearch(query: String) async throws { }
 
-  public func fetchRecentSearches() -> AnyPublisher<[Search], ErrorEnvelope> {
-    return Just([]).setFailureType(to: ErrorEnvelope.self).eraseToAnyPublisher()
+  public func fetchRecentSearches() async throws -> [Persistence.Search] {
+    return []
   }
 }

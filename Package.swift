@@ -31,7 +31,7 @@ let package = Package(
     .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "14.0.0"),
     .package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.9.1"),
     .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.14.1"),
-    .package(url: "https://github.com/pointfreeco/swift-concurrency-extras.git", .rangeItem(.upToNextMajor(from: "1.0.0"))),
+    .package(url: "https://github.com/pointfreeco/swift-concurrency-extras.git", from: "1.2.0"),
     .package(url: "https://github.com/apple/swift-algorithms.git", from: "1.2.0")
   ],
   targets: [

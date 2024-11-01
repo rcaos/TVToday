@@ -1,11 +1,7 @@
 //
-//  SearchLocalRepository.swift
-//  
-//
 //  Created by Jeans Ruiz on 11/05/22.
 //
 
-import Combine
 import Shared
 
 public final class SearchLocalRepository {
@@ -19,17 +15,14 @@ public final class SearchLocalRepository {
 }
 
 extension SearchLocalRepository: SearchLocalRepositoryProtocol {
-  public func saveSearch(query: String) -> AnyPublisher<Void, ErrorEnvelope> {
+  public func saveSearch(query: String) async throws {
     let userId = loggedUserRepository.getUser()?.id ?? 0
-    return dataSource.saveSearch(query: query, userId: userId)
+    try await dataSource.saveSearch(query: query, userId: userId)
   }
 
-  public func fetchRecentSearches() -> AnyPublisher<[Search], ErrorEnvelope> {
+  public func fetchRecentSearches() async throws -> [Search] {
     let userId = loggedUserRepository.getUser()?.id ?? 0
-    return dataSource.fetchRecentSearches(userId: userId)
-      .map {
-        return $0.map { Search(query: $0.query) }
-      }
-      .eraseToAnyPublisher()
+    let localSearchs = try await dataSource.fetchRecentSearches(userId: userId)
+    return localSearchs.map { Search(query: $0.query) }
   }
 }

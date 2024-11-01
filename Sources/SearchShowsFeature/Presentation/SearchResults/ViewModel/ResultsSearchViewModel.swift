@@ -61,7 +61,7 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
       .filter { !$0.isEmpty }
       .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] query in
-        self?.fetchShows(with: query)
+        self?.fetchShows(query: query)
       })
       .store(in: &disposeBag)
   }
@@ -70,35 +70,35 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
     viewState
       .removeDuplicates()
       .filter { $0 == .initial }
-      .flatMap { [fetchRecentSearchesUseCase] _ -> AnyPublisher<[Search], ErrorEnvelope> in
-        return fetchRecentSearchesUseCase.execute(requestValue: FetchSearchesUseCaseRequestValue())
-      }
       .receive(on: RunLoop.main)
-      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] results in
-        self?.createSectionModel(recentSearchs: results.map { $0.query }, resultShows: [])
+      .sink(receiveValue: { [weak self] _ in
+        self?.fetchRecentSearches()
       })
       .store(in: &disposeBag)
   }
 
-  private func fetchShows(with query: String) {
+  private func fetchRecentSearches() {
+    Task { /// check leaks
+      let results = await fetchRecentSearchesUseCase.execute()
+      createSectionModel(recentSearchs: results.map { $0.query }, resultShows: [])
+    }
+  }
+
+  private func fetchShows(query: String) {
+    Task { [weak self] in
+      await self?.fetchShows(with: query)
+    }
+  }
+
+  private func fetchShows(with query: String) async {
     viewState.send(.loading)
     createSectionModel(recentSearchs: [], resultShows: [])
-
-    let request = SearchTVShowsUseCaseRequestValue(query: query, page: 1)
-
-    searchTVShowsUseCase.execute(requestValue: request)
-      .receive(on: RunLoop.main)
-      .sink(receiveCompletion: { [weak self] completion in
-        switch completion {
-        case let .failure(error):
-          self?.viewState.send(.error(error.localizedDescription))  // MARK: - TODO, test recovery after an Error
-        case .finished:
-          break
-        }
-      }, receiveValue: { [weak self] result in
-        self?.processFetched(for: result)
-      })
-      .store(in: &disposeBag)
+    do {
+      let result = try await searchTVShowsUseCase.execute(request: .init(query: query, page: 1))
+      processFetched(for: result)
+    } catch {
+      viewState.send(.error(error.localizedDescription)) // MARK: - TODO, test recovery after an Error
+    }
   }
 
   private func processFetched(for response: TVShowPage) {

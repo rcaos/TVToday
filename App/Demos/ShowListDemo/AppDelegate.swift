@@ -3,7 +3,6 @@
 //
 
 import UIKit
-import ShowListFeatureDemo
 import Networking
 import NetworkingInterface
 

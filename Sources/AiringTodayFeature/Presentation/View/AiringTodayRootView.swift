@@ -119,7 +119,7 @@ class AiringTodayRootView: NiblessView, AiringTodayRootViewProtocol {
         snapShot.appendItems(entities, toSection: .shows)
         return snapShot
       }
-      .receive(on: defaultScheduler)
+      .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] snapshot in
         self?.dataSource?.apply(snapshot)
       })

@@ -1,9 +1,5 @@
 //
-//  SeasonEpisodeTableViewCell.swift
-//  MyTvShows
-//
 //  Created by Jeans on 9/24/19.
-//  Copyright © 2019 Jeans. All rights reserved.
 //
 
 import UIKit
@@ -74,7 +70,7 @@ class SeasonListTableViewCell: NiblessTableViewCell {
         snapShot.appendItems(data, toSection: .season)
         return snapShot
       }
-      .receive(on: defaultScheduler)
+      .receive(on: RunLoop.main)
       .sink(receiveValue: { [weak self] snapshot in
         self?.dataSource?.apply(snapshot)
       })
@@ -83,7 +79,7 @@ class SeasonListTableViewCell: NiblessTableViewCell {
     viewModel
       .seasonSelected
       .filter { $0 > 0 }
-      .receive(on: defaultScheduler)
+      .receive(on: RunLoop.main)
       .sink(receiveValue: { [weak self] season in
         self?.selectedSeason(at: season)
       })

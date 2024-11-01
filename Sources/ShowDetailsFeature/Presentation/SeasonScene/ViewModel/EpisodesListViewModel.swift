@@ -1,20 +1,14 @@
 //
-//  EpisodesListViewModel.swift
-//  MyTvShows
-//
 //  Created by Jeans on 9/23/19.
-//  Copyright © 2019 Jeans. All rights reserved.
 //
 
 import Foundation
 import Combine
-import CombineSchedulers
 import Shared
 
 protocol EpisodesListViewModelProtocol: SeasonListViewModelDelegate {
-  // MARK: - Input
-  func viewDidLoad()
-  func refreshView()
+  func viewDidLoad() async
+  func refreshView() async
 
   // MARK: - Output
   func getViewModelForAllSeasons() -> SeasonListViewModelProtocol?
@@ -40,23 +34,20 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
   private let seasonSelectedSubject = CurrentValueSubject<Int, Never>(0)
 
   private var seasonListViewModel: SeasonListViewModelProtocol?
-  private let scheduler: AnySchedulerOf<DispatchQueue>
   private var disposeBag = Set<AnyCancellable>()
 
   // MARK: - Public Api
   var viewState = CurrentValueSubject<ViewState, Never>(.loading)
   var data = CurrentValueSubject<[SeasonsSectionModel], Never>([])
 
-  // MARK: - Initializers
-  init(tvShowId: Int,
-       fetchDetailShowUseCase: FetchTVShowDetailsUseCase,
-       fetchEpisodesUseCase: FetchEpisodesUseCase,
-       scheduler: AnySchedulerOf<DispatchQueue> = .main
+  init(
+    tvShowId: Int,
+    fetchDetailShowUseCase: FetchTVShowDetailsUseCase,
+    fetchEpisodesUseCase: FetchEpisodesUseCase
   ) {
     self.tvShowId = tvShowId
     self.fetchDetailShowUseCase = fetchDetailShowUseCase
     self.fetchEpisodesUseCase = fetchEpisodesUseCase
-    self.scheduler = scheduler
     controlSeasons()
   }
 
@@ -69,14 +60,19 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
       .removeDuplicates()
       .filter { $0 >= 1 }
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] season in
-        guard let strongSelf = self else { return }
-        if let episodes = strongSelf.allEpisodes[season], episodes.count >= 1 {
-          strongSelf.changeToSeason(number: season, episodes: episodes)
-        } else {
-          strongSelf.fetchEpisodesFor(season: season)
-        }
+        self?.seasonDidChanged(season: season)
       })
       .store(in: &disposeBag)
+  }
+
+  private func seasonDidChanged(season: Int) {
+    Task { // check leaks
+      if let episodes = allEpisodes[season], episodes.count >= 1 {
+        changeToSeason(number: season, episodes: episodes)
+      } else {
+        await fetchEpisodesFor(season: season)
+      }
+    }
   }
 
   private func changeToSeason(number: Int, episodes: [TVShowEpisode]) {
@@ -90,7 +86,7 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
   }
 
   // MARK: - Networking
-  private func fetchShowDetailsAndFirstSeason(showLoader: Bool = true) {
+  private func fetchShowDetailsAndFirstSeason(showLoader: Bool = true) async {
     if showLoader {
       viewState.send( .loading )
     }
@@ -98,53 +94,29 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
     let requestDetailsShow = FetchTVShowDetailsUseCaseRequestValue(identifier: tvShowId)
     let requestFirstSeason = FetchEpisodesUseCaseRequestValue(showIdentifier: tvShowId, seasonNumber: 1)
 
-    Publishers.Zip(
-      fetchDetailShowUseCase.execute(requestValue: requestDetailsShow),
-      fetchEpisodesUseCase.execute(requestValue: requestFirstSeason)
-    )
-      .receive(on: scheduler)
-      .sink(receiveCompletion: { [weak self] completion in
-        switch completion {
-        case let .failure(error):
-          self?.viewState.send( .error(error.localizedDescription) )
-        case .finished:
-          break
-        }
-      }, receiveValue: { [weak self] (resultShowDetails, firstSeason) in
-        self?.processResultFirstFetched(resultShowDetails, firstSeason)
-      })
-      .store(in: &disposeBag)
+    do {
+      let detailsShow = try await fetchDetailShowUseCase.execute(request: requestDetailsShow)
+      let episodes = try await fetchEpisodesUseCase.execute(request: requestFirstSeason)
+      showDetailResult = detailsShow
+      processFetched(with: episodes)
+      createViewModelForSeasons(numberOfSeasons: detailsShow.numberOfSeasons)
+      selectFirstSeason()
+
+    } catch {
+      viewState.send( .error(error.localizedDescription) )
+    }
   }
 
-  private func processResultFirstFetched(_ detailsShow: TVShowDetail, _ firstSeason: TVShowSeason) {
-    showDetailResult = detailsShow
-    processFetched(with: firstSeason)
-    createViewModelForSeasons(numberOfSeasons: detailsShow.numberOfSeasons)
-    selectFirstSeason()
-  }
-
-  private func fetchEpisodesFor(season seasonNumber: Int) {
+  private func fetchEpisodesFor(season seasonNumber: Int) async {
     createSectionModel(state: .loadingSeason, with: totalSeasons, seasonSelected: seasonNumber, and: [])
-
     let request = FetchEpisodesUseCaseRequestValue(showIdentifier: tvShowId, seasonNumber: seasonNumber)
 
-    fetchEpisodesUseCase.execute(requestValue: request)
-      .receive(on: scheduler)
-      .sink(receiveCompletion: { [weak self] completion in
-        guard let strongSelf = self else { return }
-
-        switch completion {
-        case let .failure(error):
-          strongSelf.createSectionModel(state: .errorSeason(error.localizedDescription),
-                                        with: strongSelf.totalSeasons,
-                                        seasonSelected: seasonNumber, and: [])
-        case .finished:
-          break
-        }
-      }, receiveValue: { [weak self] result in
-        self?.processFetched(with: result)
-      })
-      .store(in: &disposeBag)
+    do {
+      let episodes = try await fetchEpisodesUseCase.execute(request: request)
+      processFetched(with: episodes)
+    } catch {
+      createSectionModel(state: .errorSeason(error.localizedDescription), with: totalSeasons, seasonSelected: seasonNumber, and: [])
+    }
   }
 
   private func processFetched(with response: TVShowSeason) {
@@ -187,18 +159,17 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
     return nil
   }
 
-  // MARK: - Public Api
-  func viewDidLoad() {
-    fetchShowDetailsAndFirstSeason()
+  func viewDidLoad() async {
+    await fetchShowDetailsAndFirstSeason()
   }
 
-  func refreshView() {
-    fetchShowDetailsAndFirstSeason(showLoader: false)
+  func refreshView() async {
+    await fetchShowDetailsAndFirstSeason(showLoader: false)
   }
 
   private func createViewModelForSeasons(numberOfSeasons: Int) {
     let seasons: [Int] = (1...numberOfSeasons).map { $0 }
-    seasonListViewModel = SeasonListViewModel(seasonList: seasons, scheduler: scheduler)
+    seasonListViewModel = SeasonListViewModel(seasonList: seasons)
     seasonListViewModel?.delegate = self
   }
 

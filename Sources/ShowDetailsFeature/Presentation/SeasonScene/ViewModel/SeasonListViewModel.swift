@@ -1,14 +1,9 @@
 //
-//  SeasonListViewModel.swift
-//  MyTvShows
-//
 //  Created by Jeans on 9/24/19.
-//  Copyright © 2019 Jeans. All rights reserved.
 //
 
 import Foundation
 import Combine
-import CombineSchedulers
 import Shared
 
 protocol SeasonListViewModelDelegate: AnyObject {
@@ -18,7 +13,7 @@ protocol SeasonListViewModelDelegate: AnyObject {
 protocol SeasonListViewModelProtocol {
 
   // MARK: - Input
-  // MARK: - TODO, refactor this, change signature, choice between delegate and Streams.
+  // MARK: - TODO, refactor this, change signature, choose between delegate and Streams.
   func selectSeason(_ season: Int)
   func selectSeason(seasonNumber: Int)
 
@@ -36,15 +31,13 @@ final class SeasonListViewModel: SeasonListViewModelProtocol {
 
   weak var delegate: SeasonListViewModelDelegate?
   private var disposeBag = Set<AnyCancellable>()
-  private let scheduler: AnySchedulerOf<DispatchQueue>
 
   let seasons: CurrentValueSubject<[Int], Never>
   let seasonSelected = CurrentValueSubject<Int, Never>(0)
 
   // MARK: Initalizer
-  init(seasonList: [Int], scheduler: AnySchedulerOf<DispatchQueue> = .main) {
+  init(seasonList: [Int]) {
     self.seasonList = seasonList
-    self.scheduler = scheduler
     seasons = CurrentValueSubject(seasonList)
     subscribe()
   }
@@ -71,7 +64,7 @@ final class SeasonListViewModel: SeasonListViewModelProtocol {
 
   private func subscribe() {
     inputSelectedSeason
-      .receive(on: scheduler)
+      .receive(on: RunLoop.main)
       .sink(receiveValue: { [weak self] season in
         guard let strongSelf = self else { return }
         strongSelf.delegate?.seasonListViewModel(strongSelf, didSelectSeason: season)

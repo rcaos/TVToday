@@ -1,9 +1,5 @@
 //
-//  AppDIContainer.swift
-//  AppFeature
-//
 //  Created by Jeans Ruiz on 4/7/20.
-//  Copyright © 2020 Jeans. All rights reserved.
 //
 
 import AccountFeature
@@ -36,21 +32,19 @@ public class AppDIContainer {
 
   private let language: Language
 
-  private lazy var apiDataTransferService: DataTransferService = {
+  private lazy var apiClient: ApiClient = {
     let queryParameters = [
       "api_key": appConfigurations.apiKey,
       "language": language.rawValue
     ]
-
-    let configuration = ApiDataNetworkConfig(
+    let config = NetworkConfig(
       baseURL: appConfigurations.apiBaseURL,
       headers: [
         "Content-Type": "application/json; charset=utf-8"
       ],
       queryParameters: queryParameters
     )
-    let networkService = DefaultNetworkService(config: configuration)
-    return DefaultDataTransferService(with: networkService)
+    return ApiClient.live(networkConfig: config)
   }()
 
   private lazy var localStorage: LocalStorage = {
@@ -83,40 +77,48 @@ public class AppDIContainer {
 
   // MARK: - Airing Today Module
   func buildAiringTodayModule() -> AiringTodayFeature.Module {
-    let dependencies = AiringTodayFeature.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                             imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                             showDetailsBuilder: self)
+    let dependencies = AiringTodayFeature.ModuleDependencies(
+      apiClient: apiClient,
+      imagesBaseURL: appConfigurations.imagesBaseURL,
+      showDetailsBuilder: self
+    )
     return AiringTodayFeature.Module(dependencies: dependencies)
   }
 
   // MARK: - Popular Module
   func buildPopularModule() -> PopularsFeature.Module {
-    let dependencies = PopularsFeature.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                          imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                          showDetailsBuilder: self)
+    let dependencies = PopularsFeature.ModuleDependencies(
+      apiClient: apiClient,
+      imagesBaseURL: appConfigurations.imagesBaseURL,
+      showDetailsBuilder: self
+    )
     return PopularsFeature.Module(dependencies: dependencies)
   }
 
   // MARK: - Search Module
   func buildSearchModule() -> SearchShowsFeature.Module {
-    let dependencies = SearchShowsFeature.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                             imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                             showsPersistence: showsPersistence,
-                                                             searchsPersistence: searchPersistence,
-                                                             showDetailsBuilder: self,
-                                                             showListBuilder: self)
+    let dependencies = SearchShowsFeature.ModuleDependencies(
+      apiClient: apiClient,
+      imagesBaseURL: appConfigurations.imagesBaseURL,
+      showsPersistence: showsPersistence,
+      searchsPersistence: searchPersistence,
+      showDetailsBuilder: self,
+      showListBuilder: self
+    )
     return SearchShowsFeature.Module(dependencies: dependencies)
   }
 
   // MARK: - Account Module
   func buildAccountModule() -> AccountFeature.Module {
-    let dependencies = AccountFeature.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                         imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                         authenticateBaseURL: appConfigurations.authenticateBaseURL,
-                                                         gravatarBaseURL: appConfigurations.gravatarBaseURL,
-                                                         requestTokenRepository: requestTokenRepository,
-                                                         accessTokenRepository: accessTokenRepository,
-                                                         userLoggedRepository: loggedUserRepository,showListBuilder: self)
+    let dependencies = AccountFeature.ModuleDependencies(
+      apiClient: apiClient,
+      imagesBaseURL: appConfigurations.imagesBaseURL,
+      authenticateBaseURL: appConfigurations.authenticateBaseURL,
+      gravatarBaseURL: appConfigurations.gravatarBaseURL,
+      requestTokenRepository: requestTokenRepository,
+      accessTokenRepository: accessTokenRepository,
+      userLoggedRepository: loggedUserRepository,showListBuilder: self
+    )
     return AccountFeature.Module(dependencies: dependencies)
   }
 }
@@ -124,10 +126,12 @@ public class AppDIContainer {
 extension AppDIContainer: ModuleShowDetailsBuilder {
   public func buildModuleCoordinator(in navigationController: UINavigationController,
                                      delegate: TVShowDetailCoordinatorDelegate?) -> TVShowDetailCoordinatorProtocol {
-    let dependencies = ShowDetailsFeatureInterface.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                                      imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                                      showsPersistenceRepository: showsPersistence,
-                                                                      loggedUserRepository: loggedUserRepository)
+    let dependencies = ShowDetailsFeatureInterface.ModuleDependencies(
+      apiClient: apiClient,
+      imagesBaseURL: appConfigurations.imagesBaseURL,
+      showsPersistenceRepository: showsPersistence,
+      loggedUserRepository: loggedUserRepository
+    )
     let module =  ShowDetailsFeature.Module(dependencies: dependencies)
     return module.buildModuleCoordinator(in: navigationController, delegate: delegate)
   }
@@ -137,10 +141,12 @@ extension AppDIContainer: ModuleShowListDetailsBuilder {
 
   public func buildModuleCoordinator(in navigationController: UINavigationController,
                                      delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinatorProtocol {
-    let dependencies = ShowListFeatureInterface.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                                   imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                                   loggedUserRepository: loggedUserRepository,
-                                                                   showDetailsBuilder: self)
+    let dependencies = ShowListFeatureInterface.ModuleDependencies(
+      apiClient: apiClient,
+      imagesBaseURL: appConfigurations.imagesBaseURL,
+      loggedUserRepository: loggedUserRepository,
+      showDetailsBuilder: self
+    )
     let module = ShowListFeature.Module(dependencies: dependencies)
     return module.buildModuleCoordinator(in: navigationController, delegate: delegate)
   }

@@ -41,7 +41,7 @@ class TVShowListViewController: NiblessViewController, Loadable, Retryable, Empt
   private func subscribeToViewState() {
     viewModel
       .viewStateObservableSubject
-      .receive(on: defaultScheduler)
+      .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] viewState in
         self?.configView(with: viewState)
       })

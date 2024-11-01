@@ -1,7 +1,4 @@
 //
-//  File.swift
-//  
-//
 //  Created by Jeans Ruiz on 20/04/22.
 //
 
@@ -13,21 +10,23 @@ import Shared
 import ShowDetailsFeatureInterface
 import ShowDetailsFeature
 
-public class ShowDetailsDemoCoordinator: Coordinator {
+class ShowDetailsDemoCoordinator: Coordinator {
   private let window: UIWindow
   private let tabBarController: UITabBarController
-  private let apiDataTransferService: DataTransferService
+  private let apiClient: ApiClient
   private let imagesBaseURL: String
   private var childCoordinators = [Coordinator]()
 
   // MARK: - Life Cycle
-  public init(window: UIWindow,
-              tabBarController: UITabBarController,
-              apiDataTransferService: DataTransferService,
-              imagesBaseURL: String) {
+  init(
+    window: UIWindow,
+    tabBarController: UITabBarController,
+    apiClient: ApiClient,
+    imagesBaseURL: String
+  ) {
     self.window = window
     self.tabBarController = tabBarController
-    self.apiDataTransferService = apiDataTransferService
+    self.apiClient = apiClient
     self.imagesBaseURL = imagesBaseURL
   }
 
@@ -48,10 +47,12 @@ public class ShowDetailsDemoCoordinator: Coordinator {
   }
 
   private func buildDetailsScene(in navigation: UINavigationController) {
-    let dependencies = ShowDetailsFeatureInterface.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                                      imagesBaseURL: imagesBaseURL,
-                                                                      showsPersistenceRepository: FakeShowsVisitedLocalRepository(),
-                                                                      loggedUserRepository: FakeLoggedUserRepository())
+    let dependencies = ShowDetailsFeatureInterface.ModuleDependencies(
+      apiClient: apiClient,
+      imagesBaseURL: imagesBaseURL,
+      showsPersistenceRepository: FakeShowsVisitedLocalRepository(),
+      loggedUserRepository: FakeLoggedUserRepository()
+    )
     let module = ShowDetailsFeature.Module(dependencies: dependencies)
     let coordinator = module.buildModuleCoordinator(in: navigation, delegate: self)
     coordinator.navigate(to: .showDetailsIsRequired(withId: 1416, closures: nil)) // Greys Anatomy

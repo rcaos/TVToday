@@ -25,8 +25,7 @@ let package = Package(
     .library(name: "ShowDetailsFeatureInterface", targets: ["ShowDetailsFeatureInterface"]),
     .library(name: "ShowListFeature", targets: ["ShowListFeature"]),
     .library(name: "ShowListFeatureInterface", targets: ["ShowListFeatureInterface"]),
-    .library(name: "UI", targets: ["UI"]),
-    .library(name: "AccountFeatureDemo", targets: ["AccountFeatureDemo"])
+    .library(name: "UI", targets: ["UI"])
   ],
   dependencies: [
     .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "14.0.0"),
@@ -238,9 +237,6 @@ let package = Package(
         .process("Resources/")
       ]
     ),
-
-    // MARK: - Demo modules
-    .target(name: "AccountFeatureDemo", dependencies: ["AccountFeature"]),
 
     // MARK: - Common For test Targets
     .target(

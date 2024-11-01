@@ -15,7 +15,6 @@
 		770BA0DC2810FAC2009CE6A8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 770BA0DB2810FAC2009CE6A8 /* Assets.xcassets */; };
 		770BA0EF2811074F009CE6A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770BA0EE2811074F009CE6A8 /* AppDelegate.swift */; };
 		770BA0F828110753009CE6A8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 770BA0F728110753009CE6A8 /* Assets.xcassets */; };
-		770BA1012811080E009CE6A8 /* AccountFeatureDemo in Frameworks */ = {isa = PBXBuildFile; productRef = 770BA1002811080E009CE6A8 /* AccountFeatureDemo */; };
 		770BA10928110C46009CE6A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 770BA10828110C46009CE6A8 /* AppDelegate.swift */; };
 		770BA11228110C48009CE6A8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 770BA11128110C48009CE6A8 /* Assets.xcassets */; };
 		7741E9D6280F11CE00A9F208 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7741E9D1280F118A00A9F208 /* AppDelegate.swift */; };
@@ -33,8 +32,10 @@
 		7763E9432810AFED00138736 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7763E9422810AFED00138736 /* AppDelegate.swift */; };
 		7763E94C2810AFF100138736 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7763E94B2810AFF100138736 /* Assets.xcassets */; };
 		7795E25C2CD2909900FFA8CE /* SearchShowsFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 7795E25B2CD2909900FFA8CE /* SearchShowsFeature */; };
+		77A9769D2CD45C1900B1F3DF /* AccountFeatureDemoCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A9769C2CD45C1900B1F3DF /* AccountFeatureDemoCoordinator.swift */; };
 		77DE06A32CD459150010CA58 /* ShowDetailsDemoCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DE06A22CD459150010CA58 /* ShowDetailsDemoCoordinator.swift */; };
 		77DE06A52CD459480010CA58 /* ShowDetailsFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 77DE06A42CD459480010CA58 /* ShowDetailsFeature */; };
+		77DE06A72CD45BD40010CA58 /* AccountFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 77DE06A62CD45BD40010CA58 /* AccountFeature */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -105,6 +106,7 @@
 		7763E9422810AFED00138736 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7763E94B2810AFF100138736 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7763E9502810AFF100138736 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		77A9769C2CD45C1900B1F3DF /* AccountFeatureDemoCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountFeatureDemoCoordinator.swift; sourceTree = "<group>"; };
 		77DE06A22CD459150010CA58 /* ShowDetailsDemoCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowDetailsDemoCoordinator.swift; sourceTree = "<group>"; };
 		83EC9748CC25119CE90E2C97 /* libKeyChainStorage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKeyChainStorage.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		8CDA1873462E3B20FD1CF9A7 /* libShowDetailsInterface.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libShowDetailsInterface.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -145,7 +147,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				770BA1012811080E009CE6A8 /* AccountFeatureDemo in Frameworks */,
+				77DE06A72CD45BD40010CA58 /* AccountFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -220,6 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				770BA0EE2811074F009CE6A8 /* AppDelegate.swift */,
+				77A9769C2CD45C1900B1F3DF /* AccountFeatureDemoCoordinator.swift */,
 				770BA0F728110753009CE6A8 /* Assets.xcassets */,
 				770BA0FC28110753009CE6A8 /* Info.plist */,
 			);
@@ -401,7 +404,7 @@
 			);
 			name = AccountDemo;
 			packageProductDependencies = (
-				770BA1002811080E009CE6A8 /* AccountFeatureDemo */,
+				77DE06A62CD45BD40010CA58 /* AccountFeature */,
 			);
 			productName = AccountDemo;
 			productReference = 770BA0EC2811074F009CE6A8 /* AccountDemo.app */;
@@ -642,6 +645,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77A9769D2CD45C1900B1F3DF /* AccountFeatureDemoCoordinator.swift in Sources */,
 				770BA0EF2811074F009CE6A8 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1308,10 +1312,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		770BA1002811080E009CE6A8 /* AccountFeatureDemo */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AccountFeatureDemo;
-		};
 		7741E9DB280F3DDE00A9F208 /* AppFeature */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AppFeature;
@@ -1335,6 +1335,10 @@
 		77DE06A42CD459480010CA58 /* ShowDetailsFeature */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ShowDetailsFeature;
+		};
+		77DE06A62CD45BD40010CA58 /* AccountFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AccountFeature;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

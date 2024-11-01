@@ -1,12 +1,8 @@
 //
-//  AppDelegate.swift
-//  AccountDemo
-//
 //  Created by Jeans Ruiz on 20/04/22.
 //
 
 import UIKit
-import AccountFeatureDemo
 import Networking
 import NetworkingInterface
 
@@ -18,7 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     window = UIWindow(frame: UIScreen.main.bounds)
-    
+
     let appConfigurations = buildAppConfigurations()
     coordinator = AccountFeatureDemoCoordinator(
       window: window!,

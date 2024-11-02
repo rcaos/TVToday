@@ -77,18 +77,3 @@ final class FakeLoggedUserRepository: LoggedUserRepositoryProtocol {
 
   func deleteUser() { }
 }
-
-// MARK: - ShowsVisitedLocalRepository
-final class FakeShowsVisitedLocalRepository: ShowsVisitedLocalRepositoryProtocol {
-  func saveShow(id: Int, pathImage: String) -> AnyPublisher<Void, ErrorEnvelope> {
-    return Just(()).setFailureType(to: ErrorEnvelope.self).eraseToAnyPublisher()
-  }
-
-  func fetchVisitedShows() -> AnyPublisher<[ShowVisited], ErrorEnvelope> {
-    return Just([]).setFailureType(to: ErrorEnvelope.self).eraseToAnyPublisher()
-  }
-
-  public func recentVisitedShowsDidChange() -> AnyPublisher<Bool, Never> {
-    return Just(true).eraseToAnyPublisher()
-  }
-}

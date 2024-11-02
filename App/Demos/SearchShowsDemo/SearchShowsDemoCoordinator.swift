@@ -101,21 +101,6 @@ class EmptyListCoordinator: TVShowListCoordinatorProtocol {
   }
 }
 
-// MARK: - ShowsVisitedLocalRepository
-final class FakeShowsVisitedLocalRepository: ShowsVisitedLocalRepositoryProtocol {
-  public func saveShow(id: Int, pathImage: String) -> AnyPublisher<Void, ErrorEnvelope> {
-    return Just(()).setFailureType(to: ErrorEnvelope.self).eraseToAnyPublisher()
-  }
-
-  public func fetchVisitedShows() -> AnyPublisher<[ShowVisited], ErrorEnvelope> {
-    return Just([]).setFailureType(to: ErrorEnvelope.self).eraseToAnyPublisher()
-  }
-
-  public func recentVisitedShowsDidChange() -> AnyPublisher<Bool, Never> {
-    return Just(true).eraseToAnyPublisher()
-  }
-}
-
 // MARK: - SearchLocalRepository
 final class FakeSearchLocalRepository: SearchLocalRepositoryProtocol {
   public func saveSearch(query: String) async throws { }

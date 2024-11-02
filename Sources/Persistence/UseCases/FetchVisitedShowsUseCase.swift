@@ -1,7 +1,4 @@
 //
-//  FetchVisitedShowsUseCase.swift
-//  Persistence
-//
 //  Created by Jeans Ruiz on 7/3/20.
 //
 
@@ -9,7 +6,7 @@ import Combine
 import Shared
 
 public protocol FetchVisitedShowsUseCase {
-  func execute(requestValue: FetchVisitedShowsUseCaseRequestValue) -> AnyPublisher<[ShowVisited], ErrorEnvelope>
+  func execute(requestValue: FetchVisitedShowsUseCaseRequestValue) -> [ShowVisited]
 }
 
 public struct FetchVisitedShowsUseCaseRequestValue {
@@ -24,7 +21,7 @@ public final class DefaultFetchVisitedShowsUseCase: FetchVisitedShowsUseCase {
     self.showsVisitedLocalRepository = showsVisitedLocalRepository
   }
 
-  public func execute(requestValue: FetchVisitedShowsUseCaseRequestValue) -> AnyPublisher<[ShowVisited], ErrorEnvelope> {
+  public func execute(requestValue: FetchVisitedShowsUseCaseRequestValue) -> [ShowVisited] {
     return showsVisitedLocalRepository.fetchVisitedShows()
   }
 }

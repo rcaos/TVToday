@@ -1,7 +1,4 @@
 //
-//  ShowsVisitedLocalRepository.swift
-//  
-//
 //  Created by Jeans Ruiz on 11/05/22.
 //
 
@@ -19,18 +16,14 @@ public final class ShowsVisitedLocalRepository {
 }
 
 extension ShowsVisitedLocalRepository: ShowsVisitedLocalRepositoryProtocol {
-  public func saveShow(id: Int, pathImage: String) -> AnyPublisher<Void, ErrorEnvelope> {
+  public func saveShow(id: Int, pathImage: String) {
     let userId = loggedUserRepository.getUser()?.id ?? 0
     return dataSource.saveShow(id: id, pathImage: pathImage, userId: userId)
   }
 
-  public func fetchVisitedShows() -> AnyPublisher<[ShowVisited], ErrorEnvelope> {
+  public func fetchVisitedShows() -> [ShowVisited] {
     let userId = loggedUserRepository.getUser()?.id ?? 0
-    return dataSource.fetchVisitedShows(userId: userId)
-      .map {
-        return $0.map { ShowVisited(id: $0.id, pathImage: $0.pathImage) }
-      }
-      .eraseToAnyPublisher()
+    return dataSource.fetchVisitedShows(userId: userId).map { ShowVisited(id: $0.id, pathImage: $0.pathImage) }
   }
 
   public func recentVisitedShowsDidChange() -> AnyPublisher<Bool, Never> {

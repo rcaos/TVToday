@@ -84,9 +84,11 @@ final class DIContainer {
 
   // MARK: - SearchViewControllerFactory
   func buildSearchOptionsController() -> UIViewController {
-    let viewModel = SearchOptionsViewModel(fetchGenresUseCase: makeFetchGenresUseCase(),
-                                           fetchVisitedShowsUseCase: makeFetchVisitedShowsUseCase(),
-                                           recentVisitedShowsDidChange: makeRecentShowsDidChangedUseCase())
+    let viewModel = SearchOptionsViewModel(
+      fetchGenresUseCase: makeFetchGenresUseCase(),
+      fetchVisitedShowsUseCase: { self.makeFetchVisitedShowsUseCase() },
+      recentVisitedShowsDidChange: makeRecentShowsDidChangedUseCase()
+    )
     viewModel.delegate = searchViewModel
     let viewController = SearchOptionsViewController(viewModel: viewModel)
     return viewController

@@ -2,15 +2,10 @@
 //  Created by Jeans Ruiz on 7/3/20.
 //
 
-import Combine
 import Shared
 
 public protocol FetchVisitedShowsUseCase {
-  func execute(requestValue: FetchVisitedShowsUseCaseRequestValue) -> [ShowVisited]
-}
-
-public struct FetchVisitedShowsUseCaseRequestValue {
-  public init() { }
+  func execute() -> [ShowVisited]
 }
 
 public final class DefaultFetchVisitedShowsUseCase: FetchVisitedShowsUseCase {
@@ -21,7 +16,7 @@ public final class DefaultFetchVisitedShowsUseCase: FetchVisitedShowsUseCase {
     self.showsVisitedLocalRepository = showsVisitedLocalRepository
   }
 
-  public func execute(requestValue: FetchVisitedShowsUseCaseRequestValue) -> [ShowVisited] {
+  public func execute() -> [ShowVisited] {
     return showsVisitedLocalRepository.fetchVisitedShows()
   }
 }

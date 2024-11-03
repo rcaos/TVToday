@@ -17,8 +17,7 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
   weak var delegate: SearchOptionsViewModelDelegate?
 
   private let fetchGenresUseCase: FetchGenresUseCase
-  
-//  private let fetchVisitedShowsUseCase: FetchVisitedShowsUseCase
+  private let fetchVisitedShowsUseCase: () -> FetchVisitedShowsUseCase
 //  private let recentVisitedShowsDidChange: RecentVisitedShowDidChangeUseCase
 
   let viewState = CurrentValueSubject<SearchViewState, Never>(.loading)
@@ -26,11 +25,11 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
 
   init(
     fetchGenresUseCase: FetchGenresUseCase,
-    fetchVisitedShowsUseCase: FetchVisitedShowsUseCase,
+    fetchVisitedShowsUseCase: @escaping () -> FetchVisitedShowsUseCase,
     recentVisitedShowsDidChange: RecentVisitedShowDidChangeUseCase
   ) {
     self.fetchGenresUseCase = fetchGenresUseCase
-//    self.fetchVisitedShowsUseCase = fetchVisitedShowsUseCase
+    self.fetchVisitedShowsUseCase = fetchVisitedShowsUseCase
 //    self.recentVisitedShowsDidChange = recentVisitedShowsDidChange
 //    self.scheduler = scheduler
   }
@@ -66,42 +65,16 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
 
   private func fetchGenresAndRecentShows() async {
     do {
-      let resultGenre = try await fetchGenresUseCase.execute()
-      processFetched(for: resultGenre)
-      //let visited = try await fetchVisitedShowsUseCase.execute()
-      createSectionModel(showsVisited: [], genres: resultGenre.genres.uniqued(on: \.id))
+      let resultsGenre = try await fetchGenresUseCase.execute()
+      if resultsGenre.genres.isEmpty {
+        viewState.send(.empty)
+      } else {
+        viewState.send(.populated )
+        let visitedShows = fetchVisitedShowsUseCase().execute()
+        createSectionModel(showsVisited: visitedShows, genres: resultsGenre.genres.uniqued(on: \.id))
+      }
     } catch {
       viewState.send(.error("error fetching genres")) // todo, recover error
-    }
-  }
-
-//  private func fetchGenresAndRecentShows_old() {
-//    Publishers.CombineLatest(
-//      recentShowsDidChanged(),
-//      fetchGenres()
-//    )
-//      .receive(on: scheduler)
-//      .sink(receiveCompletion: { [weak self] completion in
-//        switch completion {
-//        case let .failure(error):
-//          self?.viewState.send(.error(error.localizedDescription))
-//        case .finished:
-//          break
-//        }
-//      },
-//            receiveValue: { [weak self] (visited, resultGenre) in
-//        guard let strongSelf = self else { return }
-//        strongSelf.processFetched(for: resultGenre)
-//        strongSelf.createSectionModel(showsVisited: visited, genres: resultGenre.genres)
-//      })
-//      .store(in: &disposeBag)
-//  }
-
-  private func processFetched(for response: GenreList) {
-    if response.genres.isEmpty {
-      viewState.send(.empty)
-    } else {
-      viewState.send(.populated )
     }
   }
 

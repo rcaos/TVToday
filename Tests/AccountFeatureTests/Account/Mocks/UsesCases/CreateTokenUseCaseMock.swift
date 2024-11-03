@@ -10,25 +10,12 @@ import NetworkingInterface
 final class CreateTokenUseCaseMock: CreateTokenUseCase {
 
   var result: URL?
-  var error: DataTransferError?
-
-  func execute() -> AnyPublisher<URL, DataTransferError> {
-    if let error = error {
-      return Fail(error: error).eraseToAnyPublisher()
-    }
-
-    if let result = result {
-      return Just(result).setFailureType(to: DataTransferError.self) .eraseToAnyPublisher()
-    }
-
-    return Empty().setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
-  }
+  var error: ApiError?
 
   func execute() async -> URL? {
-    if error != nil {
+    if let error = error {
       return nil
     }
-
     return result
   }
 }

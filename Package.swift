@@ -65,7 +65,8 @@ let package = Package(
       dependencies: [
         "AccountFeature",
         .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
-        .product(name: "ConcurrencyExtras", package: "swift-concurrency-extras")
+        .product(name: "ConcurrencyExtras", package: "swift-concurrency-extras"),
+        .product(name: "CustomDump", package: "swift-custom-dump")
       ],
       exclude: [
         "SignIn/Presentation/__Snapshots__",

@@ -4,6 +4,8 @@
 
 @testable import AccountFeature
 import Combine
+import CustomDump
+import NetworkingInterface
 import Shared
 import XCTest
 
@@ -74,7 +76,7 @@ class AccountViewModelTests: XCTestCase {
   func test_when_CreateSession_Returns_OK_ViewModel_Should_contains_Profile_State() async {
     // given
     let authPermission = AuthPermissionViewModelMock()
-    createSessionUseCaseMock.result = ()
+    createSessionUseCaseMock.result = true
     fetchAccountDetailsUseCaseMock.result = Account.stub()
 
     authPermission.delegate = sut
@@ -94,13 +96,13 @@ class AccountViewModelTests: XCTestCase {
     await Task.yield()
 
     // then
-    XCTAssertEqual(expected, received, "Should receives two values")
+    expectNoDifference(expected, received, "Should receives two values")
   }
 
   func test_when_CreateSession_Returns_Error_ViewModel_Should_contains_Login_State() async {
     // given
     let authPermission = AuthPermissionViewModelMock()
-    createSessionUseCaseMock.error = .noResponse
+    createSessionUseCaseMock.error = ApiError(error: NSError(domain: "", code: 0, userInfo: nil))
     fetchAccountDetailsUseCaseMock.result = Account.stub()
 
     authPermission.delegate = sut

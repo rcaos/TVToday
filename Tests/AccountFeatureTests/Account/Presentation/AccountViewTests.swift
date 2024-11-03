@@ -26,7 +26,7 @@ class AccountViewTests: XCTestCase {
   override func setUp() {
     super.setUp()
     isRecording = false
-    defaultScheduler = .immediate
+//    defaultScheduler = .immediate
   }
 
   func test_WhenViewIsLogin_thenShowLoginScreen() async {

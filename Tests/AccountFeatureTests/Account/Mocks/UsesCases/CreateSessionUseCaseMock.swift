@@ -8,19 +8,12 @@ import NetworkingInterface
 
 final class CreateSessionUseCaseMock: CreateSessionUseCase {
 
-  var result: Void?
-  var error: DataTransferError?
+  var result: Bool
+  var error: ApiError?
 
-  func execute() -> AnyPublisher<Void, DataTransferError> {
-    if let error = error {
-      return Fail(error: error).eraseToAnyPublisher()
-    }
-
-    if let result = result {
-      return Just(result).setFailureType(to: DataTransferError.self) .eraseToAnyPublisher()
-    }
-
-    return Empty().setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
+  init(result: Bool = false, error: ApiError? = nil) {
+    self.result = result
+    self.error = error
   }
 
   func execute() async -> Bool {
@@ -28,6 +21,6 @@ final class CreateSessionUseCaseMock: CreateSessionUseCase {
       return false
     }
 
-    return result != nil
+    return result
   }
 }

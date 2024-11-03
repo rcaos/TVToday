@@ -14,7 +14,7 @@ class SignInViewTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
-    defaultScheduler = .immediate
+//    defaultScheduler = .immediate
     isRecording = false
   }
 

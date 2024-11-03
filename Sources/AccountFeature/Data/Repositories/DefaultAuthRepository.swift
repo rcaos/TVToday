@@ -1,9 +1,5 @@
 //
-//  DefaultAuthRepository.swift
-//  TVToday
-//
 //  Created by Jeans Ruiz on 6/19/20.
-//  Copyright © 2020 Jeans. All rights reserved.
 //
 
 import Foundation
@@ -52,6 +48,7 @@ extension DefaultAuthRepository: AuthRepository {
       return NewSession(success: dto.success, sessionId: dto.sessionId)
     } catch {
       #warning("todo: log")
+      print("🚨error createSession: \(error.localizedDescription)")
       return nil
     }
   }

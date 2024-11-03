@@ -1,14 +1,9 @@
 //
-//  RecentVisitedShowDidChangeUseCase.swift
-//  Persistence
-//
 //  Created by Jeans Ruiz on 7/7/20.
 //
 
-import Combine
-
 public protocol RecentVisitedShowDidChangeUseCase {
-  func execute() -> AnyPublisher<Bool, Never>
+  func execute() -> AsyncStream<Bool>
 }
 
 public final class DefaultRecentVisitedShowDidChangeUseCase: RecentVisitedShowDidChangeUseCase {
@@ -18,7 +13,7 @@ public final class DefaultRecentVisitedShowDidChangeUseCase: RecentVisitedShowDi
     self.showsVisitedLocalRepository = showsVisitedLocalRepository
   }
 
-  public func execute() -> AnyPublisher<Bool, Never> {
+  public func execute() -> AsyncStream<Bool> {
     return showsVisitedLocalRepository.recentVisitedShowsDidChange()
   }
 }

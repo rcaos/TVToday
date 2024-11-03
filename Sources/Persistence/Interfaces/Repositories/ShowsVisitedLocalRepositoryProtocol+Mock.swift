@@ -3,7 +3,6 @@
 //
 
 import Foundation
-import Combine
 
 #if DEBUG
 public final class FakeShowsVisitedLocalRepository: ShowsVisitedLocalRepositoryProtocol {
@@ -23,9 +22,8 @@ public final class FakeShowsVisitedLocalRepository: ShowsVisitedLocalRepositoryP
     ]
   }
 
-  #warning("todo, use AsyncStream")
-  public func recentVisitedShowsDidChange() -> AnyPublisher<Bool, Never> {
-    return Just(true).eraseToAnyPublisher()
+  public func recentVisitedShowsDidChange() -> AsyncStream<Bool> {
+    return AsyncStream(unfolding: { false })
   }
 }
 #endif

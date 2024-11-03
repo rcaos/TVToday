@@ -9,7 +9,14 @@ import Shared
 
 final class CoreDataShowVisitedStorage {
   private let store: PersistenceStore<CDShowVisited>
-  private let recentsShowsSubject = CurrentValueSubject<Bool, Never>(true)
+
+  private lazy var recentsShowsStream: AsyncStream<Bool> = {
+    return AsyncStream { continuation in
+      self.continuation = continuation
+    }
+  }()
+  private var continuation: AsyncStream<Bool>.Continuation?
+
   private let limitStorage: Int
 
   init(limitStorage: Int, store: PersistenceStore<CDShowVisited>) {
@@ -21,7 +28,6 @@ final class CoreDataShowVisitedStorage {
 }
 
 extension CoreDataShowVisitedStorage: ShowsVisitedLocalDataSource {
-
   public func saveShow(id: Int, pathImage: String, userId: Int) {
     store.delete(showId: id)
     store.deleteLimitStorage(userId: userId, until: limitStorage)
@@ -32,14 +38,14 @@ extension CoreDataShowVisitedStorage: ShowsVisitedLocalDataSource {
     return store.findAll(for: userId).map { $0.toDomain() }
   }
 
-  public func recentVisitedShowsDidChange() -> AnyPublisher<Bool, Never> {
-    return recentsShowsSubject.eraseToAnyPublisher()
+  public func recentVisitedShowsDidChange() -> AsyncStream<Bool> {
+    return recentsShowsStream
   }
 }
 
 // MARK: - PersistenceStoreDelegate
 extension CoreDataShowVisitedStorage: PersistenceStoreDelegate {
   func persistenceStore(didUpdateEntity update: Bool) {
-    recentsShowsSubject.send(update)
+    continuation?.yield(update)
   }
 }

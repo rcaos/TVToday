@@ -2,7 +2,6 @@
 //  Created by Jeans Ruiz on 11/05/22.
 //
 
-import Combine
 import Shared
 
 public final class ShowsVisitedLocalRepository {
@@ -26,7 +25,7 @@ extension ShowsVisitedLocalRepository: ShowsVisitedLocalRepositoryProtocol {
     return dataSource.fetchVisitedShows(userId: userId).map { ShowVisited(id: $0.id, pathImage: $0.pathImage) }
   }
 
-  public func recentVisitedShowsDidChange() -> AnyPublisher<Bool, Never> {
+  public func recentVisitedShowsDidChange() -> AsyncStream<Bool> {
     return dataSource.recentVisitedShowsDidChange()
   }
 }

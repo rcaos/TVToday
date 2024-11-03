@@ -36,7 +36,7 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
   // MARK: - Public
   public func viewDidLoad() async {
     await fetchGenresAndRecentShows()
-    subscribeToRecentShowsChanges()
+    await subscribeToRecentShowsChanges()
   }
 
   private func fetchGenresAndRecentShows() async {
@@ -54,22 +54,10 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
     }
   }
 
-  public func modelIsPicked(with item: SearchSectionItem) {
-    switch item {
-    case .genres(items: let genre):
-      delegate?.searchOptionsViewModel(self, didGenrePicked: genre.id, title: genre.name)
-    default:
-      break
+  private func subscribeToRecentShowsChanges() async {
+    for await didChange in recentVisitedShowsDidChange().execute() where didChange == true {
+      fetchRecentVisitedShows()
     }
-  }
-
-  private func subscribeToRecentShowsChanges() {
-    recentVisitedShowsDidChange().execute()
-      .filter { $0 }
-      .sink(receiveValue: { [weak self] _ in
-        self?.fetchRecentVisitedShows()
-      })
-      .store(in: &disposeBag)
   }
 
   private func fetchRecentVisitedShows() {
@@ -120,6 +108,15 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
     visitedModel.delegate = self
 
     return recentsShows.isEmpty ? nil : .showsVisited(items: visitedModel)
+  }
+
+  public func modelIsPicked(with item: SearchSectionItem) {
+    switch item {
+    case .genres(items: let genre):
+      delegate?.searchOptionsViewModel(self, didGenrePicked: genre.id, title: genre.name)
+    default:
+      break
+    }
   }
 }
 

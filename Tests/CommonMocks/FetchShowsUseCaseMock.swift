@@ -10,22 +10,21 @@ import Combine
 import NetworkingInterface
 @testable import Shared
 
+import ConcurrencyExtras
+
 public class FetchShowsUseCaseMock: FetchTVShowsUseCase {
 
-  public var error: DataTransferError?
+  public var error: ApiError?
   public var result: TVShowPage?
 
   public init() { }
 
-  public func execute(requestValue: FetchTVShowsUseCaseRequestValue) -> AnyPublisher<TVShowPage, DataTransferError> {
-    if let error = error {
-      return Fail(error: error).eraseToAnyPublisher()
+  public func execute(request: FetchTVShowsUseCaseRequestValue) async -> TVShowPage? {
+    await Task.yield()
+    if error != nil {
+      return nil
     }
 
-    if let result = result {
-      return Just(result).setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
-    }
-
-    return Empty().setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
+    return result
   }
 }

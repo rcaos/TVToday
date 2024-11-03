@@ -32,7 +32,8 @@ let package = Package(
     .package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.9.1"),
     .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.14.1"),
     .package(url: "https://github.com/pointfreeco/swift-concurrency-extras.git", from: "1.2.0"),
-    .package(url: "https://github.com/apple/swift-algorithms.git", from: "1.2.0")
+    .package(url: "https://github.com/apple/swift-algorithms.git", from: "1.2.0"),
+    .package(url: "https://github.com/pointfreeco/swift-custom-dump.git", from: "1.3.3")
   ],
   targets: [
     .target(
@@ -86,7 +87,9 @@ let package = Package(
       dependencies: [
         "AiringTodayFeature",
         "CommonMocks",
-        .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+        .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+        .product(name: "ConcurrencyExtras", package: "swift-concurrency-extras"),
+        .product(name: "CustomDump", package: "swift-custom-dump")
       ],
       exclude: [
         "Presentation/SnapshotTests/__Snapshots__"

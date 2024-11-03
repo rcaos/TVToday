@@ -73,12 +73,9 @@ final class DIContainer {
       mapper: DefaultTVShowDetailsMapper(),
       imageBasePath: dependencies.imagesBaseURL
     )
-
-    // wip
     return DefaultFetchTVShowDetailsUseCase(
-      tvShowDetailsRepository: tvShowDetailsRepository
-//      ,
-//      tvShowsVisitedRepository: dependencies.showsPersistenceRepository
+      tvShowDetailsRepository: tvShowDetailsRepository,
+      tvShowsVisitedRepository: dependencies.showsPersistenceRepository
     )
   }
 

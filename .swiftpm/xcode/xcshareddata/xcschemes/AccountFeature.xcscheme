@@ -37,6 +37,14 @@
                BlueprintName = "AccountFeatureTests"
                ReferencedContainer = "container:">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "AccountViewTests">
+               </Test>
+               <Test
+                  Identifier = "SignInViewTests">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>

@@ -87,7 +87,7 @@ final class DIContainer {
     let viewModel = SearchOptionsViewModel(
       fetchGenresUseCase: makeFetchGenresUseCase(),
       fetchVisitedShowsUseCase: { self.makeFetchVisitedShowsUseCase() },
-      recentVisitedShowsDidChange: makeRecentShowsDidChangedUseCase()
+      recentVisitedShowsDidChange: { self.makeRecentShowsDidChangedUseCase() }
     )
     viewModel.delegate = searchViewModel
     let viewController = SearchOptionsViewController(viewModel: viewModel)

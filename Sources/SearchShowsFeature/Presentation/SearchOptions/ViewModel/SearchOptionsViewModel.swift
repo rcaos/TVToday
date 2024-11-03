@@ -9,59 +9,35 @@ import Shared
 import Persistence
 import NetworkingInterface
 
-#warning("wip todo")
-#warning("recover coredata datasource")
-#warning("recover reactivity")
 final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
 
   weak var delegate: SearchOptionsViewModelDelegate?
 
   private let fetchGenresUseCase: FetchGenresUseCase
   private let fetchVisitedShowsUseCase: () -> FetchVisitedShowsUseCase
-//  private let recentVisitedShowsDidChange: RecentVisitedShowDidChangeUseCase
+  private let recentVisitedShowsDidChange: () -> RecentVisitedShowDidChangeUseCase
 
   let viewState = CurrentValueSubject<SearchViewState, Never>(.loading)
   let dataSource = CurrentValueSubject<[SearchOptionsSectionModel], Never>([])
 
+  private var disposeBag = Set<AnyCancellable>()
+
   init(
     fetchGenresUseCase: FetchGenresUseCase,
     fetchVisitedShowsUseCase: @escaping () -> FetchVisitedShowsUseCase,
-    recentVisitedShowsDidChange: RecentVisitedShowDidChangeUseCase
+    recentVisitedShowsDidChange: @escaping () -> RecentVisitedShowDidChangeUseCase
   ) {
     self.fetchGenresUseCase = fetchGenresUseCase
     self.fetchVisitedShowsUseCase = fetchVisitedShowsUseCase
-//    self.recentVisitedShowsDidChange = recentVisitedShowsDidChange
+    self.recentVisitedShowsDidChange = recentVisitedShowsDidChange
 //    self.scheduler = scheduler
   }
 
   // MARK: - Public
   public func viewDidLoad() async {
     await fetchGenresAndRecentShows()
+    subscribeToRecentShowsChanges()
   }
-
-  public func modelIsPicked(with item: SearchSectionItem) {
-    switch item {
-    case .genres(items: let genre):
-      delegate?.searchOptionsViewModel(self, didGenrePicked: genre.id, title: genre.name)
-    default:
-      break
-    }
-  }
-
-  // MARK: - Private
-//  private func fetchRecentShows() -> AnyPublisher<[ShowVisited], ErrorEnvelope> {
-//    return fetchVisitedShowsUseCase.execute(requestValue: FetchVisitedShowsUseCaseRequestValue())
-//  }
-
-//  private func recentShowsDidChanged() -> AnyPublisher<[ShowVisited], ErrorEnvelope> {
-//    return recentVisitedShowsDidChange.execute()
-//      .filter { $0 }
-//      .flatMap { [weak self] _ -> AnyPublisher<[ShowVisited], ErrorEnvelope> in
-//        guard let strongSelf = self else { return Just([]).setFailureType(to: ErrorEnvelope.self).eraseToAnyPublisher() }
-//        return strongSelf.fetchRecentShows()
-//      }
-//      .eraseToAnyPublisher()
-//  }
 
   private func fetchGenresAndRecentShows() async {
     do {
@@ -75,6 +51,42 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
       }
     } catch {
       viewState.send(.error("error fetching genres")) // todo, recover error
+    }
+  }
+
+  public func modelIsPicked(with item: SearchSectionItem) {
+    switch item {
+    case .genres(items: let genre):
+      delegate?.searchOptionsViewModel(self, didGenrePicked: genre.id, title: genre.name)
+    default:
+      break
+    }
+  }
+
+  private func subscribeToRecentShowsChanges() {
+    recentVisitedShowsDidChange().execute()
+      .filter { $0 }
+      .sink(receiveValue: { [weak self] _ in
+        self?.fetchRecentVisitedShows()
+      })
+      .store(in: &disposeBag)
+  }
+
+  private func fetchRecentVisitedShows() {
+    let recentVisitedShows = fetchVisitedShowsUseCase().execute()
+    let currentGenres = dataSource.value.compactMap {
+      switch $0 {
+      case .genres(items: let genres):
+        return genres
+      case .showsVisited:
+        return nil
+      }
+    }.flatMap { $0 }
+
+    if let newVisitedShows = mapRecentShowsToSectionItem(recentsShows: recentVisitedShows) {
+      dataSource.send(
+        [.showsVisited(items: [newVisitedShows])] + [.genres(items: currentGenres)]
+      )
     }
   }
 

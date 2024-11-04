@@ -3,7 +3,7 @@
 [![Swift Version](https://img.shields.io/badge/Swift-5-F16D39.svg?style=flat)](https://developer.apple.com/swift)
 [![Swift Package Manager compatible](https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg)](https://github.com/apple/swift-package-manager)
 
-TVShows iOS app built with Combine, using the [TMDb API](https://www.themoviedb.org/).
+TVShows iOS app using the [TMDb API](https://www.themoviedb.org/).
 
 ## What I'm working on
 
@@ -41,7 +41,7 @@ So you need to leverage your Unit tests, Snapshot Tests and Demo targets to save
 
 ## Built with
 - Swift 5
-- Combine
+- Async-await
 - Clean + Modular Architecture
 - Coordinator Pattern.
 - MVVM
@@ -75,7 +75,8 @@ Last snapshot tests were created using an Apple Silicon with `Xcode 15.0`, Simul
 - RxSwift + CocoaPods : https://github.com/rcaos/TVToday/releases/tag/v.0.4.0
 - RxSwift + SPM + Tuist: https://github.com/rcaos/TVToday/releases/tag/v0.5.0
 - Combine + SPM + Tuist https://github.com/rcaos/TVToday/releases/tag/v0.6.0
-- Current branch: Combine + SPM
+- Combine + SPM https://github.com/rcaos/TVToday/releases/tag/v.0.7.0
+- Current branch: Async-await + SPM
 
 ## Screenshots
 

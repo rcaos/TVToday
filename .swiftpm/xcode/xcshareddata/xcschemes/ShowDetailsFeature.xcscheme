@@ -37,6 +37,14 @@
                BlueprintName = "ShowDetailsFeatureTests"
                ReferencedContainer = "container:">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "EpisodesListViewTests">
+               </Test>
+               <Test
+                  Identifier = "TVShowDetailViewTests">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>

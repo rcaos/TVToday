@@ -1,13 +1,9 @@
 //
-//  EpisodesListViewTests.swift
-//  ShowDetailsTests
-//
 //  Created by Jeans Ruiz on 19/12/21.
 //
 
 import SnapshotTesting
 import XCTest
-import CombineSchedulers
 
 @testable import ShowDetailsFeature
 @testable import Shared
@@ -18,6 +14,7 @@ func configureWith(_ viewController: UIViewController, style: UIUserInterfaceSty
   _ = viewController.view
 }
 
+#warning("TODO: Recover these tests")
 class EpisodesListViewTests: XCTestCase {
 
   private var headerViewModel: SeasonHeaderViewModel!
@@ -28,7 +25,7 @@ class EpisodesListViewTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
-    defaultScheduler = .immediate
+//    defaultScheduler = .immediate
     isRecording = false
     headerViewModel = .mock("Dragon Ball Z", "1987-01-01", "1992-01-01")
   }

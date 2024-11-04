@@ -1,10 +1,8 @@
 //
-//  FetchTVAccountStateMock.swift
-//  ShowDetails-Unit-Tests
-//
 //  Created by Jeans Ruiz on 8/4/20.
 //
 
+import Foundation
 import Combine
 import NetworkingInterface
 import Shared
@@ -13,17 +11,17 @@ import Shared
 class FetchTVAccountStateMock: FetchTVAccountStates {
 
   var result: TVShowAccountStatus?
-  var error: DataTransferError?
+  var error: ApiError?
 
-  func execute(requestValue: FetchTVAccountStatesRequestValue) -> AnyPublisher<TVShowAccountStatus, DataTransferError> {
+  func execute(request: FetchTVAccountStatesRequestValue) async throws -> TVShowAccountStatus {
     if let error = error {
-      return Fail(error: error).eraseToAnyPublisher()
+      throw error
     }
 
     if let result = result {
-      return Just(result).setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
+      return result
+    } else {
+      throw ApiError(error: NSError(domain: "Mock", code: 404, userInfo: nil))
     }
-
-    return Empty().setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
   }
 }

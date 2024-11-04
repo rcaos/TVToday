@@ -1,7 +1,4 @@
 //
-//  AccountViewModelMock.swift
-//  AccountTV-Unit-Tests
-//
 //  Created by Jeans Ruiz on 8/8/20.
 //
 
@@ -10,12 +7,13 @@ import Combine
 
 final class AccountViewModelMock: AccountViewModelProtocol {
 
-  func viewDidLoad() { }
+  func viewDidLoad() async { }
 
-  let viewState: CurrentValueSubject<AccountViewState, Never>
+  @Published private var viewStateInternal = AccountViewState.login
+  var viewState: Published<AccountViewState>.Publisher { $viewStateInternal }
 
   init(state: AccountViewState) {
-    viewState = CurrentValueSubject(state)
+    viewStateInternal = state
   }
 
   func authPermissionViewModel(didSignedIn signedIn: Bool) { }

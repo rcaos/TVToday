@@ -1,7 +1,4 @@
 //
-//  SearchShowsOptionsViewTests.swift
-//  SearchShowsTests
-//
 //  Created by Jeans Ruiz on 20/12/21.
 //
 
@@ -13,6 +10,7 @@ import XCTest
 @testable import Persistence
 import UI
 
+#warning("todo, recover this test")
 class SearchShowsOptionsViewTests: XCTestCase {
 
   override class func setUp() {
@@ -21,7 +19,7 @@ class SearchShowsOptionsViewTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
-    defaultScheduler = .immediate
+//    defaultScheduler = .immediate
     isRecording = false
   }
 

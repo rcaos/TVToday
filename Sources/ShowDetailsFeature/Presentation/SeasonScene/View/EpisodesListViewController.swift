@@ -1,9 +1,5 @@
 //
-//  SeasonsListViewController.swift
-//  MyTvShows
-//
 //  Created by Jeans on 9/23/19.
-//  Copyright © 2019 Jeans. All rights reserved.
 //
 
 import UIKit
@@ -42,7 +38,10 @@ class EpisodesListViewController: NiblessViewController, Loadable, Retryable {
   override func viewDidLoad() {
     super.viewDidLoad()
     subscribeToViewState()
-    viewModel.viewDidLoad()
+
+    Task {
+      await viewModel.viewDidLoad()
+    }
   }
 
   deinit {
@@ -52,7 +51,7 @@ class EpisodesListViewController: NiblessViewController, Loadable, Retryable {
   private func subscribeToViewState() {
     viewModel
       .viewState
-      .receive(on: defaultScheduler)
+      .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] state in
         self?.configureView(with: state)
       })
@@ -91,7 +90,9 @@ class EpisodesListViewController: NiblessViewController, Loadable, Retryable {
       rootView?.tableView.separatorStyle = .none
       showMessageView(with: message,
                       errorHandler: { [weak self] in
-                        self?.viewModel.refreshView()
+        Task {
+          await self?.viewModel.refreshView()
+        }
       })
 
     case .errorSeason:

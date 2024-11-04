@@ -1,27 +1,22 @@
 //
-//  DefaultGenreRemoteDataSource.swift
-//  
-//
 //  Created by Jeans Ruiz on 6/05/22.
 //
 
-import Combine
 import Networking
 import NetworkingInterface
 
 final class DefaultGenreRemoteDataSource: GenreRemoteDataSource {
+  private let apiClient: ApiClient
 
-  private let dataTransferService: DataTransferService
-
-  init(dataTransferService: DataTransferService) {
-    self.dataTransferService = dataTransferService
+  init(apiClient: ApiClient) {
+    self.apiClient = apiClient
   }
 
-  func fetchGenres() -> AnyPublisher<GenreListDTO, DataTransferError> {
-    let endpoint = Endpoint<GenreListDTO>(
+  func fetchGenres() async throws -> GenreListDTO {
+    let endpoint = Endpoint(
       path: "3/genre/tv/list",
       method: .get
     )
-    return dataTransferService.request(with: endpoint)
+    return try await apiClient.apiRequest(endpoint: endpoint, as: GenreListDTO.self)
   }
 }

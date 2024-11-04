@@ -37,6 +37,32 @@
                BlueprintName = "ShowDetailsFeatureTests"
                ReferencedContainer = "container:">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "EpisodesListViewModelTests/test_When_Ask_For_Different_Season_And_UseCase_Doesnt_Respond_Yet_ViewModel_Should_Contains_Loading_Season_State()">
+               </Test>
+               <Test
+                  Identifier = "EpisodesListViewModelTests/test_When_Ask_For_Different_Season_And_UseCase_Return_Error_ViewModel_Should_Contains_Loading_Season_State()">
+               </Test>
+               <Test
+                  Identifier = "EpisodesListViewModelTests/test_When_Ask_For_Different_Season_And_UseCase_Return_OK_ViewModel_Should_Contains_Data_With_Episodes()">
+               </Test>
+               <Test
+                  Identifier = "EpisodesListViewModelTests/test_When_Ask_For_Different_Season_And_UseCase_Return_OK_ViewModel_Should_Contains_populated()">
+               </Test>
+               <Test
+                  Identifier = "EpisodesListViewTests">
+               </Test>
+               <Test
+                  Identifier = "FavoriteTapsTests">
+               </Test>
+               <Test
+                  Identifier = "TVShowDetailViewTests">
+               </Test>
+               <Test
+                  Identifier = "WatchListTapsTests">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>

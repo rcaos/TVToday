@@ -1,7 +1,4 @@
 //
-//  DefaultTVShowPageMapper.swift
-//  
-//
 //  Created by Jeans Ruiz on 30/04/22.
 //
 

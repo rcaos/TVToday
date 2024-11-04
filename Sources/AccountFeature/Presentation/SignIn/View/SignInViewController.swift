@@ -1,9 +1,5 @@
 //
-//  SignInViewController.swift
-//  TVToday
-//
 //  Created by Jeans Ruiz on 6/19/20.
-//  Copyright © 2020 Jeans. All rights reserved.
 //
 
 import Foundation
@@ -34,7 +30,7 @@ class SignInViewController: NiblessViewController {
   fileprivate func subscribe() {
     viewModel
       .viewState
-      .receive(on: defaultScheduler)
+      .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] state in
         self?.setupView(with: state)
       })

@@ -1,12 +1,8 @@
 //
-//  SignInViewModelProtocol.swift
-//  AccountTV
-//
 //  Created by Jeans Ruiz on 8/8/20.
 //
 
 import Foundation
-import Combine
 
 protocol SignInViewModelDelegate: AnyObject {
   func signInViewModel(_ signInViewModel: SignInViewModel, didTapSignInButton url: URL)
@@ -14,11 +10,10 @@ protocol SignInViewModelDelegate: AnyObject {
 
 protocol SignInViewModelProtocol {
   // MARK: - Input
-  func signInDidTapped()
-  func changeState(with state: SignInViewState)
+  func signInDidTapped() async
 
   // MARK: - Output
-  var viewState: CurrentValueSubject<SignInViewState, Never> { get }
+  var viewState: Published<SignInViewState>.Publisher { get }
   var delegate: SignInViewModelDelegate? { get set }
 }
 

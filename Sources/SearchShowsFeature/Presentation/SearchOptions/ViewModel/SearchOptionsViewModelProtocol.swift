@@ -1,7 +1,4 @@
 //
-//  SearchOptionsViewModelProtocol.swift
-//  SearchShows
-//
 //  Created by Jeans Ruiz on 8/7/20.
 //
 
@@ -18,7 +15,7 @@ protocol SearchOptionsViewModelDelegate: AnyObject {
 
 protocol SearchOptionsViewModelProtocol: VisitedShowViewModelDelegate {
   // MARK: - Input
-  func viewDidLoad()
+  func viewDidLoad() async
   func modelIsPicked(with item: SearchSectionItem)
 
   // MARK: - Output

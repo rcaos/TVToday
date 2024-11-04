@@ -1,7 +1,4 @@
 //
-//  AiringTodayRootViewCompositional.swift
-//  
-//
 //  Created by Jeans Ruiz on 23/05/22.
 //
 
@@ -77,7 +74,9 @@ class AiringTodayRootViewCompositional: NiblessView, AiringTodayRootViewProtocol
 
   private func setupCollectionView() {
     collectionView.refreshControl = DefaultRefreshControl(refreshHandler: { [weak self] in
-      self?.viewModel.refreshView()
+      Task {
+        await self?.viewModel.refreshView()
+      }
     })
 
     collectionView.registerCell(cellType: AiringTodayCollectionViewCell.self)
@@ -118,7 +117,7 @@ class AiringTodayRootViewCompositional: NiblessView, AiringTodayRootViewProtocol
         snapShot.appendItems(entities, toSection: .shows)
         return snapShot
       }
-      .receive(on: defaultScheduler)
+      .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] snapshot in
         self?.dataSource?.apply(snapshot)
       })
@@ -152,6 +151,9 @@ extension AiringTodayRootViewCompositional: UICollectionViewDelegateFlowLayout {
 
   func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
     let totalItems = dataSource?.snapshot().numberOfItems(inSection: .shows) ?? 0
-    viewModel.willDisplayRow(indexPath.row, outOf: totalItems)
+
+    Task {
+      await viewModel.willDisplayRow(indexPath.row, outOf: totalItems)
+    }
   }
 }

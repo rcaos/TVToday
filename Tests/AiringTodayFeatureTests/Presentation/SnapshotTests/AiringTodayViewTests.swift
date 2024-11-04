@@ -1,7 +1,4 @@
 //
-//  AiringTodayViewTests.swift
-//  AiringTodayTests
-//
 //  Created by Jeans Ruiz on 19/12/21.
 //
 
@@ -12,6 +9,7 @@ import CommonMocks
 import SnapshotTesting
 import XCTest
 
+#warning("Recover this test")
 class AiringTodayViewTests: XCTestCase {
 
   override class func setUp() {
@@ -21,7 +19,7 @@ class AiringTodayViewTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
-    defaultScheduler = .immediate
+    //defaultScheduler = .immediate
     isRecording = false
   }
 

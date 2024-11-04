@@ -1,27 +1,26 @@
 //
-//  FetchEpisodesUseCase+Mock.swift
-//  ShowDetails-Unit-Tests
-//
 //  Created by Jeans Ruiz on 8/6/20.
 //
 
+import Foundation
 import Combine
 import NetworkingInterface
 @testable import ShowDetailsFeature
 
 final class FetchEpisodesUseCaseMock: FetchEpisodesUseCase {
   var result: TVShowSeason?
-  var error: DataTransferError?
+  var error: ApiError?
 
-  func execute(requestValue: FetchEpisodesUseCaseRequestValue) -> AnyPublisher<TVShowSeason, DataTransferError> {
+  func execute(request: FetchEpisodesUseCaseRequestValue) async throws -> TVShowSeason {
+    await Task.yield()
     if let error = error {
-      return Fail(error: error).eraseToAnyPublisher()
+      throw error
     }
 
-    if let result = result {
-      return Just(result).setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
+    if let result {
+      return result
+    } else {
+      throw ApiError(error: NSError(domain: "Season Value not set", code: 0, userInfo: nil))
     }
-
-    return Empty().setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
   }
 }

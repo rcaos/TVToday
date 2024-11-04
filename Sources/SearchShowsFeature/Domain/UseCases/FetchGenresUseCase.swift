@@ -1,19 +1,12 @@
 //
-//  SearchMoviesUseCase.swift
-//  TVToday
-//
 //  Created by Jeans on 1/14/20.
-//  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import Combine
 import NetworkingInterface
 
 protocol FetchGenresUseCase {
-  func execute(requestValue: FetchGenresUseCaseRequestValue) -> AnyPublisher<GenreList, DataTransferError>
+  func execute() async throws -> GenreList
 }
-
-struct FetchGenresUseCaseRequestValue { }
 
 final class DefaultFetchGenresUseCase: FetchGenresUseCase {
 
@@ -23,7 +16,8 @@ final class DefaultFetchGenresUseCase: FetchGenresUseCase {
     self.genresRepository = genresRepository
   }
 
-  func execute(requestValue: FetchGenresUseCaseRequestValue) -> AnyPublisher<GenreList, DataTransferError> {
-    return genresRepository.genresList()
+  //DataTransferError
+  func execute() async throws -> GenreList {
+    return try await genresRepository.genresList()
   }
 }

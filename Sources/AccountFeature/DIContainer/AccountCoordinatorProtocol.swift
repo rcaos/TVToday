@@ -1,7 +1,4 @@
 //
-//  AccountCoordinatorProtocol.swift
-//  AccountTV
-//
 //  Created by Jeans Ruiz on 8/12/20.
 //
 
@@ -17,7 +14,7 @@ protocol AccountCoordinatorProtocol: AnyObject {
 protocol AccountCoordinatorDependencies {
   func buildAccountViewController(coordinator: AccountCoordinatorProtocol?) -> UIViewController
 
-  func buildAuthPermissionViewController(url: URL, delegate: AuthPermissionViewModelDelegate?) -> AuthPermissionViewController
+  func buildAuthPermissionViewController(url: URL, delegate: AuthPermissionViewModelDelegate?) async -> AuthPermissionViewController
 
   func buildTVShowListCoordinator(navigationController: UINavigationController,
                                   delegate: TVShowListCoordinatorDelegate?) -> TVShowListCoordinatorProtocol

@@ -1,7 +1,4 @@
 //
-//  SearchOptionsSectionModel.swift
-//  SearchShows
-//
 //  Created by Jeans Ruiz on 7/8/20.
 //
 

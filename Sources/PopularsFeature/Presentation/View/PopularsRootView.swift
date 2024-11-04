@@ -1,7 +1,4 @@
 //
-//  PopularsRootView.swift
-//  PopularShows
-//
 //  Created by Jeans Ruiz on 8/21/20.
 //
 
@@ -53,7 +50,9 @@ class PopularsRootView: NiblessView {
     tableView.registerCell(cellType: TVShowViewCell.self)
     tableView.delegate = self
     tableView.refreshControl = DefaultRefreshControl(refreshHandler: { [weak self] in
-      self?.viewModel.refreshView()
+      Task {
+        await self?.viewModel.refreshView()
+      }
     })
   }
 
@@ -74,7 +73,7 @@ class PopularsRootView: NiblessView {
         snapShot.appendItems(viewState.currentEntities, toSection: .list)
         return snapShot
       }
-      .receive(on: defaultScheduler)
+      .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] snapshot in
         self?.dataSource?.apply(snapshot)
       })
@@ -96,6 +95,8 @@ extension PopularsRootView: UITableViewDelegate {
 
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
     let totalItems = dataSource?.snapshot().itemIdentifiers(inSection: .list).count ?? 0
-    viewModel.willDisplayRow(indexPath.row, outOf: totalItems)
+    Task {
+      await viewModel.willDisplayRow(indexPath.row, outOf: totalItems)
+    }
   }
 }

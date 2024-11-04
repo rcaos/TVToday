@@ -1,13 +1,10 @@
 //
-//  AppDelegate.swift
-//  AccountDemo
-//
 //  Created by Jeans Ruiz on 20/04/22.
 //
 
 import UIKit
-import AccountFeatureDemo
 import Networking
+import NetworkingInterface
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,35 +14,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     window = UIWindow(frame: UIScreen.main.bounds)
-    
+
     let appConfigurations = buildAppConfigurations()
-    let apiDataTransferService = buildDataTransferService(appConfigurations: appConfigurations)
-    coordinator = AccountFeatureDemoCoordinator(window: window!,
-                                                tabBarController: UITabBarController(),
-                                                apiDataTransferService: apiDataTransferService,
-                                                imagesBaseURL: appConfigurations.imagesBaseURL,
-                                                gravatarBaseURL: appConfigurations.gravatarBaseURL,
-                                                authenticateBaseURL: appConfigurations.authenticateBaseURL)
+    coordinator = AccountFeatureDemoCoordinator(
+      window: window!,
+      tabBarController: UITabBarController(),
+      apiClient: buildApiClient(appConfigurations: appConfigurations),
+      imagesBaseURL: appConfigurations.imagesBaseURL,
+      gravatarBaseURL: appConfigurations.gravatarBaseURL,
+      authenticateBaseURL: appConfigurations.authenticateBaseURL
+    )
     coordinator?.start()
     return true
   }
 }
 
-func buildDataTransferService(appConfigurations: AppConfigurations) -> DefaultDataTransferService {
-  let queryParameters = [
-    "api_key": appConfigurations.apiKey,
-    "language": NSLocale.preferredLanguages.first ?? "en"
-  ]
-
-  let configuration = ApiDataNetworkConfig(
+private func buildApiClient(appConfigurations: AppConfigurations) -> ApiClient {
+  let config = NetworkConfig(
     baseURL: appConfigurations.apiBaseURL,
     headers: [
       "Content-Type": "application/json; charset=utf-8"
     ],
-    queryParameters: queryParameters
+    queryParameters: [
+      "api_key": appConfigurations.apiKey,
+      "language": NSLocale.preferredLanguages.first ?? "en"
+    ]
   )
-  let networkService = DefaultNetworkService(config: configuration)
-  return DefaultDataTransferService(with: networkService)
+  return ApiClient.live(networkConfig: config)
 }
 
 struct AppConfigurations {

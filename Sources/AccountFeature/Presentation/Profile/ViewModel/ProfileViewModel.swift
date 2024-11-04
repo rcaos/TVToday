@@ -1,25 +1,23 @@
 //
-//  ProfileViewModel.swift
-//  TVToday
-//
 //  Created by Jeans Ruiz on 6/19/20.
-//  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import Combine
+import Foundation
 
 class ProfileViewModel: ProfileViewModelProtocol {
   weak var delegate: ProfileViewModelDelegate?
 
   // MARK: - Public Api
-  let dataSource = CurrentValueSubject<[ProfileSectionModel], Never>([])
-  let presentSignOutAlert = CurrentValueSubject<Bool, Never>(false)
-  private var disposeBag = Set<AnyCancellable>()
+  @Published private var dataSourceInternal: [ProfileSectionModel] = []
+  var dataSource: Published<[ProfileSectionModel]>.Publisher { $dataSourceInternal }
+
+  @Published private var presentSignOutAlertInternal = false
+  var presentSignOutAlert: Published<Bool>.Publisher { $presentSignOutAlertInternal }
 
   // MARK: - Initializer
   init(account: Account) {
     let section = createSectionModel(account: account)
-    dataSource.send(section)
+    dataSourceInternal = section
   }
 
   // MARK: - Public
@@ -32,7 +30,7 @@ class ProfileViewModel: ProfileViewModelProtocol {
     case .userLists(items: let cellType):
       delegate?.profileViewModel(didUserList: cellType)
     case .logout:
-      presentSignOutAlert.send(true)
+      presentSignOutAlertInternal = true
     default:
       break
     }

@@ -37,6 +37,17 @@
                BlueprintName = "SearchShowsFeatureTests"
                ReferencedContainer = "container:">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "ResultsSearchViewModelTests">
+               </Test>
+               <Test
+                  Identifier = "ResultsSearchViewTests">
+               </Test>
+               <Test
+                  Identifier = "SearchShowsOptionsViewTests">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>

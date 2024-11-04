@@ -1,9 +1,5 @@
 //
-//  AiringTodayViewController.swift
-//  MyMovies
-//
 //  Created by Jeans on 8/21/19.
-//  Copyright © 2019 Jeans. All rights reserved.
 //
 
 import UIKit
@@ -32,13 +28,16 @@ class AiringTodayViewController: NiblessViewController, Loadable, Retryable, Emp
     super.viewDidLoad()
 
     subscribeToViewState()
-    viewModel.viewDidLoad()
+
+    Task {
+      await viewModel.viewDidLoad()
+    }
   }
 
   private func subscribeToViewState() {
     viewModel
       .viewStateObservableSubject
-      .receive(on: defaultScheduler)
+      .receive(on: DispatchQueue.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] viewstate in
         self?.handleViewState(with: viewstate)
       })
@@ -59,9 +58,12 @@ class AiringTodayViewController: NiblessViewController, Loadable, Retryable, Emp
 
     case .error(let message):
       hideLoadingView()
-      showMessageView(with: message,
-                      errorHandler: { [weak self] in
-                        self?.viewModel.refreshView()
+      showMessageView(
+        with: message,
+        errorHandler: { [weak self] in
+          Task {
+            await self?.viewModel.refreshView()
+          }
       })
 
     default:

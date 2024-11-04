@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -25,19 +25,15 @@ let package = Package(
     .library(name: "ShowDetailsFeatureInterface", targets: ["ShowDetailsFeatureInterface"]),
     .library(name: "ShowListFeature", targets: ["ShowListFeature"]),
     .library(name: "ShowListFeatureInterface", targets: ["ShowListFeatureInterface"]),
-    .library(name: "UI", targets: ["UI"]),
-    .library(name: "AccountFeatureDemo", targets: ["AccountFeatureDemo"]),
-    .library(name: "AiringTodayFeatureDemo", targets: ["AiringTodayFeatureDemo"]),
-    .library(name: "PopularsFeatureDemo", targets: ["PopularsFeatureDemo"]),
-    .library(name: "SearchShowsFeatureDemo", targets: ["SearchShowsFeatureDemo"]),
-    .library(name: "ShowDetailsFeatureDemo", targets: ["ShowDetailsFeatureDemo"]),
-    .library(name: "ShowListFeatureDemo", targets: ["ShowListFeatureDemo"])
+    .library(name: "UI", targets: ["UI"])
   ],
   dependencies: [
     .package(url: "https://github.com/evgenyneu/keychain-swift.git", from: "14.0.0"),
     .package(url: "https://github.com/onevcat/Kingfisher.git", from: "7.9.1"),
-    .package(url: "https://github.com/pointfreeco/combine-schedulers", .exactItem("0.5.3")),
-    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.14.1")
+    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.17.6"),
+    .package(url: "https://github.com/pointfreeco/swift-concurrency-extras.git", from: "1.2.0"),
+    .package(url: "https://github.com/apple/swift-algorithms.git", from: "1.2.0"),
+    .package(url: "https://github.com/pointfreeco/swift-custom-dump.git", from: "1.3.3")
   ],
   targets: [
     .target(
@@ -61,15 +57,16 @@ let package = Package(
         "Networking",
         "Shared",
         "ShowListFeatureInterface",
-        "UI",
-        .product(name: "CombineSchedulers", package: "combine-schedulers")
+        "UI"
       ]
     ),
     .testTarget(
       name: "AccountFeatureTests",
       dependencies: [
         "AccountFeature",
-        .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+        .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+        .product(name: "ConcurrencyExtras", package: "swift-concurrency-extras"),
+        .product(name: "CustomDump", package: "swift-custom-dump")
       ],
       exclude: [
         "SignIn/Presentation/__Snapshots__",
@@ -83,7 +80,7 @@ let package = Package(
         "Shared",
         "ShowDetailsFeatureInterface",
         "UI",
-        .product(name: "CombineSchedulers", package: "combine-schedulers")
+        .product(name: "Algorithms", package: "swift-algorithms")
       ]
     ),
     .testTarget(
@@ -91,7 +88,9 @@ let package = Package(
       dependencies: [
         "AiringTodayFeature",
         "CommonMocks",
-        .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+        .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+        .product(name: "ConcurrencyExtras", package: "swift-concurrency-extras"),
+        .product(name: "CustomDump", package: "swift-custom-dump")
       ],
       exclude: [
         "Presentation/SnapshotTests/__Snapshots__"
@@ -105,7 +104,12 @@ let package = Package(
       ]
     ),
     .target(name: "Networking", dependencies: ["NetworkingInterface"]),
-    .testTarget(name: "NetworkingTests", dependencies: ["Networking"]),
+    .testTarget(
+      name: "NetworkingTests",
+      dependencies: [
+        "Networking"
+      ]
+    ),
     .target(name: "NetworkingInterface"),
     .target(name: "Persistence", dependencies: ["Shared"]),
     .target(
@@ -121,7 +125,7 @@ let package = Package(
         "Shared",
         "ShowDetailsFeatureInterface",
         "UI",
-        .product(name: "CombineSchedulers", package: "combine-schedulers")
+        .product(name: "Algorithms", package: "swift-algorithms")
       ]
     ),
     .testTarget(
@@ -129,7 +133,9 @@ let package = Package(
       dependencies: [
         "PopularsFeature",
         "CommonMocks",
-        .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+        .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+        .product(name: "CustomDump", package: "swift-custom-dump"),
+        .product(name: "ConcurrencyExtras", package: "swift-concurrency-extras")
       ],
       exclude: [
         "Presentation/SnapshotTests/__Snapshots__"
@@ -144,7 +150,7 @@ let package = Package(
         "ShowDetailsFeatureInterface",
         "ShowListFeatureInterface",
         "UI",
-        .product(name: "CombineSchedulers", package: "combine-schedulers")
+        .product(name: "Algorithms", package: "swift-algorithms")
       ]
     ),
     .testTarget(
@@ -152,7 +158,8 @@ let package = Package(
       dependencies: [
         "SearchShowsFeature",
         "CommonMocks",
-        .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+        .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+        .product(name: "ConcurrencyExtras", package: "swift-concurrency-extras")
       ],
       exclude: [
         "SearchOptions/Presentation/SnapshotTests/__Snapshots__",
@@ -164,8 +171,7 @@ let package = Package(
       dependencies: [
         "NetworkingInterface",
         "Networking",
-        .product(name: "Kingfisher", package: "Kingfisher"),
-        .product(name: "CombineSchedulers", package: "combine-schedulers"),
+        .product(name: "Kingfisher", package: "Kingfisher")
       ]
     ),
     .testTarget(
@@ -179,15 +185,16 @@ let package = Package(
       name: "ShowDetailsFeature",
       dependencies: [
         "ShowDetailsFeatureInterface",
-        "UI",
-        .product(name: "CombineSchedulers", package: "combine-schedulers"),
+        "UI"
       ]
     ),
     .testTarget(
       name: "ShowDetailsFeatureTests",
       dependencies: [
         "ShowDetailsFeature",
-        .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+        .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+        .product(name: "CustomDump", package: "swift-custom-dump"),
+        .product(name: "ConcurrencyExtras", package: "swift-concurrency-extras")
       ],
       exclude: [
         "DetailsScene/Presentation/View/__Snapshots__",
@@ -206,7 +213,7 @@ let package = Package(
       name: "ShowListFeature",
       dependencies: [
         "ShowListFeatureInterface",
-        .product(name: "CombineSchedulers", package: "combine-schedulers"),
+        .product(name: "Algorithms", package: "swift-algorithms")
       ]
     ),
     .testTarget(
@@ -214,7 +221,8 @@ let package = Package(
       dependencies: [
         "ShowListFeature",
         "CommonMocks",
-        .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+        .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+        .product(name: "ConcurrencyExtras", package: "swift-concurrency-extras")
       ],
       exclude: [
         "Presentation/SnapshotTests/__Snapshots__"
@@ -239,14 +247,6 @@ let package = Package(
         .process("Resources/")
       ]
     ),
-
-    // MARK: - Demo modules
-    .target(name: "AiringTodayFeatureDemo", dependencies: ["AiringTodayFeature"]),
-    .target(name: "PopularsFeatureDemo", dependencies: ["PopularsFeature"]),
-    .target(name: "SearchShowsFeatureDemo", dependencies: ["SearchShowsFeature"]),
-    .target(name: "AccountFeatureDemo", dependencies: ["AccountFeature"]),
-    .target(name: "ShowDetailsFeatureDemo", dependencies: ["ShowDetailsFeature"]),
-    .target(name: "ShowListFeatureDemo", dependencies: ["ShowListFeature"]),
 
     // MARK: - Common For test Targets
     .target(

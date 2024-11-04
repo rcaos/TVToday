@@ -42,6 +42,8 @@ class AuthPermissionViewController: NiblessViewController {
 // MARK: - UIAdaptivePresentationControllerDelegate
 extension AuthPermissionViewController: UIAdaptivePresentationControllerDelegate {
   func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-    viewModel.signIn()
+    Task {
+      await viewModel.signIn()
+    }
   }
 }

@@ -1,7 +1,4 @@
 //
-//  CreateSessionUseCaseMock.swift
-//  AccountTV-Unit-Tests
-//
 //  Created by Jeans Ruiz on 8/8/20.
 //
 
@@ -11,18 +8,19 @@ import NetworkingInterface
 
 final class CreateSessionUseCaseMock: CreateSessionUseCase {
 
-  var result: Void?
-  var error: DataTransferError?
+  var result: Bool
+  var error: ApiError?
 
-  func execute() -> AnyPublisher<Void, DataTransferError> {
-    if let error = error {
-      return Fail(error: error).eraseToAnyPublisher()
+  init(result: Bool = false, error: ApiError? = nil) {
+    self.result = result
+    self.error = error
+  }
+
+  func execute() async -> Bool {
+    if error != nil {
+      return false
     }
 
-    if let result = result {
-      return Just(result).setFailureType(to: DataTransferError.self) .eraseToAnyPublisher()
-    }
-
-    return Empty().setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
+    return result
   }
 }

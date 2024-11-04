@@ -1,7 +1,4 @@
 //
-//  CreateTokenUseCaseMock.swift
-//  AccountTV-Unit-Tests
-//
 //  Created by Jeans Ruiz on 8/8/20.
 //
 
@@ -13,17 +10,12 @@ import NetworkingInterface
 final class CreateTokenUseCaseMock: CreateTokenUseCase {
 
   var result: URL?
-  var error: DataTransferError?
+  var error: ApiError?
 
-  func execute() -> AnyPublisher<URL, DataTransferError> {
+  func execute() async -> URL? {
     if let error = error {
-      return Fail(error: error).eraseToAnyPublisher()
+      return nil
     }
-
-    if let result = result {
-      return Just(result).setFailureType(to: DataTransferError.self) .eraseToAnyPublisher()
-    }
-
-    return Empty().setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
+    return result
   }
 }

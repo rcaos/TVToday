@@ -1,9 +1,5 @@
 //
-//  ProfileViewController.swift
-//  TVToday
-//
 //  Created by Jeans Ruiz on 6/19/20.
-//  Copyright © 2020 Jeans. All rights reserved.
 //
 
 import UIKit
@@ -34,7 +30,7 @@ class ProfileViewController: NiblessViewController {
     viewModel
       .presentSignOutAlert
       .filter { $0 == true }
-      .receive(on: defaultScheduler)
+      .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] _ in
         self?.showSignOutActionSheet()
       })

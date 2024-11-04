@@ -1,10 +1,8 @@
 //
-//  FetchTVShowDetailsUseCaseMock.swift
-//  ShowDetails-Unit-Tests
-//
 //  Created by Jeans Ruiz on 8/4/20.
 //
 
+import Foundation
 import Combine
 import NetworkingInterface
 import Shared
@@ -12,17 +10,18 @@ import Shared
 
 class FetchTVShowDetailsUseCaseMock: FetchTVShowDetailsUseCase {
   var result: TVShowDetail?
-  var error: DataTransferError?
+  var error: ApiError?
 
-  func execute(requestValue: FetchTVShowDetailsUseCaseRequestValue) -> AnyPublisher<TVShowDetail, DataTransferError> {
+  public func execute(request: FetchTVShowDetailsUseCaseRequestValue) async throws -> TVShowDetail {
+    await Task.yield()
     if let error = error {
-      return Fail(error: error).eraseToAnyPublisher()
+      throw error
     }
 
-    if let result = result {
-      return Just(result).setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
+    if let result {
+      return result
+    } else {
+      throw ApiError(error: NSError(domain: "Details not Set", code: 0, userInfo: nil))
     }
-
-    return Empty().setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
   }
 }

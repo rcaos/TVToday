@@ -1,12 +1,10 @@
 //
-//  NetworkError.swift
-//  NetworkingInterface
-//
 //  Created by Jeans Ruiz on 19/03/22.
 //
 
 import Foundation
 
+#warning("TODO: Unify with ApiError")
 public enum NetworkError: Error {
   case error(statusCode: Int, data: Data)
   case notConnected

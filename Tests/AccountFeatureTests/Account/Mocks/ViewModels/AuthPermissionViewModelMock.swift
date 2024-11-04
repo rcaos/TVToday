@@ -10,8 +10,8 @@ import Combine
 @testable import AccountFeature
 
 class AuthPermissionViewModelMock: AuthPermissionViewModelProtocol {
-  func signIn() {
-    delegate?.authPermissionViewModel(didSignedIn: true)
+  func signIn() async {
+    await delegate?.authPermissionViewModel(didSignedIn: true)
   }
 
   var authPermissionURL = URL(string: "http://www.123.com")!

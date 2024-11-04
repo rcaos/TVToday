@@ -1,9 +1,5 @@
 //
-//  SearchShowDependencies.swift
-//  TVToday
-//
 //  Created by Jeans Ruiz on 4/7/20.
-//  Copyright © 2020 Jeans. All rights reserved.
 //
 
 import Foundation
@@ -15,8 +11,7 @@ import ShowDetailsFeatureInterface
 import ShowListFeatureInterface
 
 public struct ModuleDependencies {
-
-  let apiDataTransferService: DataTransferService
+  let apiClient: ApiClient
   let imagesBaseURL: String
   let showsPersistence: ShowsVisitedLocalRepositoryProtocol
   let searchsPersistence: SearchLocalRepositoryProtocol
@@ -24,13 +19,16 @@ public struct ModuleDependencies {
   let showDetailsBuilder: ModuleShowDetailsBuilder
   let showListBuilder: ModuleShowListDetailsBuilder
 
-  public init(apiDataTransferService: DataTransferService,
-              imagesBaseURL: String,
-              showsPersistence: ShowsVisitedLocalRepositoryProtocol,
-              searchsPersistence: SearchLocalRepositoryProtocol,
-              showDetailsBuilder: ModuleShowDetailsBuilder,
-              showListBuilder: ModuleShowListDetailsBuilder) {
-    self.apiDataTransferService = apiDataTransferService
+  public init(
+    apiClient: ApiClient,
+    imagesBaseURL: String,
+    showsPersistence: ShowsVisitedLocalRepositoryProtocol,
+    searchsPersistence: SearchLocalRepositoryProtocol,
+    showDetailsBuilder: ModuleShowDetailsBuilder,
+    showListBuilder: ModuleShowListDetailsBuilder
+  ) {
+
+    self.apiClient = apiClient
     self.imagesBaseURL = imagesBaseURL
     self.showsPersistence = showsPersistence
     self.searchsPersistence = searchsPersistence

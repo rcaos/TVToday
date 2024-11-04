@@ -20,7 +20,7 @@ final class DIContainer {
   // MARK: - Repositories
   private lazy var genresRepository: GenresRepository = {
     return DefaultGenreRepository(
-      remoteDataSource: DefaultGenreRemoteDataSource(dataTransferService: dependencies.apiDataTransferService)
+      remoteDataSource: DefaultGenreRemoteDataSource(apiClient: dependencies.apiClient)
     )
   }()
 
@@ -42,7 +42,7 @@ final class DIContainer {
   // MARK: - Search Feature Uses Cases
   private func makeSearchShowsUseCase() -> SearchTVShowsUseCase {
     let tvShowsPageRepository = DefaultTVShowsPageRepository(
-      showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(dataTransferService: dependencies.apiDataTransferService),
+      showsPageRemoteDataSource: DefaultTVShowsRemoteDataSource(apiClient: dependencies.apiClient),
       mapper: DefaultTVShowPageMapper(),
       imageBasePath: dependencies.imagesBaseURL
     )
@@ -84,9 +84,11 @@ final class DIContainer {
 
   // MARK: - SearchViewControllerFactory
   func buildSearchOptionsController() -> UIViewController {
-    let viewModel = SearchOptionsViewModel(fetchGenresUseCase: makeFetchGenresUseCase(),
-                                           fetchVisitedShowsUseCase: makeFetchVisitedShowsUseCase(),
-                                           recentVisitedShowsDidChange: makeRecentShowsDidChangedUseCase())
+    let viewModel = SearchOptionsViewModel(
+      fetchGenresUseCase: makeFetchGenresUseCase(),
+      fetchVisitedShowsUseCase: { self.makeFetchVisitedShowsUseCase() },
+      recentVisitedShowsDidChange: { self.makeRecentShowsDidChangedUseCase() }
+    )
     viewModel.delegate = searchViewModel
     let viewController = SearchOptionsViewController(viewModel: viewModel)
     return viewController

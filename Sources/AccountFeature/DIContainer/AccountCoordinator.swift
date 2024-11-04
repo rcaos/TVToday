@@ -1,9 +1,5 @@
 //
-//  AccountCoordinator.swift
-//  TVToday
-//
 //  Created by Jeans Ruiz on 6/19/20.
-//  Copyright © 2020 Jeans. All rights reserved.
 //
 
 import UIKit
@@ -40,7 +36,9 @@ class AccountCoordinator: NavigationCoordinator, AccountCoordinatorProtocol {
       navigateToAccountFeature()
 
     case .signInIsPicked(let url, let delegate):
-      navigateToAuthPermission(url: url, delegate: delegate)
+      Task {
+        await navigateToAuthPermission(url: url, delegate: delegate)
+      }
 
     case .authorizationIsComplete:
       navigationController.presentedViewController?.dismiss(animated: true)
@@ -58,8 +56,9 @@ class AccountCoordinator: NavigationCoordinator, AccountCoordinatorProtocol {
     navigationController.pushViewController(accountVC, animated: true)
   }
 
-  fileprivate func navigateToAuthPermission(url: URL, delegate: AuthPermissionViewModelDelegate?) {
-    let authViewController = dependencies.buildAuthPermissionViewController(url: url, delegate: delegate)
+  @MainActor
+  fileprivate func navigateToAuthPermission(url: URL, delegate: AuthPermissionViewModelDelegate?) async {
+    let authViewController = await dependencies.buildAuthPermissionViewController(url: url, delegate: delegate)
 
     let embedNavController = UINavigationController(rootViewController: authViewController)
     embedNavController.presentationController?.delegate = authViewController

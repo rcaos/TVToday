@@ -1,7 +1,4 @@
 //
-//  TVShowDetailViewController.swift
-//  ShowDetails
-//
 //  Created by Jeans Ruiz on 8/21/20.
 //
 
@@ -42,7 +39,10 @@ class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Em
 
     setupNavigationBar()
     setupViewModel()
-    viewModel.viewDidLoad()
+
+    Task {
+      await viewModel.viewDidLoad()
+    }
   }
 
   override func viewDidLayoutSubviews() {
@@ -72,7 +72,7 @@ class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Em
     }
 
     viewModel.viewState
-      .receive(on: defaultScheduler)
+      .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] state in
         self?.configView(with: state)
       })
@@ -94,7 +94,7 @@ class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Em
 
     viewModel
       .isFavorite
-      .receive(on: defaultScheduler)
+      .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in },
             receiveValue: { [weak self] isFavorite in
         self?.favoriteButton.tintColor = isFavorite ? .systemRed : .systemGray
@@ -103,7 +103,7 @@ class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Em
 
     viewModel
       .isWatchList
-      .receive(on: defaultScheduler)
+      .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in },
             receiveValue: { [weak self] isWatchList in
         self?.watchListButton.tintColor = isWatchList ? .systemGreen : .systemGray
@@ -127,7 +127,9 @@ class TVShowDetailViewController: NiblessViewController, Loadable, Retryable, Em
       hideLoadingView()
       showMessageView(with: message,
                       errorHandler: { [weak self] in
-                        self?.viewModel.refreshView()
+        Task {
+          await self?.viewModel.refreshView()
+        }
       })
     }
   }

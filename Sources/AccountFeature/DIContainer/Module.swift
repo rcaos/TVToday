@@ -14,7 +14,7 @@ import ShowListFeatureInterface
 
 public struct ModuleDependencies {
 
-  let apiDataTransferService: DataTransferService
+  let apiClient: ApiClient
   let imagesBaseURL: String
   let authenticateBaseURL: String
   let gravatarBaseURL: String
@@ -23,16 +23,17 @@ public struct ModuleDependencies {
   let accessTokenRepository: AccessTokenRepositoryProtocol
   let userLoggedRepository: LoggedUserRepositoryProtocol
 
-  public init(apiDataTransferService: DataTransferService,
-              imagesBaseURL: String,
-              authenticateBaseURL: String,
-              gravatarBaseURL: String,
-              requestTokenRepository: RequestTokenRepositoryProtocol,
-              accessTokenRepository: AccessTokenRepositoryProtocol,
-              userLoggedRepository: LoggedUserRepositoryProtocol,
-              showListBuilder: ModuleShowListDetailsBuilder
+  public init(
+    apiClient: ApiClient,
+    imagesBaseURL: String,
+    authenticateBaseURL: String,
+    gravatarBaseURL: String,
+    requestTokenRepository: RequestTokenRepositoryProtocol,
+    accessTokenRepository: AccessTokenRepositoryProtocol,
+    userLoggedRepository: LoggedUserRepositoryProtocol,
+    showListBuilder: ModuleShowListDetailsBuilder
   ) {
-    self.apiDataTransferService = apiDataTransferService
+    self.apiClient = apiClient
     self.imagesBaseURL = imagesBaseURL
     self.authenticateBaseURL = authenticateBaseURL
     self.gravatarBaseURL = gravatarBaseURL

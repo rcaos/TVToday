@@ -1,7 +1,4 @@
 //
-//  DefaultTVShowsPageRepository.swift
-//  
-//
 //  Created by Jeans Ruiz on 30/04/22.
 //
 
@@ -20,29 +17,44 @@ public final class DefaultTVShowsPageRepository {
   }
 }
 
-extension DefaultTVShowsPageRepository: TVShowsPageRepository {
-
-  public func fetchAiringTodayShows(page: Int) -> AnyPublisher<TVShowPage, DataTransferError> {
-    return showsPageRemoteDataSource.fetchAiringTodayShows(page: page)
-      .map { self.mapper.mapTVShowPage($0, imageBasePath: self.imageBasePath, imageSize: .medium) }
-      .eraseToAnyPublisher()
+extension DefaultTVShowsPageRepository: TVShowsPageRepository {  
+  public func fetchAiringTodayShows(page: Int) async -> TVShowPage? {
+    do {
+      let dto = try await showsPageRemoteDataSource.fetchAiringTodayShows(page: page)
+      return mapper.mapTVShowPage(dto, imageBasePath: imageBasePath, imageSize: .medium)
+    } catch {
+      #warning("todo: log error, reseach error and logging strategies")
+      return nil
+    }
   }
 
-  public func fetchPopularShows(page: Int) -> AnyPublisher<TVShowPage, DataTransferError> {
-    return showsPageRemoteDataSource.fetchPopularShows(page: page)
-      .map { self.mapper.mapTVShowPage($0, imageBasePath: self.imageBasePath, imageSize: .medium) }
-      .eraseToAnyPublisher()
+  public func fetchPopularShows(page: Int) async -> TVShowPage? {
+    do {
+      let dto = try await showsPageRemoteDataSource.fetchPopularShows(page: page)
+      return mapper.mapTVShowPage(dto, imageBasePath: imageBasePath, imageSize: .medium)
+    } catch {
+      #warning("todo: log error, reseach error and logging strategies")
+      return nil
+    }
   }
 
-  public func fetchShowsByGenre(genreId: Int, page: Int) -> AnyPublisher<TVShowPage, DataTransferError> {
-    return showsPageRemoteDataSource.fetchShowsByGenre(genreId: genreId, page: page)
-      .map { self.mapper.mapTVShowPage($0, imageBasePath: self.imageBasePath, imageSize: .medium) }
-      .eraseToAnyPublisher()
+  public func fetchShowsByGenre(genreId: Int, page: Int) async -> TVShowPage? {
+    do {
+      let dto = try await showsPageRemoteDataSource.fetchShowsByGenre(genreId: genreId, page: page)
+      return mapper.mapTVShowPage(dto, imageBasePath: imageBasePath, imageSize: .medium)
+    } catch {
+      #warning("todo: log error, reseach error and logging strategies")
+      return nil
+    }
   }
 
-  public func searchShowsFor(query: String, page: Int) -> AnyPublisher<TVShowPage, DataTransferError> {
-    return showsPageRemoteDataSource.searchShowsFor(query: query, page: page)
-      .map { self.mapper.mapTVShowPage($0, imageBasePath: self.imageBasePath, imageSize: .medium) }
-      .eraseToAnyPublisher()
+  public func searchShowsFor(query: String, page: Int) async -> TVShowPage? {
+    do {
+      let deto = try await showsPageRemoteDataSource.searchShowsFor(query: query, page: page)
+      return mapper.mapTVShowPage(deto, imageBasePath: imageBasePath, imageSize: .medium)
+    } catch {
+      #warning("todo: log error, reseach error and logging strategies")
+      return nil
+    }
   }
 }

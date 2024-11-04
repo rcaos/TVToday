@@ -1,7 +1,4 @@
 //
-//  AuthPermissionRootView.swift
-//  AccountTV
-//
 //  Created by Jeans Ruiz on 8/21/20.
 //
 
@@ -57,7 +54,9 @@ extension AuthPermissionRootView: WKNavigationDelegate {
     if let response = navigationResponse.response as? HTTPURLResponse,
       let headers = response.allHeaderFields as? [String: Any],
       (headers["authentication-callback"] as? String) != nil {
-      viewModel.signIn()
+      Task {
+        await viewModel.signIn()
+      }
     }
     decisionHandler(.allow)
   }

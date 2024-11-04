@@ -1,7 +1,4 @@
 //
-//  RequestTokenMapper.swift
-//  
-//
 //  Created by Jeans Ruiz on 13/07/22.
 //
 
@@ -25,7 +22,7 @@ struct RequestTokenMapper: RequestTokenMapperProtocol {
       return NewRequestToken(token: model.token, url: url)
     } else {
       print("cannot Convert request token= \(model), basePath=\(authenticateBaseURL)")
-      throw DataTransferError.noResponse // MARk: - TODO, change error
+      throw ApiError(error: NSError(domain: "RequestTokenMapper", code: 0, userInfo: nil)) // MARk: - TODO, change error
     }
   }
 }

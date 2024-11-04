@@ -1,27 +1,25 @@
 //
-//  FetchVisitedShowsUseCase+Mock.swift
-//  SearchShows-Unit-Tests
-//
 //  Created by Jeans Ruiz on 8/7/20.
 //
 
 import Combine
 import Persistence
 import Shared
+import NetworkingInterface
 
 final class FetchVisitedShowsUseCaseMock: FetchVisitedShowsUseCase {
-  var error: ErrorEnvelope?
+  var error: ApiError?
   var result: [ShowVisited]?
 
-  func execute(requestValue: FetchVisitedShowsUseCaseRequestValue) -> AnyPublisher<[ShowVisited], ErrorEnvelope> {
-    if let error = error {
-      return Fail(error: error).eraseToAnyPublisher()
+  public func execute() -> [ShowVisited] {
+    if error != nil {
+      return []
     }
 
     if let result = result {
-      return Just(result).setFailureType(to: ErrorEnvelope.self).eraseToAnyPublisher()
+      return result
+    } else {
+      return []
     }
-
-    return Empty().setFailureType(to: ErrorEnvelope.self).eraseToAnyPublisher()
   }
 }

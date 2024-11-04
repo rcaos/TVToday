@@ -1,7 +1,4 @@
 //
-//  File.swift
-//  
-//
 //  Created by Jeans Ruiz on 20/04/22.
 //
 
@@ -14,22 +11,24 @@ import ShowListFeatureInterface
 public class AccountFeatureDemoCoordinator: Coordinator {
   private let window: UIWindow
   private let tabBarController: UITabBarController
-  private let apiDataTransferService: DataTransferService
+  private let apiClient: ApiClient
   private let imagesBaseURL: String
   private let authenticateBaseURL: String
   private let gravatarBaseURL: String
   private var childCoordinators = [Coordinator]()
 
   // MARK: - Life Cycle
-  public init(window: UIWindow,
-              tabBarController: UITabBarController,
-              apiDataTransferService: DataTransferService,
-              imagesBaseURL: String,
-              gravatarBaseURL: String,
-              authenticateBaseURL: String) {
+  public init(
+    window: UIWindow,
+    tabBarController: UITabBarController,
+    apiClient: ApiClient,
+    imagesBaseURL: String,
+    gravatarBaseURL: String,
+    authenticateBaseURL: String
+  ) {
     self.window = window
     self.tabBarController = tabBarController
-    self.apiDataTransferService = apiDataTransferService
+    self.apiClient = apiClient
     self.imagesBaseURL = imagesBaseURL
     self.gravatarBaseURL = gravatarBaseURL
     self.authenticateBaseURL = authenticateBaseURL
@@ -51,14 +50,15 @@ public class AccountFeatureDemoCoordinator: Coordinator {
   }
 
   private func buildAccountCoordinator(in navigation: UINavigationController) {
-    let dependencies = AccountFeature.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                         imagesBaseURL: imagesBaseURL,
-                                                         authenticateBaseURL: authenticateBaseURL,
-                                                         gravatarBaseURL: gravatarBaseURL,
-                                                         requestTokenRepository: FakeRequestTokenRepository(),
-                                                         accessTokenRepository: FakeAccessTokenRepository(),
-                                                         userLoggedRepository: FakeLoggedUserRepository(),
-                                                         showListBuilder: self
+    let dependencies = AccountFeature.ModuleDependencies(
+      apiClient: apiClient,
+      imagesBaseURL: imagesBaseURL,
+      authenticateBaseURL: authenticateBaseURL,
+      gravatarBaseURL: gravatarBaseURL,
+      requestTokenRepository: FakeRequestTokenRepository(),
+      accessTokenRepository: FakeAccessTokenRepository(),
+      userLoggedRepository: FakeLoggedUserRepository(),
+      showListBuilder: self
     )
     let module = AccountFeature.Module(dependencies: dependencies)
     let coordinator = module.buildAccountCoordinator(in: navigation)
@@ -99,7 +99,7 @@ final class FakeRequestTokenRepository: RequestTokenRepositoryProtocol {
   }
 }
 
-final class FakeAccessTokenRepository: AccessTokenRepositoryProtocol{
+final class FakeAccessTokenRepository: AccessTokenRepositoryProtocol {
   private var privateToken: String = "6b007b57648a1e65096290fe9a6239c9a66fc8c0"
 
   func saveAccessToken(_ token: String) {

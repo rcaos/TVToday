@@ -1,14 +1,8 @@
 //
-//  AccountViewModel.swift
-//  TVToday
-//
 //  Created by Jeans Ruiz on 6/19/20.
-//  Copyright © 2020 Jeans. All rights reserved.
 //
 
 import Foundation
-import Combine
-import CombineSchedulers
 import NetworkingInterface
 import Shared
 
@@ -18,96 +12,66 @@ enum AccountViewState: Equatable {
 }
 
 protocol AccountViewModelProtocol: AuthPermissionViewModelDelegate {
-  func viewDidLoad()
-  var viewState: CurrentValueSubject<AccountViewState, Never> { get }
+  func viewDidLoad() async
+  var viewState: Published<AccountViewState>.Publisher { get }
 }
 
 final class AccountViewModel: AccountViewModelProtocol {
-  private let createNewSession: CreateSessionUseCase
-  private let fetchLoggedUser: FetchLoggedUser
-  private let fetchAccountDetails: FetchAccountDetailsUseCase
-  private let deleteLoggedUser: DeleteLoggedUserUseCase
+  private let createNewSession: () -> CreateSessionUseCase
+  private let fetchLoggedUser: () -> FetchLoggedUser
+  private let fetchAccountDetails: () -> FetchAccountDetailsUseCase
+  private let deleteLoggedUser: () -> DeleteLoggedUserUseCase
 
   weak var coordinator: AccountCoordinatorProtocol?
-  private var disposeBag = Set<AnyCancellable>()
-  private let scheduler: AnySchedulerOf<DispatchQueue>
 
   // MARK: - Public Api
-  let viewState: CurrentValueSubject<AccountViewState, Never> = .init(.login)
+  @Published private var viewStateInternal = AccountViewState.login
+  var viewState: Published<AccountViewState>.Publisher { $viewStateInternal }
 
   // MARK: - Initializers
-  init(createNewSession: CreateSessionUseCase,
-       fetchAccountDetails: FetchAccountDetailsUseCase,
-       fetchLoggedUser: FetchLoggedUser,
-       deleteLoggedUser: DeleteLoggedUserUseCase,
-       scheduler: AnySchedulerOf<DispatchQueue> = .main
+  init(
+    createNewSession: @escaping () -> CreateSessionUseCase,
+    fetchAccountDetails: @escaping () -> FetchAccountDetailsUseCase,
+    fetchLoggedUser: @escaping () -> FetchLoggedUser,
+    deleteLoggedUser: @escaping () -> DeleteLoggedUserUseCase
   ) {
     self.createNewSession = createNewSession
     self.fetchAccountDetails = fetchAccountDetails
     self.fetchLoggedUser = fetchLoggedUser
     self.deleteLoggedUser = deleteLoggedUser
-    self.scheduler = scheduler
   }
 
-  func viewDidLoad() {
-    checkIsLogged()
+  func viewDidLoad() async {
+    await checkIsLogged()
   }
 
-  private func checkIsLogged() {
-    if fetchLoggedUser.execute() != nil {
-      fetchUserDetails()
+  private func checkIsLogged() async {
+    if fetchLoggedUser().execute() != nil {
+      await fetchUserDetails()
     } else {
-      viewState.send(.login)
+      viewStateInternal = .login
     }
   }
 
-  private func fetchUserDetails() {
-    fetchDetailsAccount()
-      .receive(on: scheduler)
-      .sink(receiveCompletion: { [weak self] completion in
-        switch completion {
-        case .failure:
-          self?.viewState.send(.login)
-        case .finished:
-          break
-        }
-      },
-            receiveValue: { [weak self] accountDetails in
-        self?.viewState.send(.profile(account: accountDetails))
-      })
-      .store(in: &disposeBag)
+  private func fetchUserDetails() async {
+    if let accountDetails = await fetchAccountDetails().execute() {
+      viewStateInternal = .profile(account: accountDetails)
+    } else {
+      viewStateInternal = .login
+    }
   }
 
-  private func createSession() {
-    createNewSession.execute()
-      .flatMap { [weak self] () -> AnyPublisher<Account, DataTransferError> in
-        guard let strongSelf = self else {
-          return Fail(error: DataTransferError.noResponse).eraseToAnyPublisher()
-        }
-        return strongSelf.fetchDetailsAccount()
-      }
-      .receive(on: scheduler)
-      .sink(receiveCompletion: { [weak self] completion in
-        switch completion {
-        case .failure:
-          self?.viewState.send(.login)
-        case .finished:
-          break
-        }
-      },
-            receiveValue: { [weak self] accountDetails in
-        self?.viewState.send(.profile(account: accountDetails))
-      })
-      .store(in: &disposeBag)
-  }
-
-  private func fetchDetailsAccount() -> AnyPublisher<Account, DataTransferError> {
-    return fetchAccountDetails.execute()
+  private func createSession() async {
+    if await createNewSession().execute() {
+      await fetchUserDetails()
+    } else {
+      viewStateInternal = .login
+    }
   }
 
   private func logoutUser() {
-    deleteLoggedUser.execute()
-    viewState.send(.login)
+    deleteLoggedUser().execute()
+    viewStateInternal = .login
   }
 
   // MARK: - Navigation
@@ -125,8 +89,10 @@ extension AccountViewModel: SignInViewModelDelegate {
 
 // MARK: - AuthPermissionViewModelDelegate
 extension AccountViewModel: AuthPermissionViewModelDelegate {
-  func authPermissionViewModel(didSignedIn signedIn: Bool) {
-    createSession()
+
+  @MainActor
+  func authPermissionViewModel(didSignedIn signedIn: Bool) async {
+    await createSession()
     navigateTo(step: .authorizationIsComplete)
   }
 }

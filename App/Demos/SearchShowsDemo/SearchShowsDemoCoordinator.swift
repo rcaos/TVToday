@@ -1,7 +1,4 @@
 //
-//  File.swift
-//  
-//
 //  Created by Jeans Ruiz on 20/04/22.
 //
 
@@ -17,18 +14,19 @@ import ShowListFeatureInterface
 public class SearchShowsDemoCoordinator: Coordinator {
   private let window: UIWindow
   private let tabBarController: UITabBarController
-  private let apiDataTransferService: DataTransferService
+  private let apiClient: ApiClient
   private let imagesBaseURL: String
   private var childCoordinators = [Coordinator]()
 
-  // MARK: - Life Cycle
-  public init(window: UIWindow,
-              tabBarController: UITabBarController,
-              apiDataTransferService: DataTransferService,
-              imagesBaseURL: String) {
+  public init(
+    window: UIWindow,
+    tabBarController: UITabBarController,
+    apiClient: ApiClient,
+    imagesBaseURL: String
+  ) {
     self.window = window
     self.tabBarController = tabBarController
-    self.apiDataTransferService = apiDataTransferService
+    self.apiClient = apiClient
     self.imagesBaseURL = imagesBaseURL
   }
 
@@ -48,12 +46,14 @@ public class SearchShowsDemoCoordinator: Coordinator {
   }
 
   private func buildSearchScene(in navigation: UINavigationController) {
-    let dependencies = SearchShowsFeature.ModuleDependencies(apiDataTransferService: apiDataTransferService,
-                                                             imagesBaseURL: imagesBaseURL,
-                                                             showsPersistence: FakeShowsVisitedLocalRepository(),
-                                                             searchsPersistence: FakeSearchLocalRepository(),
-                                                             showDetailsBuilder: self,
-                                                             showListBuilder: self)
+    let dependencies = SearchShowsFeature.ModuleDependencies(
+      apiClient: apiClient,
+      imagesBaseURL: imagesBaseURL,
+      showsPersistence: FakeShowsVisitedLocalRepository(),
+      searchsPersistence: FakeSearchLocalRepository(),
+      showDetailsBuilder: self,
+      showListBuilder: self
+    )
     let module = SearchShowsFeature.Module(dependencies: dependencies)
     let coordinator = module.buildSearchCoordinator(in: navigation)
     coordinator.start()
@@ -101,28 +101,11 @@ class EmptyListCoordinator: TVShowListCoordinatorProtocol {
   }
 }
 
-// MARK: - ShowsVisitedLocalRepository
-final class FakeShowsVisitedLocalRepository: ShowsVisitedLocalRepositoryProtocol {
-  public func saveShow(id: Int, pathImage: String) -> AnyPublisher<Void, ErrorEnvelope> {
-    return Just(()).setFailureType(to: ErrorEnvelope.self).eraseToAnyPublisher()
-  }
-
-  public func fetchVisitedShows() -> AnyPublisher<[ShowVisited], ErrorEnvelope> {
-    return Just([]).setFailureType(to: ErrorEnvelope.self).eraseToAnyPublisher()
-  }
-
-  public func recentVisitedShowsDidChange() -> AnyPublisher<Bool, Never> {
-    return Just(true).eraseToAnyPublisher()
-  }
-}
-
 // MARK: - SearchLocalRepository
 final class FakeSearchLocalRepository: SearchLocalRepositoryProtocol {
-  public func saveSearch(query: String) -> AnyPublisher<Void, ErrorEnvelope> {
-    return Just(()).setFailureType(to: ErrorEnvelope.self).eraseToAnyPublisher()
-  }
+  public func saveSearch(query: String) async throws { }
 
-  public func fetchRecentSearches() -> AnyPublisher<[Search], ErrorEnvelope> {
-    return Just([]).setFailureType(to: ErrorEnvelope.self).eraseToAnyPublisher()
+  public func fetchRecentSearches() async throws -> [Persistence.Search] {
+    return []
   }
 }

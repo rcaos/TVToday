@@ -1,9 +1,5 @@
 //
-//  ResultsSearchViewController.swift
-//  MyTvShows
-//
 //  Created by Jeans on 8/26/19.
-//  Copyright © 2019 Jeans. All rights reserved.
 //
 
 import Combine
@@ -55,7 +51,7 @@ class ResultsSearchViewController: NiblessViewController {
   private func setupViewModel() {
     viewModel
       .viewState
-      .receive(on: defaultScheduler)
+      .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] state in
         self?.configView(with: state)
       })
@@ -95,7 +91,7 @@ class ResultsSearchViewController: NiblessViewController {
         }
         return snapShot
       }
-      .receive(on: defaultScheduler)
+      .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] snapshot in
         self?.dataSource?.apply(snapshot)
       })

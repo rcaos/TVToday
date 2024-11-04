@@ -1,9 +1,5 @@
 //
-//  AccountViewController.swift
-//  TVToday
-//
 //  Created by Jeans Ruiz on 6/19/20.
-//  Copyright © 2020 Jeans. All rights reserved.
 //
 
 import UIKit
@@ -30,15 +26,17 @@ class AccountViewController: NiblessViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    viewModel.viewDidLoad()
-    subscribe()
+    Task {
+      await viewModel.viewDidLoad()
+      subscribe()
+    }
   }
 
   // MARK: - Setup UI
   private func subscribe() {
     viewModel
       .viewState
-      .receive(on: defaultScheduler)
+      .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] viewState in
         self?.setupUI(with: viewState)
       })
@@ -48,8 +46,10 @@ class AccountViewController: NiblessViewController {
   private func setupUI(with state: AccountViewState) {
     switch state {
     case .login:
-      let loginVC = viewControllersFactory.makeSignInViewController()
-      transition(to: loginVC, with: Strings.accountTitleLogin.localized())
+      Task {
+        let loginVC = await viewControllersFactory.makeSignInViewController()
+        transition(to: loginVC, with: Strings.accountTitleLogin.localized())
+      }
     case .profile(let account):
       let profileVC = viewControllersFactory.makeProfileViewController(with: account)
       transition(to: profileVC, with: Strings.accountTitle.localized())
@@ -66,6 +66,6 @@ class AccountViewController: NiblessViewController {
 
 // MARK: - AccountViewControllerFactory
 protocol AccountViewControllerFactory {
-  func makeSignInViewController() -> UIViewController
+  func makeSignInViewController() async -> UIViewController
   func makeProfileViewController(with account: Account) -> UIViewController
 }

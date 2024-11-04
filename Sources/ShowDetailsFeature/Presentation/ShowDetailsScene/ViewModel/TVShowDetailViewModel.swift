@@ -1,23 +1,16 @@
 //
-//  TVShowDetailViewModel.swift
-//  MyTvShows
-//
 //  Created by Jeans on 9/16/19.
-//  Copyright © 2019 Jeans. All rights reserved.
 //
 
 import Foundation
 import Combine
-import CombineSchedulers
 import Shared
 import ShowDetailsFeatureInterface
 import NetworkingInterface
 
 protocol TVShowDetailViewModelProtocol {
-
-  // MARK: - Input
-  func viewDidLoad()
-  func refreshView()
+  func viewDidLoad() async
+  func refreshView() async
   func viewDidFinish()
 
   func favoriteButtonDidTapped()
@@ -51,24 +44,25 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   private let showId: Int
   private let tapFavoriteButton: PassthroughSubject<Bool, Never>
   private let markAsFavoriteOnFlight = CurrentValueSubject<Bool, Never>(false)
+  private var savingAsFavoriteOnFlight = false
 
   private let tapWatchedButton: PassthroughSubject<Bool, Never>
   private let addToWatchListOnFlight = CurrentValueSubject<Bool, Never>(false)
+  private var addingToWatchListOnFlight = false
 
   private let closures: TVShowDetailViewModelClosures?
-  private let scheduler: AnySchedulerOf<DispatchQueue>
   private var disposeBag = Set<AnyCancellable>()
 
-  // MARK: - Initializer
-  init(_ showId: Int,
-       fetchLoggedUser: FetchLoggedUser,
-       fetchDetailShowUseCase: FetchTVShowDetailsUseCase,
-       fetchTvShowState: FetchTVAccountStates,
-       markAsFavoriteUseCase: MarkAsFavoriteUseCase,
-       saveToWatchListUseCase: SaveToWatchListUseCase,
-       coordinator: TVShowDetailCoordinatorProtocol?,
-       scheduler: AnySchedulerOf<DispatchQueue> = .main,
-       closures: TVShowDetailViewModelClosures? = nil) {
+  init(
+    _ showId: Int,
+    fetchLoggedUser: FetchLoggedUser,
+    fetchDetailShowUseCase: FetchTVShowDetailsUseCase,
+    fetchTvShowState: FetchTVAccountStates,
+    markAsFavoriteUseCase: MarkAsFavoriteUseCase,
+    saveToWatchListUseCase: SaveToWatchListUseCase,
+    coordinator: TVShowDetailCoordinatorProtocol?,
+    closures: TVShowDetailViewModelClosures? = nil
+  ) {
     self.showId = showId
     self.fetchLoggedUser = fetchLoggedUser
     self.fetchDetailShowUseCase = fetchDetailShowUseCase
@@ -76,7 +70,6 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
     self.markAsFavoriteUseCase = markAsFavoriteUseCase
     self.saveToWatchListUseCase = saveToWatchListUseCase
     self.coordinator = coordinator
-    self.scheduler = scheduler
     self.closures = closures
 
     tapFavoriteButton = PassthroughSubject()
@@ -87,12 +80,12 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
     print("deinit \(Self.self)")
   }
 
-  func viewDidLoad() {
-    subscribe()
+  func viewDidLoad() async {
+    await subscribe()
   }
 
-  public func refreshView() {
-    subscribeToViewAppears()
+  public func refreshView() async {
+    await subscribeToViewAppears() // todo
   }
 
   public func isUserLogged() -> Bool {
@@ -108,17 +101,17 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
   }
 
   // MARK: - Private
-  private func subscribe() {
-    subscribeToViewAppears()
+  private func subscribe() async {
+    await subscribeToViewAppears()
     subscribeButtonsWhenPopulated()
   }
 
   // MARK: - Subscriptions
-  private func subscribeToViewAppears() {
+  private func subscribeToViewAppears() async{
     if isUserLogged() {
-      requestTVShowDetailsAndState()
+      await requestTVShowDetailsAndState()
     } else {
-      requestTVShowDetails()
+      await requestTVShowDetails()
     }
   }
 
@@ -138,133 +131,91 @@ final class TVShowDetailViewModel: TVShowDetailViewModelProtocol {
 
   // MARK: - Handle Favorite Tap Button ❤️
   private func subscribeFavoriteTap() {
-    Publishers.CombineLatest(
-      tapFavoriteButton,
-      markAsFavoriteOnFlight
-    )
-      .filter { didSendTap, isLoading in
-        return didSendTap && isLoading == false
-      }
-      .debounce(for: .milliseconds(300), scheduler: scheduler)
-      .flatMap { [weak self] _ -> AnyPublisher<Result<Bool, DataTransferError>, Never> in
-        guard let strongSelf = self else { return Empty().eraseToAnyPublisher() }
-        strongSelf.markAsFavoriteOnFlight.send(true)
-        strongSelf.tapFavoriteButton.send(false)
-        return strongSelf.markAsFavorite(state: strongSelf.isFavorite.value)
-      }
-      .receive(on: scheduler)
-      .sink(receiveValue: { [weak self] result in
-        guard let strongSelf = self else { return }
-        strongSelf.markAsFavoriteOnFlight.send(false)
-
-        switch result {
-        case .failure:
-          break
-        case .success(let newState):
-          strongSelf.isFavorite.send(newState)
-          strongSelf.closures?.updateFavoritesShows?(TVShowUpdated(showId: strongSelf.showId, isActive: newState))
-        }
+    tapFavoriteButton
+      .filter { $0 }
+      .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
+      .sink(receiveValue: { [weak self] _ in
+        self?.markAsFavorite()
       })
       .store(in: &disposeBag)
   }
 
   // MARK: - Handle Watch List Button Tap 🎦
   private func subscribeWatchListTap() {
-    Publishers.CombineLatest3(
-      tapWatchedButton,
-      addToWatchListOnFlight,
-
-      // different approach, same result, compared with subscribeFavoriteTap()
-      isWatchList
-    )
-      .filter { didUserTap, isOnFlight, _ in
-        return didUserTap && isOnFlight == false
-      }
-      .debounce(for: .milliseconds(300), scheduler: scheduler)
-      .flatMap { [weak self] (_, _, isOnWatchListState) -> AnyPublisher<Result<Bool, DataTransferError>, Never> in
-        guard let strongSelf = self else { return Empty().eraseToAnyPublisher() }
-        strongSelf.tapWatchedButton.send(false)
-        strongSelf.addToWatchListOnFlight.send(true)
-        return strongSelf.saveToWatchList(state: isOnWatchListState)
-      }
-      .receive(on: scheduler)
-      .sink(receiveValue: { [weak self] result in
-        guard let strongSelf = self else { return }
-        strongSelf.addToWatchListOnFlight.send(false)
-        switch result {
-        case .failure:
-          break
-        case .success(let newState):
-          strongSelf.isWatchList.send(newState)
-          strongSelf.closures?.updateWatchListShows?(TVShowUpdated(showId: strongSelf.showId, isActive: newState))
-        }
+    tapWatchedButton
+      .filter { $0 }
+      .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
+      .sink(receiveValue: { [weak self] _ in
+        self?.saveToWatchList()
       })
       .store(in: &disposeBag)
   }
 
   // MARK: - Request For Guest Users
-  private func requestTVShowDetails() {
-    fetchShowDetails()
-      .receive(on: scheduler)
-      .sink(receiveCompletion: { [weak self] completion in
-        switch completion {
-        case let .failure(error):
-          self?.viewState.send(.error(error.localizedDescription))
-        case .finished:
-          break
-        }
-      }, receiveValue: { [weak self] detailResult in
-        self?.viewState.send(
-          .populated(TVShowDetailInfo(show: detailResult))
-        )
-      })
-      .store(in: &disposeBag)
+  private func requestTVShowDetails() async {
+    do {
+      let showDetails = try await fetchDetailShowUseCase.execute(request: .init(identifier: showId))
+      viewState.send(.populated(TVShowDetailInfo(show: showDetails)))
+    } catch {
+      viewState.send(.error(error.localizedDescription))
+    }
   }
 
   // MARK: - Request For Logged Users
-  private func requestTVShowDetailsAndState() {
-    Publishers.Zip(fetchShowDetails(), fetchTVShowState())
-      .receive(on: scheduler)
-      .sink(receiveCompletion: { completion in
-        switch completion {
-        case let .failure(error):
-          self.viewState.send(.error(error.localizedDescription))
-        case .finished:
-          break
-        }
-      }, receiveValue: { [viewState, isFavorite, isWatchList] (resultDetails, stateShow) in
-        viewState.send( .populated(TVShowDetailInfo(show: resultDetails)) )
-        isFavorite.send(stateShow.isFavorite)
-        isWatchList.send(stateShow.isWatchList)
-      })
-      .store(in: &disposeBag)
+  private func requestTVShowDetailsAndState() async {
+    do {
+      // todo, make requests in parallel
+      let showDetails = try await fetchDetailShowUseCase.execute(request: .init(identifier: showId))
+      let status = try await fetchTvShowState.execute(request: .init(showId: showId))
+      viewState.send(.populated(TVShowDetailInfo(show: showDetails)))
+      isFavorite.send(status.isFavorite)
+      isWatchList.send(status.isWatchList)
+    } catch {
+      viewState.send(.error(error.localizedDescription))
+    }
   }
 
-  // MARK: - Use Cases
-  private func fetchShowDetails() -> AnyPublisher<TVShowDetail, DataTransferError> {
-    let request = FetchTVShowDetailsUseCaseRequestValue(identifier: showId)
-    return fetchDetailShowUseCase.execute(requestValue: request)
+  private func markAsFavorite() {
+    Task { /// todo, check if this is the right way to do it, memory leaks?
+      guard savingAsFavoriteOnFlight == false else {
+        return
+      }
+      savingAsFavoriteOnFlight = true
+      let newState = !isFavorite.value
+      isFavorite.send(newState) /// optimistic update
+      do {
+        let request = MarkAsFavoriteUseCaseRequestValue(showId: showId, favorite: newState)
+        _ = try await markAsFavoriteUseCase.execute(request: request)
+        isFavorite.send(newState)
+        closures?.updateFavoritesShows?(TVShowUpdated(showId: showId, isActive: newState))
+      } catch {
+        // todo log error
+        isFavorite.send(!newState) // rollback
+      }
+      savingAsFavoriteOnFlight = false
+    }
   }
 
-  private func fetchTVShowState() -> AnyPublisher<TVShowAccountStatus, DataTransferError> {
-    let request = FetchTVAccountStatesRequestValue(showId: showId)
-    return fetchTvShowState.execute(requestValue: request)
-  }
+  private func saveToWatchList() {
+    Task { /// memory leaks?
+      guard addingToWatchListOnFlight == false else {
+        return
+      }
+      addingToWatchListOnFlight = true
+      let newState = !isWatchList.value
+      isWatchList.send(newState) /// optimistic update
 
-  private func markAsFavorite(state: Bool) -> AnyPublisher<Result<Bool, DataTransferError>, Never> {
-    let request = MarkAsFavoriteUseCaseRequestValue(showId: showId, favorite: !state)
-    return markAsFavoriteUseCase.execute(requestValue: request)
-      .map { .success($0) }
-      .replaceError(with: .failure(DataTransferError.noResponse))
-      .eraseToAnyPublisher()
-  }
-
-  private func saveToWatchList(state: Bool) -> AnyPublisher<Result<Bool, DataTransferError>, Never> {
-    let request = SaveToWatchListUseCaseRequestValue(showId: showId, watchList: !state)
-    return saveToWatchListUseCase.execute(requestValue: request)
-      .map { .success($0) }
-      .replaceError(with: .failure(DataTransferError.noResponse))
-      .eraseToAnyPublisher()
+      do {
+        let request = SaveToWatchListUseCaseRequestValue(showId: showId, watchList: newState)
+        let _ = try await saveToWatchListUseCase.execute(request: request)
+        isWatchList.send(newState)
+        closures?.updateWatchListShows?(TVShowUpdated(showId: showId, isActive: newState))
+      } catch {
+        // todo log error
+        isWatchList.send(!newState) // rollback
+      }
+      addingToWatchListOnFlight = false
+    }
   }
 }
 

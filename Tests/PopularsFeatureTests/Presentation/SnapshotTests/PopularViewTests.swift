@@ -1,7 +1,4 @@
 //
-//  PopularViewTests.swift
-//  PopularShowsTests
-//
 //  Created by Jeans Ruiz on 19/12/21.
 //
 
@@ -12,6 +9,7 @@ import SnapshotTesting
 import UI
 import XCTest
 
+#warning("todo recover this test")
 class PopularViewTests: XCTestCase {
 
   override class func setUp() {
@@ -20,7 +18,7 @@ class PopularViewTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
-    defaultScheduler = .immediate
+//    defaultScheduler = .immediate
     isRecording = false
   }
 

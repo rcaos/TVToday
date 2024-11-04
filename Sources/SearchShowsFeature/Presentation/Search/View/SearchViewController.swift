@@ -1,9 +1,5 @@
 //
-//  SearchViewController.swift
-//  MyMovies
-//
 //  Created by Jeans on 8/21/19.
-//  Copyright © 2019 Jeans. All rights reserved.
 //
 
 import UIKit
@@ -64,7 +60,7 @@ class SearchViewController: NiblessViewController {
 
   private func bindSearchBarText() {
     viewModel.searchBarTextSubject
-      .receive(on: defaultScheduler)
+      .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] value in
         self?.searchController.searchBar.text = value
       })

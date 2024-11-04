@@ -1,15 +1,13 @@
 //
-//  AccountViewModelTests.swift
-//  TVToday
-//
 //  Created by Jeans Ruiz on 6/19/20.
-//  Copyright © 2020 Jeans. All rights reserved.
 //
 
-import Combine
-import XCTest
 @testable import AccountFeature
-@testable import Shared
+import Combine
+import CustomDump
+import NetworkingInterface
+import Shared
+import XCTest
 
 class AccountViewModelTests: XCTestCase {
 
@@ -29,15 +27,14 @@ class AccountViewModelTests: XCTestCase {
     deleteLoggedUserUseCaseMock = DeleteLoguedUserUseCaseMock()
     disposeBag = []
     sut = AccountViewModel(
-      createNewSession: createSessionUseCaseMock,
-      fetchAccountDetails: fetchAccountDetailsUseCaseMock,
-      fetchLoggedUser: fetchLoggedUserMock,
-      deleteLoggedUser: deleteLoggedUserUseCaseMock,
-      scheduler: .immediate
+      createNewSession: { self.createSessionUseCaseMock },
+      fetchAccountDetails: { self.fetchAccountDetailsUseCaseMock },
+      fetchLoggedUser: { self.fetchLoggedUserMock },
+      deleteLoggedUser: { self.deleteLoggedUserUseCaseMock }
     )
   }
 
-  func test_When_Session_DoesNot_Exits_Should_Be_Login_State() {
+  func test_When_Session_DoesNot_Exits_Should_Be_Login_State() async {
     // given
     fetchLoggedUserMock.account = nil
 
@@ -48,13 +45,13 @@ class AccountViewModelTests: XCTestCase {
       .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
-    sut.viewDidLoad()
+    await sut.viewDidLoad()
 
     // then
     XCTAssertEqual(expected, received, "Should only receives one Value")
   }
 
-  func test_When_Session_Exits_Should_Be_Profile_State() {
+  func test_When_Session_Exits_Should_Be_Profile_State() async {
     // given
     fetchLoggedUserMock.account = AccountDomain(id: 1, sessionId: "1")
     fetchAccountDetailsUseCaseMock.result = Account.stub()
@@ -70,16 +67,16 @@ class AccountViewModelTests: XCTestCase {
       .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
-    sut.viewDidLoad()
+    await sut.viewDidLoad()
 
     // then
     XCTAssertEqual(expected, received, "Should receives two values")
   }
 
-  func test_when_CreateSession_Returns_OK_ViewModel_Should_contains_Profile_State() {
+  func test_when_CreateSession_Returns_OK_ViewModel_Should_contains_Profile_State() async {
     // given
     let authPermission = AuthPermissionViewModelMock()
-    createSessionUseCaseMock.result = ()
+    createSessionUseCaseMock.result = true
     fetchAccountDetailsUseCaseMock.result = Account.stub()
 
     authPermission.delegate = sut
@@ -94,17 +91,18 @@ class AccountViewModelTests: XCTestCase {
       .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
-    sut.viewDidLoad()
-    authPermission.signIn()
+    await sut.viewDidLoad()
+    await authPermission.signIn()
+    await Task.yield()
 
     // then
-    XCTAssertEqual(expected, received, "Should receives two values")
+    expectNoDifference(expected, received, "Should receives two values")
   }
 
-  func test_when_CreateSession_Returns_Error_ViewModel_Should_contains_Login_State() {
+  func test_when_CreateSession_Returns_Error_ViewModel_Should_contains_Login_State() async {
     // given
     let authPermission = AuthPermissionViewModelMock()
-    createSessionUseCaseMock.error = .noResponse
+    createSessionUseCaseMock.error = ApiError(error: NSError(domain: "", code: 0, userInfo: nil))
     fetchAccountDetailsUseCaseMock.result = Account.stub()
 
     authPermission.delegate = sut
@@ -116,8 +114,9 @@ class AccountViewModelTests: XCTestCase {
       .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
-    sut.viewDidLoad()
-    authPermission.signIn()
+    await sut.viewDidLoad()
+    await authPermission.signIn()
+    await Task.yield()
 
     // then
     XCTAssertEqual(expected, received, "Should receives two values")

@@ -1,27 +1,26 @@
 //
-//  FetchGenresUseCase+Mock.swift
-//  SearchShows-Unit-Tests
-//
 //  Created by Jeans Ruiz on 8/7/20.
 //
 
+import Foundation
 import Combine
 import NetworkingInterface
 @testable import SearchShowsFeature
 
 final class FetchGenresUseCaseMock: FetchGenresUseCase {
-  var error: DataTransferError?
+  var error: ApiError?
   var result: GenreList?
 
-  func execute(requestValue: FetchGenresUseCaseRequestValue) -> AnyPublisher<GenreList, DataTransferError> {
+  func execute() async throws -> GenreList {
     if let error = error {
-      return Fail(error: error).eraseToAnyPublisher()
+      throw error
     }
 
-    if let result = result {
-      return Just(result).setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
+    if let genreList = result {
+      return genreList
+    } else {
+      throw ApiError(error: NSError(domain: "Mock", code: 404, userInfo: nil))
     }
 
-    return Empty().setFailureType(to: DataTransferError.self).eraseToAnyPublisher()
   }
 }

@@ -1,25 +1,21 @@
 //
-//  AccountTVShowsRemoteDataSource.swift
-//  
-//
 //  Created by Jeans Ruiz on 13/05/22.
 //
 
-import Combine
 import Networking
 import NetworkingInterface
 
 public class AccountTVShowsRemoteDataSource {
-  private let dataTransferService: DataTransferService
+  private let apiClient: ApiClient
 
-  public init(dataTransferService: DataTransferService) {
-    self.dataTransferService = dataTransferService
+  public init(apiClient: ApiClient) {
+    self.apiClient = apiClient
   }
 }
 
 extension AccountTVShowsRemoteDataSource: AccountTVShowsRemoteDataSourceProtocol {
-  public func fetchFavoritesShows(page: Int, userId: Int, sessionId: String) -> AnyPublisher<TVShowPageDTO, DataTransferError> {
-    let endpoint = Endpoint<TVShowPageDTO>(
+  public func fetchFavoritesShows(page: Int, userId: Int, sessionId: String) async throws -> TVShowPageDTO {
+    let endpoint = Endpoint(
       path: "3/account/\(userId)/favorite/tv",
       method: .get,
       queryParameters: [
@@ -27,11 +23,11 @@ extension AccountTVShowsRemoteDataSource: AccountTVShowsRemoteDataSourceProtocol
         "session_id": sessionId
       ]
     )
-    return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
+    return try await apiClient.apiRequest(endpoint: endpoint, as: TVShowPageDTO.self)
   }
 
-  public func fetchWatchListShows(page: Int, userId: Int, sessionId: String) -> AnyPublisher<TVShowPageDTO, DataTransferError> {
-    let endpoint = Endpoint<TVShowPageDTO>(
+  public func fetchWatchListShows(page: Int, userId: Int, sessionId: String) async throws -> TVShowPageDTO {
+    let endpoint = Endpoint(
       path: "3/account/\(userId)/watchlist/tv",
       method: .get,
       queryParameters: [
@@ -39,6 +35,6 @@ extension AccountTVShowsRemoteDataSource: AccountTVShowsRemoteDataSourceProtocol
         "session_id": sessionId
       ]
     )
-    return dataTransferService.request(with: endpoint).eraseToAnyPublisher()
+    return try await apiClient.apiRequest(endpoint: endpoint, as: TVShowPageDTO.self)
   }
 }

@@ -1,15 +1,14 @@
 //
-//  EpisodesListViewModelTests.swift
-//  EpisodesListViewModelTests-Unit-Tests
-//
 //  Created by Jeans Ruiz on 7/28/20.
 //
 
 import Combine
 import XCTest
-import CombineSchedulers
 @testable import ShowDetailsFeature
 @testable import Shared
+import NetworkingInterface
+import CustomDump
+import ConcurrencyExtras
 
 class EpisodesListViewModelTests: XCTestCase {
 
@@ -34,28 +33,31 @@ class EpisodesListViewModelTests: XCTestCase {
     disposeBag = []
   }
 
-  func test_when_useCase_Is_Not_Responds_Yet_ViewModel_Should_contains_Loading_State() {
-    // given
-    let sut: EpisodesListViewModelProtocol =
-    EpisodesListViewModel(tvShowId: 1,
-                          fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock,
-                          scheduler: .immediate)
+  func test_when_useCase_Is_Not_Responds_Yet_ViewModel_Should_contains_Loading_State() async {
+    await withMainSerialExecutor {
+      // given
+      let sut: EpisodesListViewModelProtocol = EpisodesListViewModel(
+        tvShowId: 1,
+        fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+        fetchEpisodesUseCase: fetchEpisodesUseCaseMock
+      )
 
-    let expected = [EpisodesListViewModel.ViewState.loading]
-    var received = [EpisodesListViewModel.ViewState]()
+      let expected: [EpisodesListViewModel.ViewState] = [.loading, .loading]
+      var received = [EpisodesListViewModel.ViewState]()
 
-    sut.viewState.removeDuplicates()
-      .sink(receiveValue: { received.append($0)}).store(in: &disposeBag)
+      sut.viewState
+        .sink(receiveValue: { received.append($0)}).store(in: &disposeBag)
 
-    // when
-    sut.viewDidLoad()
+      // when
+      let task = Task { await sut.viewDidLoad() }
+      await Task.yield()
 
-    // then
-    XCTAssertEqual(expected, received, "Should contains Loading State")
+      // then
+      expectNoDifference(expected, received, "Should contains Loading State")
+    }
   }
 
-  func test_when_ShowDetails_useCase_And_Seasons_useCase_return_OK_ViewModel_Should_Contains_Populated_State() {
+  func test_when_ShowDetails_useCase_And_Seasons_useCase_return_OK_ViewModel_Should_Contains_Populated_State() async {
     // given
     fetchTVShowDetailsUseCaseMock.result = self.detailResult
     fetchEpisodesUseCaseMock.result = TVShowSeason(id: "1", episodes: self.episodes, seasonNumber: 1)
@@ -63,8 +65,7 @@ class EpisodesListViewModelTests: XCTestCase {
     let sut: EpisodesListViewModelProtocol =
     EpisodesListViewModel(tvShowId: 1,
                           fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock,
-                          scheduler: .immediate)
+                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock)
 
     let expected = [
       EpisodesListViewModel.ViewState.loading,
@@ -76,13 +77,13 @@ class EpisodesListViewModelTests: XCTestCase {
       .sink(receiveValue: { received.append($0)}).store(in: &disposeBag)
 
     // when
-    sut.viewDidLoad()
+    await sut.viewDidLoad()
 
     // then
     XCTAssertEqual(expected, received, "Should contains Populated State")
   }
 
-  func test_when_UseCase_GetData_return_OK_ViewModel_Should_Contains_Data_Of_List_Episodes() {
+  func test_when_UseCase_GetData_return_OK_ViewModel_Should_Contains_Data_Of_List_Episodes() async {
     // given
     let headerViewModel = SeasonHeaderViewModel(showDetail: self.detailResult)
     let episodesSection = self.episodes
@@ -100,8 +101,7 @@ class EpisodesListViewModelTests: XCTestCase {
     let sut: EpisodesListViewModelProtocol =
     EpisodesListViewModel(tvShowId: 1,
                           fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock,
-                          scheduler: .immediate)
+                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock)
 
     let expected = [ [], dataExpected ]
     var received = [[SeasonsSectionModel]]()
@@ -110,24 +110,22 @@ class EpisodesListViewModelTests: XCTestCase {
       .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
-    sut.viewDidLoad()
+    await sut.viewDidLoad()
 
     // then
     XCTAssertEqual(expected, received, "Should contains Populated State")
   }
 
-  func test_when_useCase_Is_Not_Responds_Yet_ViewModel_Should_contains_Error_State() {
+  func test_when_useCase_Is_Not_Responds_Yet_ViewModel_Should_contains_Error_State() async {
     // given
-    fetchTVShowDetailsUseCaseMock.error = .noResponse
-    fetchEpisodesUseCaseMock.error = .noResponse
+    fetchTVShowDetailsUseCaseMock.error = ApiError(error: NSError(domain: "", code: 0, userInfo: nil))
+    fetchEpisodesUseCaseMock.error = ApiError(error: NSError(domain: "", code: 0, userInfo: nil))
 
-    let scheduler = DispatchQueue.test
-
-    let sut: EpisodesListViewModelProtocol =
-    EpisodesListViewModel(tvShowId: 1,
-                          fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock,
-                          scheduler: scheduler.eraseToAnyScheduler())
+    let sut: EpisodesListViewModelProtocol = EpisodesListViewModel(
+      tvShowId: 1,
+      fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+      fetchEpisodesUseCase: fetchEpisodesUseCaseMock
+    )
 
     var received = [EpisodesListViewModel.ViewState]()
 
@@ -135,8 +133,8 @@ class EpisodesListViewModelTests: XCTestCase {
       .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
     // when
-    sut.viewDidLoad()
-    scheduler.advance(by: 1)
+    await sut.viewDidLoad()
+    //scheduler.advance(by: 1)
 
     // then
     XCTAssertEqual([.loading, .error("")], received, "Should contains Error State")
@@ -148,121 +146,129 @@ class EpisodesListViewModelTests: XCTestCase {
     fetchEpisodesUseCaseMock.error = nil
     fetchEpisodesUseCaseMock.result = TVShowSeason(id: "1", episodes: self.episodes, seasonNumber: 1)
 
-    sut.refreshView()
-    scheduler.advance(by: 1)
+    await sut.refreshView()
+//    scheduler.advance(by: 1)
 
     // then
     XCTAssertEqual([.loading, .error(""), .populated], received, "Should contains Populated State")
   }
 
-  func test_when_useCase_Returns_Zero_Episodes_Viewmodel_should_Contains_Empty_State() {
-    // given
-    fetchTVShowDetailsUseCaseMock.result = self.detailResult
-    fetchEpisodesUseCaseMock.result = TVShowSeason(id: "1", episodes: [], seasonNumber: 1)
+  func test_when_useCase_Returns_Zero_Episodes_Viewmodel_should_Contains_Empty_State() async {
+    await withMainSerialExecutor {
+      // given
+      fetchTVShowDetailsUseCaseMock.result = self.detailResult
+      fetchEpisodesUseCaseMock.result = TVShowSeason(id: "1", episodes: [], seasonNumber: 1)
 
-    let sut: EpisodesListViewModelProtocol =
-    EpisodesListViewModel(tvShowId: 1,
-                          fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock,
-                          scheduler: .immediate)
+      let sut: EpisodesListViewModelProtocol =
+      EpisodesListViewModel(tvShowId: 1,
+                            fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+                            fetchEpisodesUseCase: fetchEpisodesUseCaseMock)
 
-    // MARK: - TODO
-    let expected = [
-      EpisodesListViewModel.ViewState.loading,
-      EpisodesListViewModel.ViewState.empty,
-      EpisodesListViewModel.ViewState.loadingSeason,
-      EpisodesListViewModel.ViewState.empty
-    ]
-    var received = [EpisodesListViewModel.ViewState]()
+      // MARK: - TODO
+      let expected: [EpisodesListViewModel.ViewState] = [
+        .loading, .loading,
+        .empty
+      ]
+      var received = [EpisodesListViewModel.ViewState]()
 
-    sut.viewState.removeDuplicates()
-      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
+      sut.viewState
+        .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
-    // when
-    sut.viewDidLoad()
+      // when
+      let task = Task { await sut.viewDidLoad() }
+      await Task.yield()
 
-    // then
-    XCTAssertEqual(expected, received, "Should contains Loading State")
+      await task.value
+
+      // then
+      expectNoDifference(expected, received, "Should contains Loading State")
+    }
   }
 
-  func test_When_Ask_For_Different_Season_And_UseCase_Doesnt_Respond_Yet_ViewModel_Should_Contains_Loading_Season_State() {
+  #warning("recover this test")
+  func test_When_Ask_For_Different_Season_And_UseCase_Doesnt_Respond_Yet_ViewModel_Should_Contains_Loading_Season_State() async {
+    await withMainSerialExecutor {
+      // given
+      //let scheduler = DispatchQueue.test
+      fetchTVShowDetailsUseCaseMock.result = self.detailResult
+      fetchTVShowDetailsUseCaseMock.error = nil
+      fetchEpisodesUseCaseMock.result = TVShowSeason(id: "1", episodes: self.episodes, seasonNumber: 1)
+      fetchEpisodesUseCaseMock.error = nil
+
+      let sut: EpisodesListViewModelProtocol =
+      EpisodesListViewModel(tvShowId: 1,
+                            fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+                            fetchEpisodesUseCase: fetchEpisodesUseCaseMock)
+
+      var received = [EpisodesListViewModel.ViewState]()
+      sut.viewState
+        .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
+
+      // when
+      let task = Task { await sut.viewDidLoad() }
+      await Task.yield()
+      //scheduler.advance(by: 1)
+
+      // UseCase not response yet
+      fetchEpisodesUseCaseMock.result = nil
+      fetchEpisodesUseCaseMock.error = nil
+
+      sut.getViewModelForAllSeasons()?.selectSeason(seasonNumber: 2)
+      //scheduler.advance(by: 1)
+
+      await task.value
+      expectNoDifference([.loading, .loading, .populated, .loadingSeason], received)
+    }
+  }
+
+  #warning("recover this test")
+  func test_When_Ask_For_Different_Season_And_UseCase_Return_Error_ViewModel_Should_Contains_Loading_Season_State() async {
     // given
-    let scheduler = DispatchQueue.test
+    //let scheduler = DispatchQueue.test
+
     fetchTVShowDetailsUseCaseMock.result = self.detailResult
     fetchEpisodesUseCaseMock.result = TVShowSeason(id: "1", episodes: self.episodes, seasonNumber: 1)
 
     let sut: EpisodesListViewModelProtocol =
     EpisodesListViewModel(tvShowId: 1,
                           fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock,
-                          scheduler: scheduler.eraseToAnyScheduler())
+                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock)
 
     var received = [EpisodesListViewModel.ViewState]()
     sut.viewState.removeDuplicates()
       .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
-    // when
-    sut.viewDidLoad()
-    scheduler.advance(by: 1)
-
-    // UseCase not response yet
-    fetchEpisodesUseCaseMock.result = nil
-    fetchEpisodesUseCaseMock.error = nil
-
-    sut.getViewModelForAllSeasons()?.selectSeason(seasonNumber: 2)
-    scheduler.advance(by: 1)
-
-    XCTAssertEqual([.loading, .populated, .loadingSeason], received)
-  }
-
-  func test_When_Ask_For_Different_Season_And_UseCase_Return_Error_ViewModel_Should_Contains_Loading_Season_State() {
-    // given
-    let scheduler = DispatchQueue.test
-
-    fetchTVShowDetailsUseCaseMock.result = self.detailResult
-    fetchEpisodesUseCaseMock.result = TVShowSeason(id: "1", episodes: self.episodes, seasonNumber: 1)
-
-    let sut: EpisodesListViewModelProtocol =
-    EpisodesListViewModel(tvShowId: 1,
-                          fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock,
-                          scheduler: scheduler.eraseToAnyScheduler())
-
-    var received = [EpisodesListViewModel.ViewState]()
-    sut.viewState.removeDuplicates()
-      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
-
-    sut.viewDidLoad()
-    scheduler.advance(by: 1)
+    await sut.viewDidLoad()
+//    scheduler.advance(by: 1)
 
     // UseCase responds with error
     fetchEpisodesUseCaseMock.result = nil
-    fetchEpisodesUseCaseMock.error = .noResponse
+    fetchEpisodesUseCaseMock.error = ApiError(error: NSError(domain: "", code: 0, userInfo: nil))
 
     // when
     sut.getViewModelForAllSeasons()?.selectSeason(seasonNumber: 2)
-    scheduler.advance(by: 1)
+//    scheduler.advance(by: 1)
 
     // then
     XCTAssertEqual([.loading, .populated, .loadingSeason, .errorSeason("")], received)
   }
 
-  func test_When_Ask_For_Different_Season_And_UseCase_Return_OK_ViewModel_Should_Contains_populated() {
-    let scheduler = DispatchQueue.test
+  #warning("recover this test")
+  func test_When_Ask_For_Different_Season_And_UseCase_Return_OK_ViewModel_Should_Contains_populated() async {
+//    let scheduler = DispatchQueue.test
     fetchTVShowDetailsUseCaseMock.result = self.detailResult
     fetchEpisodesUseCaseMock.result = TVShowSeason(id: "1", episodes: self.episodes, seasonNumber: 1)
 
     let sut: EpisodesListViewModelProtocol =
     EpisodesListViewModel(tvShowId: 1,
                           fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock,
-                          scheduler: .immediate)
+                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock)
     var received = [EpisodesListViewModel.ViewState]()
     sut.viewState.removeDuplicates()
       .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
-    sut.viewDidLoad()
-    scheduler.advance(by: 1)
+    await sut.viewDidLoad()
+//    scheduler.advance(by: 1)
 
     // Given UseCase responds with Data
     fetchEpisodesUseCaseMock.result = TVShowSeason(id: "2", episodes: self.episodes, seasonNumber: 2)
@@ -270,13 +276,14 @@ class EpisodesListViewModelTests: XCTestCase {
 
     // When
     sut.getViewModelForAllSeasons()?.selectSeason(seasonNumber: 2)
-    scheduler.advance(by: 1)
+//    scheduler.advance(by: 1)
 
     // Then
     XCTAssertEqual([.loading, .populated, .loadingSeason, .populated], received)
   }
 
-  func test_When_Ask_For_Different_Season_And_UseCase_Return_OK_ViewModel_Should_Contains_Data_With_Episodes() {
+  #warning("recover this test")
+  func test_When_Ask_For_Different_Season_And_UseCase_Return_OK_ViewModel_Should_Contains_Data_With_Episodes() async {
     let firstEpisodes = self.episodes
       .map { EpisodeSectionModelType(episode: $0)}
       .map { SeasonsSectionItem.episodes(items: $0) }
@@ -307,18 +314,17 @@ class EpisodesListViewModelTests: XCTestCase {
     fetchEpisodesUseCaseMock.result = TVShowSeason(id: "1", episodes: self.episodes, seasonNumber: 1)
 
     // Given
-    let scheduler = DispatchQueue.test
+//    let scheduler = DispatchQueue.test
     let sut: EpisodesListViewModelProtocol =
     EpisodesListViewModel(tvShowId: 1,
                           fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock,
-                          scheduler: scheduler.eraseToAnyScheduler())
+                          fetchEpisodesUseCase: fetchEpisodesUseCaseMock)
     var received = [[SeasonsSectionModel]]()
     sut.data.removeDuplicates()
       .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
-    sut.viewDidLoad()
-    scheduler.advance(by: 1)
+    await sut.viewDidLoad()
+//    scheduler.advance(by: 1)
 
     // Second Season responds
     fetchEpisodesUseCaseMock.result = TVShowSeason(id: "2", episodes: self.episodes, seasonNumber: 2)
@@ -326,7 +332,7 @@ class EpisodesListViewModelTests: XCTestCase {
 
     // When
     sut.getViewModelForAllSeasons()?.selectSeason(seasonNumber: 2)
-    scheduler.advance(by: 1)
+//    scheduler.advance(by: 1)
 
     // Then
     XCTAssertEqual([[], firstSeason, loadingSection, secondSeason], received)

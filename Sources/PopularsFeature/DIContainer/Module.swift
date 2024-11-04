@@ -1,7 +1,4 @@
 //
-//  PopularShowsDependencies.swift
-//  PopularShows
-//
 //  Created by Jeans Ruiz on 6/28/20.
 //
 
@@ -12,15 +9,16 @@ import Shared
 import ShowDetailsFeatureInterface
 
 public struct ModuleDependencies {
-
-  let apiDataTransferService: DataTransferService
+  let apiClient: ApiClient
   let imagesBaseURL: String
   let showDetailsBuilder: ModuleShowDetailsBuilder
 
-  public init(apiDataTransferService: DataTransferService,
-              imagesBaseURL: String,
-              showDetailsBuilder: ModuleShowDetailsBuilder) {
-    self.apiDataTransferService = apiDataTransferService
+  public init(
+    apiClient: ApiClient,
+    imagesBaseURL: String,
+    showDetailsBuilder: ModuleShowDetailsBuilder
+  ) {
+    self.apiClient = apiClient
     self.imagesBaseURL = imagesBaseURL
     self.showDetailsBuilder = showDetailsBuilder
   }

@@ -1,7 +1,4 @@
 //
-//  SearchOptionsViewController.swift
-//  SearchShows
-//
 //  Created by Jeans Ruiz on 7/7/20.
 //
 
@@ -29,7 +26,10 @@ class SearchOptionsViewController: NiblessViewController, Loadable {
   override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
-    viewModel.viewDidLoad()
+
+    Task {
+      await viewModel.viewDidLoad()
+    }
   }
 
   private func setupUI() {
@@ -43,7 +43,7 @@ class SearchOptionsViewController: NiblessViewController, Loadable {
 
   private func bindViewState() {
     viewModel.viewState
-      .receive(on: defaultScheduler)
+      .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] viewState in
         self?.handleTableState(with: viewState)
       })

@@ -1,7 +1,4 @@
 //
-//  SearchOptionRootView.swift
-//  SearchShows
-//
 //  Created by Jeans Ruiz on 8/21/20.
 //
 
@@ -72,7 +69,7 @@ class SearchOptionRootView: NiblessView {
         }
         return snapShot
       }
-      .receive(on: defaultScheduler)
+      .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] snapshot in
         self?.dataSource?.apply(snapshot)
       })

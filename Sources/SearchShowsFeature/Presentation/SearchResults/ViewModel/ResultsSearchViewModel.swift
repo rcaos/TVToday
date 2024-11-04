@@ -1,14 +1,9 @@
 //
-//  ResultsSearchViewModel.swift
-//  MyTvShows
-//
 //  Created by Jeans on 9/16/19.
-//  Copyright © 2019 Jeans. All rights reserved.
 //
 
 import Foundation
 import Combine
-import CombineSchedulers
 import Shared
 import UI
 import Persistence
@@ -22,18 +17,17 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
   let dataSource = CurrentValueSubject<[ResultSearchSectionModel], Never>([])
 
   weak var delegate: ResultsSearchViewModelDelegate?
-  private let scheduler: AnySchedulerOf<DispatchQueue>
   private var disposeBag = Set<AnyCancellable>()
 
   private var currentResultShows: [TVShowPage.TVShow] = []
 
   // MARK: - Init
-  init(searchTVShowsUseCase: SearchTVShowsUseCase,
-       fetchRecentSearchesUseCase: FetchSearchesUseCase,
-       scheduler: AnySchedulerOf<DispatchQueue> = .main) {
+  init(
+    searchTVShowsUseCase: SearchTVShowsUseCase,
+    fetchRecentSearchesUseCase: FetchSearchesUseCase
+  ) {
     self.searchTVShowsUseCase = searchTVShowsUseCase
     self.fetchRecentSearchesUseCase = fetchRecentSearchesUseCase
-    self.scheduler = scheduler
     subscribeToRecentsShowsChange()
     subscribeToSearchInput()
   }
@@ -65,9 +59,9 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
   private func subscribeToSearchInput() {
     currentSearchSubject
       .filter { !$0.isEmpty }
-      .receive(on: scheduler)
+      .receive(on: RunLoop.main)
       .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] query in
-        self?.fetchShows(with: query)
+        self?.fetchShows(query: query)
       })
       .store(in: &disposeBag)
   }
@@ -76,35 +70,35 @@ final class ResultsSearchViewModel: ResultsSearchViewModelProtocol {
     viewState
       .removeDuplicates()
       .filter { $0 == .initial }
-      .flatMap { [fetchRecentSearchesUseCase] _ -> AnyPublisher<[Search], ErrorEnvelope> in
-        return fetchRecentSearchesUseCase.execute(requestValue: FetchSearchesUseCaseRequestValue())
-      }
-      .receive(on: scheduler)
-      .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] results in
-        self?.createSectionModel(recentSearchs: results.map { $0.query }, resultShows: [])
+      .receive(on: RunLoop.main)
+      .sink(receiveValue: { [weak self] _ in
+        self?.fetchRecentSearches()
       })
       .store(in: &disposeBag)
   }
 
-  private func fetchShows(with query: String) {
+  private func fetchRecentSearches() {
+    Task { /// check leaks
+      let results = await fetchRecentSearchesUseCase.execute()
+      createSectionModel(recentSearchs: results.map { $0.query }, resultShows: [])
+    }
+  }
+
+  private func fetchShows(query: String) {
+    Task { [weak self] in
+      await self?.fetchShows(with: query)
+    }
+  }
+
+  private func fetchShows(with query: String) async {
     viewState.send(.loading)
     createSectionModel(recentSearchs: [], resultShows: [])
-
-    let request = SearchTVShowsUseCaseRequestValue(query: query, page: 1)
-
-    searchTVShowsUseCase.execute(requestValue: request)
-      .receive(on: scheduler)
-      .sink(receiveCompletion: { [weak self] completion in
-        switch completion {
-        case let .failure(error):
-          self?.viewState.send(.error(error.localizedDescription))  // MARK: - TODO, test recovery after an Error
-        case .finished:
-          break
-        }
-      }, receiveValue: { [weak self] result in
-        self?.processFetched(for: result)
-      })
-      .store(in: &disposeBag)
+    do {
+      let result = try await searchTVShowsUseCase.execute(request: .init(query: query, page: 1))
+      processFetched(for: result)
+    } catch {
+      viewState.send(.error(error.localizedDescription)) // MARK: - TODO, test recovery after an Error
+    }
   }
 
   private func processFetched(for response: TVShowPage) {

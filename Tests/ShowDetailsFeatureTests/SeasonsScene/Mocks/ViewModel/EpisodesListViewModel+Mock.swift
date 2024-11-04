@@ -1,12 +1,8 @@
 //
-//  EpisodesListViewModel+Mock.swift
-//  ShowDetails-Unit-Tests
-//
 //  Created by Jeans Ruiz on 8/6/20.
 //
 
 import Combine
-import CombineSchedulers
 @testable import ShowDetailsFeature
 
 extension SeasonHeaderViewModel {

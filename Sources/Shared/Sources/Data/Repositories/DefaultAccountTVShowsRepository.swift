@@ -1,11 +1,7 @@
 //
-//  DefaultAccountTVShowsRepository.swift
-//  Account
-//
 //  Created by Jeans Ruiz on 6/27/20.
 //
 
-import Combine
 import NetworkingInterface
 import Networking
 
@@ -27,21 +23,19 @@ public final class DefaultAccountTVShowsRepository {
 
 extension DefaultAccountTVShowsRepository: AccountTVShowsRepository {
 
-  public func fetchFavoritesShows(page: Int) -> AnyPublisher<TVShowPage, DataTransferError> {
+  public func fetchFavoritesShows(page: Int) async throws -> TVShowPage {
     let loggedUser = loggedUserRepository.getUser()
     let userId = loggedUser?.id ?? 0
 
-    return showsPageRemoteDataSource.fetchFavoritesShows(page: page, userId: userId, sessionId: loggedUser?.sessionId ?? "")
-      .map { self.mapper.mapTVShowPage($0, imageBasePath: self.imageBasePath, imageSize: .medium) }
-      .eraseToAnyPublisher()
+    let dto = try await showsPageRemoteDataSource.fetchFavoritesShows(page: page, userId: userId, sessionId: loggedUser?.sessionId ?? "")
+    return mapper.mapTVShowPage(dto, imageBasePath: imageBasePath, imageSize: .medium)
   }
 
-  public func fetchWatchListShows(page: Int) -> AnyPublisher<TVShowPage, DataTransferError> {
+  public func fetchWatchListShows(page: Int) async throws -> TVShowPage {
     let loggedUser = loggedUserRepository.getUser()
     let userId = loggedUser?.id ?? 0
 
-    return showsPageRemoteDataSource.fetchWatchListShows(page: page, userId: userId, sessionId: loggedUser?.sessionId ?? "")
-      .map { self.mapper.mapTVShowPage($0, imageBasePath: self.imageBasePath, imageSize: .medium) }
-      .eraseToAnyPublisher()
+    let dto = try await showsPageRemoteDataSource.fetchWatchListShows(page: page, userId: userId, sessionId: loggedUser?.sessionId ?? "")
+    return mapper.mapTVShowPage(dto, imageBasePath: self.imageBasePath, imageSize: .medium)
   }
 }

@@ -7,8 +7,7 @@ TVShows iOS app built with Combine, using the [TMDb API](https://www.themoviedb.
 
 ## What I'm working on
 
-* ⏳ Migrating Networking layer from Combine to Async await (https://github.com/rcaos/TVToday/tree/networking-async)
-
+- ✅ Migrate Networking layer from Combine to Async await 
 - ✅ Localize UI and requests to endpoint
 - ✅ Support Dynamic Type 
 

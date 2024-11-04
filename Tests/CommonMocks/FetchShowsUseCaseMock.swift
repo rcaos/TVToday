@@ -1,7 +1,4 @@
 //
-//  FetchShowsUseCaseMock.swift
-//  
-//
 //  Created by Jeans Ruiz on 14/05/22.
 //
 

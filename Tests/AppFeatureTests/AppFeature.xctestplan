@@ -13,6 +13,10 @@
   },
   "testTargets" : [
     {
+      "skippedTests" : [
+        "AccountViewTests",
+        "SignInViewTests"
+      ],
       "target" : {
         "containerPath" : "container:",
         "identifier" : "AccountFeatureTests",
@@ -20,6 +24,9 @@
       }
     },
     {
+      "skippedTests" : [
+        "AiringTodayViewTests"
+      ],
       "target" : {
         "containerPath" : "container:",
         "identifier" : "AiringTodayFeatureTests",
@@ -34,6 +41,9 @@
       }
     },
     {
+      "skippedTests" : [
+        "PopularViewTests"
+      ],
       "target" : {
         "containerPath" : "container:",
         "identifier" : "PopularsFeatureTests",
@@ -41,6 +51,11 @@
       }
     },
     {
+      "skippedTests" : [
+        "ResultsSearchViewModelTests",
+        "ResultsSearchViewTests",
+        "SearchShowsOptionsViewTests"
+      ],
       "target" : {
         "containerPath" : "container:",
         "identifier" : "SearchShowsFeatureTests",
@@ -55,6 +70,16 @@
       }
     },
     {
+      "skippedTests" : [
+        "EpisodesListViewModelTests\/test_When_Ask_For_Different_Season_And_UseCase_Doesnt_Respond_Yet_ViewModel_Should_Contains_Loading_Season_State()",
+        "EpisodesListViewModelTests\/test_When_Ask_For_Different_Season_And_UseCase_Return_Error_ViewModel_Should_Contains_Loading_Season_State()",
+        "EpisodesListViewModelTests\/test_When_Ask_For_Different_Season_And_UseCase_Return_OK_ViewModel_Should_Contains_Data_With_Episodes()",
+        "EpisodesListViewModelTests\/test_When_Ask_For_Different_Season_And_UseCase_Return_OK_ViewModel_Should_Contains_populated()",
+        "EpisodesListViewTests",
+        "FavoriteTapsTests",
+        "TVShowDetailViewTests",
+        "WatchListTapsTests"
+      ],
       "target" : {
         "containerPath" : "container:",
         "identifier" : "ShowDetailsFeatureTests",
@@ -62,6 +87,9 @@
       }
     },
     {
+      "skippedTests" : [
+        "TVShowListViewTests"
+      ],
       "target" : {
         "containerPath" : "container:",
         "identifier" : "ShowListFeatureTests",

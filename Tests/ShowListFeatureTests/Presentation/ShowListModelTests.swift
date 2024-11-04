@@ -12,6 +12,7 @@ import XCTest
 import Shared
 import UI
 import NetworkingInterface
+import ConcurrencyExtras
 
 class TVShowListViewModelTests: XCTestCase {
   private var fetchUseCaseMock: FetchShowsUseCaseMock!
@@ -24,22 +25,24 @@ class TVShowListViewModelTests: XCTestCase {
   }
 
   func test_When_UseCase_Doesnot_Responds_Yet_ViewModel_Should_Contains_Loading_State() async {
-    // given
-    let sut: TVShowListViewModelProtocol
-    sut = TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
+    await withMainSerialExecutor {
+      // given
+      let sut: TVShowListViewModelProtocol
+      sut = TVShowListViewModel(fetchTVShowsUseCase: fetchUseCaseMock, coordinator: nil)
 
-    let expected = [SimpleViewState<TVShowCellViewModel>.loading]
-    var received = [SimpleViewState<TVShowCellViewModel>]()
+      let expected = [SimpleViewState<TVShowCellViewModel>.loading]
+      var received = [SimpleViewState<TVShowCellViewModel>]()
 
-    sut.viewStateObservableSubject.removeDuplicates()
-      .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
+      sut.viewStateObservableSubject.removeDuplicates()
+        .sink(receiveValue: { received.append($0) }).store(in: &disposeBag)
 
-    // when
-    let task = Task { await sut.viewDidLoad() }
-    await Task.yield()
+      // when
+      let task = Task { await sut.viewDidLoad() }
+      await Task.yield()
 
-    // then
-    XCTAssertEqual(expected, received, "Should only receives one Value")
+      // then
+      XCTAssertEqual(expected, received, "Should only receives one Value")
+    }
   }
 
   func test_when_useCase_respons_with_FirstPage_ViewModel_Should_contains_Populated_State() async {

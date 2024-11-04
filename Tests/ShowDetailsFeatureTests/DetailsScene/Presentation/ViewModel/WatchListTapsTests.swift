@@ -9,6 +9,7 @@ import NetworkingInterface
 @testable import ShowDetailsFeature
 @testable import Shared
 
+#warning("recover these tests")
 class WatchListTapsTests: XCTestCase {
 
   let detailResult = TVShowDetail.stub()

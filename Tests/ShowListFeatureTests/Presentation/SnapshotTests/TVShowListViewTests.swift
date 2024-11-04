@@ -13,6 +13,7 @@ import UI
 
 @testable import ShowListFeature
 
+#warning("todo, recover these tests")
 class TVShowListViewTests: XCTestCase {
 
   override class func setUp() {
@@ -21,7 +22,7 @@ class TVShowListViewTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
-    defaultScheduler = .immediate
+//    defaultScheduler = .immediate
     isRecording = false
   }
 

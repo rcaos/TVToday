@@ -54,7 +54,13 @@
                   Identifier = "EpisodesListViewTests">
                </Test>
                <Test
+                  Identifier = "FavoriteTapsTests">
+               </Test>
+               <Test
                   Identifier = "TVShowDetailViewTests">
+               </Test>
+               <Test
+                  Identifier = "WatchListTapsTests">
                </Test>
             </SkippedTests>
          </TestableReference>

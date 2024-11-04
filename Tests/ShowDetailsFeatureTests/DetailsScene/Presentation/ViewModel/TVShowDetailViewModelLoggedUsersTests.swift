@@ -7,6 +7,7 @@ import XCTest
 import NetworkingInterface
 @testable import ShowDetailsFeature
 @testable import Shared
+import ConcurrencyExtras
 
 class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
 
@@ -32,32 +33,35 @@ class TVShowDetailViewModelLoggedUsersTests: XCTestCase {
   }
 
   func test_For_Logged_User_When_UseCase_Doesnot_Respond_Yet_ViewModel_Should_Contains_Loading_State() async {
-    // given
-    let sut: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
-      1,
-      fetchLoggedUser: fetchLoggedUserMock,
-      fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
-      fetchTvShowState: fetchTVAccountStateMock,
-      markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
-      saveToWatchListUseCase: saveToWatchListUseCaseMock,
-      coordinator: nil
-    )
+    await withMainSerialExecutor {
+      // given
+      let sut: TVShowDetailViewModelProtocol = TVShowDetailViewModel(
+        1,
+        fetchLoggedUser: fetchLoggedUserMock,
+        fetchDetailShowUseCase: fetchTVShowDetailsUseCaseMock,
+        fetchTvShowState: fetchTVAccountStateMock,
+        markAsFavoriteUseCase: markAsFavoriteUseCaseMock,
+        saveToWatchListUseCase: saveToWatchListUseCaseMock,
+        coordinator: nil
+      )
 
-    let expected = [TVShowDetailViewModel.ViewState.loading]
-    var received = [TVShowDetailViewModel.ViewState]()
+      let expected = [TVShowDetailViewModel.ViewState.loading]
+      var received = [TVShowDetailViewModel.ViewState]()
 
-    sut.viewState
-      .removeDuplicates()
-      .sink(receiveValue: { value in
-        received.append(value)
-      })
-      .store(in: &disposeBag)
+      sut.viewState
+        .removeDuplicates()
+        .sink(receiveValue: { value in
+          received.append(value)
+        })
+        .store(in: &disposeBag)
 
-    // when
-    await sut.viewDidLoad()
+      // when
+      let task = Task { await sut.viewDidLoad() }
+      await Task.yield()
 
-    // then
-    XCTAssertEqual(expected, received, "Should contains loading State")
+      // then
+      XCTAssertEqual(expected, received, "Should contains loading State")
+    }
   }
 
   func test_For_Logged_User_When_UseCase_Respond_OK_ViewModel_Should_Contains_Populated_State() async {

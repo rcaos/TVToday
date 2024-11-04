@@ -1,7 +1,4 @@
 //
-//  RecentVisitedShowDidChangeUseCase+Mock.swift
-//  SearchShows-Unit-Tests
-//
 //  Created by Jeans Ruiz on 8/7/20.
 //
 
@@ -11,11 +8,12 @@ import Persistence
 final class RecentVisitedShowDidChangeUseCaseMock: RecentVisitedShowDidChangeUseCase {
   var result: Bool?
 
-  func execute() -> AnyPublisher<Bool, Never> {
-    if let result = result {
-      return Just(result).eraseToAnyPublisher()
+  public func execute() -> AsyncStream<Bool> {
+    return AsyncStream { continuation in
+      if let result = self.result {
+        continuation.yield(result)
+      }
+      continuation.finish()
     }
-
-    return Empty().eraseToAnyPublisher()
   }
 }

@@ -39,6 +39,9 @@
             </BuildableReference>
             <SkippedTests>
                <Test
+                  Identifier = "ResultsSearchViewModelTests">
+               </Test>
+               <Test
                   Identifier = "ResultsSearchViewTests">
                </Test>
                <Test

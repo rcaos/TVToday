@@ -158,7 +158,8 @@ let package = Package(
       dependencies: [
         "SearchShowsFeature",
         "CommonMocks",
-        .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+        .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+        .product(name: "ConcurrencyExtras", package: "swift-concurrency-extras")
       ],
       exclude: [
         "SearchOptions/Presentation/SnapshotTests/__Snapshots__",

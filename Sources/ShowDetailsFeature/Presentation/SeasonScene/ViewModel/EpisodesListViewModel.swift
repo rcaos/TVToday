@@ -55,6 +55,14 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
     print("deinit \(Self.self)")
   }
 
+  func viewDidLoad() async {
+    await fetchShowDetailsAndFirstSeason()
+  }
+
+  func refreshView() async {
+    await fetchShowDetailsAndFirstSeason(showLoader: false)
+  }
+
   private func controlSeasons() {
     seasonSelectedSubject
       .removeDuplicates()
@@ -157,14 +165,6 @@ final class EpisodesListViewModel: EpisodesListViewModelProtocol {
       return .headerShow(items: [.headerShow(viewModel: SeasonHeaderViewModel(showDetail: detailShow))])
     }
     return nil
-  }
-
-  func viewDidLoad() async {
-    await fetchShowDetailsAndFirstSeason()
-  }
-
-  func refreshView() async {
-    await fetchShowDetailsAndFirstSeason(showLoader: false)
   }
 
   private func createViewModelForSeasons(numberOfSeasons: Int) {

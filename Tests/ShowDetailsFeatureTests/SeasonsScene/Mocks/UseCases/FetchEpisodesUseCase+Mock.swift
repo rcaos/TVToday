@@ -12,14 +12,15 @@ final class FetchEpisodesUseCaseMock: FetchEpisodesUseCase {
   var error: ApiError?
 
   func execute(request: FetchEpisodesUseCaseRequestValue) async throws -> TVShowSeason {
+    await Task.yield()
     if let error = error {
       throw error
     }
 
-    if let result = result {
+    if let result {
       return result
     } else {
-      throw ApiError(error: NSError(domain: "Mock", code: 0, userInfo: nil))
+      throw ApiError(error: NSError(domain: "Season Value not set", code: 0, userInfo: nil))
     }
   }
 }

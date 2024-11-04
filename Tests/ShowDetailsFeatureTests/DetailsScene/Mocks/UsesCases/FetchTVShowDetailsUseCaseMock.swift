@@ -13,14 +13,15 @@ class FetchTVShowDetailsUseCaseMock: FetchTVShowDetailsUseCase {
   var error: ApiError?
 
   public func execute(request: FetchTVShowDetailsUseCaseRequestValue) async throws -> TVShowDetail {
+    await Task.yield()
     if let error = error {
       throw error
     }
 
-    if let result = result {
+    if let result {
       return result
     } else {
-      throw ApiError(error: NSError(domain: "", code: 0, userInfo: nil))
+      throw ApiError(error: NSError(domain: "Details not Set", code: 0, userInfo: nil))
     }
   }
 }

@@ -192,7 +192,9 @@ let package = Package(
       name: "ShowDetailsFeatureTests",
       dependencies: [
         "ShowDetailsFeature",
-        .product(name: "SnapshotTesting", package: "swift-snapshot-testing")
+        .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+        .product(name: "CustomDump", package: "swift-custom-dump"),
+        .product(name: "ConcurrencyExtras", package: "swift-concurrency-extras")
       ],
       exclude: [
         "DetailsScene/Presentation/View/__Snapshots__",

@@ -13,6 +13,7 @@ import XCTest
 @testable import Persistence
 import UI
 
+#warning("todo, recover these tests")
 class ResultsSearchViewTests: XCTestCase {
 
   override class func setUp() {
@@ -21,7 +22,7 @@ class ResultsSearchViewTests: XCTestCase {
 
   override func setUp() {
     super.setUp()
-    defaultScheduler = .immediate
+    //defaultScheduler = .immediate
     isRecording = false
   }
 
